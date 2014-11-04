@@ -1,0 +1,15 @@
+# Project Specifics #
+#####################
+.project
+node_modules
+npm-debug.log
+logs
+coverage
+tmp
+
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db

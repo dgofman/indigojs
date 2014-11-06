@@ -1,0 +1,20 @@
+<div class="container">
+	<div class="content">
+		<div class="row">
+			<form class="login-form">
+				<h2><%= locales.account.signin %></h2>
+				<h5 class="error_message text-error"></h5>
+				<fieldset>
+					<div class="clearfix">
+						<input type="email" id="email" required placeholder="<%= locales.account.email %>">
+					</div>
+					<div class="clearfix">
+						<input type="password" id="password" required placeholder="<%= locales.account.resetpwd %>">
+					</div>
+					<button class="btn btn-primary" type="submit"><%= locales.account.signin %></button>
+				</fieldset>
+				<small class="pull-right"><a href="#resetPassword"><%= locales.account.resetpwd %></a></small><br/>
+			</form>
+		</div>
+	</div>
+</div>

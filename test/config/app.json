@@ -1,0 +1,27 @@
+{
+	"environment": "dev",
+
+	"server": {
+		"port": 8080,
+		"uri": "/indigo",
+		"appdir": "/test/web",
+		"session-key": "indigojs-session"
+	},
+
+	"logger": {
+		"level": "debug"
+	},
+
+	"locales": {
+		"default": "en-us",
+		"directory": "test/locales"
+	},
+
+	"controllers": [
+		"test/controllers"
+	],
+
+	"templates": [
+		"test/templates"
+	]
+}

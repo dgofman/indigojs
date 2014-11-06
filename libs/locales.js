@@ -30,11 +30,13 @@ module.exports = {
 					}
 				}
 			}
+
+			//initLocaleDependencies(nconf);
 		}
 	},
 
-	init: function(req) {
-		setLocale(req);
+	init: function(req, locale) {
+		setLocale(req, locale);
 		return localeMap[req.session.locale];
 	},
 
@@ -44,15 +46,17 @@ module.exports = {
 	}
 };
 
-function setLocale(req) {
+function setLocale(req, locale) {
+	req.session.locale = locale || req.session.locale;
+
 	if (!req.session.locale) {
 		logger.debug('locales::setLocale sessionID=', req.sessionID);
 		var split = req.headers['accept-language'].split(';'); // en-us,en-au;q=0.8,en;q=0.5,ru;q=0.3
 		for (var value in split) {
 			var languages = split[value].split(',');
 			for (var name in languages) {
-				var locale = languages[name].toLowerCase();
-				if (locale.indexOf('q=') === -1 && fs.existsSync(__dirname + '/' + locale)) {
+				locale = languages[name].toLowerCase();
+				if (locale.indexOf('q=') === -1 && localeMap[locale]) {
 					return saveToSession(req, locale);
 				}
 			}
@@ -64,6 +68,33 @@ function setLocale(req) {
 }
 
 function saveToSession(req, locale) {
-	req.session.locale = locale;
-	req.model.langugage = locale.split('-')[0];
+	req.session.locale = req.model.locality.locale = locale;
+	req.model.locality.langugage = locale.split('-')[0];
+}
+
+function initLocaleDependencies(nconf) {
+	if (nconf.get('locales:rules')) {
+		var rules = require(__appDir + nconf.get('locales:rules'));
+		for (var code in rules) {
+			var target = localeMap[code] = localeMap[code] || {};
+
+			var dependencies = rules[code];
+			for (var index in dependencies) {
+				var locale = dependencies[index],
+					source = localeMap[locale] || {};
+
+				for (var name in source) {
+					if (!target[name]) {
+					 	target[name] = source[name];
+					} else { //copy only missing key/values
+					 	for (var key in source[name]) {
+					 		if (!target[name][key]) {
+					 			 target[name][key] = source[name][key];
+					 		}
+					 	}
+					}
+				}
+			}
+		}
+	}
 }

@@ -1,7 +1,15 @@
 <!DOCTYPE html>
-<html lang="<%= langugage %>">
+<html lang="<%= locality.langugage %>">
 <head>
 <% include templates/head.html %>
+<script>
+    window.Indigo = {
+        messages: {
+            'greeting': '<%= locales.account.greeting %>',
+            'resetpwd': '<%= locales.account.resetpwd %>'
+        }
+    }
+</script>
 </head>
 
 <body>

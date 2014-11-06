@@ -1,0 +1,19 @@
+<div class="container">
+	<div class="content">
+		<div class="row">
+			<form class="reset-form">
+				<h2><%= locales.account.resettitle %></h2>
+				<h5 class="error_message text-error"></h5>
+				<fieldset>
+					<div class="clearfix">
+						<label for="theEmail"><%= locales.account.email %></label>
+						<input type="email" id="email" required placeholder="<%= locales.account.email %>">
+						<span class="help-block"><%= locales.account.emailhint %></span>
+					</div>
+					<button class="btn btn-primary" type="submit"><%= locales.account.resetpwd %></button>
+					<button class="btn cancel" type="button"><%= locales.common.cancel %></button>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>

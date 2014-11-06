@@ -1,0 +1,9 @@
+{
+	"pageTitle": "Log In",
+	"signin": "Please Sign In",
+	"email": "Email Address",
+	"emailhint": "The email address associated with your account.",
+	"password": "Password",
+	"resetpwd": "Reset Password",
+	"resettitle": "Reset Password"
+}

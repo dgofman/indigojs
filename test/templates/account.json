@@ -1,0 +1,26 @@
+{
+	"login_html": {
+		"url": "login",
+		"locales": [
+			"common",
+			"navbar",
+			"footer",
+			"account"
+		]
+	},
+
+	"login": {
+		"url": "templates/account/login",
+		"locales": [
+			"account"
+		]
+	},
+
+	"reset": {
+		"url": "templates/account/reset",
+		"locales": [
+			"account",
+			"common"
+		]
+	}
+}

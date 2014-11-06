@@ -21,7 +21,7 @@ module.exports = function(app, uri, next) {
 		if (user && user.password === req.body.password) {
 	  		return res.json(user.details);
 	  	}
-	  	indigo.error(res, res, 'invalidEmailOrPassword');
+	  	indigo.error(req, res, 'invalidEmailOrPassword');
 	  	next();
 	});
 
@@ -32,7 +32,7 @@ module.exports = function(app, uri, next) {
 		if (user) {
 	  		return res.json(user.details);
 	  	}
-	  	indigo.error(res, res, 'invalidAccount');
+	  	indigo.error(req, res, 'invalidAccount');
 	  	next();
 	});
 };

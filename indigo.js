@@ -36,13 +36,14 @@ module.exports = indigo = {
 			//console.log('%s %s', req.method, req.url);
 			req.model = {
 				environment: nconf.get('environment'),
+				locality: {},
 				locales: {}
 			};
 			next();
 		});
 
 		//Localize /templates/**.*html
-		var templates = nconf.get('templates') || [];
+		var templates = nconf.get('templates') || (fs.lstatSync('./templates').isDirectory() ? ['./templates'] : []);
 		for (var index in templates) {
 			fs.readdirSync(__dirname + '/'+ templates[index]).forEach(function (file) {
 				if(file.substr(-5) === '.json') {
@@ -59,7 +60,7 @@ module.exports = indigo = {
 
 		// dynamically include routes (Controller)
 		var next = function(){},
-		controllers = nconf.get('controllers') || {};
+		controllers = nconf.get('controllers') || (fs.lstatSync('./controllers').isDirectory() ? ['./controllers'] : []);;
 		for (index in controllers) {
 			fs.readdirSync(__dirname + '/'+ controllers[index]).forEach(function (file) {
 				if(file.substr(-3) === '.js') {

@@ -14,7 +14,8 @@
 
 	"locales": {
 		"default": "en-us",
-		"directory": "test/locales"
+		"directory": "test/locales",
+		"rules": "test/config/localeRules.json"
 	},
 
 	"controllers": [

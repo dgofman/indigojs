@@ -1,2 +1,3 @@
 test/web/js/vendor
 node_modules
+coverage

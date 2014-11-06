@@ -33,7 +33,7 @@ define([
             }, function(error, model) {
                 password.val(''); //clean password
                 if(!error) {
-                  alert('Welcome: ' + model.get('first') + ' ' + model.get('last'));
+                  alert(window.Indigo.messages.greeting + ' ' + model.get('email'));
                 }
             });
         }

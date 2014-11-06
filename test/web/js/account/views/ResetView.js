@@ -34,7 +34,7 @@ define([
                 email: this.div.find('#email').val(),
             }, function(error, model) {
                 if(!error) {
-                  alert('Reset Password: ' + model.get('first') + ' ' + model.get('last'));
+                  alert(window.Indigo.messages.resetpwd + ' ' + model.get('first') + ' ' + model.get('last'));
                 }
             }, '/reset');
         }

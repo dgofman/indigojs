@@ -1,6 +1,6 @@
 {
 	"login_html": {
-		"url": "login",
+		"url": "login.html",
 		"locales": [
 			"common",
 			"navbar",
@@ -10,14 +10,14 @@
 	},
 
 	"login": {
-		"url": "templates/account/login",
+		"url": "templates/account/login.html",
 		"locales": [
 			"account"
 		]
 	},
 
 	"reset": {
-		"url": "templates/account/reset",
+		"url": "templates/account/reset.html",
 		"locales": [
 			"account",
 			"common"

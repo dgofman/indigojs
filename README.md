@@ -15,6 +15,6 @@ Open terminal
 
 Localization
 
-http://localhost:8080/templates/account/login.html
+http://localhost:8585/templates/account/login.html
 
-http://localhost:8080/indigo/templates/account/login.html
+http://localhost:8585/indigo/en-us/templates/account/login.html

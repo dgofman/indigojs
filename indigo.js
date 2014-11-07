@@ -5,6 +5,8 @@ var express = require('express'),
 	bodyParser = require('body-parser'),
 	fs = require('fs'),
 	templateMap = {},
+	uri, appdir, portNumber,
+
 	logger, locales, indigo;
 
 global.__appDir = __dirname + '/'; 
@@ -17,10 +19,11 @@ module.exports = indigo = {
 		this.logger = logger = require('./libs/logger');
 		this.locales = locales = require('./libs/locales');
 
-		var app = express(),
-			uri = nconf.get('server:uri'),
-			appdir = __dirname + nconf.get('server:appdir'),
-			portNumber = Number(process.env.PORT || nconf.get('server:port'));
+		uri = nconf.get('server:uri'),
+		appdir = __dirname + nconf.get('server:appdir'),
+		portNumber = Number(process.env.PORT || nconf.get('server:port'));
+
+		var app = express();
 
 		locales.config(nconf);
 
@@ -33,12 +36,17 @@ module.exports = indigo = {
 		}));
 
 		app.use(function(req, res, next) {
-			//console.log('%s %s', req.method, req.url);
+			console.log('%s %s', req.method, req.url);
+			if (req.method === 'GET' && req.url.indexOf(uri) === 0) {
+				req.url = uri + getNewURL(req, req.url.split(uri)[1]);
+			}
+
 			req.model = {
 				environment: nconf.get('environment'),
 				locality: {},
 				locales: {}
 			};
+
 			next();
 		});
 
@@ -64,7 +72,7 @@ module.exports = indigo = {
 		for (index in controllers) {
 			fs.readdirSync(__dirname + '/'+ controllers[index]).forEach(function (file) {
 				if(file.substr(-3) === '.js') {
-					require(__dirname + '/'+ controllers[index] + '/' + file.split('.')[0])(app, uri, next);
+					require(__dirname + '/'+ controllers[index] + '/' + file.split('.')[0])(app, uri + '/:locale', next);
 				}
 			});
 		}
@@ -78,29 +86,24 @@ module.exports = indigo = {
 		// Set the folder where the pages are kept
 		app.set('views', appdir);
 
-		// This avoids having to provide the 
-		// extension to res.render()
-		app.set('view engine', 'html');	 
-
 		// Start the server
 		app.listen(portNumber);
 		logger.info('Server is running on port %s', portNumber);
 		logger.info('Default URL: http://localhost:%s%s/login', portNumber, uri);
 	},
 
-	render: function(req, res, templateId, pageId) {
+	render: function(req, res, templateId, pageId, locale) {
 		var template = templateMap[templateId] || {};
 		template = template[pageId];
 		if (template) {
-			if (locales.init(req)) {
-				for (var index in template.locales) {
-					var locale = locales.apply(req, template.locales[index]);
-					if (locale.pageTitle) {
-						req.model.pageTitle = locale.pageTitle;
-					}
+			locales.init(req, locale)
+			for (var index in template.locales) {
+				var properties = locales.apply(req, template.locales[index]);
+				if (properties.pageTitle) {
+					req.model.pageTitle = properties.pageTitle;
 				}
 			}
-			res.render(template.url, req.model);
+			res.render(appdir + getNewURL(req, '/' + req.session.locale + '/' + template.url), req.model);
 		}
 	},
 
@@ -108,3 +111,19 @@ module.exports = indigo = {
 		res.json(errorCode || 400, { error: (model || locales.apply(req, 'errors'))[errorKey] });
 	}
 };
+
+function getNewURL(req, url) {
+	console.log("<<<<", url, req.session.locale, req.session.templateLocales)
+	if (req.session.locale && !fs.existsSync(appdir + url) && 
+	    url.indexOf(req.session.locale) === 1) { //try to get file from another locale directory
+		for (var index in req.session.templateLocales) {
+			var newUrl = url.replace(req.session.locale, req.session.templateLocales[index]);
+			console.log(">>", appdir + newUrl)
+			if (fs.existsSync(appdir + newUrl)) {
+				console.log("HERE", newUrl)
+				return newUrl;
+			}
+		}
+	}
+	return url;
+}

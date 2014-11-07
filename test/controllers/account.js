@@ -14,6 +14,7 @@ module.exports = function(app, uri, next) {
 		next();
 	});
 
+	//REST calls
 	app.post('/login', function(req, res) {
 		logger.debug('post login::login', req.body.email);
 

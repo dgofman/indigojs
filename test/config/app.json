@@ -2,7 +2,7 @@
 	"environment": "dev",
 
 	"server": {
-		"port": 8080,
+		"port": 8585,
 		"uri": "/indigo",
 		"appdir": "/test/web",
 		"session-key": "indigojs-session"

@@ -4,13 +4,12 @@ BASE = .
 
 ISTANBUL = ./node_modules/.bin/istanbul
 JSHINT = ./node_modules/.bin/jshint
-MOCHA = ./node_modules/.bin/mocha
-COVERAGE_OPTS = #--lines 95 --statements 90 --branches 80 --functions 90
+MOCHA = ./node_modules/.bin/_mocha
 
 main: clean lint test-unit
 
-cover:
-	$(ISTANBUL) cover test/unittest/tests.js
+cover: clean
+	$(ISTANBUL) cover $(MOCHA) test/unittest/tests.js
 
 test-unit:
 	@NODE_ENV=test $(MOCHA) test/unittest \

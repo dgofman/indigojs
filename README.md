@@ -15,6 +15,6 @@ Open terminal
 
 Localization
 
-http://localhost:8585/templates/account/login.html
+http://localhost:8585/templates/account/login.html?locale=ru
 
-http://localhost:8585/indigo/en-us/templates/account/login.html
+http://localhost:8585/indigo/ru/templates/account/login.html?locale=ru

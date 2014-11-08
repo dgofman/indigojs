@@ -1,12 +1,9 @@
 'use strict';
 
 var express = require('express'),
-	expressSession = require('express-session'),
-	bodyParser = require('body-parser'),
 	fs = require('fs'),
 	templateMap = {},
 	uri, appdir, portNumber,
-
 	logger, locales, indigo;
 
 global.__appDir = __dirname + '/'; 
@@ -27,25 +24,26 @@ module.exports = indigo = {
 
 		locales.config(nconf);
 
-		app.use(bodyParser.json()); //enabled req.body
+		app.use(require(nconf.get('server:parser:path') || './libs/parser')(nconf)); //enabled req.body
 
-		app.use(expressSession({  //enabled req.session
-			secret: nconf.get('server:session-key'),
-			resave: true,
-			saveUninitialized: true
-		}));
+		app.use(require(nconf.get('server:session:path') || './libs/session')(nconf)); //enabled req.session
 
 		app.use(function(req, res, next) {
-			console.log('%s %s', req.method, req.url);
-			if (req.method === 'GET' && req.url.indexOf(uri) === 0) {
-				req.url = uri + getNewURL(req, req.url.split(uri)[1]);
-			}
+			//console.log('%s %s', req.method, req.url);
 
 			req.model = {
 				environment: nconf.get('environment'),
 				locality: {},
 				locales: {}
 			};
+
+			if (req.query.locale && req.query.locale !== req.session.locale) {
+				locales.init(req, req.query.locale);
+			}
+
+			if (req.method === 'GET' && req._parsedUrl.pathname.indexOf(uri) === 0) {
+				req.url = uri + getNewURL(req, req._parsedUrl.pathname.split(uri)[1]);
+			}
 
 			next();
 		});
@@ -63,16 +61,16 @@ module.exports = indigo = {
 
 		app.get('/templates/:templateId/:pageId', function(req, res) { //Template url: 'text!/templates/account/login' 
 			indigo.render(req, res, req.params.templateId, 
-				req.params.pageId.split('.')[0]);
+				req.params.pageId.split('.')[0], req.query.locale);
 		});
 
 		// dynamically include routes (Controller)
 		var next = function(){},
-		controllers = nconf.get('controllers') || (fs.lstatSync('./controllers').isDirectory() ? ['./controllers'] : []);;
+		controllers = nconf.get('controllers') || (fs.lstatSync('./controllers').isDirectory() ? ['./controllers'] : []);
 		for (index in controllers) {
 			fs.readdirSync(__dirname + '/'+ controllers[index]).forEach(function (file) {
 				if(file.substr(-3) === '.js') {
-					require(__dirname + '/'+ controllers[index] + '/' + file.split('.')[0])(app, uri + '/:locale', next);
+					require(__dirname + '/'+ controllers[index] + '/' + file.split('.')[0])(app, uri, next);
 				}
 			});
 		}
@@ -96,7 +94,7 @@ module.exports = indigo = {
 		var template = templateMap[templateId] || {};
 		template = template[pageId];
 		if (template) {
-			locales.init(req, locale)
+			locales.init(req, locale);
 			for (var index in template.locales) {
 				var properties = locales.apply(req, template.locales[index]);
 				if (properties.pageTitle) {
@@ -113,14 +111,11 @@ module.exports = indigo = {
 };
 
 function getNewURL(req, url) {
-	console.log("<<<<", url, req.session.locale, req.session.templateLocales)
 	if (req.session.locale && !fs.existsSync(appdir + url) && 
 	    url.indexOf(req.session.locale) === 1) { //try to get file from another locale directory
 		for (var index in req.session.templateLocales) {
 			var newUrl = url.replace(req.session.locale, req.session.templateLocales[index]);
-			console.log(">>", appdir + newUrl)
 			if (fs.existsSync(appdir + newUrl)) {
-				console.log("HERE", newUrl)
 				return newUrl;
 			}
 		}

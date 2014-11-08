@@ -32,12 +32,12 @@ module.exports = {
 			}
 
 			initLocaleDependencies(nconf);
+			localeMap[defLocale].dependencies.push(defLocale);
 		}
 	},
 
 	init: function(req, locale) {
 		setLocale(req, locale);
-		logger.debug('locales::init locale=', req.session.locale);
 		return localeMap[req.session.locale];
 	},
 
@@ -48,7 +48,7 @@ module.exports = {
 };
 
 function setLocale(req, locale) {
-	req.session.locale = locale || req.params.locale || req.session.locale;
+	req.session.locale = locale || req.session.locale;
 
 	if (!localeMap[req.session.locale]) {
 		logger.debug('locales::setLocale sessionID=', req.sessionID);

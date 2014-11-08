@@ -5,7 +5,13 @@
 		"port": 8585,
 		"uri": "/indigo",
 		"appdir": "/test/web",
-		"session-key": "indigojs-session"
+		"session": {
+			"session-key": "indigojs-session",
+			"path": null
+		},
+		"parser": {
+			"path": null
+		}
 	},
 
 	"logger": {

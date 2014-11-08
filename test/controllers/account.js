@@ -8,9 +8,9 @@ var users = require('../models/account').users;
 module.exports = function(app, uri, next) {
 
 	//HTML/templates renderer
-	app.get(uri + '/login', function(req, res) {
+	app.get(uri + '/:locale/login', function(req, res) {
 		req.model.jsDir = 'account';
-		indigo.render(req, res, 'account', 'login_html');
+		indigo.render(req, res, 'account', 'login_html', req.params.locale);
 		next();
 	});
 

@@ -1,6 +1,9 @@
 {
-	"en-gb": ["en-us"],
-	"en-au": ["en-gb"],
-	"en-ca": ["en-gb"],
-	"hi": ["en-gb"]
+	"us": ["en-us"],
+	"en-gb": ["en-gb", "en-us"],
+	"gb": ["en-gb"],
+	"au": ["en-gb"],
+	"ca": ["en-gb"],
+	"hi": ["en-gb"],
+	"ru": ["ru", "en-us"]
 }

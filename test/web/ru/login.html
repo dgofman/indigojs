@@ -2,6 +2,14 @@
 <html lang="<%= locality.langugage %>">
 <head>
 <%- url(req, 'templates/head.html') %>
+<style>
+	html, body {
+		background-color:#e1f1fc
+	}
+	h2 {
+		font-size: 18px;
+	}
+</style>
 <script>
     window.Indigo = {
         messages: {
@@ -15,8 +23,6 @@
 <body>
 	<div id="wrap">
 		<div class="page">
-			<%- url(req, 'templates/navbar.html') %>
-			
 			<div class="wrapper"></div>
 			
 			<%- url(req, 'templates/footer.html') %>

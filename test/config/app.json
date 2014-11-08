@@ -15,7 +15,8 @@
 	},
 
 	"logger": {
-		"level": "debug"
+		"level": "debug",
+		"path": null
 	},
 
 	"locales": {

@@ -26,7 +26,7 @@ module.exports = indigo = {
 		locales.config(nconf); //initialize locales
 	},
 
-	start: function(nconf) {
+	start: function(nconf, next) {
 
 		this.init(nconf);
 
@@ -72,6 +72,10 @@ module.exports = indigo = {
 		// Start the server
 		app.listen(portNumber);
 		logger.info('Server is running on port %s', portNumber);
+
+		if (next) {
+			next();
+		}
 	},
 
 	render: function(req, res, url, locales) {
@@ -111,7 +115,7 @@ function routerRedirectListener(req, res, next) {
 
 	req.model = JSON.parse(reqModel);
 
-	if (req.params.locale && req.params.locale !== req.session.locale) {
+	if (!req.session.locale || req.params.locale !== req.session.locale) {
 		locales.init(req, req.params.locale);
 	}
 

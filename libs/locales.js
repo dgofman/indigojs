@@ -15,9 +15,7 @@ module.exports = {
 		localeMap[defLocale] = { lookup: [] };
 
 		var localeDir = __appDir + nconf.get('locales:directory') ;
-		if (!fs.existsSync(localeDir)) {
-			logger.warn('Invalid locale directory:', localeDir);
-		} else {
+		if (fs.existsSync(localeDir)) {
 			var dirs = fs.readdirSync(localeDir);
 			for (var d in dirs) {
 				var localeName = dirs[d];
@@ -50,13 +48,15 @@ function setLocale(req, locale) {
 
 	if (!localeMap[req.session.locale]) {
 		debug('sessionID=%', req.sessionID);
-		var split = req.headers['accept-language'].split(';'); // en-us,en-au;q=0.8,en;q=0.5,ru;q=0.3
-		for (var value in split) {
-			var languages = split[value].split(',');
-			for (var name in languages) {
-				locale = languages[name].toLowerCase();
-				if (locale.indexOf('q=') === -1 && localeMap[locale]) {
-					return saveToSession(req, locale);
+		if (req.headers && req.headers['accept-language']) {
+			var split = req.headers['accept-language'].split(';'); // en-us,en-au;q=0.8,en;q=0.5,ru;q=0.3
+			for (var value in split) {
+				var languages = split[value].split(',');
+				for (var name in languages) {
+					locale = languages[name].toLowerCase();
+					if (locale.indexOf('q=') === -1 && localeMap[locale]) {
+						return saveToSession(req, locale);
+					}
 				}
 			}
 		}
@@ -68,7 +68,7 @@ function setLocale(req, locale) {
 
 function saveToSession(req, locale) {
 	req.session.locale = req.model.locality.locale = locale;
-	if (localeMap[locale].lookup.length > 1) {
+	if (localeMap[locale].lookup.length > 0) {
 		req.model.locality.langugage = localeMap[locale].lookup[0].split('-')[0];
 	}
 	req.session.localeLookup = localeMap[locale].lookup.concat('default');

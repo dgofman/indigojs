@@ -3,9 +3,10 @@
 var expressSession = require('express-session');
 
 module.exports = function session(nconf) {
-	return expressSession({
+	var opts = {
 		secret: nconf.get('server:session:session-key') || new Date().getTime(),
 		resave: true,
 		saveUninitialized: true
-	});
+	};
+	return expressSession(opts);
 };

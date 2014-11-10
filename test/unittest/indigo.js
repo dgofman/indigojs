@@ -24,7 +24,7 @@ describe('UnitTests Indigo APIs', function () {
 				}
 			},res = {
 				render: function(url, model) {
-					assert.equal(url, __appDir + 'examples/web/en-us/login.html');
+					assert.equal(url, __appDir + 'examples/web/en/login.html');
 					assert.equal(model.locality.locale, 'en-gb');
 					assert.equal(model.locality.langugage, 'en');
 					assert.equal(model.locales.account.greeting, 'Hello');

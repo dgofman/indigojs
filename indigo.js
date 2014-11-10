@@ -30,7 +30,7 @@ module.exports = indigo = {
 
 		this.init(nconf);
 
-		var app = express();
+		var app = this.app = express();
 
 		app.use(require(nconf.get('server:parser:path') || './libs/parser')(nconf)); //enabled req.body
 

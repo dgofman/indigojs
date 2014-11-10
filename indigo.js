@@ -38,6 +38,18 @@ module.exports = indigo = {
 
 		app.use('/', express.static(appdir));
 
+		//http://localhost:8585/indigo/account/ru/templates/login
+		app.use('/indigo/:routerPath/:locale/templates/:pageId', function(req, res) {
+			req.model = JSON.parse(reqModel);
+			locales.init(req, req.params.locale);
+
+			var url = '/' + req.session.locale + '/templates/' + req.params.routerPath + '/' + req.params.pageId + '.html',
+				newUrl = getNewURL(req, url);
+			debug('url=%s redirect=%s', url, newUrl);
+			console.log('url=%s redirect=%s', url, newUrl);
+			res.redirect(newUrl);
+		})
+
 		// dynamically include routers
 		loadModule('routers', nconf, function(route) {
 			var router = express.Router(),
@@ -81,6 +93,9 @@ module.exports = indigo = {
 	render: function(req, res, url, locales) {
 		req.model.locales = locales || indigo.getLocales(req);
 		req.model.req = req;
+		if (url.indexOf('.') === -1) {
+			url += '.html'; //attach default HTML extension
+		}
 		res.render(appdir + getNewURL(req, '/' + req.session.locale + '/' + url), req.model);
 	},
 

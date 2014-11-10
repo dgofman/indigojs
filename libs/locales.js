@@ -14,7 +14,7 @@ module.exports = {
 		defLocale = nconf.get('locales:default') || defLocale;
 		localeMap[defLocale] = { lookup: [] };
 
-		var localeDir = __appDir + nconf.get('locales:directory');
+		var localeDir = __appDir + nconf.get('locales:path');
 		if (fs.existsSync(localeDir)) {
 			var dirs = fs.readdirSync(localeDir);
 			for (var d in dirs) {
@@ -75,7 +75,7 @@ function saveToSession(req, locale) {
 }
 
 function initLocalelookup(nconf) {
-	var file = __appDir + nconf.get('locales:directory') + '/accept-rules.json';
+	var file = __appDir + nconf.get('locales:path') + '/accept-rules.json';
 	if (fs.existsSync(file)) {
 		var customRules = require(file);
 		for (var code in customRules) {

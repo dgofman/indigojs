@@ -20,7 +20,7 @@
 
 	"locales": {
 		"default": "en-us",
-		"directory": "examples/locales"
+		"path": "examples/locales"
 	},
 
 	"routers": [

@@ -3,7 +3,7 @@
 
 	"server": {
 		"port": 8585,
-		"appdir": "/test/web",
+		"appdir": "/examples/web",
 		"session": {
 			"session-key": "indigojs-session",
 			"path": null
@@ -20,15 +20,15 @@
 
 	"locales": {
 		"default": "en-us",
-		"directory": "test/locales",
-		"rules": "test/config/localeRules.json"
+		"directory": "examples/locales",
+		"rules": "examples/config/localeRules.json"
 	},
 
 	"routers": [
-		"test/routers"
+		"examples/routers"
 	],
 
 	"controllers": [
-		"test/controllers"
+		"examples/controllers"
 	]
 }

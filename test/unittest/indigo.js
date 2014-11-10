@@ -5,7 +5,7 @@ var debug = require('debug')('indigo:test'),
 	assert = require('assert'),
 	reqmodel = require(__appDir + '/libs/reqmodel'),
 	nconf = require('nconf').
-				use('file', { file: __appDir + '/test/config/app.json' });
+				use('file', { file: __appDir + '/examples/config/app.json' });
 
 describe('Testing indigo.js', function () {
 
@@ -26,7 +26,7 @@ describe('Testing indigo.js', function () {
 				}
 			},res = {
 				render: function(url, model) {
-					assert.equal(url, __appDir + 'test/web/en-gb/login');
+					assert.equal(url, __appDir + 'examples/web/en-gb/login');
 					assert.equal(model.environment, 'dev');
 					assert.equal(model.locality.locale, 'en-gb');
 					assert.equal(model.locality.langugage, 'en');

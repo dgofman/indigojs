@@ -2,6 +2,7 @@
 
 var debug = require('debug')('indigo:locales'),
 	fs = require('fs'),
+	rules = require('./locales/accept-rules.json'),
 	defLocale = 'en-us',
 	localeMap = {};
 
@@ -13,7 +14,7 @@ module.exports = {
 		defLocale = nconf.get('locales:default') || defLocale;
 		localeMap[defLocale] = { lookup: [] };
 
-		var localeDir = __appDir + nconf.get('locales:directory') ;
+		var localeDir = __appDir + nconf.get('locales:directory');
 		if (fs.existsSync(localeDir)) {
 			var dirs = fs.readdirSync(localeDir);
 			for (var d in dirs) {
@@ -74,28 +75,33 @@ function saveToSession(req, locale) {
 }
 
 function initLocalelookup(nconf) {
-	if (nconf.get('locales:rules')) {
-		var rules = require(__appDir + nconf.get('locales:rules'));
-		for (var code in rules) {
-			var target = localeMap[code] = localeMap[code] || { lookup: [] };
+	var file = __appDir + nconf.get('locales:directory') + '/accept-rules.json';
+	if (fs.existsSync(file)) {
+		var customRules = require(file);
+		for (var code in customRules) {
+			rules[code] = customRules[code];
+		}
+	}
 
-			var lookup = rules[code];
-			target.lookup = target.lookup.concat(lookup);
+	for (code in rules) {
+		var target = localeMap[code] = localeMap[code] || { lookup: [] };
 
-			for (var index in lookup) {
-				var locale = lookup[index],
-					source = localeMap[locale] || { lookup: [] };	
+		var lookup = rules[code];
+		target.lookup = target.lookup.concat(lookup);
 
-				for (var name in source) {
-					if (!target[name]) {
-					 	target[name] = source[name];
-					} else { //copy only missing key/values
-					 	for (var key in source[name]) {
-					 		if (!target[name][key]) {
-					 			 target[name][key] = source[name][key];
-					 		}
-					 	}
-					}
+		for (var index in lookup) {
+			var locale = lookup[index],
+				source = localeMap[locale] || { lookup: [] };	
+
+			for (var name in source) {
+				if (!target[name]) {
+				 	target[name] = source[name];
+				} else { //copy only missing key/values
+				 	for (var key in source[name]) {
+				 		if (!target[name][key]) {
+				 			 target[name][key] = source[name][key];
+				 		}
+				 	}
 				}
 			}
 		}

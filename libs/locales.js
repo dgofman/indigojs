@@ -33,7 +33,6 @@ module.exports = {
 			}
 
 			initLocalelookup(nconf);
-			localeMap[defLocale].lookup.push(defLocale);
 		}
 	},
 
@@ -83,7 +82,7 @@ function initLocalelookup(nconf) {
 		}
 	}
 
-	for (code in rules) {
+	function traverse(code) {
 		var target = localeMap[code] = localeMap[code] || { lookup: [] };
 
 		var lookup = rules[code];
@@ -91,7 +90,18 @@ function initLocalelookup(nconf) {
 
 		for (var index in lookup) {
 			var locale = lookup[index],
-				source = localeMap[locale] || { lookup: [] };	
+				source = localeMap[locale];
+
+			if (!source) {
+				source = traverse(locale);
+			}
+
+			for (var i in source.lookup) {
+				locale = source.lookup[i];
+				if (target.lookup.indexOf(locale) === -1) {
+					target.lookup.push(locale);
+				}
+			}
 
 			for (var name in source) {
 				if (!target[name]) {
@@ -105,5 +115,11 @@ function initLocalelookup(nconf) {
 				}
 			}
 		}
+
+		return target;
+	}
+
+	for (code in rules) {
+		traverse(code);
 	}
 }

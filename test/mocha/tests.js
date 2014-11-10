@@ -5,6 +5,6 @@ var indigo = require('../../indigo'),
 				use('file', { file: __appDir + '/examples/config/app.json' });
 
 indigo.start(nconf, function() {
-	require('./indigo');
-	require('./account');
+	require('./routers');
+	require('./controllers');
 });

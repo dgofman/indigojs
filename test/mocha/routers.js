@@ -3,7 +3,7 @@
 var superagent = require('superagent'),
 	assert = require('assert');
 
-describe('Testing Account Pages', function () {
+describe('Testing Account Routers', function () {
 
 	it('should request to US login page', function(done){
 		superagent.get('http://localhost:8585/account/us/login')
@@ -29,6 +29,16 @@ describe('Testing Account Pages', function () {
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 302);
 				assert.equal(res.headers['location'], '/default/js/account/models/userModel.js');
+				done();
+		});
+	});
+
+	it('should test template redirect', function(done){
+		superagent.get('http://localhost:8585/indigo/account/ru/templates/login')
+			.redirects(0)
+			.end(function(err, res) {
+				assert.equal(res.statusCode, 302);
+				assert.equal(res.headers['location'], '/default/templates/account/login.html');
 				done();
 		});
 	});

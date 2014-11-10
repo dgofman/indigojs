@@ -46,7 +46,6 @@ module.exports = indigo = {
 			var url = '/' + req.session.locale + '/templates/' + req.params.routerPath + '/' + req.params.pageId + '.html',
 				newUrl = getNewURL(req, url);
 			debug('url=%s redirect=%s', url, newUrl);
-			console.log('url=%s redirect=%s', url, newUrl);
 			res.redirect(newUrl);
 		})
 

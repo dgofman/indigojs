@@ -17,5 +17,10 @@ module.exports = function(router, next) {
 		next();
 	});
 
-	return '/account'; //pass URL path
+	return {
+		'path': '/account',
+		'controllers': [
+			'examples/controllers'
+		]
+	};
 };

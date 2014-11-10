@@ -25,9 +25,5 @@
 
 	"routers": [
 		"examples/routers"
-	],
-
-	"controllers": [
-		"examples/controllers"
 	]
 }

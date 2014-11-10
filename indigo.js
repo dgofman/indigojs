@@ -1,9 +1,10 @@
 'use strict';
 
-var express = require('express'),
-	debug = require('debug')('indigo:main'),
+var debug = require('debug')('indigo:main'),
+	express = require('express'),
 	ejs = require('ejs'),
-	fs = require('fs');
+	fs = require('fs'),
+	routers = require('./libs/routers');
 
 var reqModel,
 	appdir, portNumber,
@@ -49,23 +50,7 @@ module.exports = indigo = {
 			res.redirect(newUrl);
 		});
 
-		// dynamically include routers
-		loadModule('routers', nconf, function(route) {
-			var router = express.Router(),
-				next = function() {},
-				path = null;
-
-			router.use(routerRedirectListener);
-			path = route(router, next);
-			app.use(path, router);
-
-			debug('router::path - %s', path);
-
-			// dynamically include controllers
-			loadModule('controllers', nconf, function(controller) {
-				controller(router, next);
-			});
-		});
+		routers.init(app, nconf, routerRedirectListener);
 
 		app.locals.url = function(req, url) {
 			var newUrl = getNewURL(req, '/' + req.session.locale + '/' + url);
@@ -143,16 +128,4 @@ function routerRedirectListener(req, res, next) {
 	}
 
 	next();
-}
-
-function loadModule(name, nconf, callback) {
-	var dirs = nconf.get(name) || (fs.lstatSync('./' + name).isDirectory() ? ['./' + name] : []);
-	for (var index in dirs) {
-		var dir = __dirname + '/'+ dirs[index];
-		fs.readdirSync(dir).forEach(function (file) {
-			if(file.substr(-3) === '.js') {
-				callback(require(dir + '/' + file.split('.')[0]));
-			}
-		});
-	}
 }

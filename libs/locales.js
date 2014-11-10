@@ -41,12 +41,7 @@ module.exports = {
 
 	init: function(req, locale) {
 		setLocale(req, locale);
-		return localeMap[req.session.locale];
-	},
-
-	apply: function(req, fileName) {
-		var locale = localeMap[req.session.locale] || localeMap[defLocale];
-		return req.model.locales[fileName] = locale[fileName];
+		return localeMap[req.session.locale] || localeMap[defLocale];
 	}
 };
 

@@ -47,7 +47,7 @@ module.exports = indigo = {
 				newUrl = getNewURL(req, url);
 			debug('url=%s redirect=%s', url, newUrl);
 			res.redirect(newUrl);
-		})
+		});
 
 		// dynamically include routers
 		loadModule('routers', nconf, function(route) {

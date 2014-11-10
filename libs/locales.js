@@ -2,7 +2,6 @@
 
 var debug = require('debug')('indigo:locales'),
 	fs = require('fs'),
-	logger = require('./logger'),
 	defLocale = 'en-us',
 	localeMap = {};
 

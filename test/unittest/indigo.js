@@ -16,7 +16,7 @@ describe('Testing indigo.js', function () {
 		done();
 	});
 
-	it('should accept UK language as default locale', function (done) {
+	it('should be UK language from req.headers', function (done) {
 
 		var req = {
 				session: {},
@@ -26,7 +26,7 @@ describe('Testing indigo.js', function () {
 				}
 			},res = {
 				render: function(url, model) {
-					assert.equal(url, __appDir + 'test/web/default/templates/account/login.html');
+					assert.equal(url, __appDir + 'test/web/en-gb/login');
 					assert.equal(model.environment, 'dev');
 					assert.equal(model.locality.locale, 'en-gb');
 					assert.equal(model.locality.langugage, 'en');
@@ -37,12 +37,15 @@ describe('Testing indigo.js', function () {
 
 		indigo.init(nconf);
 
-		indigo.render(req, res, 'account', 'login');
+		indigo.render(req, res, 'login');
 	});
 
 	it('should test US locale', function (done) {
 
 		var req = {
+				params: {
+					locale: 'us'
+				},
 				session: {},
 				model: reqmodel(nconf),
 				headers: {
@@ -59,12 +62,16 @@ describe('Testing indigo.js', function () {
 
 		indigo.init(nconf);
 
-		indigo.render(req, res, 'account', 'login', 'us');
+		indigo.render(req, res, 'login');
 	});
 
 	it('should test RU locale', function (done) {
 
-		var req = {
+		var locales = null,
+			req = {
+				params: {
+					countryCode: 'ru'
+				},
 				session: {},
 				model: reqmodel(nconf),
 				headers: {
@@ -74,14 +81,16 @@ describe('Testing indigo.js', function () {
 				render: function(url, model) {
 					assert.equal(model.locality.locale, 'ru');
 					assert.equal(model.locality.langugage, 'ru');
-					assert.equal(model.locales.account.greeting, 'Здравствуйте');
+					assert.equal(locales.account.greeting, 'Здравствуйте');
 					done();
 				}
 			};
 
 		indigo.init(nconf);
 
-		indigo.render(req, res, 'account', 'login', 'ru');
+		locales = indigo.getLocales(req, 'countryCode'); //req.params.countryCode
+
+		indigo.render(req, res, 'login', locales);
 	});
 
 	it('should test default error 400', function (done) {

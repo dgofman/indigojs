@@ -74,10 +74,10 @@ module.exports = indigo = {
 		logger.info('Server is running on port %s', portNumber);
 	},
 
-	render: function(req, res, templateUrl, locales) {
+	render: function(req, res, url, locales) {
 		req.model.locales = locales || indigo.getLocales(req);
 		req.model.req = req;
-		res.render(appdir + getNewURL(req, '/' + req.session.locale + '/' + templateUrl), req.model);
+		res.render(appdir + getNewURL(req, '/' + req.session.locale + '/' + url), req.model);
 	},
 
 	error: function(req, res, errorKey, errorCode) {
@@ -86,7 +86,8 @@ module.exports = indigo = {
 	},
 
 	getLocales: function(req, paramName) {
-		return locales.init(req, req.params[paramName || 'locale'])
+		req.params = req.params || {};
+		return locales.init(req, req.params[paramName || 'locale']);
 	}
 };
 

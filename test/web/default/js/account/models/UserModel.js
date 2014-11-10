@@ -12,7 +12,7 @@ define([
 		message.html(''); //clean old messages
 
 		var user = new UserModel();
-		user.url = url || '/login';
+		user.url = '/account' + (url || '/login');
 
 		user.save(data, {
           success : function(model, response, options) {

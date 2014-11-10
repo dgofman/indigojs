@@ -3,7 +3,6 @@
 
 	"server": {
 		"port": 8585,
-		"uri": "/indigo",
 		"appdir": "/test/web",
 		"session": {
 			"session-key": "indigojs-session",
@@ -25,11 +24,11 @@
 		"rules": "test/config/localeRules.json"
 	},
 
-	"controllers": [
-		"test/controllers"
+	"routers": [
+		"test/routers"
 	],
 
-	"templates": [
-		"test/templates"
+	"controllers": [
+		"test/controllers"
 	]
 }

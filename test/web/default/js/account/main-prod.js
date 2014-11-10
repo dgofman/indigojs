@@ -11,9 +11,8 @@ require.config({
 	    text: '../vendor/require-text-2.0.12',
 
 	    //Templates
-	    login: '/templates/account/login',
-	    reset: '/templates/account/reset',
-	    forgot: '/templates/account/forgot'
+	    login: '../../templates/login',
+		reset: '../../templates/reset'
 	},
 
 	shim: {

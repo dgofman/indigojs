@@ -5,17 +5,10 @@ var indigo = require('../../indigo'),
 
 var users = require('../models/account').users;
 
-module.exports = function(app, uri, next) {
-
-	//HTML/templates renderer
-	app.get(uri + '/:locale/login', function(req, res) {
-		req.model.jsDir = 'account';
-		indigo.render(req, res, 'account', 'login_html', req.params.locale);
-		next();
-	});
+module.exports = function(router, next) {
 
 	//REST calls
-	app.post('/login', function(req, res) {
+	router.post('/login', function(req, res) {
 		logger.debug('post login::login', req.body.email);
 
 		var user = users[req.body.email];
@@ -26,7 +19,7 @@ module.exports = function(app, uri, next) {
 	  	next();
 	});
 
-	app.post('/reset', function(req, res) {
+	router.post('/reset', function(req, res) {
 		logger.debug('post login::reset', req.body.email);
 
 		var user = users[req.body.email];

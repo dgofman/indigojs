@@ -20,21 +20,22 @@ test-unit:
 		--reporter $(REPORTER) \
 		$(MOCHA_OPTS)
 
-test-mocha:
+test-mocha: killnode
 	@NODE_ENV=test $(MOCHA) \
 		test/mocha \
 		--reporter $(REPORTER) \
 		$(MOCHA_OPTS)
 
-account:
-	killall -9 node || true
+account: killnode
 	node examples/account/index.js </dev/null &
 	open "http://localhost:8585/account/us/login"
 
-helloworld:
-	killall -9 node || true
+helloworld: killnode
 	node examples/helloworld/index.js </dev/null &
 	open "http://localhost:8686/helloworld/us/index"
+
+killnode:
+	killall -9 node || true
 
 lint:
 	$(JSHINT) . --config $(BASE)/.jshintrc

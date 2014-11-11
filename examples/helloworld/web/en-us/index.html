@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="<%= locality.langugage %>">
+<head>
+<%- url(req, 'templates/head.html') %>
+</head>
+
+<body>
+	<div id="wrap">
+		<div class="page">
+			<div class="wrapper">
+				<h1><%= locales.common.head %></h1>
+			</div>
+			
+			<%- url(req, 'templates/footer.html') %>
+		</div>
+	</div>
+</body>
+</html>

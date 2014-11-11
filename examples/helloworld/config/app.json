@@ -1,0 +1,16 @@
+{
+	"environment": "dev",
+
+	"server": {
+		"port": 8686,
+		"appdir": "/examples/helloworld/web"
+	},
+
+	"locales": {
+		"path": "examples/helloworld/locales"
+	},
+	
+	"routers": [
+		"examples/helloworld/routers"
+	]
+}

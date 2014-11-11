@@ -10,9 +10,10 @@ module.exports = {
 
 		// dynamically include routers
 		var routers = nconf.get('routers');
-		if (!routers && fs.lstatSync('routers').isDirectory()) {
-			routers =  ['./routers'];
+		if (!routers) {
+			routers =  ['routers'];
 		}
+
 		loadModule(routers, function(route, file) {
 			var router = express.Router(),
 				next = function() {},
@@ -24,11 +25,7 @@ module.exports = {
 			if (typeof params === 'string') {
 				path = params;
 			} else {
-				path = params.path;
-			}
-
-			if (!path) {
-				throw new Error('Invalid the router path in: %s', file);
+				path = params.path || '/';
 			}
 
 			app.use(path, router);
@@ -46,7 +43,7 @@ module.exports = {
 function loadModule(dirs, callback) { 
 	for (var index in dirs) {
 		var dir = __appDir + dirs[index];
-		if (fs.lstatSync(dir).isDirectory()) {
+		if (fs.existsSync(dir) && fs.lstatSync(dir).isDirectory()) {
 			fs.readdirSync(dir).forEach(function (file) {
 				if(file.substr(-3) === '.js') {
 					callback(require(dir + '/' + file.split('.')[0]), dir + '/' + file);

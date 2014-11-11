@@ -7,4 +7,5 @@ var indigo = require('../../indigo'),
 indigo.start(nconf, function() {
 	require('./indigo');
 	require('./libs/session');
+	require('./libs/routers');
 });

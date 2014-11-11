@@ -1,9 +1,21 @@
 'use strict';
 
 var superagent = require('superagent'),
-	assert = require('assert');
+	assert = require('assert'),
+	indigo = require('../../indigo');
 
 describe('Testing Account Routers', function () {
+
+	before(function (done) {
+		var nconf = require('nconf').
+				use('file', { file: __appDir +  '/examples/account/config/app.json' });
+		indigo.start(nconf);
+		done();
+	});
+
+	after(function(done) {
+		indigo.close(done);
+	});
 
 	it('should request to US login page', function(done){
 		superagent.get('http://localhost:8585/account/us/login')

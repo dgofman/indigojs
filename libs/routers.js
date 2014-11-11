@@ -14,7 +14,7 @@ module.exports = {
 			routers =  ['routers'];
 		}
 
-		loadModule(routers, function(route, file) {
+		loadModule(routers, function(route) {
 			var router = express.Router(),
 				next = function() {},
 				path, params;
@@ -46,7 +46,7 @@ function loadModule(dirs, callback) {
 		if (fs.existsSync(dir) && fs.lstatSync(dir).isDirectory()) {
 			fs.readdirSync(dir).forEach(function (file) {
 				if(file.substr(-3) === '.js') {
-					callback(require(dir + '/' + file.split('.')[0]), dir + '/' + file);
+					callback(require(dir + '/' + file.split('.')[0]));
 				}
 			});
 		}

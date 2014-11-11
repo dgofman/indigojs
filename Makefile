@@ -11,18 +11,30 @@ main: clean lint test-unit test-mocha
 
 cover: clean
 	$(ISTANBUL) cover $(UMOCHA) \
-		test/unittest/tests.js \
-		test/mocha/tests.js
+		test/mocha \
+		test/unittest
 
 test-unit:
-	@NODE_ENV=test $(UMOCHA) test/unittest \
+	@NODE_ENV=test $(UMOCHA) \
+		test/unittest \
 		--reporter $(REPORTER) \
 		$(MOCHA_OPTS)
 
 test-mocha:
-	@NODE_ENV=test $(MOCHA) test/mocha \
+	@NODE_ENV=test $(MOCHA) \
+		test/mocha \
 		--reporter $(REPORTER) \
 		$(MOCHA_OPTS)
+
+account:
+	killall -9 node || true
+	node examples/account/index.js </dev/null &
+	open "http://localhost:8585/account/us/login"
+
+helloworld:
+	killall -9 node || true
+	node examples/helloworld/index.js </dev/null &
+	open "http://localhost:8686/helloworld/us/index"
 
 lint:
 	$(JSHINT) . --config $(BASE)/.jshintrc

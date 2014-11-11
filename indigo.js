@@ -6,7 +6,7 @@ var debug = require('debug')('indigo:main'),
 	fs = require('fs'),
 	routers = require('./libs/routers');
 
-var reqModel,
+var reqModel, http,
 	appdir, portNumber,
 	logger, locales, indigo;
 
@@ -27,7 +27,7 @@ module.exports = indigo = {
 		locales.config(nconf); //initialize locales
 	},
 
-	start: function(nconf, next) {
+	start: function(nconf) {
 
 		this.init(nconf);
 
@@ -66,12 +66,14 @@ module.exports = indigo = {
 		app.set('views', appdir);
 
 		// Start the server
-		app.listen(portNumber);
-		logger.info('Server is running on port %s', portNumber);
+		http = require('http').createServer(app);
+		http.listen(portNumber, function() {
+			logger.info('Server is running on port %s', portNumber);
+		});
+	},
 
-		if (next) {
-			next();
-		}
+	close: function(done) {
+		http.close(done);
 	},
 
 	render: function(req, res, url, locales) {

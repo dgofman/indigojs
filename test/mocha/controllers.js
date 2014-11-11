@@ -2,9 +2,21 @@
 
 var superagent = require('superagent'),
 	assert = require('assert'),
-	users = require('../../examples/account/models/account').users;
+	users = require('../../examples/account/models/account').users,
+	indigo = require('../../indigo');
 
 describe('Testing Account Controllers', function () {
+
+	before(function (done) {
+		var nconf = require('nconf').
+				use('file', { file: __appDir +  '/examples/account/config/app.json' });
+		indigo.start(nconf);
+		done();
+	});
+
+	after(function(done) {
+		indigo.close(done);
+	});
 
 	var userEmail = 'user@indigo.js',
 		userDetails = users[userEmail].details,

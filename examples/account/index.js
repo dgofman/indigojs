@@ -2,7 +2,7 @@
 
 (function() {
 
-	var indigo = require('../indigo'),
+	var indigo = require('../../indigo'),
 		nconf = require('nconf').
 					use('file', { file: __dirname + '/config/app.json' });
 

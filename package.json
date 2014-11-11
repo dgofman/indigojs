@@ -5,7 +5,7 @@
   "main": "indigo.js",
   "scripts": {
     "test": "make test-unit",
-    "start": "nodemon --debug examples/index.js"
+    "start": "nodemon --debug examples/account/index.js"
   },
   "homepage": "https://github.com/dgofman/indigojs.git",
   "author": "David Gofman",

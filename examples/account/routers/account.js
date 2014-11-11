@@ -1,6 +1,6 @@
 'use strict';
 
-var indigo = require('../../indigo');
+var indigo = require('../../../indigo');
 
 module.exports = function(router, next) {
 
@@ -20,7 +20,7 @@ module.exports = function(router, next) {
 	return {
 		'path': '/account',
 		'controllers': [
-			'examples/controllers'
+			'examples/account/controllers'
 		]
 	};
 };

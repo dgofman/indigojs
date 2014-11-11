@@ -1,3 +1,3 @@
-examples/web/*/js/vendor
+examples/**/*/vendor
 node_modules
 coverage

@@ -1,6 +1,6 @@
 'use strict';
 
-var indigo = require('../../indigo'),
+var indigo = require('../../../indigo'),
 	debug = require('debug')('indigo:account');
 
 var users = require('../models/account').users;

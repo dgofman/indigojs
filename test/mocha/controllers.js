@@ -2,7 +2,7 @@
 
 var superagent = require('superagent'),
 	assert = require('assert'),
-	users = require('../../examples/models/account').users;
+	users = require('../../examples/account/models/account').users;
 
 describe('Testing Account Controllers', function () {
 

@@ -9,7 +9,7 @@ UMOCHA = ./node_modules/.bin/_mocha
 
 main: clean lint test-unit test-mocha
 
-cover: clean
+cover: clean killnode
 	$(ISTANBUL) cover $(UMOCHA) \
 		test/mocha \
 		test/unittest

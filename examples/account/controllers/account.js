@@ -13,10 +13,10 @@ module.exports = function(router, next) {
 
 		var user = users[req.body.email];
 		if (user && user.password === req.body.password) {
-	  		return res.json(user.details);
-	  	}
-	  	indigo.error(req, res, 'invalidEmailOrPassword');
-	  	next();
+			return res.json(user.details);
+		}
+		indigo.error(req, res, 'invalidEmailOrPassword');
+		next();
 	});
 
 	router.post('/reset', function(req, res) {
@@ -24,9 +24,9 @@ module.exports = function(router, next) {
 
 		var user = users[req.body.email];
 		if (user) {
-	  		return res.json(user.details);
-	  	}
-	  	indigo.error(req, res, 'invalidAccount');
-	  	next();
+			return res.json(user.details);
+		}
+		indigo.error(req, res, 'invalidAccount');
+		next();
 	});
 };

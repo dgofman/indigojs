@@ -1,23 +1,23 @@
 {
-      "users": {
-            "admin@indigo.js": {
-                  "password": "12345",
-                  "details": {
-                        "email": "admin@indigo.js",
-                        "first": "Test",
-                        "last": "Admin",
-                        "role": "admin"
-                  }
-            },
+	"users": {
+		"admin@indigo.js": {
+			"password": "12345",
+			"details": {
+				"email": "admin@indigo.js",
+				"first": "Test",
+				"last": "Admin",
+				"role": "admin"
+			}
+		},
 
-            "user@indigo.js": {
-                  "password": "12345",
-                  "details": {
-                        "email": "user@indigo.js",
-                        "first": "Test",
-                        "last": "User",
-                        "role": "user"
-                  }
-            }
-      }
+		"user@indigo.js": {
+			"password": "12345",
+			"details": {
+				"email": "user@indigo.js",
+				"first": "Test",
+				"last": "User",
+				"role": "user"
+			}
+		}
+	}
 }

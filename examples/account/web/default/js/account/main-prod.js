@@ -8,10 +8,10 @@ require.config({
 		backbone: '../vendor/backbone-1.1.2.min',
 
 		// Require.js plugins for loading templates
-	    text: '../vendor/require-text-2.0.12',
+		text: '../vendor/require-text-2.0.12',
 
-	    //Templates
-	    login: '../../templates/login',
+		//Templates
+		login: '../../templates/login',
 		reset: '../../templates/reset'
 	},
 
@@ -24,8 +24,8 @@ require.config({
 
 // Let's kick off the application
 require([
-'router/AccountRouter',
-'bootstrap'
+	'router/AccountRouter',
+	'bootstrap'
 ], function(AccountRouter){
 	AccountRouter.initialize();
 });

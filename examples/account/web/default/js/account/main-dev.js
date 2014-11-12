@@ -24,8 +24,8 @@ require.config({
 
 // Let's kick off the application
 require([
-'router/AccountRouter',
-'bootstrap'
+	'router/AccountRouter',
+	'bootstrap'
 ], function(AccountRouter){
 	AccountRouter.initialize();
 });

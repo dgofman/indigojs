@@ -8,7 +8,7 @@ require.config({
 
 // Let's kick off the application
 require([
-'views/HelloWorldView'
+	'views/HelloWorldView'
 ], function(HelloWorldView){
 	HelloWorldView.initialize();
 });

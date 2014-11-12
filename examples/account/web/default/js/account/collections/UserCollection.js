@@ -1,12 +1,12 @@
 'use strict';
 
 define([
-  'backbone',
-  'models/UserModel'
+	'backbone',
+	'models/UserModel'
 ], function(Backbone, User){
-  var UserCollection = Backbone.Collection.extend({
-    model: User,
-    url: '/login'
-  });
-  return UserCollection;
+	var UserCollection = Backbone.Collection.extend({
+		model: User,
+		url: '/login'
+	});
+	return UserCollection;
 });

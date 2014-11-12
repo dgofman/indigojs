@@ -53,7 +53,7 @@ module.exports = indigo = {
 		routers.init(app, nconf, routerRedirectListener);
 
 		app.locals.url = function(req, url) {
-			var newUrl = getNewURL(req, '/' + req.session.locale + '/' + url);
+			var newUrl = getNewURL(req, '/' + req.session.locale + '/' + url, '/' + url);
 			debug('%s -> %s', url, newUrl);
 			return ejs.render(fs.readFileSync(appdir + newUrl, 'utf-8'), req.model);
 		};
@@ -82,7 +82,7 @@ module.exports = indigo = {
 		if (url.indexOf('.') === -1) {
 			url += '.html'; //attach default HTML extension
 		}
-		res.render(appdir + getNewURL(req, '/' + req.session.locale + '/' + url), req.model);
+		res.render(appdir + getNewURL(req, '/' + req.session.locale + '/' + url, '/' + url), req.model);
 	},
 
 	error: function(req, res, errorKey, errorCode) {
@@ -96,7 +96,7 @@ module.exports = indigo = {
 	}
 };
 
-function getNewURL(req, url) {
+function getNewURL(req, url, redirectURL) {
 	if (req.session.locale && !fs.existsSync(appdir + url) && 
 		url.indexOf(req.session.locale) === 1) { //try to get file from another locale directory
 		debug('url=%s locale=%s lookup=%s', url, req.session.locale, req.session.localeLookup);
@@ -107,6 +107,9 @@ function getNewURL(req, url) {
 				return newUrl;
 			}
 		}
+	}
+	if (!fs.existsSync(appdir + url)) {
+		url = redirectURL || req.url || url;
 	}
 	return url;
 }

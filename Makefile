@@ -34,6 +34,10 @@ helloworld: killnode
 	node examples/helloworld/index.js </dev/null &
 	open "http://localhost:8686/helloworld/us/index"
 
+firststep: killnode
+	node examples/firststep/index.js </dev/null &
+	open "http://localhost:8787/firststep/index"
+
 killnode:
 	killall -9 node || true
 

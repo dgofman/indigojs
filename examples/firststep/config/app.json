@@ -1,0 +1,10 @@
+{
+	"server": {
+		"port": 8787,
+		"appdir": "/examples/firststep/web"
+	},
+
+	"routers": [
+		"examples/firststep/routers"
+	]
+}

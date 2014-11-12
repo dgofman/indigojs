@@ -7,6 +7,7 @@
     "test": "make test-unit",
     "account": "nodemon --debug examples/account/index.js",
     "helloworld": "nodemon --debug examples/helloworld/index.js",
+    "firststep": "nodemon --debug examples/firststep/index.js",
     "start": "make account"
   },
   "homepage": "https://github.com/dgofman/indigojs.git",

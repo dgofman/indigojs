@@ -1,21 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= locality.langugage %>">
 <head>
 <%- url(req, 'templates/head.html') %>
-
-<script>
-	var HelloWorld = {
-		text: '<%= locales.common.head %>'
-	};
-</script>
-
 </head>
 
 <body>
 	<div id="wrap">
 		<div class="page">
 			<div class="wrapper">
-				<h1></h1>
+				<h1><%= locales.head %></h1>
 			</div>
 			
 			<%- url(req, 'templates/footer.html') %>

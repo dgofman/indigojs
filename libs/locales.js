@@ -69,6 +69,8 @@ function saveToSession(req, locale) {
 	req.session.locale = req.model.locality.locale = locale;
 	if (localeMap[locale].lookup.length > 0) {
 		req.model.locality.langugage = localeMap[locale].lookup[0].split('-')[0];
+	} else {
+		req.model.locality.langugage = locale.split('-')[0];
 	}
 	req.session.localeLookup = localeMap[locale].lookup.concat('default');
 }

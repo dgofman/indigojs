@@ -11,6 +11,7 @@ Open terminal
 
 4) Open browser copy and paste URL from console
 
+5) Run "make account" / "make helloworld" / "make firststep"
 
 
 Localization

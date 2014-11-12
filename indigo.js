@@ -79,17 +79,10 @@ module.exports = indigo = {
 	render: function(req, res, url, locales) {
 		req.model.locales = locales || indigo.getLocales(req);
 		req.model.req = req;
-
-		if (!req.session.locale) {
-			locales.init(req);
+		if (url.indexOf('.') === -1) {
+			url += '.html'; //attach default HTML extension
 		}
-
-		var newURL = getNewURL(req, '/' + req.session.locale + '/' + url);
-		if (newURL.indexOf('.') === -1) {
-			newURL += '.html'; //attach default HTML extension
-		}
-
-		res.render(appdir + '/' + newURL, req.model);
+		res.render(appdir + getNewURL(req, '/' + req.session.locale + '/' + url, '/' + url), req.model);
 	},
 
 	error: function(req, res, errorKey, errorCode) {
@@ -103,7 +96,7 @@ module.exports = indigo = {
 	}
 };
 
-function getNewURL(req, url, originalURL) {
+function getNewURL(req, url, redirectURL) {
 	if (req.session.locale && !fs.existsSync(appdir + url) && 
 		url.indexOf(req.session.locale) === 1) { //try to get file from another locale directory
 		debug('url=%s locale=%s lookup=%s', url, req.session.locale, req.session.localeLookup);
@@ -116,7 +109,7 @@ function getNewURL(req, url, originalURL) {
 		}
 	}
 	if (!fs.existsSync(appdir + url)) {
-		url = originalURL || req.url || url;
+		url = redirectURL || req.url || url;
 	}
 	return url;
 }

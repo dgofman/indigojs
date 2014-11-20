@@ -1,0 +1,12 @@
+{
+	"environment": "prod",
+
+	"server": {
+		"port": 8888,
+		"appdir": "/tools/localization/web"
+	},
+
+	"routers": [
+		"tools/localization/routers"
+	]
+}

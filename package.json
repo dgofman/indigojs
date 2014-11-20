@@ -30,7 +30,9 @@
 		"pine": "~1.0.0",
 		"nconf": "~0.6.9",
 		"fs": "~0.0.2",
-		"ejs": "~1.0.0"
+		"ejs": "~1.0.0",
+		"socket.io": "~1.2.0",
+		"mongoose": "~3.8.19"
 	},
 	"devDependencies": {
 		"assert": "~1.1.2",

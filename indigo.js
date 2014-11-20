@@ -27,7 +27,7 @@ module.exports = indigo = {
 		locales.config(nconf); //initialize locales
 	},
 
-	start: function(nconf) {
+	start: function(nconf, before, after) {
 
 		this.init(nconf);
 
@@ -67,8 +67,16 @@ module.exports = indigo = {
 
 		// Start the server
 		http = require('http').createServer(app);
+
+		if (before) {
+			before(http, app);
+		}
+
 		http.listen(portNumber, function() {
 			logger.info('Server is running on port %s', portNumber);
+			if (after) {
+				after(http, app);
+			}
 		});
 	},
 

@@ -38,6 +38,10 @@ firststep: killnode
 	node examples/firststep/index.js </dev/null &
 	open "http://localhost:8787/firststep/index"
 
+localetool: killnode
+	node tools/localization/index.js </dev/null &
+	open "http://localhost:8888/localization/index"
+
 killnode:
 	killall -9 node || true
 

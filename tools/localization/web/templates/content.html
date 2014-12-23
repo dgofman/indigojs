@@ -1,0 +1,45 @@
+<div class="container">
+	<div class="row">
+		<span><%= locales.content.appConfig %></span>
+		<input type="file" id="appconf" name="appconf" accept="app.json" placeholder="<%= locales.content.selectApp %>">
+	</div>
+	<div class="row">
+		<span><%= locales.content.filter %></span>
+		<select id="filter"><select>
+	</div>
+	<div class="row">
+		<span><%= locales.content.language %></span>
+		<select id="language"><%= languages %><select>
+	</div>
+	<div class="row jqGridContainer">
+		<table class="jqgrid"></table>
+	</div>
+	<div class="row">
+		<input type="checkbox" class="wordWrap"><%= locales.content.wordWrap %></input>
+		<input type="checkbox" class="preview"><%= locales.content.preview %></input>
+	</div>
+	<div class="row">
+		<div class="col">
+			<span><%= locales.content.default %></span>
+			<div>{{defaultLocale}}<div>
+		</div>
+		<div class="col">
+			<div class="default"><div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<span><%= locales.content.localized %></span>
+			<div>{{selectedLocale}}<div>
+		</div>
+		<div class="col">
+			<textarea class="localized" width="100%" rows="5" wrap="off"></textarea>
+		</div>
+	</div>
+	<div class="row">
+		<span><%= locales.content.saveFile %></span>
+		<input type="text" id="file"/>
+		<button class="btn save"><%= locales.content.save %></button>
+		<button class="btn cancel"><%= locales.content.cancel %></button>
+	</div>
+</div>

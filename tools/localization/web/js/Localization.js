@@ -2,13 +2,52 @@
 
 define([
 	'jquery',
-	'backbone',
+	'angular',
+	'gridController',
 	'socketio'
-], function($, Backbone, io) {
+], function($, angular, gridController, io) {
 
-	var socket = null;
+	var socket = null,
+		localization = function(params) {
+			this.initialize(params);
+			this.div.show();
+		};
 
-	return Backbone.View.extend({
+		localization.prototype = {
+
+			initialize: function(params) {
+				var appName = 'app',
+					gridCntlName = 'gridController',
+					app = angular.module(appName, []);
+
+				app.service('appService', function($rootScope) {
+					return {
+						data: {},
+						set: function(key, value) {
+							this.data[key] = value;
+							$rootScope.$broadcast('appServiceChanged', key);
+						},
+						get: function(key) {
+							return this.data[key];
+						}
+					};
+				});
+
+				this.div = $(params.el);
+
+				this.div.find('.jqGridContainer').attr('ng-controller', gridCntlName);
+				app.controller(gridCntlName, ['appService', '$scope', '$element', gridController]);
+
+				app.run(function($rootScope) {
+				})
+
+				angular.bootstrap(this.div[0], [appName]);
+			}
+		};
+
+		return localization;
+
+	/*return Backbone.View.extend({
 		events: {
 			'click .submit': 'submit'
 		},
@@ -26,5 +65,5 @@ define([
 			e.preventDefault();
 			socket.emit('localize', 'TO DO');
 		}
-	});
+	});*/
 });

@@ -18,7 +18,7 @@ module.exports = function(router, next) {
 	});
 
 	return {
-		'path': '/account',
+		'base': '/account',
 		'controllers': [
 			'examples/account/controllers'
 		]

@@ -17,9 +17,23 @@ module.exports = {
 		loadModule(routers, function(route) {
 			var router = express.Router(),
 				next = function() {},
-				path, params;
+				base, params;
 
 			router.use(redirectListener);
+
+			params = route(router, next) || {};
+			if (typeof params === 'string') {
+				base = params;
+			} else {
+				base = params.base || '/';
+			}
+
+			app.use(base, router);
+
+			Object.defineProperty(router, 'base', {
+				get: function() { return base; },
+				enumerable: true
+			});
 
 			Object.defineProperty(router, 'nconf', {
 				get: function() { return nconf; },
@@ -31,16 +45,7 @@ module.exports = {
 				enumerable: true
 			});
 
-			params = route(router, next) || {};
-			if (typeof params === 'string') {
-				path = params;
-			} else {
-				path = params.path || '/';
-			}
-
-			app.use(path, router);
-
-			debug('router::path - %s, controllers: %s', path, params.controllers);
+			debug('router::base - %s, controllers: %s', base, params.controllers);
 
 			// dynamically include controllers
 			loadModule(params.controllers, function(controller) {

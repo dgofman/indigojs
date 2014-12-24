@@ -2,25 +2,13 @@
 <html lang="<%= locality.langugage %>">
 <head>
 <%- url(req, 'templates/head.html') %>
-
-<link rel="stylesheet" type="text/css" href="../../css/smoothness/jquery-ui.min.css">
-<link rel="stylesheet" type="text/css" href="../../css/ui.jqgrid.css">
-
-<script>
-	window.Localization = {
-		columns: {
-			'key': '<%= locales.content.key %>',
-			'path': '<%= locales.content.path %>',
-			'localized': '<%= locales.content.localized %>'
-		}
-	}
-</script>
-
 </head>
+
 <body>
 	<div id="wrap">
 		<div class="wrapper">
-			<%- url(req, 'templates/content.html') %>
+			<div class="container">
+			</div>
 		</div>
 
 		<%- url(req, 'templates/footer.html') %>

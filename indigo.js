@@ -53,19 +53,9 @@ module.exports = indigo = {
 		routers.init(app, nconf, routerRedirectListener);
 
 		app.locals.url = function(req, url) {
-			if (!req) {
-				console.log(url);
-				return '';
-			}
 			var newUrl = getNewURL(req, '/' + req.session.locale + '/' + url, '/' + url);
 			debug('%s -> %s', url, newUrl);
-			try {
-				return ejs.render(fs.readFileSync(appdir + newUrl, 'utf-8'), req.model);
-			} catch(e) {
-				var code = new Date().getTime();
-				logger.error('Code: ', code, '\n', e.toString());
-				return '<h3>Internal error. Please contact your system administrator</h3><br/>Code: ' + code;
-			}
+			return ejs.render(fs.readFileSync(appdir + newUrl, 'utf-8'), req.model);
 		};
 
 		// Using the .html extension instead of

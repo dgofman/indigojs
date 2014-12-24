@@ -1,14 +1,9 @@
 {
-	"environment": "dev",
+	"environment": "prod",
 
 	"server": {
 		"port": 8888,
 		"appdir": "/tools/localization/web"
-	},
-
-	"locales": {
-		"default": "en-us",
-		"path": "tools/localization/locales"
 	},
 
 	"routers": [

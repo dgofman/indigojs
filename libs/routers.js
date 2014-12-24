@@ -20,17 +20,7 @@ module.exports = {
 				path, params;
 
 			router.use(redirectListener);
-
-			Object.defineProperty(router, 'nconf', {
-				get: function() { return nconf; },
-				enumerable: true
-			});
-
-			Object.defineProperty(router, 'app', {
-				get: function() { return app; },
-				enumerable: true
-			});
-
+			
 			params = route(router, next) || {};
 			if (typeof params === 'string') {
 				path = params;
@@ -44,9 +34,7 @@ module.exports = {
 
 			// dynamically include controllers
 			loadModule(params.controllers, function(controller) {
-				if (typeof(controller) === 'function') {
-					controller(router, next);
-				}
+				controller(router, next);
 			});
 		});
 	}

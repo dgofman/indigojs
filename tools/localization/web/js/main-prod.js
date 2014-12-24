@@ -6,6 +6,8 @@ require.config({
 		angular: '/js/vendor/angular-1.3.8.min',
 		jqGrid: '/js/vendor/jquery.jqGrid-4.7.0.min',
 
+		gridController: '/js/controllers/GridController',
+
 		socketio: '/socket.io/socket.io'
 	},
 

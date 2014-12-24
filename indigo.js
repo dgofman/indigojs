@@ -53,10 +53,6 @@ module.exports = indigo = {
 		routers.init(app, nconf, routerRedirectListener);
 
 		app.locals.url = function(req, url) {
-			if (!req) {
-				console.log(url);
-				return '';
-			}
 			var newUrl = getNewURL(req, '/' + req.session.locale + '/' + url, '/' + url);
 			debug('%s -> %s', url, newUrl);
 			try {

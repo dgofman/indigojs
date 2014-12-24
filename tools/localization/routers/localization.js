@@ -3,7 +3,7 @@
 module.exports = function(router, next) {
 
 	return {
-		'path': '/localization',
+		'base': '/localization',
 		'controllers': [
 			'tools/localization/controllers'
 		]

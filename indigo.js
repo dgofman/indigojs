@@ -4,32 +4,47 @@ var debug = require('debug')('indigo:main'),
 	express = require('express'),
 	ejs = require('ejs'),
 	fs = require('fs'),
+	path = require('path'),
 	routers = require('./libs/routers');
 
 var reqModel, http,
 	appdir, portNumber,
 	logger, locales, indigo;
 
-global.__appDir = __dirname + '/'; 
+global.__appDir = path.dirname(require.main.filename) + '/'; 
+
+debug('__appDir: %s', __appDir);
 
 module.exports = indigo = {
 
 	init: function(nconf) {
-		this.locales = locales = require('./libs/locales');
-		this.logger = logger = require(nconf.get('logger:path') || './libs/logger')(nconf);
+		if (typeof(nconf) === 'string') { //path to app.json
+			debug('indigo::init nconf - %s', nconf);
+			nconf = require('nconf').
+					use('file', { file: nconf });
+		}
 
-		reqModel = JSON.stringify(
-				require(nconf.get('server:reqmodel:path') || './libs/reqmodel')(nconf));
+		if (!appdir) {
+			appdir = __dirname + nconf.get('server:appdir');
 
-		appdir = __dirname + nconf.get('server:appdir');
-		portNumber = Number(process.env.PORT || nconf.get('server:port'));
+			this.locales = locales = require('./libs/locales');
+			this.logger = logger = require(nconf.get('logger:path') || './libs/logger')(nconf);
+			this.debug = require('debug');
 
-		locales.config(nconf); //initialize locales
+			reqModel = JSON.stringify(
+					require(nconf.get('server:reqmodel:path') || './libs/reqmodel')(nconf));
+
+			portNumber = Number(process.env.PORT || nconf.get('server:port'));
+
+			locales.config(nconf); //initialize locales
+		}
+
+		return nconf;
 	},
 
 	start: function(nconf, before, after) {
 
-		this.init(nconf);
+		nconf = this.init(nconf);
 
 		var app = this.app = express();
 

@@ -14,6 +14,8 @@ module.exports = {
 			routers =  ['routers'];
 		}
 
+		debug('router::routers', routers);
+
 		loadModule(routers, function(route) {
 			var router = express.Router(),
 				next = function() {},
@@ -60,6 +62,7 @@ module.exports = {
 function loadModule(dirs, callback) { 
 	for (var index in dirs) {
 		var dir = __appDir + dirs[index];
+		debug('router::dir - %s', dir);
 		if (fs.existsSync(dir) && fs.lstatSync(dir).isDirectory()) {
 			fs.readdirSync(dir).forEach(function (file) {
 				if(file.substr(-3) === '.js') {

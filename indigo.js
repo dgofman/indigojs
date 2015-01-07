@@ -4,14 +4,13 @@ var debug = require('debug')('indigo:main'),
 	express = require('express'),
 	ejs = require('ejs'),
 	fs = require('fs'),
-	path = require('path'),
 	routers = require('./libs/routers');
 
 var reqModel, http,
 	appdir, portNumber,
 	logger, locales, indigo;
 
-global.__appDir = path.dirname(require.main.filename) + '/'; 
+global.__appDir = process.cwd() + '/'; 
 
 debug('__appDir: %s', __appDir);
 
@@ -24,20 +23,27 @@ module.exports = indigo = {
 					use('file', { file: nconf });
 		}
 
-		if (!appdir) {
-			appdir = __dirname + nconf.get('server:appdir');
+		appdir = __appDir + nconf.get('server:appdir');
 
-			this.locales = locales = require('./libs/locales');
-			this.logger = logger = require(nconf.get('logger:path') || './libs/logger')(nconf);
-			this.debug = require('debug');
+		this.locales = locales = require('./libs/locales');
+		this.logger = logger = require(nconf.get('logger:path') || './libs/logger')(nconf);
+		this.debug = require('debug');
 
-			reqModel = JSON.stringify(
-					require(nconf.get('server:reqmodel:path') || './libs/reqmodel')(nconf));
+		var service = require(nconf.get('service:path') || './libs/rest')(nconf);
 
-			portNumber = Number(process.env.PORT || nconf.get('server:port'));
-
-			locales.config(nconf); //initialize locales
+		if (!this.service) {
+			Object.defineProperty(this, 'service', {
+				get: function() { return Object.create(service); },
+				enumerable: true
+			});
 		}
+
+		reqModel = JSON.stringify(
+				require(nconf.get('server:reqmodel:path') || './libs/reqmodel')(nconf));
+
+		portNumber = Number(process.env.PORT || nconf.get('server:port'));
+
+		locales.config(nconf); //initialize locales
 
 		return nconf;
 	},
@@ -105,13 +111,13 @@ module.exports = indigo = {
 		http.close(done);
 	},
 
-	render: function(req, res, url, locales) {
+	render: function(req, res, fileName, locales) {
 		req.model.locales = locales || indigo.getLocales(req);
 		req.model.req = req;
-		if (url.indexOf('.') === -1) {
-			url += '.html'; //attach default HTML extension
+		if (fileName.indexOf('.') === -1) {
+			fileName += '.html'; //attach default HTML extension
 		}
-		res.render(appdir + getNewURL(req, '/' + req.session.locale + '/' + url, '/' + url), req.model);
+		res.render(appdir + getNewURL(req, '/' + req.session.locale + '/' + fileName, '/' + fileName), req.model);
 	},
 
 	error: function(req, res, errorKey, errorCode) {

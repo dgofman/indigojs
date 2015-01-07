@@ -4,6 +4,12 @@
 		"appdir": "/examples/firststep/web"
 	},
 
+	"service": {
+		"host": "localhost",
+		"port": 8787,
+		"secure": false
+	},
+
 	"routers": [
 		"examples/firststep/routers"
 	]

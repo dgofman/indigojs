@@ -50,7 +50,7 @@ module.exports = indigo = {
 
 	start: function(nconf, before, after) {
 
-		nconf = this.init(nconf);
+		this.nconf = nconf = this.init(nconf);
 
 		var app = this.app = express();
 

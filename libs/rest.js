@@ -8,6 +8,11 @@ var debug = require('debug')('indigo:rest'),
 module.exports = function service(nconf) {
 
 	return {
+		headers: {
+			'Accept-Encoding': 'gzip, deflate',
+			'Cache-Control': 'no-cache',
+			'Content-Type': 'text/plain;charset=UTF-8'
+		},
 		init: function(host, port, secure) {
 			this.host = host;
 			this.port = port;
@@ -37,26 +42,22 @@ module.exports = function service(nconf) {
 		},
 		request: function(method, path, data, callback) {
 
-			var headers = {},
-				content = JSON.stringify(data);
+			var content = data ? JSON.stringify(data) || '' : '';
+
+			this.headers['Content-Length'] = content.length;
 
 			if (method === 'GET') {
 				path += '?' + querystring.stringify(data);
-			} else {
-				headers = {
-					'Content-Type': 'application/json',
-					'Content-Length': content.length
-				};
 			}
 
-			var server, 
+			var server, req,
 				secure = nconf.get('service:secure'),
 				options = {
 					host: this.getHost(),
 					port: this.getPort(),
 					method: method,
 					path: path,
-					headers: headers
+					headers: this.headers
 				};
 
 			if (this.secure !== undefined) {
@@ -70,7 +71,7 @@ module.exports = function service(nconf) {
 			debug('options -> %s', JSON.stringify(options, null, 2));
 			debug('is HTTPS -> %s', server === https);
 
-			var req = server.request(options, function(res) {
+			req = server.request(options, function(res) {
 				var responseString = '';
 				res.setEncoding('utf-8');
 
@@ -82,13 +83,16 @@ module.exports = function service(nconf) {
 					try {
 						callback(null, JSON.parse(responseString), req, res);
 					} catch (e) {
-						callback(e, null, req, res);
+						debug('parse error - %s', e.message);
+						debug('parse content - %s', responseString);
+						callback(null, responseString, req, res);
 					}
 				});
 			});
 
 			req.on('error', function(err) {
-				callback(err, null, req, {statusCode: 500});
+				debug('error - %s', err);
+				callback(err, null, req, {statusCode: 500, message: 'Internal Server Error', err: err});
 			});
 
 			if (method != 'GET') {

@@ -4,6 +4,7 @@ var debug = require('debug')('indigo:main'),
 	express = require('express'),
 	ejs = require('ejs'),
 	fs = require('fs'),
+	less = require('less'),
 	routers = require('./libs/routers');
 
 var reqModel, http,
@@ -162,7 +163,28 @@ function routerRedirectListener(req, res, next) {
 		var newUrl = getNewURL(req, req.url);
 		if (req.originalUrl.indexOf(newUrl) === -1) {
 			debug('redirect: %s', newUrl);
-			res.redirect(newUrl);
+			if (newUrl.lastIndexOf('.less') !== -1) {
+				fs.readFile(appdir + newUrl, function(error, data) {
+					if (!error) {
+						data = data.toString();
+						less.render(data, {compress: indigo.nconf.get('environment') !== 'dev'}, function (error, result) {
+							if (!error) {
+								res.statusCode = 302;
+								res.set('Content-Type', 'text/css');
+								res.write(result.css);
+								res.end();
+							} else {
+								indigo.logger.error('ERROR_LESS: ' + newUrl + ' - ' + error);
+								res.send(data);
+							}
+						});
+					} else {
+						res.redirect(newUrl);
+					}
+				});
+			} else {
+				res.redirect(newUrl);
+			}
 			return;
 		}
 	}

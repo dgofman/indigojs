@@ -12,5 +12,9 @@
 
 	"routers": [
 		"examples/firststep/routers"
-	]
+	],
+
+	"errors": {
+		"404": "https://www.google.com/indigojs"
+	}
 }

@@ -6,7 +6,7 @@ var debug = require('debug')('indigo:routers'),
 
 module.exports = {
 
-	init: function(app, nconf, redirectListener) {
+	init: function(app, nconf, reqModel, redirectListener) {
 
 		// dynamically include routers
 		var routers = nconf.get('routers');
@@ -20,6 +20,12 @@ module.exports = {
 			var router = express.Router(),
 				next = function() {},
 				base, params;
+
+			router.use(function (req, res, next) {
+				debug(req.method, req.url, req.originalUrl);
+				req.model = JSON.parse(reqModel);
+				next();
+			});
 
 			router.use(redirectListener);
 

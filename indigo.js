@@ -74,9 +74,9 @@ module.exports = indigo = {
 
 		routers.init(app, nconf, reqModel, routerRedirectListener);
 
-		app.locals.url = function(req, url) {
+		app.locals.inject = function(req, url) {
 			var newUrl = getNewURL(req, '/' + req.session.locale + '/' + url, '/' + url);
-			debug('%s -> %s', url, newUrl);
+			debug('inject: %s -> %s', url, newUrl);
 			req.model.filename = appdir + newUrl;
 			try {
 				return ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);

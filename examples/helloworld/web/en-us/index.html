@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="<%= locality.langugage %>">
 <head>
-<%- url(req, 'templates/head.html') %>
+<%- inject(req, 'templates/head.html') %>
 
 <script>
 	var HelloWorld = {
@@ -18,7 +18,7 @@
 				<h1></h1>
 			</div>
 			
-			<%- url(req, 'templates/footer.html') %>
+			<%- inject(req, 'templates/footer.html') %>
 		</div>
 	</div>
 </body>

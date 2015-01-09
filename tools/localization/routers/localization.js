@@ -1,7 +1,6 @@
 'use strict';
 
-module.exports = function(router, next) {
-
+module.exports = function() {
 	return {
 		'base': '/localization',
 		'controllers': [

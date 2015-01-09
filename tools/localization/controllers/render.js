@@ -1,5 +1,6 @@
-var indigo = require('../../../indigo'),
-	debug = require('debug')('indigo:localization');
+'use strict';
+
+var indigo = require('../../../indigo');
 
 module.exports = function(router, next) {
 

@@ -5,10 +5,9 @@ define([
 	'angular',
 	'gridController',
 	'socketio'
-], function($, angular, gridController, io) {
+], function($, angular, gridController) {
 
-	var socket = null,
-		localization = function(params) {
+	var localization = function(params) {
 			this.initialize(params);
 			this.div.show();
 		};
@@ -39,7 +38,8 @@ define([
 				app.controller(gridCntlName, ['appService', '$scope', '$element', gridController]);
 
 				app.run(function($rootScope) {
-				})
+					console.log($rootScope);
+				});
 
 				angular.bootstrap(this.div[0], [appName]);
 			}

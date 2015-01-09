@@ -95,11 +95,11 @@ module.exports = function service(nconf) {
 				callback(err, null, req, {statusCode: 500, message: 'Internal Server Error', err: err});
 			});
 
-			if (method != 'GET') {
+			if (method !== 'GET') {
 				req.write(content);
 			}
 
 			req.end();
 		}
-	}
+	};
 };

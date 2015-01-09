@@ -15,27 +15,27 @@ module.exports = function(router, next) {
 	});
 
 	router.get('/REST', function(req, res) {
-		res.json({ 'method': 'GET' })
+		res.json({ 'method': 'GET' });
 		next();
 	});
 
 	router.post('/REST', function(req, res) {
-		res.json({ 'method': 'POST' })
+		res.json({ 'method': 'POST' });
 		next();
 	});
 
 	router.put('/REST', function(req, res) {
-		res.json({ 'method': 'PUT' })
+		res.json({ 'method': 'PUT' });
 		next();
 	});
 
 	router.delete('/REST', function(req, res) {
-		res.json({ 'method': 'DELETE' })
+		res.json({ 'method': 'DELETE' });
 		next();
 	});
 
 	router.patch('/REST', function(req, res) {
-		res.json({ 'method': 'PATCH' })
+		res.json({ 'method': 'PATCH' });
 		next();
 	});
 

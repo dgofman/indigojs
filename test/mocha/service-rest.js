@@ -29,7 +29,7 @@ describe('Testing REST API\'s', function () {
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'GET');
 			done();
-		})
+		});
 	});
 
 	it('should test POST', function(done) {
@@ -38,7 +38,7 @@ describe('Testing REST API\'s', function () {
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'POST');
 			done();
-		})
+		});
 	});
 
 	it('should test PUT', function(done) {
@@ -47,7 +47,7 @@ describe('Testing REST API\'s', function () {
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'PUT');
 			done();
-		})
+		});
 	});
 
 	it('should test DELETE', function(done) {
@@ -56,7 +56,7 @@ describe('Testing REST API\'s', function () {
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'DELETE');
 			done();
-		})
+		});
 	});
 
 	it('should test PATCH', function(done) {
@@ -65,7 +65,7 @@ describe('Testing REST API\'s', function () {
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'PATCH');
 			done();
-		})
+		});
 	});
 
 	it('should get ECONNRESET error', function(done) {
@@ -74,7 +74,7 @@ describe('Testing REST API\'s', function () {
 				assert.equal(res.statusCode, 500);
 				assert.equal(err.code, 'ECONNRESET');
 				done();
-		})
+		});
 	});
 
 	it('should get ECONNREFUSED error', function(done) {
@@ -83,7 +83,7 @@ describe('Testing REST API\'s', function () {
 				assert.equal(res.statusCode, 500);
 				assert.equal(err.code, 'ECONNREFUSED');
 				done();
-		})
+		});
 	});
 });
  

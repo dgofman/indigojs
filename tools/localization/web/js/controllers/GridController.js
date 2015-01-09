@@ -7,7 +7,7 @@ define([
 
 	var grid = null,
 		appServiceEventHandler = function(evt, key) {
-			console.log(key)
+			console.log(evt, key, $, angular);
 	};
 
 	return function (appService, $scope, $element) {

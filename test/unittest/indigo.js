@@ -10,7 +10,7 @@ var acceptLanguage = 'en-gb, en-us';
 describe('UnitTests Indigo APIs', function () {
 
 	it('should verify __appDir', function (done) {
-		assert.equal(__appDir + 'test/unittest', __dirname);
+		assert.equal(fixPath(__appDir) + 'test/unittest', fixPath(__dirname));
 		done();
 	});
 
@@ -24,7 +24,7 @@ describe('UnitTests Indigo APIs', function () {
 				}
 			},res = {
 				render: function(url, model) {
-					assert.equal(url, __appDir + 'examples/account/web/en/login.html');
+					assert.equal(fixPath(url), fixPath(__appDir) + 'examples/account/web/en/login.html');
 					assert.equal(model.locality.locale, 'en-gb');
 					assert.equal(model.locality.langugage, 'en');
 					assert.equal(model.locales.account.greeting, 'Hello');
@@ -135,3 +135,7 @@ describe('UnitTests Indigo APIs', function () {
 		indigo.error(req, res, errorKey, errorCode);
 	});
 });
+
+function fixPath(path) {
+	return path.replace(/\\/g, '/').replace(/\/\//g, '/');
+}

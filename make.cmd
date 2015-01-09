@@ -9,6 +9,8 @@ SET JSHINT=node_modules\.bin\jshint
 SET MOCHA=node_modules\.bin\mocha
 SET UMOCHA=node_modules\.bin\_mocha
 
+if "%1"=="" goto :main else goto :eof
+
 call:%~1
 
 goto :eof

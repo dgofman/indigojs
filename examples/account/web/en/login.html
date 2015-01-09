@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="<%= locality.langugage %>">
 <head>
-<%- url(req, 'templates/head.html') %>
+<%- inject(req, 'templates/head.html') %>
 <script>
 	window.Indigo = {
 		messages: {
@@ -15,7 +15,7 @@
 <body>
 	<div id="wrap">
 		<div class="page">
-			<%- url(req, 'templates/navbar.html') %>
+			<%- inject(req, 'templates/navbar.html') %>
 
 			<div class="wrapper"></div>
 

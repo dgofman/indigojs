@@ -2,10 +2,14 @@
 
 module.exports = function reqmodel(nconf) {
 	nconf = nconf || require('nconf');
+
+	var minify = nconf.get('environment') === 'dev' ? '' : '.min';
+
 	return {
 		environment: nconf.get('environment'),
-		extCSS: nconf.get('environment') === 'dev' ? '.css' : '.min.css',
-		extJS: nconf.get('environment') === 'dev' ? '.js' : '.min.js',
+		minify: minify,
+		extCSS: minify + '.css',
+		extJS: minify + '.js',
 		locality: {},
 		locales: {}
 	};

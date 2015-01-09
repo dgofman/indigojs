@@ -1,6 +1,7 @@
 'use strict';
 
 var debug = require('debug')('indigo:locales'),
+	indigo = require('../indigo'),
 	fs = require('fs'),
 	rules = require('./locales/accept-rules.json'),
 	defLocale = 'en-us',
@@ -26,7 +27,11 @@ module.exports = {
 						var file = files[f],
 							arr = file.split('.');
 						if (arr.length > 1 && arr[1] === 'json') {
-							localeMap[localeName][arr[0]] = require(localeDir + '/' + localeName + '/' + file);
+							try {
+								localeMap[localeName][arr[0]] = require(localeDir + '/' + localeName + '/' + file);
+							} catch (e) {
+								indigo.logger.error('FILE: %s, ERROR: %s', localeDir + '/' + localeName + '/' + file, e.toString());
+							}
 						}
 					}
 				}

@@ -77,8 +77,9 @@ module.exports = indigo = {
 		app.locals.url = function(req, url) {
 			var newUrl = getNewURL(req, '/' + req.session.locale + '/' + url, '/' + url);
 			debug('%s -> %s', url, newUrl);
+			req.model.filename = appdir + newUrl;
 			try {
-				return ejs.render(fs.readFileSync(appdir + newUrl, 'utf-8'), req.model);
+				return ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
 			} catch(e) {
 				var code = new Date().getTime();
 				logger.error('Code: ', code, '\n', e.toString());
@@ -124,7 +125,7 @@ module.exports = indigo = {
 			if (this.nconf.get('errors:404')) {
 				res.setHeader('URL', req.url);
 				res.setHeader('PATH', fileName);
-				res.redirect(this.nconf.get('errors:404'));
+				return res.redirect(this.nconf.get('errors:404'));
 			} else {
 				return res.status(404).end();
 			}
@@ -176,7 +177,10 @@ function routerRedirectListener(req, res, next) {
 				fs.readFile(appdir + newUrl, function(error, data) {
 					if (!error) {
 						data = data.toString();
-						less.render(data, {compress: indigo.nconf.get('environment') !== 'dev'}, function (error, result) {
+						less.render(data, {
+								filename: appdir + newUrl,
+								compress: indigo.nconf.get('environment') !== 'dev'
+							}, function (error, result) {
 							if (!error) {
 								res.statusCode = 302;
 								res.set('Content-Type', 'text/css');

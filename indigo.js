@@ -67,7 +67,7 @@ module.exports = indigo = {
 			locales.init(req, req.params.locale);
 
 			var url = '/' + req.session.locale + '/templates/' + req.params.routerPath + '/' + req.params.pageId + '.html',
-				newUrl = getNewURL(req, url);
+				newUrl = getNewURL(req, res, url);
 			debug('template=%s redirect=%s', url, newUrl);
 			res.redirect(newUrl);
 		});
@@ -75,7 +75,7 @@ module.exports = indigo = {
 		routers.init(app, nconf, reqModel, routerRedirectListener);
 
 		app.locals.inject = function(req, url) {
-			var newUrl = getNewURL(req, '/' + req.session.locale + '/' + url, '/' + url);
+			var newUrl = getNewURL(req, null, '/' + req.session.locale + '/' + url, '/' + url);
 			debug('inject: %s -> %s', url, newUrl);
 			req.model.filename = appdir + newUrl;
 			try {
@@ -121,7 +121,7 @@ module.exports = indigo = {
 		if (fileName.indexOf('.') === -1) {
 			fileName += '.html'; //attach default HTML extension
 		}
-		fileName = appdir + getNewURL(req, '/' + req.session.locale + '/' + fileName, '/' + fileName);
+		fileName = appdir + getNewURL(req, res, '/' + req.session.locale + fileName, '/' + fileName);
 		if (!fs.existsSync(fileName)) {
 			debug('FILE_NOT_FOUND %s', fileName);
 			if (this.nconf.get('errors:404')) {
@@ -146,7 +146,7 @@ module.exports = indigo = {
 	}
 };
 
-function getNewURL(req, url, redirectURL) {
+function getNewURL(req, res, url, redirectURL) {
 	if (req.session.locale && !fs.existsSync(appdir + url) && 
 		url.indexOf('/' + req.session.locale +'/') !== -1) { //try to get file from another locale directory
 		debug('url=%s locale=%s lookup=%s', url, req.session.locale, req.session.localeLookup);
@@ -154,6 +154,7 @@ function getNewURL(req, url, redirectURL) {
 			var newUrl = url.replace('/' + req.session.locale + '/', '/' + req.session.localeLookup[index] + '/');
 			if (fs.existsSync(appdir + newUrl)) {
 				debug('getNewURL %s', newUrl);
+				res && res.setHeader('url', newUrl);
 				return newUrl;
 			}
 		}
@@ -167,12 +168,8 @@ function getNewURL(req, url, redirectURL) {
 function routerRedirectListener(req, res, next) {
 	debug(req.method, req.url, req.originalUrl);
 
-	if (!req.session.locale || req.params.locale !== req.session.locale) {
-		locales.init(req, req.params.locale);
-	}
-
-	if (req.method === 'GET') {
-		var newUrl = getNewURL(req, req.url);
+	if (req.method === 'GET' && req.session.locale) {
+		var newUrl = getNewURL(req, res, req.url);
 		if (req.originalUrl.indexOf(newUrl) === -1) {
 			debug('redirect: %s', newUrl);
 			if (newUrl.lastIndexOf('.less') !== -1) {

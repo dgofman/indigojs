@@ -22,12 +22,12 @@ module.exports = {
 				base, params;
 
 			router.use(function (req, res, next) {
-				debug(req.method, req.url, req.originalUrl);
-				req.model = JSON.parse(reqModel);
+				if (req.get('accept').indexOf('text/html') !== -1) {
+					debug(req.method, req.url, req.originalUrl);
+					req.model = JSON.parse(reqModel);
+				}
 				next();
 			});
-
-			router.use(redirectListener);
 
 			params = route(router, next) || {};
 			if (typeof params === 'string') {
@@ -61,6 +61,8 @@ module.exports = {
 					controller(router, next);
 				}
 			});
+
+			router.use(redirectListener);
 		});
 	}
 };

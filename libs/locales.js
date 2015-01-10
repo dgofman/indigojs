@@ -13,7 +13,7 @@ module.exports = {
 
 	config: function(nconf) {
 		defLocale = nconf.get('locales:default') || defLocale;
-		localeMap[defLocale] = { lookup: [] };
+		localeMap[defLocale] = { __lookup__: [], __localName__:defLocale };
 
 		var localeDir = __appDir + nconf.get('locales:path');
 		if (fs.existsSync(localeDir)) {
@@ -21,7 +21,7 @@ module.exports = {
 			for (var d in dirs) {
 				var localeName = dirs[d];
 				if (fs.lstatSync(localeDir + '/' + localeName).isDirectory()) {
-					localeMap[localeName] = { lookup: [] };
+					localeMap[localeName] = { __lookup__: [], __localName__:localeName };
 					var files = fs.readdirSync(localeDir + '/' + localeName);
 					for (var f in files) {
 						var file = files[f],
@@ -72,12 +72,8 @@ function setLocale(req, locale) {
 
 function saveToSession(req, locale) {
 	req.session.locale = req.model.locality.locale = locale;
-	if (localeMap[locale].lookup.length > 0) {
-		req.model.locality.langugage = localeMap[locale].lookup[0].split('-')[0];
-	} else {
-		req.model.locality.langugage = locale.split('-')[0];
-	}
-	req.session.localeLookup = localeMap[locale].lookup.concat('default');
+	req.model.locality.langugage = localeMap[locale].__localName__;
+	req.session.localeLookup = localeMap[locale].__lookup__.concat('default');
 }
 
 function initLocalelookup(nconf) {
@@ -90,36 +86,45 @@ function initLocalelookup(nconf) {
 	}
 
 	function traverse(code) {
-		var target = localeMap[code] = localeMap[code] || { lookup: [] };
+		var target = localeMap[code] = localeMap[code] || { __lookup__: [], __localName__:code };
 
 		var lookup = rules[code];
-		target.lookup = target.lookup.concat(lookup);
+		target.__lookup__ = target.__lookup__.concat(lookup);
 
 		for (var index in lookup) {
 			var locale = lookup[index],
-				source = localeMap[locale];
+				source = localeMap[locale],
+				sourceLocale = true;
 
 			if (!source) {
 				source = traverse(locale);
 			}
 
-			for (var i in source.lookup) {
-				locale = source.lookup[i];
-				if (target.lookup.indexOf(locale) === -1) {
-					target.lookup.push(locale);
+			for (var i in source.__lookup__) {
+				locale = source.__lookup__[i];
+				if (locale && target.__lookup__.indexOf(locale) === -1) {
+					target.__lookup__.push(locale);
 				}
 			}
 
 			for (var name in source) {
-				if (!target[name]) {
-				 	target[name] = source[name];
-				} else { //copy only missing key/values
-				 	for (var key in source[name]) {
-				 		if (!target[name][key]) {
-				 			 target[name][key] = source[name][key];
-				 		}
-				 	}
+				if (name !== '__localName__' && name !== '__lookup__') {
+					if (!target[name]) {
+						target[name] = source[name];
+					} else { //copy only missing key/values
+						sourceLocale = false;
+
+						for (var key in source[name]) {
+							if (!target[name][key]) {
+								 target[name][key] = source[name][key];
+							}
+						}
+					}
 				}
+			}
+
+			if (sourceLocale) {
+				target.__localName__ = source.__localName__;
 			}
 		}
 

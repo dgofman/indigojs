@@ -62,7 +62,7 @@ goto :eof
 goto :eof
 
 :debug
-	call :killnode
+	cls
 	SET DEBUG=indigo:* & nodemon --debug .
 goto :eof
 

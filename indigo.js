@@ -116,6 +116,8 @@ module.exports = indigo = {
 	render: function(req, res, fileName, locales) {
 		req.model.locales = locales || indigo.getLocales(req);
 		req.model.req = req;
+		res.setHeader('lang', req.model.locality.langugage);
+
 		if (fileName.indexOf('.') === -1) {
 			fileName += '.html'; //attach default HTML extension
 		}
@@ -123,8 +125,8 @@ module.exports = indigo = {
 		if (!fs.existsSync(fileName)) {
 			debug('FILE_NOT_FOUND %s', fileName);
 			if (this.nconf.get('errors:404')) {
-				res.setHeader('URL', req.url);
-				res.setHeader('PATH', fileName);
+				res.setHeader('url', req.url);
+				res.setHeader('path', fileName);
 				return res.redirect(this.nconf.get('errors:404'));
 			} else {
 				return res.status(404).end();

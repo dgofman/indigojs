@@ -21,12 +21,15 @@ module.exports = {
 				base, params;
 
 			router.use(function (req, res, next) {
-				var accept = req.get('accept');
-				if (!accept || accept.indexOf('text/html') !== -1) {
+				var header = req.headers || {};
+				if (!header.accept || header.accept.indexOf('text/html') !== -1) {
 					debug(req.method, req.url, req.originalUrl);
 					req.model = JSON.parse(reqModel);
 				}
-				next();
+
+				if (header['x-requested-with'] !== 'XMLHttpRequest') { //EJS include
+					next();
+				}
 			});
 
 			params = route(router) || {};

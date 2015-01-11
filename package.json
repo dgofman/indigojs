@@ -30,9 +30,7 @@
 		"fs": "~0.0.2",
 		"ejs": "~1.0.0",
 		"querystring": "~0.2.0",
-		"less": "~2.2.0",
-		"socket.io": "~1.2.0",
-		"mongoose": "~3.8.19"
+		"less": "~2.2.0"
 	},
 	"devDependencies": {
 		"nodemon": "~1.2.1",
@@ -40,7 +38,9 @@
 		"mocha": "~2.0.1",
 		"superagent": "~0.20.0",
 		"istanbul": "~0.3.2",
-		"jshint": "~2.5.8"
+		"jshint": "~2.5.8",
+		"socket.io": "~1.2.0",
+		"mongoose": "~3.8.19"
 	},
 	"readmeFilename": "README.md",
 	"license": "MIT"

@@ -7,7 +7,7 @@ JSHINT = ./node_modules/.bin/jshint
 MOCHA = ./node_modules/.bin/mocha
 UMOCHA = ./node_modules/.bin/_mocha
 
-main: clean lint test-unit test-mocha
+main: clean lint killnode test-unit test-mocha
 
 cover: clean killnode
 	$(ISTANBUL) cover $(UMOCHA) \

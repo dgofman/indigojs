@@ -18,7 +18,7 @@ module.exports = {
 
 		loadModule(routers, function(route) {
 			var router = express.Router(),
-				interceptRoutes = null,
+				intercept = null,
 				base, params;
 
 			router.get = function(path, callback) {
@@ -26,8 +26,8 @@ module.exports = {
 					.all(function(req, res, next) {
 						debug(req.method, req.url, req.originalUrl);
 						req.model = JSON.parse(reqModel);
-						if (interceptRoutes) {
-							interceptRoutes(req, res, next);
+						if (intercept) {
+							intercept(req, res, next);
 						} else {
 							next();
 						}

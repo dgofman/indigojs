@@ -18,6 +18,7 @@ goto :eof
 :main
 	call :clean
 	call :lint
+	call :killnode
 	call :test-unit
 	call :test-mocha
 goto :eof

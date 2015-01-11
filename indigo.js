@@ -19,11 +19,10 @@ module.exports = indigo = {
 
 	init: function(appconf) {
 		if (typeof(appconf) === 'string') { //path to app.json
+			debug('indigo::init appconf - %s', appconf);
 			appconf = require('cjson').load(appconf);
 		}
 		this.appconf = appconf;
-
-		debug('indigo::init appconf - %s', appconf);
 
 		appconf.get = function(path) {
 			var value = this,

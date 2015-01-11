@@ -18,25 +18,28 @@ module.exports = {
 
 		loadModule(routers, function(route) {
 			var router = express.Router(),
+				interceptRoutes = null,
 				base, params;
 
-			router.use(function (req, res, next) {
-				var header = req.headers || {};
-				if (!header.accept || header.accept.indexOf('text/html') !== -1) {
-					debug(req.method, req.url, req.originalUrl);
-					req.model = JSON.parse(reqModel);
-				}
-
-				if (header['x-requested-with'] !== 'XMLHttpRequest') { //EJS include
-					next();
-				}
-			});
+			router.get = function(path, callback) {
+				router.route(path)
+					.all(function(req, res, next) {
+						debug(req.method, req.url, req.originalUrl);
+						req.model = JSON.parse(reqModel);
+						if (interceptRoutes) {
+							interceptRoutes(req, res, next);
+						} else {
+							next();
+						}
+					}).get(callback);
+			};
 
 			params = route(router) || {};
 			if (typeof params === 'string') {
 				base = params;
 			} else {
 				base = params.base || '/';
+				interceptRoutes = params.interceptRoutes;
 			}
 
 			app.use(base, router);

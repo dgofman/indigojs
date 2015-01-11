@@ -2,11 +2,10 @@
 
 var indigo = require('../../../indigo');
 
-module.exports = function(router, next) {
+module.exports = function(router) {
 
 	router.get('/index', function(req, res) {
 		res.redirect(router.base + '/en/index');
-		next();
 	});
 
 	router.get('/:locale/index', function(req, res) {
@@ -15,6 +14,5 @@ module.exports = function(router, next) {
 		req.model.routerName = 'localization';
 		req.model.languages = '';
 		indigo.render(req, res, 'index', locales);
-		next();
 	});
 };

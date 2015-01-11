@@ -11,11 +11,11 @@ module.exports = {
 
 	localeMap: localeMap,
 
-	config: function(nconf) {
-		defLocale = nconf.get('locales:default') || defLocale;
+	config: function(appconf) {
+		defLocale = appconf.get('locales:default') || defLocale;
 		localeMap[defLocale] = { __lookup__: [], __localName__:defLocale };
 
-		var localeDir = __appDir + nconf.get('locales:path');
+		var localeDir = __appDir + appconf.get('locales:path');
 		if (fs.existsSync(localeDir)) {
 			var dirs = fs.readdirSync(localeDir);
 			for (var d in dirs) {
@@ -37,7 +37,7 @@ module.exports = {
 				}
 			}
 
-			initLocalelookup(nconf);
+			initLocalelookup(appconf);
 		}
 	},
 
@@ -71,13 +71,16 @@ function setLocale(req, locale) {
 }
 
 function saveToSession(req, locale) {
-	req.session.locale = req.model.locality.locale = locale;
-	req.model.locality.langugage = localeMap[locale].__localName__;
+	req.session.locale = locale;
 	req.session.localeLookup = localeMap[locale].__lookup__.concat('default');
+	if (req.model) {
+		req.model.locality.locale = locale;
+		req.model.locality.langugage = localeMap[locale].__localName__;
+	}
 }
 
-function initLocalelookup(nconf) {
-	var file = __appDir + nconf.get('locales:path') + '/accept-rules.json';
+function initLocalelookup(appconf) {
+	var file = __appDir + appconf.get('locales:path') + '/accept-rules.json';
 	if (fs.existsSync(file)) {
 		var customRules = require(file);
 		for (var code in customRules) {

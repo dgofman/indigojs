@@ -11,7 +11,7 @@
 	},
 
 	"routers": [
-		"examples/firststep/routers"
+		"/examples/firststep/routers"
 	],
 
 	"errors": {

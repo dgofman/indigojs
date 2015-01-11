@@ -6,10 +6,10 @@ var debug = require('debug')('indigo:routers'),
 
 module.exports = {
 
-	init: function(app, nconf, reqModel, redirectListener) {
+	init: function(app, appconf, reqModel, redirectListener) {
 
 		// dynamically include routers
-		var routers = nconf.get('routers');
+		var routers = appconf.get('routers');
 		if (!routers) {
 			routers =  ['routers'];
 		}
@@ -18,18 +18,18 @@ module.exports = {
 
 		loadModule(routers, function(route) {
 			var router = express.Router(),
-				next = function() {},
 				base, params;
 
 			router.use(function (req, res, next) {
-				if (req.get('accept').indexOf('text/html') !== -1) {
+				var accept = req.get('accept');
+				if (!accept || accept.indexOf('text/html') !== -1) {
 					debug(req.method, req.url, req.originalUrl);
 					req.model = JSON.parse(reqModel);
 				}
 				next();
 			});
 
-			params = route(router, next) || {};
+			params = route(router) || {};
 			if (typeof params === 'string') {
 				base = params;
 			} else {
@@ -43,11 +43,6 @@ module.exports = {
 				enumerable: true
 			});
 
-			Object.defineProperty(router, 'nconf', {
-				get: function() { return nconf; },
-				enumerable: true
-			});
-
 			Object.defineProperty(router, 'app', {
 				get: function() { return app; },
 				enumerable: true
@@ -58,7 +53,7 @@ module.exports = {
 			// dynamically include controllers
 			loadModule(params.controllers, function(controller) {
 				if (typeof(controller) === 'function') {
-					controller(router, next);
+					controller(router);
 				}
 			});
 

@@ -3,8 +3,7 @@
 (function() {
 
 	var indigo = require('../../indigo'),
-		nconf = require('nconf').
-					use('file', { file: __dirname + '/config/app.json' });
+		appconf = require('cjson').load(__dirname + '/config/app.json');
 
-	indigo.start(nconf);
+	indigo.start(appconf);
 })();

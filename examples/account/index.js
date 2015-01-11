@@ -1,10 +1,5 @@
 'use strict';
 
 (function() {
-
-	var indigo = require('../../indigo'),
-		nconf = require('nconf').
-					use('file', { file: __dirname + '/config/app.json' });
-
-	indigo.start(nconf);
+	require('../../indigo').start(__dirname + '/config/app.json');
 })();

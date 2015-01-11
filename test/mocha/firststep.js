@@ -7,9 +7,7 @@ var superagent = require('superagent'),
 describe('Testing FirstStep example', function () {
 
 	before(function (done) {
-		var nconf = require('nconf').
-				use('file', { file: __appDir +  '/examples/firststep/config/app.json' });
-		indigo.start(nconf);
+		indigo.start(__appDir +  '/examples/firststep/config/app.json');
 		done();
 	});
 

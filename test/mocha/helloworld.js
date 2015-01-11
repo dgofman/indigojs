@@ -7,9 +7,7 @@ var superagent = require('superagent'),
 describe('Testing HelloWorld example', function () {
 
 	before(function (done) {
-		var nconf = require('nconf').
-				use('file', { file: __appDir +  '/examples/helloworld/config/app.json' });
-		indigo.start(nconf);
+		indigo.start(__appDir +  '/examples/helloworld/config/app.json');
 		done();
 	});
 

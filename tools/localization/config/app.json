@@ -8,10 +8,10 @@
 
 	"locales": {
 		"default": "en-us",
-		"path": "tools/localization/locales"
+		"path": "/tools/localization/locales"
 	},
 
 	"routers": [
-		"tools/localization/routers"
+		"/tools/localization/routers"
 	]
 }

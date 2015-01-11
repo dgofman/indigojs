@@ -1,11 +1,12 @@
 'use strict';
 
 var debug = require('debug')('indigo:rest'),
+	indigo = require('../indigo'),
 	querystring = require('querystring'),
 	http = require('http'),
 	https = require('https');
 
-module.exports = function service(nconf) {
+module.exports = function service() {
 
 	return {
 		headers: {
@@ -13,17 +14,12 @@ module.exports = function service(nconf) {
 			'Cache-Control': 'no-cache',
 			'Content-Type': 'text/plain;charset=UTF-8'
 		},
-		init: function(host, port, secure) {
-			this.host = host;
-			this.port = port;
-			this.secure = secure;
+		init: function(opts) {
+			opts = opts || indigo.appconf.get('service') || {};
+			this.host = opts.host;
+			this.port = opts.port;
+			this.secure = opts.secure;
 			return this;
-		},
-		getHost: function() {
-			return this.host || nconf.get('service:host');
-		},
-		getPort: function() {
-			return this.port || nconf.get('service:port');
 		},
 		get: function(path, data, callback) {
 			this.request('GET', path, data, callback);
@@ -51,19 +47,16 @@ module.exports = function service(nconf) {
 			}
 
 			var server, req,
-				secure = nconf.get('service:secure'),
 				options = {
-					host: this.getHost(),
-					port: this.getPort(),
+					host: this.host,
+					port: this.port,
+					headers: this.headers,
 					method: method,
-					path: path,
-					headers: this.headers
+					path: path
 				};
 
 			if (this.secure !== undefined) {
 				server = this.secure ? https : http;
-			} else if (secure !== undefined) {
-				server = secure ? https : http;
 			} else {
 				server = options.port !== 80 ? https : http;
 			}

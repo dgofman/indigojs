@@ -5,7 +5,7 @@ var debug = require('debug')('indigo:localization');
 module.exports = function() {
 	return {
 		'base': '/localization',
-		'interceptRoutes': function(req, res, next) {
+		'intercept': function(req, res, next) {
 			if (req.headers.accept.indexOf('text/xml') === -1) {
 				next();
 			} else {

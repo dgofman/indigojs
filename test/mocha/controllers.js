@@ -8,9 +8,7 @@ var superagent = require('superagent'),
 describe('Testing Account Controllers', function () {
 
 	before(function (done) {
-		var nconf = require('nconf').
-				use('file', { file: __appDir +  '/examples/account/config/app.json' });
-		indigo.start(nconf);
+		indigo.start(__appDir +  '/examples/account/config/app.json');
 		done();
 	});
 

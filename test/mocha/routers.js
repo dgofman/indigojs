@@ -7,9 +7,7 @@ var superagent = require('superagent'),
 describe('Testing Account Routers', function () {
 
 	before(function (done) {
-		var nconf = require('nconf').
-				use('file', { file: __appDir +  '/examples/account/config/app.json' });
-		indigo.start(nconf);
+		indigo.start(__appDir +  '/examples/account/config/app.json');
 		done();
 	});
 
@@ -35,22 +33,22 @@ describe('Testing Account Routers', function () {
 		});
 	});
 
-	it('should test redirect to default/common resources', function(done){
+	it('should test Referer header value', function(done){
 		superagent.get('http://localhost:8585/account/en-us/js/account/models/userModel.js')
 			.redirects(0)
 			.end(function(err, res) {
-				assert.equal(res.statusCode, 302);
-				assert.equal(res.headers['location'], '/default/js/account/models/userModel.js');
+				assert.equal(res.statusCode, 200);
+				assert.equal(res.headers['referer'], '/default/js/account/models/userModel.js');
 				done();
 		});
 	});
 
-	it('should test template redirect', function(done){
+	it('should test template Referer', function(done){
 		superagent.get('http://localhost:8585/indigo/account/ru/templates/login')
 			.redirects(0)
 			.end(function(err, res) {
-				assert.equal(res.statusCode, 302);
-				assert.equal(res.headers['location'], '/default/templates/account/login.html');
+				assert.equal(res.statusCode, 200);
+				assert.equal(res.headers['referer'], '/default/templates/account/login.html');
 				done();
 		});
 	});

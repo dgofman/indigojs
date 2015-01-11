@@ -5,7 +5,7 @@ var indigo = require('../../../indigo'),
 
 var users = require('../models/account').users;
 
-module.exports = function(router, next) {
+module.exports = function(router) {
 
 	//REST calls
 	router.post('/login', function(req, res) {
@@ -16,7 +16,6 @@ module.exports = function(router, next) {
 			return res.json(user.details);
 		}
 		indigo.error(req, res, 'invalidEmailOrPassword');
-		next();
 	});
 
 	router.post('/reset', function(req, res) {
@@ -27,6 +26,5 @@ module.exports = function(router, next) {
 			return res.json(user.details);
 		}
 		indigo.error(req, res, 'invalidAccount');
-		next();
 	});
 };

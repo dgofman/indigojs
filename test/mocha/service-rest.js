@@ -7,9 +7,7 @@ var assert = require('assert'),
 describe('Testing REST API\'s', function () {
 
 	before(function (done) {
-		var nconf = require('nconf').
-				use('file', { file: __appDir +  '/examples/firststep/config/app.json' });
-		indigo.start(nconf);
+		indigo.start(__appDir + '/examples/firststep/config/app.json');
 		done();
 	});
 
@@ -18,8 +16,8 @@ describe('Testing REST API\'s', function () {
 	});
 
 	it('should verify rest properties', function(done) {
-		assert.equal(indigo.service.getHost(), 'localhost');
-		assert.equal(indigo.service.getPort(), '8787');
+		assert.equal(indigo.service.host, 'localhost');
+		assert.equal(indigo.service.port, '8787');
 		done();
 	});
 
@@ -69,8 +67,11 @@ describe('Testing REST API\'s', function () {
 	});
 
 	it('should get ECONNRESET error', function(done) {
-		indigo.service.init('localhost', 8787, true)
-			.get('/firststep/REST', params, function(err, result, req, res) {
+		indigo.service.init({
+				host:'localhost',
+				port:8787,
+				secure:true
+			}).get('/firststep/REST', params, function(err, result, req, res) {
 				assert.equal(res.statusCode, 500);
 				assert.equal(err.code, 'ECONNRESET');
 				done();
@@ -78,8 +79,11 @@ describe('Testing REST API\'s', function () {
 	});
 
 	it('should get ECONNREFUSED error', function(done) {
-		indigo.service.init('localhost', 12345, true)
-			.get('/firststep/REST', params, function(err, result, req, res) {
+		indigo.service.init({
+				host:'localhost',
+				port: 12345,
+				secure: true
+			}).get('/firststep/REST', params, function(err, result, req, res) {
 				assert.equal(res.statusCode, 500);
 				assert.equal(err.code, 'ECONNREFUSED');
 				done();

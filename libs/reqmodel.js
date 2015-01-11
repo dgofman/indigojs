@@ -1,9 +1,8 @@
 'use strict';
 
-module.exports = function reqmodel(nconf) {
-	nconf = nconf || require('nconf');
+module.exports = function reqmodel(appconf) {
 
-	var env = nconf.get('environment'),
+	var env = appconf.get('environment'),
 		minify = env === 'dev' ? '' : '.min';
 
 	return {

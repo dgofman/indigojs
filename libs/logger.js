@@ -3,11 +3,11 @@
 var pine = require('pine'),
 	logger = null;
 
-module.exports = logger = function logger(nconf) {
+module.exports = logger = function logger(appconf) {
 	var log = pine(':', {
 		transports: {
 			console: {
-				level: nconf.get('logger:level')
+				level: appconf.get('logger:level')
 			}
 		}
 	});

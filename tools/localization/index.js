@@ -2,25 +2,27 @@
 
 var mongoose = require('mongoose'),
 	indigo = require('../../indigo'),
-	nconf = require('nconf').
-				use('file', { file: __dirname + '/config/app.json' });
+	cjson = require('cjson');
 
 (function() {
+	var appconf = cjson.load(__dirname + '/config/app.json'),
+		db = mongoose.connection;
+
 	mongoose.connect('mongodb://localhost/indigoLocales');
 
-	var db = mongoose.connection;
+	//var db = mongoose.connection;
 	db.on('error', function onError(e) {
 		console.error('Connection Error to MongoDB:', e);
-		startApp(nconf, false);
+		startApp(appconf);
 	});
 	db.once('open', function onSuccess () {
-		startApp(nconf, true);
+		appconf.mongoDB = true;
+		startApp(appconf);
 	});
 })();
 
-function startApp(nconf, isRunning) {
-	nconf.set('MongoDB', isRunning);
-	indigo.start(nconf, function(http) {
+function startApp(appconf) {
+	indigo.start(appconf, function(http) {
 		var io = require('socket.io').listen(http);
 		io.sockets.on('connection', function(socket) {
 			socket.on('localize', function(data){

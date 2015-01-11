@@ -10,21 +10,21 @@ var acceptLanguage = 'en-gb, en-us';
 describe('UnitTests Indigo APIs', function () {
 
 	it('should verify __appDir', function (done) {
-		assert.equal(fixPath(__appDir) + 'test/unittest', fixPath(__dirname));
+		assert.equal(fixPath(__appDir) + '/test/unittest', fixPath(__dirname));
 		done();
 	});
 
-	it('should be UK language from req.headers', function (done) {
+	it('should get EN location', function (done) {
 
 		var req = {
 				session: {},
-				model: reqmodel(),
+				model: reqmodel(indigo.appconf),
 				headers: {
 					'accept-language': acceptLanguage
 				}
 			},res = {
 				render: function(url, model) {
-					assert.equal(fixPath(url), fixPath(__appDir) + 'examples/account/web/en/login.html');
+					assert.equal(fixPath(url), fixPath(__appDir) + '/examples/account/web/en/login.html');
 					assert.equal(model.locality.locale, 'en-gb');
 					assert.equal(model.locality.langugage, 'en');
 					assert.equal(model.locales.account.greeting, 'Hello');
@@ -42,14 +42,14 @@ describe('UnitTests Indigo APIs', function () {
 					locale: 'us'
 				},
 				session: {},
-				model: reqmodel(),
+				model: reqmodel(indigo.appconf),
 				headers: {
 					'accept-language': acceptLanguage
 				}
 			},res = {
 				render: function(url, model) {
 					assert.equal(model.locality.locale, 'us');
-					assert.equal(model.locality.langugage, 'en');
+					assert.equal(model.locality.langugage, 'en-us');
 					assert.equal(model.locales.account.greeting, 'Hi');
 					done();
 				}
@@ -66,7 +66,7 @@ describe('UnitTests Indigo APIs', function () {
 					countryCode: 'ru'
 				},
 				session: {},
-				model: reqmodel(),
+				model: reqmodel(indigo.appconf),
 				headers: {
 					'accept-language': acceptLanguage
 				}
@@ -93,7 +93,7 @@ describe('UnitTests Indigo APIs', function () {
 				session: {
 					locale: locale
 				},
-				model: reqmodel(),
+				model: reqmodel(indigo.appconf),
 				headers: {
 					'accept-language': acceptLanguage
 				}
@@ -119,7 +119,7 @@ describe('UnitTests Indigo APIs', function () {
 				session: {
 					locale: locale
 				},
-				model: reqmodel(),
+				model: reqmodel(indigo.appconf),
 				headers: {
 					'accept-language': acceptLanguage
 				}

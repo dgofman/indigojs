@@ -7,10 +7,10 @@
 	},
 
 	"locales": {
-		"path": "examples/helloworld/locales"
+		"path": "/examples/helloworld/locales"
 	},
 	
 	"routers": [
-		"examples/helloworld/routers"
+		"/examples/helloworld/routers"
 	]
 }

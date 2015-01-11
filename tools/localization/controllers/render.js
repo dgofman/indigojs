@@ -13,6 +13,6 @@ module.exports = function(router) {
 		req.model.pageTitle = locales.content.pageTitle;
 		req.model.routerName = 'localization';
 		req.model.languages = '';
-		indigo.render(req, res, 'index', locales);
+		indigo.render(req, res, '/index', locales);
 	});
 };

@@ -90,8 +90,8 @@ module.exports = indigo = {
 			debug(req.method, url);
 			var newUrl = getNewURL(req, null, '/' + req.session.locale + '/' + url, '/' + url);
 			debug('inject: %s -> %s', url, newUrl);
-			req.model.filename = appdir + newUrl;
 			try {
+				req.model.filename = appdir + newUrl;
 				return ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
 			} catch(e) {
 				var code = new Date().getTime();

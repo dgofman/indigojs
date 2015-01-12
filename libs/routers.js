@@ -39,7 +39,7 @@ module.exports = {
 				base = params;
 			} else {
 				base = params.base || '/';
-				interceptRoutes = params.interceptRoutes;
+				intercept = params.intercept;
 			}
 
 			app.use(base, router);

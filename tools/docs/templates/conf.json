@@ -1,0 +1,20 @@
+{
+	"tags": {
+		"allowUnknownTags" : true
+	},
+	"plugins": ["plugins/markdown"],
+	"templates": {
+		"cleverLinks": true,
+		"monospaceLinks": true,
+		"default": {
+			"outputSourceFiles" : true,
+			"layoutFile": "templates/tmpl/layout.tmpl"
+		},
+		"applicationName": "IndigoJS"
+	},
+	"markdown": {
+		"parser": "gfm",
+		"hardwrap": true,
+		"tags": ["examples"]
+	}
+}

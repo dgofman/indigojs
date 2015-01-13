@@ -4,7 +4,6 @@ var debug = require('debug')('indigo:main'),
 	express = require('express'),
 	ejs = require('ejs'),
 	fs = require('fs'),
-	less = require('less'),
 	routers = require('./libs/routers');
 
 var reqModel, http,
@@ -78,16 +77,16 @@ module.exports = indigo = {
 			locales.init(req, req.params.locale);
 
 			var url = '/' + req.session.locale + '/templates/' + req.params.routerPath + '/' + req.params.pageId + '.html',
-				newUrl = getNewURL(req, res, url);
+				newUrl = indigo.getNewURL(req, res, url);
 			debug('template: %s -> %s', url, newUrl);
 			res.sendfile(appdir + newUrl);
 		});
 
-		routers.init(app, appconf, reqModel, routerRedirectListener);
+		routers.init(app, appconf, reqModel);
 
 		app.locals.inject = function(req, url) {
 			debug(req.method, url);
-			var newUrl = getNewURL(req, null, '/' + req.session.locale + '/' + url, '/' + url);
+			var newUrl = indigo.getNewURL(req, null, '/' + req.session.locale + '/' + url, '/' + url);
 			debug('inject: %s -> %s', url, newUrl);
 			try {
 				req.model.filename = appdir + newUrl;
@@ -136,7 +135,7 @@ module.exports = indigo = {
 		if (fileName.indexOf('.') === -1) {
 			fileName += '.html'; //attach default HTML extension
 		}
-		var newUrl = getNewURL(req, res, '/' + req.session.locale + '/' + fileName, '/' + fileName);
+		var newUrl = indigo.getNewURL(req, res, '/' + req.session.locale + '/' + fileName, '/' + fileName);
 		debug('render: %s -> %s', req.url, newUrl);
 
 		fileName = appdir + newUrl;
@@ -162,75 +161,30 @@ module.exports = indigo = {
 	getLocales: function(req, paramName) {
 		req.params = req.params || {};
 		return locales.init(req, req.params[paramName || 'locale']);
+	},
+
+	getNewURL: function(req, res, url, redirectURL) {
+		if (!req.session.locale) {
+			indigo.getLocales(req);
+		}
+
+		if ( !fs.existsSync(appdir + url) && 
+			url.indexOf('/' + req.session.locale +'/') !== -1) { //try to get file from another locale directory
+			debug('getNewURL=%s locale=%s lookup=%s', url, req.session.locale, req.session.localeLookup);
+			for (var index in req.session.localeLookup) {
+				var newUrl = url.replace('/' + req.session.locale + '/', '/' + req.session.localeLookup[index] + '/');
+				if (fs.existsSync(appdir + newUrl)) {
+					setHeader(res, 'Referer', newUrl);
+					return newUrl;
+				}
+			}
+		}
+		if (!fs.existsSync(appdir + url)) {
+			url = redirectURL || req.url || url;
+		}
+		return url;
 	}
 };
-
-function getNewURL(req, res, url, redirectURL) {
-	if (!req.session.locale) {
-		indigo.getLocales(req);
-	}
-
-	if ( !fs.existsSync(appdir + url) && 
-		url.indexOf('/' + req.session.locale +'/') !== -1) { //try to get file from another locale directory
-		debug('getNewURL=%s locale=%s lookup=%s', url, req.session.locale, req.session.localeLookup);
-		for (var index in req.session.localeLookup) {
-			var newUrl = url.replace('/' + req.session.locale + '/', '/' + req.session.localeLookup[index] + '/');
-			if (fs.existsSync(appdir + newUrl)) {
-				setHeader(res, 'Referer', newUrl);
-				return newUrl;
-			}
-		}
-	}
-	if (!fs.existsSync(appdir + url)) {
-		url = redirectURL || req.url || url;
-	}
-	return url;
-}
-
-function routerRedirectListener(req, res, next) {
-	if (!res._headerSent && req.method === 'GET') {
-		debug(req.method, req.url, req.originalUrl);
-
-		var newUrl = getNewURL(req, res, req.url),
-			isDev = indigo.appconf.get('environment') === 'dev',
-			cache = indigo.appconf.get('server:cache');
-
-		if (req.originalUrl.indexOf(newUrl) === -1) {
-			setHeader(res, 'Cache-Control', 'public, max-age=' + 
-				(cache !== undefined ? parseInt(cache) : 3600)); //or one hour
-
-			debug('redirect: %s -> %s', req.url, newUrl);
-			if (newUrl.lastIndexOf('.less') !== -1) {
-				fs.readFile(appdir + newUrl, function(error, data) {
-					if (!error) {
-						data = data.toString();
-						less.render(data, {
-								filename: appdir + newUrl,
-								compress: !isDev
-							}, function (error, result) {
-							if (!error) {
-								res.statusCode = 302;
-								res.set('Content-Type', 'text/css');
-								res.write(result.css);
-								res.end();
-							} else {
-								indigo.logger.error('ERROR_LESS: ' + newUrl + ' - ' + error);
-								res.send(data);
-							}
-						});
-					} else {
-						res.sendfile(appdir + newUrl);
-					}
-				});
-			} else {
-				res.sendfile(appdir + newUrl);
-			}
-			return;
-		}
-	}
-
-	next();
-}
 
 function setHeader(res, key, value) {
 	if (res && res.setHeader) {

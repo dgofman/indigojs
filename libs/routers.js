@@ -6,10 +6,11 @@ var debug = require('debug')('indigo:routers'),
 
 module.exports = {
 
-	init: function(app, appconf, reqModel, redirectListener) {
+	init: function(app, appconf, reqModel) {
 
 		// dynamically include routers
-		var routers = appconf.get('routers');
+		var middleware = require('./middleware')(appconf),
+			routers = appconf.get('routers');
 		if (!routers) {
 			routers =  ['routers'];
 		}
@@ -18,34 +19,10 @@ module.exports = {
 
 		loadModule(routers, function(route) {
 			var router = express.Router(),
-				intercept = null,
-				base, params;
+				conf = {};
 
-			router.get = function(path, callback) {
-				router.route(path)
-					.all(function(req, res, next) {
-						debug(req.method, req.url, req.originalUrl);
-						req.model = JSON.parse(reqModel);
-						if (intercept) {
-							intercept(req, res, next);
-						} else {
-							next();
-						}
-					}).get(callback);
-			};
-
-			params = route(router) || {};
-			if (typeof params === 'string') {
-				base = params;
-			} else {
-				base = params.base || '/';
-				intercept = params.intercept;
-			}
-
-			app.use(base, router);
-
-			Object.defineProperty(router, 'base', {
-				get: function() { return base; },
+			Object.defineProperty(router, 'conf', {
+				get: function() { return conf; },
 				enumerable: true
 			});
 
@@ -54,19 +31,54 @@ module.exports = {
 				enumerable: true
 			});
 
-			debug('router::base - %s, controllers: %s', base, params.controllers);
+			router.get = function(path, callback) {
+				router.route(path)
+					.all(function(req, res, next) {
+						debug(req.method, req.url, req.originalUrl);
+						req.model = JSON.parse(reqModel);
+						if (conf.intercept) {
+							conf.intercept(req, res, next);
+						} else {
+							next();
+						}
+					}).get(callback);
+			};
+
+			conf = routerConf(route(router), middleware);
+
+			app.use(conf.base, router);
+
+			debug('router::base - %s, controllers: %s', conf.base, conf.controllers);
 
 			// dynamically include controllers
-			loadModule(params.controllers, function(controller) {
+			loadModule(conf.controllers, function(controller) {
 				if (typeof(controller) === 'function') {
 					controller(router);
 				}
 			});
 
-			router.use(redirectListener);
+			router.use(conf.middleware);
 		});
 	}
+
 };
+
+	/**
+		base
+		middleware
+		controllers
+		intercept
+	*/
+function routerConf(opt, middleware) {
+	if (typeof opt === 'string') {
+		opt = {base: opt};
+	} else {
+		opt = opt || {};
+		opt.base = opt.base || '/';
+	}
+	opt.middleware = opt.middleware || middleware;
+	return opt;
+}
 
 function loadModule(dirs, callback) { 
 	for (var index in dirs) {

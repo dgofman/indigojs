@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function (grunt) {
     var SRC = './src';
     var DIST = './dist';

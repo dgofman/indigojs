@@ -5,7 +5,7 @@ var indigo = require('../../../indigo');
 module.exports = function(router) {
 
 	router.get('/index', function(req, res) {
-		res.redirect(router.base + '/en/index');
+		res.redirect(router.conf.base + '/en/index');
 	});
 
 	router.get('/:locale/index', function(req, res) {

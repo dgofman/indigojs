@@ -7,7 +7,7 @@ SET BASE=.
 SET ISTANBUL=node_modules\.bin\istanbul
 SET JSHINT=node_modules\.bin\jshint
 SET MOCHA=node_modules\.bin\mocha
-SET UMOCHA=node_modules\.bin\_mocha
+SET UMOCHA=node_modules\mocha\bin\_mocha
 
 if "%1"=="" goto :main else goto :eof
 
@@ -26,7 +26,7 @@ goto :eof
 :cover
 	call :clean
 	call :killnode
-	cmd /c %ISTANBUL% cover %UMOCHA% test/mocha test/unittest
+	cmd /c %ISTANBUL% cover "%UMOCHA%" -- test/mocha test/unittest -R spec
 goto :eof
 
 :test-unit

@@ -17,11 +17,10 @@ module.exports = function middleware(appconf) {
 
 			var newUrl = indigo.getNewURL(req, res, req.url);
 
-			if (req.originalUrl.indexOf(newUrl) === -1) {
-				if (res && res.setHeader) {
-					res.setHeader('Cache-Control', 'public, max-age=' + 
+			if (fs.existsSync(appdir + newUrl) && 
+				req.originalUrl.indexOf(newUrl) === -1) {
+				res.setHeader && res.setHeader('Cache-Control', 'public, max-age=' + 
 						(cache !== undefined ? parseInt(cache) : 3600)); //or one hour
-				}
 
 				debug('redirect: %s -> %s', req.url, newUrl);
 				if (newUrl.lastIndexOf('.less') !== -1) {
@@ -49,8 +48,12 @@ module.exports = function middleware(appconf) {
 				} else {
 					res.sendfile(appdir + newUrl);
 				}
-				return;
+			} else {
+				res.status(404);
+				res.setHeader && res.setHeader('path', appdir + newUrl);
+				next('middleware');
 			}
+			return;
 		}
 
 		next();

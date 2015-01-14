@@ -2,12 +2,18 @@
 
 var debug = require('debug')('indigo:test'),
 	indigo = require('../../indigo'),
-	assert = require('assert'),
-	reqmodel = require(__appDir + '/libs/reqmodel');
+	assert = require('assert');
 
 var acceptLanguage = 'en-gb, en-us';
 
 describe('UnitTests Indigo APIs', function () {
+
+	it('should test JSON custom configuration', function (done) {
+		var appconfig = indigo.init({parent: {child1: 1, child2: 2}});
+		assert.equal(appconfig.get('parent:child1'), 1);
+		assert.equal(appconfig.get('parent:child2'), 2);
+		done();
+	});
 
 	it('should init app', function (done) {
 		indigo.init(__appDir + '/examples/account/config/app.json');
@@ -21,10 +27,8 @@ describe('UnitTests Indigo APIs', function () {
 	});
 
 	it('should get EN location', function (done) {
-
 		var req = {
 				session: {},
-				model: reqmodel(indigo.appconf),
 				headers: {
 					'accept-language': acceptLanguage
 				}
@@ -39,17 +43,15 @@ describe('UnitTests Indigo APIs', function () {
 				}
 			};
 
-		indigo.render(req, res, 'login');
+		indigo.render(req, res, '/login.html');
 	});
 
 	it('should test US locale', function (done) {
-
 		var req = {
 				params: {
 					locale: 'us'
 				},
 				session: {},
-				model: reqmodel(indigo.appconf),
 				headers: {
 					'accept-language': acceptLanguage
 				}
@@ -62,18 +64,17 @@ describe('UnitTests Indigo APIs', function () {
 				}
 			};
 
-		indigo.render(req, res, 'login');
+		indigo.render(req, res, '/login');
 	});
 
 	it('should test RU locale', function (done) {
-
 		var locales = null,
 			req = {
 				params: {
 					countryCode: 'ru'
 				},
 				session: {},
-				model: reqmodel(indigo.appconf),
+				model: require(__appDir + '/libs/reqmodel')(indigo.appconf),
 				headers: {
 					'accept-language': acceptLanguage
 				}
@@ -88,11 +89,43 @@ describe('UnitTests Indigo APIs', function () {
 
 		locales = indigo.getLocales(req, 'countryCode'); //req.params.countryCode
 
-		indigo.render(req, res, 'login', locales);
+		indigo.render(req, res, '/login', locales);
+	});
+
+	it('should get 404 status code', function (done) {
+		var req = {
+				session: {},
+			},res = {
+				status: function(code) {
+					assert.equal(code, 404);
+				},
+				render: function() {
+					done();
+				}
+			};
+		indigo.render(req, res, '/login404');
+	});
+
+	it('should get 404 file path', function (done) {
+		var req = {
+				session: {},
+			},res = {
+				status: function(code) {
+					assert.equal(code, 404);
+				},
+				setHeader: function(key, value) {
+					if (key === 'path') {
+						assert.equal(fixPath(__appDir) + '/examples/account/web/login404.html', fixPath(value));
+					}
+				},
+				render: function() {
+					done();
+				}
+			};
+		indigo.render(req, res, '/login404');
 	});
 
 	it('should test default error 400', function (done) {
-
 		var errorKey = 'invalidAccount',
 			locale = 'en-us',
 			errors = indigo.locales.localeMap[locale].errors,
@@ -100,7 +133,6 @@ describe('UnitTests Indigo APIs', function () {
 				session: {
 					locale: locale
 				},
-				model: reqmodel(indigo.appconf),
 				headers: {
 					'accept-language': acceptLanguage
 				}
@@ -117,7 +149,6 @@ describe('UnitTests Indigo APIs', function () {
 	});
 
 	it('should test custom error 500', function (done) {
-
 		var errorCode = 500,
 			errorKey = 'invalidAccount',
 			locale = 'ru',
@@ -126,7 +157,6 @@ describe('UnitTests Indigo APIs', function () {
 				session: {
 					locale: locale
 				},
-				model: reqmodel(indigo.appconf),
 				headers: {
 					'accept-language': acceptLanguage
 				}
@@ -140,6 +170,16 @@ describe('UnitTests Indigo APIs', function () {
 			};
 
 		indigo.error(req, res, errorKey, errorCode);
+	});
+
+	it('should test getNewURL', function (done) {
+		var req = {
+				session: {
+					locale: 'en'
+				}
+			};
+		assert.equal(indigo.getNewURL(req, null, '/foo'), '/foo');
+		done();
 	});
 });
 

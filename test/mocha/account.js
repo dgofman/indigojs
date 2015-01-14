@@ -22,6 +22,15 @@ describe('Testing Account Controllers', function () {
 		adminDetails = users[adminEmail].details,
 		password = '12345';
 
+	it('should redirect to /en/login', function(done){
+		superagent.get('http://localhost:8585/account/login')
+			.end(function(err, res) {
+				assert.equal(res.statusCode, 200);
+				assert.equal(res.redirects.toString(),  'http://localhost:8585/account/en/login');
+				done();
+		});
+	});
+
 	it('should get user details', function(done){
 		superagent.post('http://localhost:8585/account/login')
 			.send({

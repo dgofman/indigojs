@@ -2,9 +2,9 @@
 
 var debug = require('debug')('indigo:routers'),
 	express = require('express'),
-	fs = require('fs');
+	fs = require('fs'), Routers = {};
 
-module.exports = {
+module.exports = Routers = {
 
 	init: function(app, appconf, reqModel) {
 
@@ -17,17 +17,12 @@ module.exports = {
 
 		debug('router::routers', routers);
 
-		loadModule(routers, function(route) {
+		Routers.loadModule(routers, function(route) {
 			var router = express.Router(),
 				conf = {};
 
 			Object.defineProperty(router, 'conf', {
 				get: function() { return conf; },
-				enumerable: true
-			});
-
-			Object.defineProperty(router, 'app', {
-				get: function() { return app; },
 				enumerable: true
 			});
 
@@ -44,14 +39,14 @@ module.exports = {
 					}).get(callback);
 			};
 
-			conf = routerConf(route(router), middleware);
+			conf = Routers.routerConf(route(router), middleware);
 
 			app.use(conf.base, router);
 
 			debug('router::base - %s, controllers: %s', conf.base, conf.controllers);
 
 			// dynamically include controllers
-			loadModule(conf.controllers, function(controller) {
+			Routers.loadModule(conf.controllers, function(controller) {
 				if (typeof(controller) === 'function') {
 					controller(router);
 				}
@@ -62,7 +57,6 @@ module.exports = {
 			router.use(require(appconf.get('errors:path') || './errorHandler')(appconf));
 		});
 	}
-
 };
 
 	/**
@@ -71,7 +65,7 @@ module.exports = {
 		controllers
 		intercept
 	*/
-function routerConf(opt, middleware) {
+Routers.routerConf = function(opt, middleware) {
 	if (typeof opt === 'string') {
 		opt = {base: opt};
 	} else {
@@ -82,7 +76,7 @@ function routerConf(opt, middleware) {
 	return opt;
 }
 
-function loadModule(dirs, callback) { 
+Routers.loadModule = function(dirs, callback) { 
 	for (var index in dirs) {
 		var dir = __appDir + dirs[index];
 		debug('router::dir - %s', dir);

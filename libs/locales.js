@@ -10,6 +10,7 @@ var debug = require('debug')('indigo:locales'),
 module.exports = {
 
 	localeMap: localeMap,
+	errorFiles: {},
 
 	config: function(appconf) {
 		defLocale = appconf.get('locales:default') || defLocale;
@@ -30,6 +31,7 @@ module.exports = {
 							try {
 								localeMap[localeName][arr[0]] = require(localeDir + '/' + localeName + '/' + file);
 							} catch (e) {
+								this.errorFiles[localeDir + '/' + localeName + '/' + file] = e;
 								indigo.logger.error('FILE: %s, ERROR: %s', localeDir + '/' + localeName + '/' + file, e.toString());
 							}
 						}
@@ -43,7 +45,7 @@ module.exports = {
 
 	init: function(req, locale) {
 		setLocale(req, locale);
-		return localeMap[req.session.locale] || localeMap[defLocale];
+		return localeMap[req.session.locale];
 	}
 };
 

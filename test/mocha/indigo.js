@@ -25,7 +25,7 @@ describe('Testing Indigo API\'s', function () {
 		var req = superagent.get('http://localhost:8787/firststep/index')
 			.end(function() {
 				var injectErrorHandler = errorHandler.injectErrorHandler;
-				errorHandler.injectErrorHandler = function(err) {
+				errorHandler.injectErrorHandler = function() {
 					return {
 						code: 0,
 						error: 'Not Found',

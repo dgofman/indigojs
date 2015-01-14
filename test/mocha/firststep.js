@@ -2,8 +2,7 @@
 
 var superagent = require('superagent'),
 	assert = require('assert'),
-	indigo = require('../../indigo'),
-	errorHandler = require('../../libs/errorHandler');
+	indigo = require('../../indigo');
 
 describe('Testing FirstStep example', function () {
 

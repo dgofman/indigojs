@@ -9,12 +9,10 @@ module.exports = errorHandler = function(appconf) {
 		if (err) {
 
 			var model = {
-					code: res.statusCode,
-					message: '',
-					details: ''
+					code: res.statusCode
 				},
 				template = appconf.get('errors:template'),
-				file = appconf.get('errors:' + res.statusCode);
+				url = appconf.get('errors:' + res.statusCode);
 
 			if (res.statusCode === 404) {
 				model.message = 'Not Found';
@@ -25,12 +23,15 @@ module.exports = errorHandler = function(appconf) {
 			} else if (res.statusCode ===503) {
 				model.message = 'Service Unavailable';
 				model.details = 'Connection refuse.';
+			} else {
+				model.message = 'System Error';
+				model.details = 'Please contact your system administrator.';
 			}
 
 			debug(model);
 
-			if (file && file.length > 0){
-				res.redirect(file);
+			if (url && url.length > 0){
+				res.redirect(url);
 			} else {
 				res.render(__appDir + (template || '/examples/templates/errors.html'), model);
 			}

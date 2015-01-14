@@ -4,6 +4,10 @@ var indigo = require('../../../indigo');
 
 module.exports = function(router) {
 
+	router.get('/login', function(req, res) {
+		res.redirect(router.conf.base + '/en/login');
+	});
+
 	router.get('/:locale/login', function(req, res) {
 		var locales = indigo.getLocales(req);
 		req.model.pageTitle = locales.account.pageTitle; //set title in templates/head.html 

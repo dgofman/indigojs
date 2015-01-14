@@ -4,7 +4,8 @@ var debug = require('debug')('indigo:main'),
 	express = require('express'),
 	ejs = require('ejs'),
 	fs = require('fs'),
-	routers = require('./libs/routers');
+	routers = require('./libs/routers'),
+	errorHandler = require('./libs/errorHandler');
 
 var reqModel, http,
 	appdir, portNumber,
@@ -91,10 +92,10 @@ module.exports = indigo = {
 			try {
 				req.model.filename = appdir + newUrl;
 				return ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
-			} catch(e) {
-				var code = new Date().getTime();
-				logger.error('Code: ', code, '\n', e.toString());
-				return '<h3>Internal error. Please contact your system administrator</h3><br/>Code: ' + code;
+			} catch(err) {
+				var hanlder = errorHandler.injectErrorHandler(err);
+				logger.error('ERROR_INJECT: %s - ', hanlder.code, hanlder.error);
+				return hanlder.message;
 			}
 		};
 
@@ -139,16 +140,10 @@ module.exports = indigo = {
 		debug('render: %s -> %s', req.url, newUrl);
 
 		fileName = appdir + newUrl;
-		setHeader(res,'lang', req.model.locality.langugage);
+		res.setHeader && res.setHeader('lang', req.model.locality.langugage);
 		if (!fs.existsSync(fileName)) {
-			debug('FILE_NOT_FOUND %s', fileName);
-			if (indigo.appconf.get('errors:404')) {
-				setHeader(res, 'url', req.url);
-				setHeader(res, 'path', fileName);
-				return res.redirect(indigo.appconf.get('errors:404'));
-			} else {
-				return res.status(404).end();
-			}
+			res.status(404);
+			res.setHeader && res.setHeader('path', fileName);
 		}
 		res.render(fileName, req.model);
 	},
@@ -174,7 +169,7 @@ module.exports = indigo = {
 			for (var index in req.session.localeLookup) {
 				var newUrl = url.replace('/' + req.session.locale + '/', '/' + req.session.localeLookup[index] + '/');
 				if (fs.existsSync(appdir + newUrl)) {
-					setHeader(res, 'Referer', newUrl);
+					res && res.setHeader && res.setHeader('Referer', newUrl);
 					return newUrl;
 				}
 			}
@@ -185,9 +180,3 @@ module.exports = indigo = {
 		return url;
 	}
 };
-
-function setHeader(res, key, value) {
-	if (res && res.setHeader) {
-		res.setHeader(key, value);
-	}
-}

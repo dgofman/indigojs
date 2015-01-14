@@ -14,6 +14,14 @@
 		}
 	},
 
+	"errors": {
+		"path": null,
+		"template": null,
+		"404": "",
+		"500": "",
+		"503": ""
+	},
+
 	"logger": {
 		"level": "debug",
 		"path": null

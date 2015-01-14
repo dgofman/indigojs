@@ -58,6 +58,8 @@ module.exports = {
 			});
 
 			router.use(conf.middleware);
+
+			router.use(require(appconf.get('errors:path') || './errorHandler')(appconf));
 		});
 	}
 

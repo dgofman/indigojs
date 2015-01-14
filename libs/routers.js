@@ -74,7 +74,7 @@ Routers.routerConf = function(opt, middleware) {
 	}
 	opt.middleware = opt.middleware || middleware;
 	return opt;
-}
+};
 
 Routers.loadModule = function(dirs, callback) { 
 	for (var index in dirs) {
@@ -88,4 +88,4 @@ Routers.loadModule = function(dirs, callback) {
 			});
 		}
 	}
-}
+};

@@ -1,7 +1,7 @@
 {
 	"name": "indigojs",
 	"version": "1.0.0",
-	"description": "IndigoJS Toolkit",
+	"description": "IndigoJS is an open source, JavaScript/NodeJS localization framework",
 	"main": "indigo.js",
 	"scripts": {
 		"test": "make test-unit",
@@ -40,6 +40,8 @@
 		"istanbul": "~0.3.2",
 		"jshint": "~2.5.8",
 		"socket.io": "~1.2.0",
+		"stdio": "~0.2.7",
+		"fs-extra": "~0.14.0",
 		"mongoose": "~3.8.19"
 	},
 	"readmeFilename": "README.md",

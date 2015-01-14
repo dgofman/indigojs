@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="<%= locality.langugage %>">
+<head>
+<%- inject(req, 'templates/head.html') %>
+</head>
+<body>
+	<div id="wrap">
+		<div class="page">
+			<div class="wrapper">
+				<h1><%= locales.common.pageTitle %> is running</h1>
+			</div>
+			
+			<%- inject(req, 'templates/footer.html') %>
+		</div>
+	</div>
+</body>
+</html>

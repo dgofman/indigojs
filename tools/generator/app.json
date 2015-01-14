@@ -1,0 +1,18 @@
+{
+	"environment": "{{env}}",
+
+	"server": {
+		"port": {{port}},
+		"appdir": "{{appdir}}",
+		"cache": 3600 /* seconds, 0 - no-cache */
+	},
+
+	"locales": {
+		"default": "en",
+		"path": "{{locales}}"
+	},
+
+	"routers": [
+		"{{routers}}"
+	]
+}

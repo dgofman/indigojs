@@ -30,7 +30,9 @@
 		"fs": "~0.0.2",
 		"ejs": "~1.0.0",
 		"querystring": "~0.2.0",
-		"less": "~2.2.0"
+		"less": "~2.2.0",
+		"stdio": "~0.2.7",
+		"fs-extra": "~0.14.0"
 	},
 	"devDependencies": {
 		"nodemon": "~1.2.1",
@@ -40,8 +42,6 @@
 		"istanbul": "~0.3.2",
 		"jshint": "~2.5.8",
 		"socket.io": "~1.2.0",
-		"stdio": "~0.2.7",
-		"fs-extra": "~0.14.0",
 		"mongoose": "~3.8.19"
 	},
 	"readmeFilename": "README.md",

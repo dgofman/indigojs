@@ -30,7 +30,7 @@ var stdio = require('stdio'),
 	lines = fs.readFileSync(__dirname + '/index.js', 'utf-8');
 	createFile(dir, '/index.js', lines);
 
-	lines = fs.readFileSync(__dirname + '/.gitignore', 'utf-8');
+	lines = fs.readFileSync(__dirname + '/.npmignore', 'utf-8');
 	createFile(dir, '/.gitignore', lines);
 
 	lines = fs.readFileSync(__dirname + '/app.json', 'utf-8').

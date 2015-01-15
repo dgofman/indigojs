@@ -6,6 +6,7 @@ npm-debug.log
 logs
 coverage
 tmp
+tools/docs/dist
 
 # OS generated files #
 ######################

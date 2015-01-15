@@ -6,6 +6,14 @@ var debug = require('debug')('indigo:routers'),
 
 module.exports = Routers = {
 
+	/**
+	 * Description
+	 * @method init
+	 * @param {} app
+	 * @param {} appconf
+	 * @param {} reqModel
+	 * @return 
+	 */
 	init: function(app, appconf, reqModel) {
 
 		// dynamically include routers
@@ -22,10 +30,22 @@ module.exports = Routers = {
 				conf = {};
 
 			Object.defineProperty(router, 'conf', {
+				/**
+				 * Description
+				 * @method get
+				 * @return conf
+				 */
 				get: function() { return conf; },
 				enumerable: true
 			});
 
+			/**
+			 * Description
+			 * @method get
+			 * @param {} path
+			 * @param {} callback
+			 * @return 
+			 */
 			router.get = function(path, callback) {
 				router.route(path)
 					.all(function(req, res, next) {
@@ -58,11 +78,15 @@ module.exports = Routers = {
 };
 
 	/**
-		base
-		middleware
-		controllers
-		intercept
-	*/
+ * base
+ * middleware
+ * controllers
+ * intercept
+ * @method routerConf
+ * @param {} opt
+ * @param {} middleware
+ * @return opt
+ */
 Routers.routerConf = function(opt, middleware) {
 	if (typeof opt === 'string') {
 		opt = {base: opt};
@@ -74,6 +98,13 @@ Routers.routerConf = function(opt, middleware) {
 	return opt;
 };
 
+/**
+ * Description
+ * @method loadModule
+ * @param {} dirs
+ * @param {} callback
+ * @return 
+ */
 Routers.loadModule = function(dirs, callback) { 
 	for (var index in dirs) {
 		var dir = __appDir + dirs[index];

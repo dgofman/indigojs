@@ -1,5 +1,11 @@
 'use strict';
 
+/**
+ * Description
+ * @method exports
+ * @param {} appconf
+ * @return ObjectExpression
+ */
 module.exports = function reqmodel(appconf) {
 
 	var env = appconf.get('environment'),

@@ -12,6 +12,12 @@ module.exports = {
 	localeMap: localeMap,
 	errorFiles: {},
 
+	/**
+	 * Description
+	 * @method config
+	 * @param {} appconf
+	 * @return 
+	 */
 	config: function(appconf) {
 		defLocale = appconf.get('locales:default') || defLocale;
 		localeMap[defLocale] = { __lookup__: [], __localName__:defLocale };
@@ -43,12 +49,26 @@ module.exports = {
 		}
 	},
 
+	/**
+	 * Description
+	 * @method init
+	 * @param {} req
+	 * @param {} locale
+	 * @return MemberExpression
+	 */
 	init: function(req, locale) {
 		setLocale(req, locale);
 		return localeMap[req.session.locale];
 	}
 };
 
+/**
+ * Description
+ * @method setLocale
+ * @param {} req
+ * @param {} locale
+ * @return 
+ */
 function setLocale(req, locale) {
 	req.session.locale = locale || req.session.locale;
 
@@ -72,6 +92,13 @@ function setLocale(req, locale) {
 	}
 }
 
+/**
+ * Description
+ * @method saveToSession
+ * @param {} req
+ * @param {} locale
+ * @return 
+ */
 function saveToSession(req, locale) {
 	req.session.locale = locale;
 	req.session.localeLookup = localeMap[locale].__lookup__.concat('default');
@@ -81,6 +108,12 @@ function saveToSession(req, locale) {
 	}
 }
 
+/**
+ * Description
+ * @method initLocalelookup
+ * @param {} appconf
+ * @return 
+ */
 function initLocalelookup(appconf) {
 	var file = __appDir + appconf.get('locales:path') + '/accept-rules.json';
 	if (fs.existsSync(file)) {
@@ -90,6 +123,12 @@ function initLocalelookup(appconf) {
 		}
 	}
 
+	/**
+	 * Description
+	 * @method traverse
+	 * @param {} code
+	 * @return target
+	 */
 	function traverse(code) {
 		var target = localeMap[code] = localeMap[code] || { __lookup__: [], __localName__:code };
 

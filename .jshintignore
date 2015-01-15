@@ -1,6 +1,6 @@
 examples/**/*/vendor
 tools/localization/web/js/vendor
 tools/generator/web/default/js/vendor
-tools/docs/templates
+tools/docs/dist
 node_modules
 coverage

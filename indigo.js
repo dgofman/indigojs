@@ -17,6 +17,12 @@ debug('__appDir: %s', __appDir);
 
 module.exports = indigo = {
 
+	/**
+	 * Description
+	 * @method init
+	 * @param {} appconf
+	 * @return appconf
+	 */
 	init: function(appconf) {
 		if (typeof(appconf) === 'string') { //path to app.json
 			debug('indigo::init appconf - %s', appconf);
@@ -24,6 +30,12 @@ module.exports = indigo = {
 		}
 		this.appconf = appconf;
 
+		/**
+		 * Description
+		 * @method get
+		 * @param {} path
+		 * @return value
+		 */
 		appconf.get = function(path) {
 			var value = this,
 				keys = path.split(':');
@@ -45,6 +57,11 @@ module.exports = indigo = {
 
 		if (!this.service) {
 			Object.defineProperty(this, 'service', {
+				/**
+				 * Description
+				 * @method get
+				 * @return CallExpression
+				 */
 				get: function() { return Object.create(service).init(); },
 				enumerable: true
 			});
@@ -60,6 +77,14 @@ module.exports = indigo = {
 		return appconf;
 	},
 
+	/**
+	 * Description
+	 * @method start
+	 * @param {} appconf
+	 * @param {} before
+	 * @param {} after
+	 * @return 
+	 */
 	start: function(appconf, before, after) {
 
 		appconf = this.init(appconf);
@@ -85,6 +110,13 @@ module.exports = indigo = {
 
 		routers.init(app, appconf, reqModel);
 
+		/**
+		 * Description
+		 * @method inject
+		 * @param {} req
+		 * @param {} url
+		 * @return 
+		 */
 		app.locals.inject = function(req, url) {
 			debug(req.method, url);
 			var newUrl = indigo.getNewURL(req, null, '/' + req.session.locale + '/' + url, '/' + url);
@@ -119,10 +151,25 @@ module.exports = indigo = {
 		});
 	},
 
+	/**
+	 * Description
+	 * @method close
+	 * @param {} done
+	 * @return 
+	 */
 	close: function(done) {
 		http.close(done);
 	},
 
+	/**
+	 * Description
+	 * @method render
+	 * @param {} req
+	 * @param {} res
+	 * @param {} fileName
+	 * @param {} locales
+	 * @return 
+	 */
 	render: function(req, res, fileName, locales) {
 		if (!req.model) {
 			req.model = JSON.parse(reqModel);
@@ -146,16 +193,41 @@ module.exports = indigo = {
 		res.render(fileName, req.model);
 	},
 
+	/**
+	 * Description
+	 * @method error
+	 * @param {} req
+	 * @param {} res
+	 * @param {} errorKey
+	 * @param {} errorCode
+	 * @return 
+	 */
 	error: function(req, res, errorKey, errorCode) {
 		var locales = indigo.getLocales(req);
 		res.json(errorCode || 400, { error: locales.errors[errorKey] });
 	},
 
+	/**
+	 * Description
+	 * @method getLocales
+	 * @param {} req
+	 * @param {} paramName
+	 * @return CallExpression
+	 */
 	getLocales: function(req, paramName) {
 		req.params = req.params || {};
 		return locales.init(req, req.params[paramName || 'locale']);
 	},
 
+	/**
+	 * Description
+	 * @method getNewURL
+	 * @param {} req
+	 * @param {} res
+	 * @param {} url
+	 * @param {} redirectURL
+	 * @return url
+	 */
 	getNewURL: function(req, res, url, redirectURL) {
 		if (!req.session.locale) {
 			indigo.getLocales(req);

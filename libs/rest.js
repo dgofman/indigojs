@@ -6,6 +6,11 @@ var debug = require('debug')('indigo:rest'),
 	http = require('http'),
 	https = require('https');
 
+/**
+ * Description
+ * @method exports
+ * @return ObjectExpression
+ */
 module.exports = function service() {
 
 	return {
@@ -14,6 +19,12 @@ module.exports = function service() {
 			'Cache-Control': 'no-cache',
 			'Content-Type': 'text/plain;charset=UTF-8'
 		},
+		/**
+		 * Description
+		 * @method init
+		 * @param {} opts
+		 * @return ThisExpression
+		 */
 		init: function(opts) {
 			opts = opts || indigo.appconf.get('service') || {};
 			this.host = opts.host;
@@ -21,21 +32,70 @@ module.exports = function service() {
 			this.secure = opts.secure;
 			return this;
 		},
+		/**
+		 * Description
+		 * @method get
+		 * @param {} path
+		 * @param {} data
+		 * @param {} callback
+		 * @return 
+		 */
 		get: function(path, data, callback) {
 			this.request('GET', path, data, callback);
 		},
+		/**
+		 * Description
+		 * @method post
+		 * @param {} path
+		 * @param {} data
+		 * @param {} callback
+		 * @return 
+		 */
 		post: function(path, data, callback) {
 			this.request('POST', path, data, callback);
 		},
+		/**
+		 * Description
+		 * @method put
+		 * @param {} path
+		 * @param {} data
+		 * @param {} callback
+		 * @return 
+		 */
 		put: function(path, data, callback) {
 			this.request('PUT', path, data, callback);
 		},
+		/**
+		 * Description
+		 * @method delete
+		 * @param {} path
+		 * @param {} data
+		 * @param {} callback
+		 * @return 
+		 */
 		delete: function(path, data, callback) {
 			this.request('DELETE', path, data, callback);
 		},
+		/**
+		 * Description
+		 * @method patch
+		 * @param {} path
+		 * @param {} data
+		 * @param {} callback
+		 * @return 
+		 */
 		patch: function(path, data, callback) {
 			this.request('PATCH', path, data, callback);
 		},
+		/**
+		 * Description
+		 * @method request
+		 * @param {} method
+		 * @param {} path
+		 * @param {} data
+		 * @param {} callback
+		 * @return 
+		 */
 		request: function(method, path, data, callback) {
 
 			var content = data ? JSON.stringify(data) : '';

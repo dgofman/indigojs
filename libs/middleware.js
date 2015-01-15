@@ -5,6 +5,12 @@ var debug = require('debug')('indigo:middleware'),
 	less = require('less'),
 	errorHandler = require('./errorHandler');
 
+/**
+ * Description
+ * @method exports
+ * @param {} appconf
+ * @return FunctionExpression
+ */
 module.exports = function middleware(appconf) {
 
 	var isDev = appconf.get('environment') === 'dev',

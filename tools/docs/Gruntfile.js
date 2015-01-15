@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function (grunt) {
-    var SRC = './src';
+    var SRC = '../../';
     var DIST = './dist';
     var TMPL = './templates';
     
@@ -13,20 +13,13 @@ module.exports = function (grunt) {
             }
         },
 
-        less: {
-            dist: {
-                src: TMPL + '/less/**/custom.less',
-                dest: TMPL + '/static/styles/custom.css'
-            }
-        },
-
         jsdoc: {
             dist: {
-                src: [SRC + '/**/*.js'],
+                src: [SRC + 'indigo.js', SRC + 'libs/**/*.js'],
                 options: {
                     destination: DIST,
-                    configure: TMPL + '/conf.json',
-                    template: TMPL,
+                    configure: './conf.json',
+                    template: './node_modules/ink-docstrap/template',
                     'private': false
                 }
             }
@@ -36,15 +29,13 @@ module.exports = function (grunt) {
     // Load task libraries
     [
         'grunt-contrib-clean',
-        'grunt-contrib-less',
         'grunt-jsdoc'
     ].forEach(function (taskName) {
         grunt.loadNpmTasks(taskName);
     });
 
-    grunt.registerTask('build', 'Create documentations', [
+    grunt.registerTask('default', 'Create documentations', [
         'clean:jsdoc',
-        'less',
         'jsdoc:dist'
     ]);
 };

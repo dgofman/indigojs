@@ -39,7 +39,7 @@ module.exports = Routers = {
 					}).get(callback);
 			};
 
-			conf = Routers.routerConf(route(router), middleware);
+			conf = Routers.routerConf(route(router, app), middleware);
 
 			app.use(conf.base, router);
 

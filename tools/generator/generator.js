@@ -30,6 +30,9 @@ var stdio = require('stdio'),
 	lines = fs.readFileSync(__dirname + '/index.js', 'utf-8');
 	createFile(dir, '/index.js', lines);
 
+	lines = fs.readFileSync(__dirname + '/.npmignore', 'utf-8');
+	createFile(dir, '/.npmignore', lines);
+
 	lines = fs.readFileSync(__dirname + '/app.json', 'utf-8').
 						replace('{{env}}', ops.env || 'dev').
 						replace('{{port}}', ops.port || 80).

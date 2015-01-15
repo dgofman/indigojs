@@ -12,7 +12,7 @@ module.exports = Routers = {
 		var middleware = require('./middleware')(appconf),
 			routers = appconf.get('routers');
 		if (!routers) {
-			routers =  ['routers'];
+			routers =  ['/routers'];
 		}
 
 		debug('router::routers', routers);
@@ -47,9 +47,7 @@ module.exports = Routers = {
 
 			// dynamically include controllers
 			Routers.loadModule(conf.controllers, function(controller) {
-				if (typeof(controller) === 'function') {
-					controller(router);
-				}
+				controller(router);
 			});
 
 			router.use(conf.middleware);

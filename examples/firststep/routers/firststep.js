@@ -33,5 +33,9 @@ module.exports = function(router) {
 		res.json({ 'method': 'PATCH' });
 	});
 
+	router.get('/TEST', function(req, res) {
+		res.send('HELLO WORLD!');
+	});
+
 	return '/firststep';
 };

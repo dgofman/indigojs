@@ -3,7 +3,7 @@
 
 	"server": {
 		"port": 8585,
-		"cache": 3600, /*0 - no-cache*/
+		"cache": 86400, /*0 - no-cache*/
 		"appdir": "/examples/account/web",
 		"session": {
 			"session-key": "indigojs-session",

@@ -49,7 +49,7 @@ describe('UnitTests Indigo APIs', function () {
 	it('should test US locale', function (done) {
 		var req = {
 				params: {
-					locale: 'us'
+					locale: 'en-us'
 				},
 				session: {},
 				headers: {
@@ -57,7 +57,7 @@ describe('UnitTests Indigo APIs', function () {
 				}
 			},res = {
 				render: function(url, model) {
-					assert.equal(model.locality.locale, 'us');
+					assert.equal(model.locality.locale, 'en-us');
 					assert.equal(model.locality.langugage, 'en-us');
 					assert.equal(model.locales.account.greeting, 'Hi');
 					done();

@@ -93,9 +93,7 @@ module.exports = indigo = {
 				req.model.filename = appdir + newUrl;
 				return ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
 			} catch(err) {
-				var hanlder = errorHandler.injectErrorHandler(err);
-				logger.error('ERROR_INJECT: %s - ', hanlder.code, hanlder.error);
-				return hanlder.message;
+				return errorHandler.injectErrorHandler(err).message;
 			}
 		};
 

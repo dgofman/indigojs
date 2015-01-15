@@ -9,6 +9,14 @@ describe('libs/locales', function () {
 
 	var appconf = indigo.init(__appDir + '/examples/account/config/app.json');
 
+	it('should skip not json files', function (done) {
+		var fileName = __appDir + '/examples/account/locales/en/invalid.js';
+		fs.writeFileSync(fileName, 'HELLO WORLD');
+		locales.config(appconf);
+		fs.unlinkSync(fileName);
+		done();
+	});
+
 	it('should test try/catch', function (done) {
 		var fileName = __appDir + '/examples/account/locales/en/invalid.json';
 		fs.writeFileSync(fileName, 'HELLO WORLD');

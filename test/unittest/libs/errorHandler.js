@@ -83,4 +83,10 @@ describe('libs/errorHandler', function () {
 		assert.equal(errorHandler.injectErrorHandler(error).error, error.toString());
 		done();
 	});
+
+	it('should test lessErrorHandler', function (done) {
+		var error = {error:'ERROR'};
+		assert.equal(errorHandler.lessErrorHandler(error).error, error.toString());
+		done();
+	});
 });

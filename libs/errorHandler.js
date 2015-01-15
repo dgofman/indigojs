@@ -1,9 +1,11 @@
 'use strict';
 
 var debug = require('debug')('indigo:errorHandler'),
-	errorHandler = {};
+	indigo, errorHandler = {};
 
 module.exports = errorHandler = function(appconf) {
+
+	indigo = require('../indigo');
 
 	return function(err, req, res, next) {
 		if (err) {
@@ -45,11 +47,22 @@ module.exports = errorHandler = function(appconf) {
 	static function
 */
 errorHandler.injectErrorHandler = function(err) {
+	return errorHandler.error('ERROR_INJECT', err,
+		'<h3>Internal error. Please contact your system administrator</h3><br/>Code: %UID%');
+};
+
+errorHandler.lessErrorHandler = function(err) {
+	return errorHandler.error('ERROR_LESS_PARSING', err, 'Unable to parse file. Code: %UID%');
+};
+
+errorHandler.error = function(errorId, err, message) {
+	var uid = new Date().getTime().toString();
 	debug(err.toString());
-	var code = new Date().getTime();
+	indigo.logger.error('%s: %s - ', errorId, uid, err.toString());
 	return {
-		code: code,
+		id: errorId,
+		uid: uid,
 		error: err.toString(),
-		message: '<h3>Internal error. Please contact your system administrator</h3><br/>Code: ' + code
+		message: message.replace('%UID%', uid)
 	};
 };

@@ -23,4 +23,13 @@ describe('Testing FirstStep example', function () {
 				done();
 		});
 	});
+
+	it('should test GET', function(done){
+		superagent.get('http://localhost:8787/firststep/index')
+			.end(function(err, res) {
+				assert.equal(res.statusCode, 200);
+				assert.equal(res.headers['content-type'], 'text/html; charset=utf-8');
+				done();
+		});
+	});
 });

@@ -2,6 +2,7 @@
 
 var assert = require('assert'),
 	indigo = require('../../indigo'),
+	rest = require('../../libs/rest'),
 	params = {'param1':1, 'param2': 2};
 
 describe('Testing REST API\'s', function () {
@@ -66,7 +67,7 @@ describe('Testing REST API\'s', function () {
 		});
 	});
 
-	it('should get ECONNRESET error', function(done) {
+	it('should test ECONNRESET error', function(done) {
 		indigo.service.init({
 				host:'localhost',
 				port:8787,
@@ -87,6 +88,37 @@ describe('Testing REST API\'s', function () {
 				assert.equal(res.statusCode, 500);
 				assert.equal(err.code, 'ECONNREFUSED');
 				done();
+		});
+	});
+
+	it('should get ECONNREFUSED calling request function', function(done) {
+		rest().init({
+				host:'localhost',
+				port: 80
+			}).request('GET', '/firststep/REST', null, function(err, result, req, res) {
+				assert.equal(res.statusCode, 500);
+				assert.equal(err.code, 'ECONNREFUSED');
+				done();
+		});
+	});
+
+	it('should get ECONNREFUSED calling request function', function(done) {
+		rest().init({
+				host:'localhost',
+				port: 8787
+			}).request('GET', '/firststep/REST', null, function(err, result, req, res) {
+				assert.equal(res.statusCode, 500);
+				assert.equal(err.code, 'ECONNRESET');
+				done();
+		});
+	});
+
+	it('should test parsing error', function(done) {
+		indigo.service.get('/firststep/TEST', params, function(err, result, req, res) {
+			assert.equal(res.statusCode, 200);
+			assert.equal(err.message, 'Unexpected token H');
+			assert.equal(result, 'HELLO WORLD!');
+			done();
 		});
 	});
 });

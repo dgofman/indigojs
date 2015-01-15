@@ -22,7 +22,7 @@ describe('Testing Account Controllers', function () {
 		adminDetails = users[adminEmail].details,
 		password = '12345';
 
-	it('should redirect to /en/login', function(done){
+	it('should redirect to /en/login', function(done) {
 		superagent.get('http://localhost:8585/account/login')
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 200);
@@ -31,7 +31,7 @@ describe('Testing Account Controllers', function () {
 		});
 	});
 
-	it('should get user details', function(done){
+	it('should get user details', function(done) {
 		superagent.post('http://localhost:8585/account/login')
 			.send({
 				email: userEmail,
@@ -46,7 +46,7 @@ describe('Testing Account Controllers', function () {
 		});
 	});
 
-	it('should get admin details', function(done){
+	it('should get admin details', function(done) {
 		superagent.post('http://localhost:8585/account/login')
 			.send({
 				email: adminEmail,
@@ -61,7 +61,7 @@ describe('Testing Account Controllers', function () {
 		});
 	});
 
-	it('should get error on login', function(done){
+	it('should get error on login', function(done) {
 		superagent.post('http://localhost:8585/account/login')
 			.send({
 				email: 'wrong@user.com',
@@ -74,7 +74,7 @@ describe('Testing Account Controllers', function () {
 		});
 	});
 
-	it('should test reset password', function(done){
+	it('should test reset password', function(done) {
 		superagent.post('http://localhost:8585/account/reset')
 			.send({
 				email: userEmail,
@@ -89,7 +89,7 @@ describe('Testing Account Controllers', function () {
 		});
 	});
 
-	it('should get error on reset', function(done){
+	it('should get error on reset', function(done) {
 		superagent.post('http://localhost:8585/account/reset')
 			.send({
 				email: 'wrong@user.com',

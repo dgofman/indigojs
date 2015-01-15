@@ -38,7 +38,7 @@ module.exports = function service() {
 		},
 		request: function(method, path, data, callback) {
 
-			var content = data ? JSON.stringify(data) || '' : '';
+			var content = data ? JSON.stringify(data) : '';
 
 			this.headers['Content-Length'] = content.length;
 
@@ -76,9 +76,9 @@ module.exports = function service() {
 					try {
 						callback(null, JSON.parse(responseString), req, res);
 					} catch (e) {
-						debug('parse error - %s', e.message);
-						debug('parse content - %s', responseString);
-						callback(null, responseString, req, res);
+						debug('error - %s', e.message);
+						debug('result - %s', responseString);
+						callback(e, responseString, req, res);
 					}
 				});
 			});

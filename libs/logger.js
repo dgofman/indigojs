@@ -1,15 +1,13 @@
 'use strict';
 
-var pine = require('pine'),
-	logger = null;
+var pine = require('pine');
 
-module.exports = 
 /**
   * Description
   * @param {} appconf
   * @return log
   */
- logger = function logger(appconf) {
+module.exports = function logger(appconf) {
 	var log = pine(':', {
 		transports: {
 			console: {

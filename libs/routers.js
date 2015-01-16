@@ -2,9 +2,13 @@
 
 var debug = require('debug')('indigo:routers'),
 	express = require('express'),
-	fs = require('fs'), Routers = {};
+	fs = require('fs');
 
-module.exports = Routers = {
+/**
+ * Router class handling any HTTP request starting from the route base name.
+ * @mixin libs/routers
+ */
+var routers = {
 
 	/**
 	 * Description
@@ -18,14 +22,14 @@ module.exports = Routers = {
 
 		// dynamically include routers
 		var middleware = require('./middleware')(appconf),
-			routers = appconf.get('routers');
-		if (!routers) {
-			routers =  ['/routers'];
+			routersDir = appconf.get('routers');
+		if (!routersDir) {
+			routersDir =  ['/routers'];
 		}
 
-		debug('router::routers', routers);
+		debug('router::routersDir', routersDir);
 
-		Routers.loadModule(routers, function(route) {
+		routers.loadModule(routersDir, function(route) {
 			var router = express.Router(),
 				conf = {};
 
@@ -59,14 +63,14 @@ module.exports = Routers = {
 					}).get(callback);
 			};
 
-			conf = Routers.routerConf(route(router, app), middleware);
+			conf = routers.routerConf(route(router, app), middleware);
 
 			app.use(conf.base, router);
 
 			debug('router::base - %s, controllers: %s', conf.base, conf.controllers);
 
 			// dynamically include controllers
-			Routers.loadModule(conf.controllers, function(controller) {
+			routers.loadModule(conf.controllers, function(controller) {
 				controller(router);
 			});
 
@@ -87,7 +91,7 @@ module.exports = Routers = {
  * @param {} middleware
  * @return opt
  */
-Routers.routerConf = function(opt, middleware) {
+routers.routerConf = function(opt, middleware) {
 	if (typeof opt === 'string') {
 		opt = {base: opt};
 	} else {
@@ -105,7 +109,7 @@ Routers.routerConf = function(opt, middleware) {
  * @param {} callback
  * @return 
  */
-Routers.loadModule = function(dirs, callback) { 
+routers.loadModule = function(dirs, callback) { 
 	for (var index in dirs) {
 		var dir = __appDir + dirs[index];
 		debug('router::dir - %s', dir);
@@ -118,3 +122,5 @@ Routers.loadModule = function(dirs, callback) {
 		}
 	}
 };
+
+module.exports = routers;

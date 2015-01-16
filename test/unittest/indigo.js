@@ -1,7 +1,7 @@
 'use strict';
 
-var debug = require('debug')('indigo:test'),
-	indigo = require('../../indigo'),
+var indigo = require('../../indigo'),
+	locales = require('../../libs/locales'),
 	assert = require('assert');
 
 var acceptLanguage = 'en-gb, en-us';
@@ -123,53 +123,6 @@ describe('UnitTests Indigo APIs', function () {
 				}
 			};
 		indigo.render(req, res, '/login404');
-	});
-
-	it('should test default error 400', function (done) {
-		var errorKey = 'invalidAccount',
-			locale = 'en-us',
-			errors = indigo.locales.localeMap[locale].errors,
-			req = {
-				session: {
-					locale: locale
-				},
-				headers: {
-					'accept-language': acceptLanguage
-				}
-			},res = {
-				json: function(errorCode, model) {
-					assert.equal(errorCode, 400);
-					debug('error: %s', errors[errorKey]);
-					assert.equal(model.error, errors[errorKey]);
-					done();
-				}
-			};
-
-		indigo.error(req, res, errorKey);
-	});
-
-	it('should test custom error 500', function (done) {
-		var errorCode = 500,
-			errorKey = 'invalidAccount',
-			locale = 'ru',
-			errors = indigo.locales.localeMap[locale].errors,
-			req = {
-				session: {
-					locale: locale
-				},
-				headers: {
-					'accept-language': acceptLanguage
-				}
-			},res = {
-				json: function(errorCode, model) {
-					assert.equal(errorCode, errorCode);
-					debug('error: %s', errors[errorKey]);
-					assert.equal(model.error, errors[errorKey]);
-					done();
-				}
-			};
-
-		indigo.error(req, res, errorKey, errorCode);
 	});
 
 	it('should test getNewURL', function (done) {

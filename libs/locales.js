@@ -7,7 +7,12 @@ var debug = require('debug')('indigo:locales'),
 	defLocale = 'en-us',
 	localeMap = {};
 
-module.exports = {
+/**
+  * Description
+  * @module libs/errorHandler
+  * @requires ./locales/accept-rules.json
+*/
+var locales = {
 
 	localeMap: localeMap,
 	errorFiles: {},
@@ -179,3 +184,11 @@ function initLocalelookup(appconf) {
 		traverse(code);
 	}
 }
+
+/**
+ * An exception reporting an error that occurred during HTTP request.
+ * @module libs/errorHandler
+ * @version 1.0
+ * See {@link libs/errorHandler}
+ */
+module.exports = locales;

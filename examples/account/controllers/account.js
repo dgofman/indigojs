@@ -1,6 +1,7 @@
 'use strict';
 
 var indigo = require('../../../indigo'),
+	errorHandler = require('../../../libs/errorHandler'),
 	debug = require('debug')('indigo:account');
 
 var users = require('../models/account').users;
@@ -15,7 +16,7 @@ module.exports = function(router) {
 		if (user && user.password === req.body.password) {
 			return res.json(user.details);
 		}
-		indigo.error(req, res, 'invalidEmailOrPassword');
+		errorHandler.json(req, res, 'invalidEmailOrPassword');
 	});
 
 	router.post('/reset', function(req, res) {
@@ -25,6 +26,6 @@ module.exports = function(router) {
 		if (user) {
 			return res.json(user.details);
 		}
-		indigo.error(req, res, 'invalidAccount');
+		errorHandler.json(req, res, 'invalidAccount');
 	});
 };

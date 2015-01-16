@@ -11,7 +11,7 @@ var debug = require('debug')('indigo:rest'),
  * @method exports
  * @return ObjectExpression
  */
-module.exports = function service() {
+module.exports = function rest() {
 
 	return {
 		headers: {

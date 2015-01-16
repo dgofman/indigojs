@@ -3,7 +3,7 @@
 module.exports = function (grunt) {
     var SRC = '../../';
     var DIST = './dist';
-    var TMPL = './templates';
+    var TMPL = './node_modules/ink-docstrap/template';
     
     grunt.initConfig({
 
@@ -15,11 +15,11 @@ module.exports = function (grunt) {
 
         jsdoc: {
             dist: {
-                src: [SRC + 'indigo.js', SRC + 'libs/**/*.js'],
+                src: [SRC + 'indigo.js', SRC + 'libs/errorHandler.js', SRC + 'libs/middleware.js'],
                 options: {
                     destination: DIST,
                     configure: './conf.json',
-                    template: './node_modules/ink-docstrap/template',
+                    template: TMPL,
                     'private': false
                 }
             }
@@ -34,8 +34,22 @@ module.exports = function (grunt) {
         grunt.loadNpmTasks(taskName);
     });
 
-    grunt.registerTask('default', 'Create documentations', [
+    grunt.registerTask('doc', 'Create documentations', [
         'clean:jsdoc',
-        'jsdoc:dist'
+        'jsdoc:dist',
     ]);
+
+    grunt.registerTask('replace', 'Insert new styles', function() {
+        var file = TMPL + '/tmpl/source.tmpl',
+            contents = grunt.file.read(file);
+        if (contents.indexOf('.navbar-fixed-top') === -1) {
+            console.log(contents)
+            grunt.file.write(file, contents + 
+                '<style>.navbar-fixed-top {position: absolute !important;}</style>');
+        }
+    });
+
+    grunt.registerTask('default', 'Run tasks', function() {
+        grunt.task.run(['doc', 'replace']);
+    });
 };

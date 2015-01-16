@@ -1,7 +1,9 @@
 'use strict';
 
-var errorHandler = require('../../../libs/errorHandler'),
+var debug = require('debug')('indigo:test'),
+	errorHandler = require('../../../libs/errorHandler'),
 	indigo = require('../../../indigo'),
+	locales = require('../../../libs/locales'),
 	assert = require('assert');
 
 describe('libs/errorHandler', function () {
@@ -88,5 +90,46 @@ describe('libs/errorHandler', function () {
 		var error = {error:'ERROR'};
 		assert.equal(errorHandler.lessErrorHandler(error).error, error.toString());
 		done();
+	});
+
+	it('should test default error 400', function (done) {
+		var errorKey = 'invalidAccount',
+			locale = 'en-us',
+			errors = locales.localeMap[locale].errors,
+			req = {
+				session: {
+					locale: locale
+				}
+			},res = {
+				json: function(errorCode, model) {
+					assert.equal(errorCode, 400);
+					debug('error: %s', errors[errorKey]);
+					assert.equal(model.error, errors[errorKey]);
+					done();
+				}
+			};
+
+		errorHandler.json(req, res, errorKey);
+	});
+
+	it('should test custom error 500', function (done) {
+		var errorCode = 500,
+			errorKey = 'invalidAccount',
+			locale = 'ru',
+			errors = locales.localeMap[locale].errors,
+			req = {
+				session: {
+					locale: locale
+				}
+			},res = {
+				json: function(errorCode, model) {
+					assert.equal(errorCode, errorCode);
+					debug('error: %s', errors[errorKey]);
+					assert.equal(model.error, errors[errorKey]);
+					done();
+				}
+			};
+
+		errorHandler.json(req, res, errorKey, errorCode);
 	});
 });

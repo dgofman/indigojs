@@ -9,33 +9,43 @@ var debug = require('debug')('indigo:main'),
 
 var reqModel, http,
 	appdir, portNumber,
-	logger, locales, indigo;
+	logger, locales;
 
+/**
+ * Absolute path to application directory.
+ * @alias __appDir
+ * @type {String}
+ */
 global.__appDir = process.cwd(); 
 
 debug('__appDir: %s', __appDir);
 
-module.exports = indigo = {
+/**
+* @mixin indigo
+*/
+var indigo = 
+	/** @lends indigo.prototype */
+	{
 
 	/**
-	 * Description
-	 * @method init
-	 * @param {} appconf
-	 * @return appconf
+	 * Initialization of module members by using JSON configuration object.
+	 * @param {JSON|String} appconf Path to the <code>app.json</code> file or application configuration object.
+	 * @return {Object} appconf
 	 */
 	init: function(appconf) {
 		if (typeof(appconf) === 'string') { //path to app.json
-			debug('indigo::init appconf - %s', appconf);
+			debug('indigo.init appconf - %s', appconf);
 			appconf = require('cjson').load(appconf);
 		}
-		this.appconf = appconf;
 
 		/**
-		 * Description
-		 * @method get
-		 * @param {} path
-		 * @return value
+		 * JSON object represents application configuration.
+		 * @memberof indigo
+		 * @alias appconf
+		 * @type {Object}
 		 */
+		this.appconf = appconf;
+
 		appconf.get = function(path) {
 			var value = this,
 				keys = path.split(':');
@@ -49,19 +59,33 @@ module.exports = indigo = {
 
 		appdir = __appDir + appconf.get('server:appdir');
 
-		this.locales = locales = require('./libs/locales');
+		locales = require('./libs/locales');
+
+		/**
+		 * Reference to logging API's.
+		 * @memberof indigo
+		 * @alias logger
+		 * @type {Object}
+		 */
 		this.logger = logger = require(appconf.get('logger:path') || './libs/logger')(appconf);
+		/**
+		 * Reference to debugging utility.
+		 * @memberof indigo
+		 * @alias logger
+		 * @type {Function}
+		 */
 		this.debug = require('debug');
 
 		var service = require(appconf.get('service:path') || './libs/rest')();
 
+		/**
+		 * Reference to REST-based api.
+		 * @memberof indigo
+		 * @alias service
+		 * @type {Object}
+		 */
 		if (!this.service) {
 			Object.defineProperty(this, 'service', {
-				/**
-				 * Description
-				 * @method get
-				 * @return CallExpression
-				 */
 				get: function() { return Object.create(service).init(); },
 				enumerable: true
 			});
@@ -78,12 +102,21 @@ module.exports = indigo = {
 	},
 
 	/**
-	 * Description
-	 * @method start
-	 * @param {} appconf
-	 * @param {} before
-	 * @param {} after
-	 * @return 
+	 * Starting a server. It is called after the init method.
+	 * @example
+	 * require('indigojs').start(__dirname + '/config/app.json', 
+	 *	function(http, app) { //before
+	 *	},
+	 *	function(http, app) { //after
+	 *	}
+	 * });
+	 *
+	 * @example
+	 * require('indigojs').start({server:80, appdir:"/web"});
+	 *
+	 * @param {JSON|String} appconf Path to the app.json file or application configuration object.
+	 * @param {Function} [before] Callback function before starting http server.
+	 * @param {Function} [after] Callback function after server started.
 	 */
 	start: function(appconf, before, after) {
 
@@ -97,7 +130,7 @@ module.exports = indigo = {
 
 		app.use('/', express.static(appdir));
 
-		//http://localhost:8585/indigo/account/ru/templates/login
+		//http://localhost:8585/indigo/account/en/templates/login
 		app.use('/indigo/:routerPath/:locale/templates/:pageId', function(req, res) {
 			req.model = JSON.parse(reqModel);
 			locales.init(req, req.params.locale);
@@ -110,13 +143,6 @@ module.exports = indigo = {
 
 		routers.init(app, appconf, reqModel);
 
-		/**
-		 * Description
-		 * @method inject
-		 * @param {} req
-		 * @param {} url
-		 * @return 
-		 */
 		app.locals.inject = function(req, url) {
 			debug(req.method, url);
 			var newUrl = indigo.getNewURL(req, null, '/' + req.session.locale + '/' + url, '/' + url);
@@ -152,23 +178,19 @@ module.exports = indigo = {
 	},
 
 	/**
-	 * Description
-	 * @method close
-	 * @param {} done
-	 * @return 
+	 * Explicitly closing http server using by unittests.
+	 * @param {Function} done Callback function executing after services are terminated.
 	 */
 	close: function(done) {
 		http.close(done);
 	},
 
 	/**
-	 * Description
-	 * @method render
-	 * @param {} req
-	 * @param {} res
-	 * @param {} fileName
-	 * @param {} locales
-	 * @return 
+	 * Rendering HTML templates.
+	 * @param {express.Request} req Defines an object to provide client request information.
+	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
+	 * @param {String} fileName Name of HTML file under application web directory.
+	 * @param {Object} [locales] Reference to the object with localization values.
 	 */
 	render: function(req, res, fileName, locales) {
 		if (!req.model) {
@@ -194,39 +216,23 @@ module.exports = indigo = {
 	},
 
 	/**
-	 * Description
-	 * @method error
-	 * @param {} req
-	 * @param {} res
-	 * @param {} errorKey
-	 * @param {} errorCode
-	 * @return 
+	 * Return object with key/value pair when values will be localized base on client locale request.
+	 * @param {express.Request} req Defines an object to provide client request information.
+	 * @param {String} [keyName] Customize <code>req.params</code> key name refering to locale code (default is 'locale').
+	 * @return Object
 	 */
-	error: function(req, res, errorKey, errorCode) {
-		var locales = indigo.getLocales(req);
-		res.json(errorCode || 400, { error: locales.errors[errorKey] });
-	},
-
-	/**
-	 * Description
-	 * @method getLocales
-	 * @param {} req
-	 * @param {} paramName
-	 * @return CallExpression
-	 */
-	getLocales: function(req, paramName) {
+	getLocales: function(req, keyName) {
 		req.params = req.params || {};
-		return locales.init(req, req.params[paramName || 'locale']);
+		return locales.init(req, req.params[keyName || 'locale']);
 	},
 
 	/**
-	 * Description
-	 * @method getNewURL
-	 * @param {} req
-	 * @param {} res
-	 * @param {} url
-	 * @param {} redirectURL
-	 * @return url
+	 * Verify path to existing file in application web directory based of locale rule in <code>libs/locales/accept-rules.json</code>.
+	 * @param {express.Request} req Defines an object to provide client request information.
+	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
+	 * @param {String} url Client request to the locale file. 
+	 * @param {String} [redirectURL] Redirect URL in case <code>url</code> could not verify.
+	 * @return String
 	 */
 	getNewURL: function(req, res, url, redirectURL) {
 		if (!req.session.locale) {
@@ -250,3 +256,14 @@ module.exports = indigo = {
 		return url;
 	}
 };
+
+/**
+ * Main module.
+ * @module indigo
+ * @version 1.0
+ * @see {@link indigo}
+ *
+ * @author David Gofman <dgofman@gmail.com>
+ * @license MIT License {@link http://opensource.org/licenses/mit-license.php}
+ */
+module.exports = indigo;

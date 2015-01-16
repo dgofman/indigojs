@@ -2,6 +2,7 @@
 	"tags"      : {
 		"allowUnknownTags" : true
 	},
+
 	"plugins"   : ["plugins/markdown"],
 
 	"templates" : {
@@ -18,9 +19,9 @@
 		"linenums"              : true,
 		"collapseSymbols"       : false,
 		"inverseNav"            : true,
-		"highlightTutorialCode" : true,
-		"protocol": "fred://"
+		"highlightTutorialCode" : true
 	},
+
 	"markdown"  : {
 		"parser"   : "gfm",
 		"hardwrap" : true

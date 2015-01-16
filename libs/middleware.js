@@ -6,10 +6,13 @@ var debug = require('debug')('indigo:middleware'),
 	errorHandler = require('./errorHandler');
 
 /**
- * Description
- * @method exports
- * @param {} appconf
- * @return FunctionExpression
+ * Middleware function handling any {@link libs/routers#init} requests. 
+ * IndigoJS middleware provides redirection to locale files under application web directory
+ * based on locale rules defined in <code>libs/locales/accept-rules.json</code>. In case if
+ * file extension is <code>LESS</code> Indigo middleware will compile to <code>CSS</code>.
+ *
+ * @module libs/middleware
+ * @version 1.0
  */
 module.exports = function middleware(appconf) {
 

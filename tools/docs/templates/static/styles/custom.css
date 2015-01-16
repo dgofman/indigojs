@@ -11,6 +11,11 @@ ol {
 li {
   list-style-type: none;
 }
+a>code {
+color: #4B0082;
+text-decoration: underline;
+background-color: #F4D2DE;
+}
 #wrap {
   position: relative;
 }

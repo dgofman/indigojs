@@ -198,6 +198,7 @@ function attachModuleSymbols(doclets, modules) {
  */
 function buildNav(members) {
     var nav = [],
+        mixin = {},
         getItem = function(type, v) {
             return {
                 type: type,
@@ -236,7 +237,18 @@ function buildNav(members) {
 
     if (members.mixins.length) {
         _.each(members.mixins, function (v) {
+            mixin[v.name] = v;
             nav.push(getItem('mixin', v));
+        });
+    }
+
+    if (members.modules.length) {
+        _.each(members.modules, function (v) {
+            if (mixin[v.name] === undefined) {
+                nav.push(getItem('module', v));
+            } else {
+                mixin[v.name].kind = 'module';
+            }
         });
     }
 
@@ -473,7 +485,11 @@ exports.publish = function(taffyData, opts, tutorials) {
             
             var myMixins = helper.find(mixins, {longname: longname});
             if (myMixins.length) {
-                generate('Mixin: ' + myMixins[0].name, myMixins, helper.longnameToUrl[longname]);
+                var kind = 'Mixin';
+                if (myMixins[0].kind === 'module') {
+                    kind = 'Module';
+                }
+                generate(kind + ': ' + myMixins[0].name, myMixins, helper.longnameToUrl[longname]);
             }
 
             var myExternals = helper.find(externals, {longname: longname});

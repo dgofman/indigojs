@@ -1,29 +1,19 @@
 {
-	"tags"      : {
+	"tags": {
 		"allowUnknownTags" : true
 	},
-
-	"plugins"   : ["plugins/markdown"],
-
-	"templates" : {
-		"cleverLinks"           : false,
-		"monospaceLinks"        : false,
-		"dateFormat"            : "ddd MMM Do YYYY",
-		"outputSourceFiles"     : true,
-		"outputSourcePath"      : true,
-		"systemName"            : "indigoJS",
-		"footer"                : "",
-		"copyright"             : "indigoJS Copyright © 2015.",
-		"navType"               : "vertical",
-		"theme"                 : "cerulean",
-		"linenums"              : true,
-		"collapseSymbols"       : false,
-		"inverseNav"            : true,
-		"highlightTutorialCode" : true
+	"plugins": ["plugins/markdown"],
+	"templates": {
+		"cleverLinks": true,
+		"monospaceLinks": true,
+		"default": {
+			"outputSourceFiles" : true
+		},
+		"applicationName": "indigoJS"
 	},
-
-	"markdown"  : {
-		"parser"   : "gfm",
-		"hardwrap" : true
+	"markdown": {
+		"parser": "gfm",
+		"hardwrap": true,
+		"tags": ["examples"]
 	}
 }

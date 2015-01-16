@@ -15,8 +15,7 @@
   },
   "devDependencies": {
     "grunt-contrib-clean": "~0.6.0",
-    "grunt-jsdoc": "~0.5.7",
-    "ink-docstrap": "~0.4.12"
+    "grunt-jsdoc": "~0.5.7"
   },
   "readmeFilename": "README.md",
   "license": "MIT"

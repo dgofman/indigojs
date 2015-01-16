@@ -123,4 +123,8 @@ routers.loadModule = function(dirs, callback) {
 	}
 };
 
+/**
+ * @module libs/routers
+ * @see {@link libs/routers}
+ */
 module.exports = routers;

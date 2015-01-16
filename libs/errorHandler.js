@@ -5,6 +5,10 @@ var debug = require('debug')('indigo:errorHandler'),
 
 /**
  * An exception reporting an error that occurred during HTTP request.
+ *
+ * @version 1.0
+ *
+ * @module
  * @mixin libs/errorHandler
  * @param {Object} appconf An application configuration.
  */
@@ -50,7 +54,7 @@ var errorHandler = function(appconf) {
 
 /**
  * Error handler of runtime errors during rendering EJS templates.
- * @see <code>app.locals.inject</code> {@link indigo#start}
+ * @see <code>app.locals.inject</code> {@link indigo.js.html#line126} {@link app.locals.inject} {@link indigo.js.html#app.locals.inject}
  * @memberof libs/errorHandler
  * @alias injectErrorHandler
  * @param {Object} err Contains information about errors.
@@ -63,7 +67,7 @@ errorHandler.injectErrorHandler = function(err) {
 
 /**
  * Error handler compiling less files to css.
- * @see {@link module:libs/middleware}
+ * @see {@link libs/middleware}
  * @memberof libs/errorHandler
  * @alias lessErrorHandler
  * @param {Object} err Contains information about errors.
@@ -107,9 +111,7 @@ errorHandler.json = function(req, res, errorKey, errorCode) {
 };
 
 /**
- * An exception reporting an error that occurred during HTTP request.
  * @module libs/errorHandler
- * @version 1.0
- * See {@link libs/errorHandler}
+ * @see {@link libs/errorHandler}
  */
 module.exports = errorHandler;

@@ -21,8 +21,13 @@ global.__appDir = process.cwd();
 debug('__appDir: %s', __appDir);
 
 /**
-* @mixin indigo
-*/
+ * Main module.
+ *
+ * @version 1.0
+ *
+ * @module
+ * @mixin indigo
+ */
 var indigo = 
 	/** @lends indigo.prototype */
 	{
@@ -258,9 +263,7 @@ var indigo =
 };
 
 /**
- * Main module.
  * @module indigo
- * @version 1.0
  * @see {@link indigo}
  *
  * @author David Gofman <dgofman@gmail.com>

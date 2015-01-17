@@ -86,6 +86,7 @@ var routers = {
  * middleware
  * controllers
  * intercept
+ *
  * @method routerConf
  * @param {} opt
  * @param {} middleware

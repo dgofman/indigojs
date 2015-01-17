@@ -16,9 +16,7 @@ var self = this;
         <li class="item" data-name="<?js= item.longname ?>">
             <span class="title">
                 <?js= self.linkto(item.longname, item.longname) ?>
-                <?js if (item.type === 'namespace') { ?>
-                <span class="static">static</span>
-                <?js } ?>
+                <span class="type"><?js= item.type ?></span>
             </span>
             <ul class="members itemMembers">
             <?js
@@ -57,7 +55,11 @@ var self = this;
 
                 item.methods.forEach(function (v) {
             ?>
-                <li data-name="<?js= v.longname ?>"><?js= self.linkto(v.longname, v.name) ?></li>
+                <li data-name="<?js= v.longname ?>"><?js= self.linkto(v.longname, v.name) ?>
+                <?js if (v.access === 'protected') { ?>
+                <span class="protected"><?js= v.access ?></span>
+                <?js } ?>
+                </li>
             <?js
                 });
             }

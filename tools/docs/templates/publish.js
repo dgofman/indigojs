@@ -204,6 +204,7 @@ function buildNav(members) {
                 type: type,
                 longname: v.longname,
                 name: v.name,
+                item: v,
                 members: find({
                     kind: 'member',
                     memberof: v.longname
@@ -237,8 +238,9 @@ function buildNav(members) {
 
     if (members.mixins.length) {
         _.each(members.mixins, function (v) {
-            mixin[v.meta.filename] = v;
-            nav.push(getItem('mixin', v));
+            var item = getItem('mixin', v);
+            mixin[v.meta.filename] = item;
+            nav.push(item);
         });
     }
 
@@ -248,7 +250,8 @@ function buildNav(members) {
                 if (mixin[v.meta.filename] === undefined) {
                     nav.push(getItem('module', v));
                 } else {
-                    mixin[v.meta.filename].kind = 'module';
+                    mixin[v.meta.filename].type = 'module';
+                    mixin[v.meta.filename].item.kind = 'module';
                 }
             } else {
                 nav.push(getItem('module', v));

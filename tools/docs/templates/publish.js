@@ -237,17 +237,21 @@ function buildNav(members) {
 
     if (members.mixins.length) {
         _.each(members.mixins, function (v) {
-            mixin[v.name] = v;
+            mixin[v.meta.filename] = v;
             nav.push(getItem('mixin', v));
         });
     }
 
     if (members.modules.length) {
         _.each(members.modules, function (v) {
-            if (mixin[v.name] === undefined) {
-                nav.push(getItem('module', v));
+            if (env.conf.templates.fixMixin) {
+                if (mixin[v.meta.filename] === undefined) {
+                    nav.push(getItem('module', v));
+                } else {
+                    mixin[v.meta.filename].kind = 'module';
+                }
             } else {
-                mixin[v.name].kind = 'module';
+                nav.push(getItem('module', v));
             }
         });
     }
@@ -273,6 +277,8 @@ exports.publish = function(taffyData, opts, tutorials) {
 
     var conf = env.conf.templates || {};
     conf['default'] = conf['default'] || {};
+
+    env.conf.projectVersion = process.env.projectVersion;
 
     var templatePath = opts.template;
     view = new template.Template(templatePath + '/tmpl');

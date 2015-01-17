@@ -16,6 +16,13 @@ color: #4B0082;
 text-decoration: underline;
 background-color: #F4D2DE;
 }
+.version {
+  float: right;
+  margin: -15px 15px 10px;
+  color: #AC7CCF;
+  font-size: 12px;
+  font-weight: bold;
+}
 #wrap {
   position: relative;
 }

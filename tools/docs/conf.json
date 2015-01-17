@@ -4,6 +4,7 @@
 	},
 	"plugins": ["plugins/markdown"],
 	"templates": {
+		"fixMixin": true,
 		"cleverLinks": true,
 		"monospaceLinks": true,
 		"default": {

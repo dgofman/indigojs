@@ -148,6 +148,10 @@ var indigo =
 
 		routers.init(app, appconf, reqModel);
 
+		/**
+		 * @memberOf sourceloader
+		 * @alias indigo.js#localsInject
+		 */
 		app.locals.inject = function(req, url) {
 			debug(req.method, url);
 			var newUrl = indigo.getNewURL(req, null, '/' + req.session.locale + '/' + url, '/' + url);
@@ -223,7 +227,7 @@ var indigo =
 	/**
 	 * Return object with key/value pair when values will be localized base on client locale request.
 	 * @param {express.Request} req Defines an object to provide client request information.
-	 * @param {String} [keyName] Customize <code>req.params</code> key name refering to locale code (default is 'locale').
+	 * @param {String} [keyName='locale'] Customize <code>req.params</code> key name refering to locale code.
 	 * @return Object
 	 */
 	getLocales: function(req, keyName) {

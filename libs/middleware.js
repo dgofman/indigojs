@@ -23,6 +23,10 @@ function middleware(appconf) {
 		appdir = __appDir + appconf.get('server:appdir'),
 		indigo = require('../indigo');
 
+	/**
+	 * @memberOf sourceloader
+	 * @alias middleware.js#handler
+	 */
 	return function(req, res, next) {
 		if (!res._headerSent && req.method === 'GET') {
 			debug(req.method, req.url, req.originalUrl);
@@ -69,7 +73,7 @@ function middleware(appconf) {
 };
 
 /**
- * @module libs/middleware
+ * @module middleware
  * @see {@link libs/middleware}
  */
 module.exports = middleware;

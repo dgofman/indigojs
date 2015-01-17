@@ -39,7 +39,12 @@ module.exports = function (grunt) {
         'jsdoc:dist',
     ]);
 
+    grunt.registerTask('copy', 'Copy sourceloader', function() {
+        grunt.file.copy('./sourceloader.html', DIST + '/sourceloader.html');
+    });
+
     grunt.registerTask('default', 'Run tasks', function() {
-        grunt.task.run(['doc']);
+        process.env.projectVersion = require('../../package.json').version;
+        grunt.task.run(['doc', 'copy']);
     });
 };

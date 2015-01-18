@@ -1,7 +1,6 @@
 'use strict';
 
-var indigo = require('../../../indigo'),
-	errorHandler = require('../../../libs/errorHandler'),
+var errorHandler = require('../../../libs/errorHandler'),
 	debug = require('debug')('indigo:account');
 
 var users = require('../models/account').users;

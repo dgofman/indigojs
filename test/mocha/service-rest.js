@@ -82,7 +82,7 @@ describe('Testing REST API\'s', function () {
 	it('should get ECONNREFUSED error', function(done) {
 		indigo.service.init({
 				host:'localhost',
-				port: 12345,
+				port: 8765,
 				secure: true
 			}).get('/firststep/REST', params, function(err, result, req, res) {
 				assert.equal(res.statusCode, 500);

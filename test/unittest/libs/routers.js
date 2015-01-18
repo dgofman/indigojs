@@ -17,7 +17,7 @@ describe('libs/routers', function () {
 
 	it('should test default setting in routerConf', function (done) {
 		var opt = routers.routerConf();
-		assert.equal(opt.base, '/');
+		assert.equal(opt.base, '/route');
 		done();
 	});
 

@@ -11,13 +11,14 @@ var debug = require('debug')('indigo:middleware'),
  * based on locale rules defined in <code>libs/locales/accept-rules.json</code>. In case if
  * file extension is <code>LESS</code> Indigo middleware will compile to <code>CSS</code>.
  *
+ * @see {@link libs/routers#routerConf}
  * @see {@link libs/middleware.js libs/middleware}
  *
  * @version 1.0
  *
  * @module
  * @mixin libs/middleware
- * @param {appconf} appconf JSON object represents application configuration.
+ * @param {Object} appconf JSON object represents application configuration.
  */
 function middleware(appconf) {
 
@@ -72,7 +73,7 @@ function middleware(appconf) {
 
 		next();
 	};
-};
+}
 
 /**
  * @module middleware

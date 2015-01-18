@@ -15,8 +15,7 @@ module.exports = function (grunt) {
 
         jsdoc: {
             dist: {
-                src: [SRC + 'README.md', SRC + 'indigo.js', SRC + 'libs/errorHandler.js', SRC + 
-                    'libs/middleware.js', SRC + 'libs/locales.js', SRC + 'libs/logger.js'],
+                src: [SRC + 'README.md', SRC + 'indigo.js', SRC + 'libs/**/*'],
                 options: {
                     destination: DIST,
                     configure: './conf.json',

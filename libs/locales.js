@@ -47,9 +47,9 @@ var locales =
 	 *		"default": "en-us",
 	 *		"path": "/src/locales"
 	 *	}
-	 *...
+	 *	...
 	 *}
-	 * @param {appconf} appconf JSON object represents application configuration.
+	 * @param {Object} appconf JSON object represents application configuration.
 	 */
 	config: function(appconf) {
 		defLocale = appconf.get('locales:default') || defLocale;
@@ -142,7 +142,7 @@ function saveToSession(req, locale) {
 /**
  * Traversing all locales files under locale directory.
  * @memberof libs/locales.prototype
- * @param {appconf} appconf JSON object represents application configuration.
+ * @param {Object} appconf JSON object represents application configuration.
  * @access protected
  */
 function localelookup(appconf) {
@@ -198,7 +198,7 @@ function localelookup(appconf) {
 		}
 
 		return target;
-	}
+	};
 
 	for (code in rules) {
 		traverse(code);

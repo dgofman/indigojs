@@ -1,7 +1,6 @@
 'use strict';
 
 var indigo = require('../../indigo'),
-	locales = require('../../libs/locales'),
 	assert = require('assert');
 
 var acceptLanguage = 'en-gb, en-us';

@@ -21,7 +21,37 @@ global.__appDir = process.cwd();
 debug('__appDir: %s', __appDir);
 
 /**
- * Main module.
+ * An indigoJS is the simples localization framework library running on node platform.
+ *
+ * indigoJS is dynamic library and allowing varius number of configurations from 
+ * the JSON file. By default indigoJS assigning a server port number from system environment
+ * <code>process.env.PORT</code> if this varible is not defined on the host server indigoJS reading
+ * server properties from the JSON file. In case we would like to force always starting server on the port
+ * defined in the <code>app.json</code> we should assign true value to the <code>force</code> property, by
+ * default this field is ommited. 
+ *
+ * The <code>cache</code> property setting the header cache value for static files (in the socconds). 
+ * By assign to zero it will prevent browser for caching.
+ *
+ * The property <code>appdir</code> specifying path to the all web static resources.
+ *
+ * By defining the <code>environment</code> varibale as <code>prod</code> indigo including minifying version of
+ * the static resources (*.min.js, *.min.css, compressed less) that simulating file output in deployed server, by
+ * default the value set's to <code>dev</code>.
+ *
+ * @example
+ * conf/app.json 
+ *{
+ *	"server": {
+ *		"port": 8585,
+ *		"force": true,
+ *		"cache": 86400,
+ *		"appdir": "/examples/account/web",
+ *		...
+ *	},
+ *	"environment": "dev"
+ *	...
+ *}
  *
  * @version 1.0
  *
@@ -62,6 +92,8 @@ var indigo =
 			return value;
 		};
 
+		appconf.environment = appconf.environment  || 'dev';
+
 		appdir = __appDir + appconf.get('server:appdir');
 
 		locales = require('./libs/locales');
@@ -76,7 +108,7 @@ var indigo =
 		/**
 		 * Reference to debugging utility.
 		 * @memberof indigo
-		 * @alias logger
+		 * @alias debug
 		 * @type {Function}
 		 */
 		this.debug = require('debug');
@@ -99,7 +131,10 @@ var indigo =
 		reqModel = JSON.stringify(
 				require(appconf.get('server:reqmodel:path') || './libs/reqmodel')(appconf));
 
-		portNumber = Number(process.env.PORT || appconf.get('server:port'));
+		portNumber = process.env.PORT || appconf.get('server:port');
+		if (appconf.get('server:force')) {
+			portNumber = appconf.get('server:port');
+		}
 
 		locales.config(appconf); //initialize locales
 
@@ -178,7 +213,7 @@ var indigo =
 			before(http, app);
 		}
 
-		http.listen(portNumber, function() {
+		http.listen(Number(portNumber), function() {
 			logger.info('Server is running on port %s', portNumber);
 			if (after) {
 				after(http, app);

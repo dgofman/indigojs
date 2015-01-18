@@ -4,7 +4,32 @@ var debug = require('debug')('indigo:errorHandler'),
 	indigo;
 
 /**
- * An exception reporting an error that occurred during HTTP request.
+ * This is default expection handler module assignig for each router and reporting an error 
+ * that occurred during HTTP request.
+ *
+ * indigo providing option overridinging this library from <code>app.json</code> by specifing <code>path</code>
+ * to your custom library.
+ *
+ * Another option for you customize an HTML error details by pointing to your <code>template</code> file. By default
+ * indigo rendering template from <code>examples/templates</code> directory. 
+ *
+ * And last option you can specify URL link for HTTP errors <code>400/500/503</code>.
+ * 
+ * @see {@link sourceloader.routers.js#errorHandler libs/routers}
+ *
+ * @example
+ * conf/app.json 
+ *{
+ *	...
+ *	"errors": {
+ *		"path": null,
+ *		"template": null,
+ *		"404": "",
+ *		"500": "",
+ *		"503": ""
+ *	}
+ *	...
+ *}
  *
  * @version 1.0
  *

@@ -7,23 +7,32 @@ var debug = require('debug')('indigo:rest'),
 	https = require('https');
 
 /**
- * Description
- * @method exports
- * @return ObjectExpression
+ * indigoJS rest module is a simple yet powerful representation of your RESTful API.
+ *
+ * @version 1.0
+ *
+ * @module
+ * @mixin libs/rest
  */
-module.exports = function rest() {
+function rest() {
 
 	return {
+		/**
+		 * JSON object represents service configuration.
+		 * @memberof libs/rest
+		 * @alias headers
+		 * @type {Object}
+		 */
 		headers: {
 			'Accept-Encoding': 'gzip, deflate',
 			'Cache-Control': 'no-cache',
 			'Content-Type': 'text/plain;charset=UTF-8'
 		},
 		/**
-		 * Description
-		 * @method init
-		 * @param {} opts
-		 * @return ThisExpression
+		 * Initializing 
+		 * @memberof libs/rest
+		 * @param {Object} opts
+		 * @return {Object} Scope to the current instance.
 		 */
 		init: function(opts) {
 			opts = opts || indigo.appconf.get('service') || {};
@@ -33,68 +42,55 @@ module.exports = function rest() {
 			return this;
 		},
 		/**
-		 * Description
-		 * @method get
-		 * @param {} path
-		 * @param {} data
-		 * @param {} callback
-		 * @return 
+		 * Initializing 
+		 * @memberof libs/rest
+		 * @param {Object} opts
+		 * @return {Object} Scope to the current instance.
 		 */
 		get: function(path, data, callback) {
 			this.request('GET', path, data, callback);
 		},
 		/**
-		 * Description
-		 * @method post
-		 * @param {} path
-		 * @param {} data
-		 * @param {} callback
-		 * @return 
+		 * Initializing 
+		 * @memberof libs/rest
+		 * @param {Object} opts
+		 * @return {Object} Scope to the current instance.
 		 */
 		post: function(path, data, callback) {
 			this.request('POST', path, data, callback);
 		},
 		/**
-		 * Description
-		 * @method put
-		 * @param {} path
-		 * @param {} data
-		 * @param {} callback
-		 * @return 
+		 * Initializing 
+		 * @memberof libs/rest
+		 * @param {Object} opts
+		 * @return {Object} Scope to the current instance.
 		 */
 		put: function(path, data, callback) {
 			this.request('PUT', path, data, callback);
 		},
 		/**
-		 * Description
-		 * @method delete
-		 * @param {} path
-		 * @param {} data
-		 * @param {} callback
-		 * @return 
+		 * Initializing 
+		 * @memberof libs/rest
+		 * @param {Object} opts
+		 * @return {Object} Scope to the current instance.
 		 */
 		delete: function(path, data, callback) {
 			this.request('DELETE', path, data, callback);
 		},
 		/**
-		 * Description
-		 * @method patch
-		 * @param {} path
-		 * @param {} data
-		 * @param {} callback
-		 * @return 
+		 * Initializing 
+		 * @memberof libs/rest
+		 * @param {Object} opts
+		 * @return {Object} Scope to the current instance.
 		 */
 		patch: function(path, data, callback) {
 			this.request('PATCH', path, data, callback);
 		},
 		/**
-		 * Description
-		 * @method request
-		 * @param {} method
-		 * @param {} path
-		 * @param {} data
-		 * @param {} callback
-		 * @return 
+		 * Initializing 
+		 * @memberof libs/rest
+		 * @param {Object} opts
+		 * @return {Object} Scope to the current instance.
 		 */
 		request: function(method, path, data, callback) {
 
@@ -155,4 +151,10 @@ module.exports = function rest() {
 			req.end();
 		}
 	};
-};
+}
+
+/**
+ * @module rest
+ * @see {@link libs/rest}
+ */
+module.exports = rest;

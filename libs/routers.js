@@ -6,23 +6,43 @@ var debug = require('debug')('indigo:routers'),
 
 /**
  * Router class handling any HTTP request starting from the route base name.
+ *
+ * @version 1.0
+ *
+ * @module
  * @mixin libs/routers
  */
-var routers = {
-
+var routers = 
+	/** @lends libs/routers.prototype */
+	{
 	/**
-	 * Description
-	 * @method init
-	 * @param {} app
-	 * @param {} appconf
-	 * @param {} reqModel
-	 * @return 
+	 * Initializing location of routers directory defined in <code>app.json</code> configuration file.
+	 *
+	 * @example
+	 * conf/app.json 
+	 *{
+	 *	...
+	 *	"routers": [
+	 *		"/src/routers"
+	 *	]
+	 *	...
+	 *}
+	 *
+	 * @param {express} app Instance of the application server.
+	 * @param {Object} appconf JSON object represents application configuration.
+	 * @param {Object} reqModel Reference to {@link libs/reqmodel} object what will be assign to <code>req.model</code> for each router request.
 	 */
 	init: function(app, appconf, reqModel) {
 
 		// dynamically include routers
 		var middleware = require('./middleware')(appconf),
-			routersDir = appconf.get('routers');
+			routersDir = appconf.get('routers'),
+			/**
+			 * @memberOf sourceloader
+			 * @alias routers.js#errorHandler
+			 */
+			errorHandler = require(appconf.get('errors:path') || './errorHandler');
+
 		if (!routersDir) {
 			routersDir =  ['/routers'];
 		}
@@ -34,27 +54,16 @@ var routers = {
 				conf = {};
 
 			Object.defineProperty(router, 'conf', {
-				/**
-				 * Description
-				 * @method get
-				 * @return conf
-				 */
 				get: function() { return conf; },
 				enumerable: true
 			});
 
-			/**
-			 * Description
-			 * @method get
-			 * @param {} path
-			 * @param {} callback
-			 * @return 
-			 */
 			router.get = function(path, callback) {
 				router.route(path)
 					.all(function(req, res, next) {
 						debug(req.method, req.url, req.originalUrl);
 						req.model = JSON.parse(reqModel);
+						req.model.routerBase = conf.base;
 						if (conf.intercept) {
 							conf.intercept(req, res, next);
 						} else {
@@ -63,7 +72,7 @@ var routers = {
 					}).get(callback);
 			};
 
-			conf = routers.routerConf(route(router, app), middleware);
+			conf = routers.routerConf(middleware, route(router, app));
 
 			app.use(conf.base, router);
 
@@ -76,39 +85,121 @@ var routers = {
 
 			router.use(conf.middleware);
 
-			router.use(require(appconf.get('errors:path') || './errorHandler')(appconf));
+			router.use(errorHandler(appconf));
 		});
 	}
 };
 
-	/**
- * base
- * middleware
- * controllers
- * intercept
+/**
+ * This function evaluating the router configuration and initializing routing rules.
+ * A router is an isolated the requests from the client by a route path. The main parameter from the router 
+ * instances is <code>base</code> name. For handling all routing requests in the same class we may return 
+ * just name (Example 1).
  *
- * @method routerConf
- * @param {} opt
- * @param {} middleware
- * @return opt
+ * Each router path may extend implementation of the the business logic in the multiple controllers.
+ * What helps to reduce numbers of lines in the same file. For this reason we need specify the path into 
+ * controllers directories (Example 2).
+ *
+ * IndigoJS routers executing five sequential phases 
+ * <code>derivation/interception/implementation/middleware/integration</code>. For the security reasons indogoJS 
+ * protecting access to <code>derivation</code> and <code>integration</code> phases. The router may handling and 
+ * prevent propagation to the next phase starting from <code>interception</code> phase (Example 3).
+ *
+ * The next phase <code>implementation</code> resolving in router/controller (Example 4).
+ *
+ * The <code>middleware</code> phase usually handling all requests to the static resourses (Example 5).
+ *
+ * @example
+ * Example 1
+ *
+ * module.exports = function(router) {
+ *	return '/account';
+ *};
+ *
+ * module.exports = function(router) {
+ *	return {
+ *		'base': '/account'
+ *	};
+ *};
+ *
+ * @example
+ * Example 2
+ *
+ * module.exports = function(router) {
+ *	return {
+ *		'base': '/account',
+ *		'controllers': [
+ *			'/src/controllers',
+ *			'/src/account/controllers'
+ *		]
+ *	};
+ *};
+ *
+ * @example
+ * Example 3
+ *
+ * module.exports = function() {
+ * 	return {
+ * 		'base' : '/account',
+ * 		'intercept': function(req, res, next) {
+ * 			//prevent router and controllers receiving POST requests
+ * 			if (req.method !== 'POST') {
+ * 				next();
+ * 			}
+ * 		}
+ * 	}
+ * };
+ *
+ * @example
+ * Example 4
+ *
+ * module.exports = function() {
+ * 	router.get('/login', function(req, res) {
+ * 		indigo.render(req, res, '/login.html');
+ * 	});
+ * };
+ *
+ * @example
+ * Example 5
+ *
+ * module.exports = function() {
+ * 	return {
+ * 		'base' : '/account',
+ * 		'middleware': function(req, res, next) {
+ * 			next();
+ * 		}
+ * 	}
+ * };
+ *
+ * @see {@link http://expressjs.com/starter/basic-routing.html}
+ * @see {@link http://expressjs.com/guide/using-middleware.html}
+ *
+ * @memberof libs/routers.prototype
+ * @alias routerConf
+ *
+ * @param {Object} middleware Reference to {@link libs/middleware} module.
+ * @param {Object|String} [opt] Return configuration parameters from the router class. 
+ * In case of <code>opt</code> is undefined the default router pass will assign to root '/route' or you 
+ * can override by returning base name as string or an object <code>{base:'/myroute'}</code>
+ * @return {Object} conf New router configuration object.
  */
-routers.routerConf = function(opt, middleware) {
+routers.routerConf = function(middleware, opt) {
+	var conf = opt || {};
 	if (typeof opt === 'string') {
-		opt = {base: opt};
+		conf = {base: opt};
 	} else {
-		opt = opt || {};
-		opt.base = opt.base || '/';
+		conf.base = conf.base || '/route';
 	}
-	opt.middleware = opt.middleware || middleware;
-	return opt;
+	conf.middleware = conf.middleware || middleware;
+	return conf;
 };
 
 /**
- * Description
- * @method loadModule
- * @param {} dirs
- * @param {} callback
- * @return 
+ * This function verifying and loading routers and controllers.
+ * @memberof libs/routers.prototype
+ * @alias loadModule
+ * @param {Array} dirs List of directories with javascript files.
+ * @param {Function} callback Returns loaded module to the function handler.
  */
 routers.loadModule = function(dirs, callback) { 
 	for (var index in dirs) {
@@ -125,7 +216,7 @@ routers.loadModule = function(dirs, callback) {
 };
 
 /**
- * @module libs/routers
+ * @module routers
  * @see {@link libs/routers}
  */
 module.exports = routers;

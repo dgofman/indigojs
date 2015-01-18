@@ -18,13 +18,15 @@ var pine = require('pine');
  *		"level": "debug",
  *		"path": null
  * 	}
- *...
+ *	...
  *}
  *
  * @version 1.0
  *
+ * @module
  * @mixin libs/logger
  * @param {Object} appconf An application configuration.
+ * @requires pine
  */
 function logger(appconf) {
 	var log = pine(':', {
@@ -42,7 +44,7 @@ function logger(appconf) {
 	}
 
 	return log;
-};
+}
 
 /**
  * @module logger

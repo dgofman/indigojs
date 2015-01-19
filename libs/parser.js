@@ -3,10 +3,40 @@
 var bodyParser = require('body-parser');
 
 /**
- * Description
- * @method exports
- * @return CallExpression
+ * Default module for the initialization of <code>req.body</code> request attribute.
+ * For initialization of custom parsing module locate the path to the new library.
+ *
+ * @example
+ * conf/app.json 
+ *{
+ *
+ *	"server": {
+ *		...
+ *		"parser": {
+ *			"path": null
+ *		}
+ *		...
+ *	}
+ *}
+ *
+ * @version 1.0
+ *
+ * @module
+ * @mixin libs/parser
+ *
+ * @return {express.bodyParser} bodyParser JSON request parameters.
+ * 
+ * @see {@link libs/parser.js}
+ * @see {@link https://www.npmjs.com/package/body-parser}
+ *
+ * @requires body-parser
  */
-module.exports = function parser() {
-	return bodyParser.json(); //enabled req.body
-};
+function parser() {
+	return bodyParser.json();
+}
+
+/**
+ * @module parser
+ * @see {@link libs/parser}
+ */
+module.exports = parser;

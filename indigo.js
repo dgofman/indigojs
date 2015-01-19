@@ -21,8 +21,43 @@ global.__appDir = process.cwd();
 debug('__appDir: %s', __appDir);
 
 /**
-* @mixin indigo
-*/
+ * indigoJS is the simplest localization and templating framework running on node platform.
+ *
+ * indigoJS is a flexible library, allowing multiple configurations from 
+ * the JSON file. By default indigoJS assigns a server port number from a system environment
+ * <code>process.env.PORT</code> if this varible is not defined on the host server, indigoJS reads
+ * the server properties from the JSON file. In case we would like to force, always start server on the port
+ * defined in the <code>app.json</code> we should assign true value to the <code>force</code> property, by
+ * default this field is ommited. 
+ *
+ * The <code>cache</code> property sets the header cache value for static files (in the seconds). 
+ * By assigning it to zero it will prevent browser from caching.
+ *
+ * The property <code>appdir</code> specifies path to the all web static resources.
+ *
+ * By defining the <code>environment</code> variable as <code>prod</code> indigo including a minifying version of
+ * the static resources (*.min.js, *.min.css, compressed less) that simulates file output in deployed server, by
+ * default the value set's to <code>dev</code>.
+ *
+ * @example
+ * conf/app.json 
+ *{
+ *	"server": {
+ *		"port": 8585,
+ *		"force": true,
+ *		"cache": 86400,
+ *		"appdir": "/examples/account/web",
+ *		...
+ *	},
+ *	"environment": "dev"
+ *	...
+ *}
+ *
+ * @version 1.0
+ *
+ * @module
+ * @mixin indigo
+ */
 var indigo = 
 	/** @lends indigo.prototype */
 	{
@@ -30,7 +65,7 @@ var indigo =
 	/**
 	 * Initialization of module members by using JSON configuration object.
 	 * @param {JSON|String} appconf Path to the <code>app.json</code> file or application configuration object.
-	 * @return {Object} appconf
+	 * @return {Object} appconf Return reference to the  configuration object.
 	 */
 	init: function(appconf) {
 		if (typeof(appconf) === 'string') { //path to app.json
@@ -57,6 +92,8 @@ var indigo =
 			return value;
 		};
 
+		appconf.environment = appconf.environment  || 'dev';
+
 		appdir = __appDir + appconf.get('server:appdir');
 
 		locales = require('./libs/locales');
@@ -71,7 +108,7 @@ var indigo =
 		/**
 		 * Reference to debugging utility.
 		 * @memberof indigo
-		 * @alias logger
+		 * @alias debug
 		 * @type {Function}
 		 */
 		this.debug = require('debug');
@@ -94,7 +131,10 @@ var indigo =
 		reqModel = JSON.stringify(
 				require(appconf.get('server:reqmodel:path') || './libs/reqmodel')(appconf));
 
-		portNumber = Number(process.env.PORT || appconf.get('server:port'));
+		portNumber = process.env.PORT || appconf.get('server:port');
+		if (appconf.get('server:force')) {
+			portNumber = appconf.get('server:port');
+		}
 
 		locales.config(appconf); //initialize locales
 
@@ -143,6 +183,10 @@ var indigo =
 
 		routers.init(app, appconf, reqModel);
 
+		/**
+		 * @memberOf sourceloader
+		 * @alias indigo.js#localsInject
+		 */
 		app.locals.inject = function(req, url) {
 			debug(req.method, url);
 			var newUrl = indigo.getNewURL(req, null, '/' + req.session.locale + '/' + url, '/' + url);
@@ -169,7 +213,7 @@ var indigo =
 			before(http, app);
 		}
 
-		http.listen(portNumber, function() {
+		http.listen(Number(portNumber), function() {
 			logger.info('Server is running on port %s', portNumber);
 			if (after) {
 				after(http, app);
@@ -178,7 +222,7 @@ var indigo =
 	},
 
 	/**
-	 * Explicitly closing http server using by unittests.
+	 * Explicitly closing http server by using unittests.
 	 * @param {Function} done Callback function executing after services are terminated.
 	 */
 	close: function(done) {
@@ -218,8 +262,8 @@ var indigo =
 	/**
 	 * Return object with key/value pair when values will be localized base on client locale request.
 	 * @param {express.Request} req Defines an object to provide client request information.
-	 * @param {String} [keyName] Customize <code>req.params</code> key name refering to locale code (default is 'locale').
-	 * @return Object
+	 * @param {String} [keyName='locale'] Customize <code>req.params</code> key name refering to locale code.
+	 * @return {Object} locale Collection of localization messages.
 	 */
 	getLocales: function(req, keyName) {
 		req.params = req.params || {};
@@ -232,7 +276,7 @@ var indigo =
 	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
 	 * @param {String} url Client request to the locale file. 
 	 * @param {String} [redirectURL] Redirect URL in case <code>url</code> could not verify.
-	 * @return String
+	 * @return {String} url New URL base on web appllication directory defined in locale dependencies.
 	 */
 	getNewURL: function(req, res, url, redirectURL) {
 		if (!req.session.locale) {
@@ -258,9 +302,7 @@ var indigo =
 };
 
 /**
- * Main module.
  * @module indigo
- * @version 1.0
  * @see {@link indigo}
  *
  * @author David Gofman <dgofman@gmail.com>

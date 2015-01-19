@@ -11,7 +11,7 @@
 		"start": "make account"
 	},
 	"homepage": "https://github.com/dgofman/indigojs.git",
-	"author": "David Gofman",
+	"author": "David Gofman <dgofman@gmail.com>",
 	"private": false,
 	"publishConfig": {
 		"registry": "https://registry.npmjs.org/"

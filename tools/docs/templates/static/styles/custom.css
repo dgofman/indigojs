@@ -11,6 +11,18 @@ ol {
 li {
   list-style-type: none;
 }
+a>code {
+color: #4B0082;
+text-decoration: underline;
+background-color: #F4D2DE;
+}
+.version {
+  float: right;
+  margin: -15px 15px 10px;
+  color: #AC7CCF;
+  font-size: 12px;
+  font-weight: bold;
+}
 #wrap {
   position: relative;
 }
@@ -76,14 +88,19 @@ li {
 .navigation li.item .title a:hover {
   color: #fff;
 }
-.navigation li.item .title .static {
+.navigation li.item .title .type,
+.navigation li.item .protected {
   display: block;
   border-radius: 3px;
-  background-color: #779c34;
+  background-color: #AC7CCF;
   color: #000;
-  font-size: 0.7em;
-  padding: 2px 4px;
+  font-size: 9px;
+  padding: 1px 4px;
   float: right;
+}
+.navigation li.item .protected {
+  color: #fff;
+  background-color: gray;
 }
 .navigation li.item .subtitle {
   margin-top: 10px;
@@ -139,6 +156,7 @@ li {
   color: #fff;
   font-size: 0.7em;
   padding: 2px 4px;
+  margin-right: 10px;
 }
 .main h4.name span.type {
   margin-left: 5px;

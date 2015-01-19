@@ -65,9 +65,11 @@ function addSignatureParams(f) {
 
 function addSignatureReturns(f) {
     var returnTypes = helper.getSignatureReturns(f);
-    
+
     f.signature = '<span class="signature">'+(f.signature || '') + '</span>';
-    
+
+    console.log(returnTypes)
+
     if (returnTypes.length) {
         f.signature += '<span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">'+(returnTypes.length ? '{'+returnTypes.join('|')+'}' : '')+'</span>';
     }
@@ -198,11 +200,13 @@ function attachModuleSymbols(doclets, modules) {
  */
 function buildNav(members) {
     var nav = [],
+        mixin = {},
         getItem = function(type, v) {
             return {
                 type: type,
                 longname: v.longname,
                 name: v.name,
+                item: v,
                 members: find({
                     kind: 'member',
                     memberof: v.longname
@@ -236,7 +240,24 @@ function buildNav(members) {
 
     if (members.mixins.length) {
         _.each(members.mixins, function (v) {
-            nav.push(getItem('mixin', v));
+            var item = getItem('mixin', v);
+            mixin[v.meta.filename] = item;
+            nav.push(item);
+        });
+    }
+
+    if (members.modules.length) {
+        _.each(members.modules, function (v) {
+            if (env.conf.templates.fixMixin) {
+                if (mixin[v.meta.filename] === undefined) {
+                    nav.push(getItem('module', v));
+                } else {
+                    mixin[v.meta.filename].type = 'module';
+                    mixin[v.meta.filename].item.kind = 'module';
+                }
+            } else {
+                nav.push(getItem('module', v));
+            }
         });
     }
 
@@ -261,6 +282,8 @@ exports.publish = function(taffyData, opts, tutorials) {
 
     var conf = env.conf.templates || {};
     conf['default'] = conf['default'] || {};
+
+    env.conf.projectVersion = process.env.projectVersion;
 
     var templatePath = opts.template;
     view = new template.Template(templatePath + '/tmpl');
@@ -473,7 +496,11 @@ exports.publish = function(taffyData, opts, tutorials) {
             
             var myMixins = helper.find(mixins, {longname: longname});
             if (myMixins.length) {
-                generate('Mixin: ' + myMixins[0].name, myMixins, helper.longnameToUrl[longname]);
+                var kind = 'Mixin';
+                if (myMixins[0].kind === 'module') {
+                    kind = 'Module';
+                }
+                generate(kind + ': ' + myMixins[0].name, myMixins, helper.longnameToUrl[longname]);
             }
 
             var myExternals = helper.find(externals, {longname: longname});

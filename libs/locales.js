@@ -8,20 +8,48 @@ var debug = require('debug')('indigo:locales'),
 	localeMap = {};
 
 /**
-  * Description
-  * @module libs/errorHandler
-  * @requires ./locales/accept-rules.json
-*/
-var locales = {
+ * This module exposes the locale-determination logic for resource 
+ * bundles implementation that needs to produce localized messages.
+ *
+ * @version 1.0
+ *
+ * @module
+ * @mixin libs/locales
+ * @requires ./locales/accept-rules.json
+ */
+var locales = 
+	/** @lends libs/locales.prototype */
+	{
 
+	/**
+	 * Collection of localization objects where key points to locale code and value map 
+	 * of key and value of localization messages.
+	 * @type {Object}
+	 */
 	localeMap: localeMap,
+
+	/**
+	 * Collection of expections during parsering the locale files, where key is file 
+	 * name and value is error object.
+	 * @type {Object}
+	 */
 	errorFiles: {},
 
 	/**
-	 * Description
-	 * @method config
-	 * @param {} appconf
-	 * @return 
+	 * This method executed once reading <code>locales</code> setting defined in appconf.json 
+	 * and building tree of locale messages <code>localeMap</code> at start time.
+	 *
+	 * @example
+	 * conf/app.json 
+	 *{
+	 *	...
+	 *	"locales": {
+	 *		"default": "en-us",
+	 *		"path": "/src/locales"
+	 *	}
+	 *	...
+	 *}
+	 * @param {Object} appconf JSON object represents application configuration.
 	 */
 	config: function(appconf) {
 		defLocale = appconf.get('locales:default') || defLocale;
@@ -50,16 +78,15 @@ var locales = {
 				}
 			}
 
-			initLocalelookup(appconf);
+			localelookup(appconf);
 		}
 	},
 
 	/**
-	 * Description
-	 * @method init
-	 * @param {} req
-	 * @param {} locale
-	 * @return MemberExpression
+	 * Initializing current user locale and returning locallization map of localized messages.
+	 * @param {express.Request} req Defines an object to provide client request information.
+	 * @param {String} [locale] User language code.
+	 * @return {Object} locale Collection of localization messages.
 	 */
 	init: function(req, locale) {
 		setLocale(req, locale);
@@ -68,11 +95,11 @@ var locales = {
 };
 
 /**
- * Description
- * @method setLocale
- * @param {} req
- * @param {} locale
- * @return 
+ * Determine user language code base on URL parameter or browser language settings.
+ * @memberof libs/locales.prototype
+ * @param {express.Request} req Defines an object to provide client request information.
+ * @param {String} [locale] User language code.
+ * @access protected
  */
 function setLocale(req, locale) {
 	req.session.locale = locale || req.session.locale;
@@ -98,11 +125,11 @@ function setLocale(req, locale) {
 }
 
 /**
- * Description
- * @method saveToSession
- * @param {} req
- * @param {} locale
- * @return 
+ * Save current language code into <code>express.Request</code> session.
+ * @memberof libs/locales.prototype
+ * @param {express.Request} req Defines an object to provide client request information.
+ * @param {String} locale User language code.
+ * @access protected
  */
 function saveToSession(req, locale) {
 	req.session.locale = locale;
@@ -114,12 +141,12 @@ function saveToSession(req, locale) {
 }
 
 /**
- * Description
- * @method initLocalelookup
- * @param {} appconf
- * @return 
+ * Traverse all locales files under locale directory.
+ * @memberof libs/locales.prototype
+ * @param {Object} appconf JSON object represents application configuration.
+ * @access protected
  */
-function initLocalelookup(appconf) {
+function localelookup(appconf) {
 	var file = __appDir + appconf.get('locales:path') + '/accept-rules.json';
 	if (fs.existsSync(file)) {
 		var customRules = require(file);
@@ -128,13 +155,7 @@ function initLocalelookup(appconf) {
 		}
 	}
 
-	/**
-	 * Description
-	 * @method traverse
-	 * @param {} code
-	 * @return target
-	 */
-	function traverse(code) {
+	var traverse = function(code) {
 		var target = localeMap[code] = localeMap[code] || { __lookup__: [], __localName__:code };
 
 		var lookup = rules[code];
@@ -178,7 +199,7 @@ function initLocalelookup(appconf) {
 		}
 
 		return target;
-	}
+	};
 
 	for (code in rules) {
 		traverse(code);
@@ -186,9 +207,7 @@ function initLocalelookup(appconf) {
 }
 
 /**
- * An exception reporting an error that occurred during HTTP request.
- * @module libs/errorHandler
- * @version 1.0
- * See {@link libs/errorHandler}
+ * @module locales
+ * @see {@link libs/locales}
  */
 module.exports = locales;

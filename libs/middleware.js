@@ -6,20 +6,30 @@ var debug = require('debug')('indigo:middleware'),
 	errorHandler = require('./errorHandler');
 
 /**
- * Middleware function handling any {@link libs/routers#init} requests. 
+ * Middleware function is handling any router requests. 
  * IndigoJS middleware provides redirection to locale files under application web directory
- * based on locale rules defined in <code>libs/locales/accept-rules.json</code>. In case if
+ * based on locale rules defined in <code>libs/locales/accept-rules.json</code>. In case a
  * file extension is <code>LESS</code> Indigo middleware will compile to <code>CSS</code>.
  *
- * @module libs/middleware
+ * @see {@link libs/routers#routerConf}
+ * @see {@link libs/middleware.js libs/middleware}
+ *
  * @version 1.0
+ *
+ * @module
+ * @mixin libs/middleware
+ * @param {Object} appconf JSON object represents application configuration.
  */
-module.exports = function middleware(appconf) {
+function middleware(appconf) {
 
 	var isDev = appconf.get('environment') === 'dev',
 		appdir = __appDir + appconf.get('server:appdir'),
 		indigo = require('../indigo');
 
+	/**
+	 * @memberOf sourceloader
+	 * @alias middleware.js#handler
+	 */
 	return function(req, res, next) {
 		if (!res._headerSent && req.method === 'GET') {
 			debug(req.method, req.url, req.originalUrl);
@@ -63,4 +73,10 @@ module.exports = function middleware(appconf) {
 
 		next();
 	};
-};
+}
+
+/**
+ * @module middleware
+ * @see {@link libs/middleware}
+ */
+module.exports = middleware;

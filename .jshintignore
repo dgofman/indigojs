@@ -2,5 +2,7 @@ examples/**/*/vendor
 tools/localization/web/js/vendor
 tools/generator/web/default/js/vendor
 tools/docs/dist
+tools/docs/templates
+tools/**/*/node_modules
 node_modules
 coverage

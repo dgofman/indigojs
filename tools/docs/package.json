@@ -1,6 +1,5 @@
 {
   "name": "indigojs_doc",
-  "version": "1.0.0",
   "description": "IndigoJS Documentation",
   "main": "Gruntfile.js",
   "homepage": "https://github.com/dgofman/indigojs.git",

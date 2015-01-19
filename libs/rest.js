@@ -7,23 +7,61 @@ var debug = require('debug')('indigo:rest'),
 	https = require('https');
 
 /**
- * Description
- * @method exports
- * @return ObjectExpression
+ * indigoJS <code>rest</code> module is a simple yet powerful representation of your RESTful API.
+ * By specifying <code>service:path</code> in <code>app.conf</code> you can link to custom version to your
+ * REST API's or another service manager module.
+ *
+ * @version 1.0
+ *
+ * @module
+ * @mixin libs/rest
+ *
+ * @requires http
+ * @requires https
+ *
+ * @example
+ * conf/app.json 
+ *{
+ * ...
+ *	"service": 
+ *	{
+ *		"path": null,
+ *		"host": "localhost",
+ *		"port": 443,
+ *		"secure": true
+ *	}
+ *...
+ *}
  */
-module.exports = function rest() {
+function rest() {
 
-	return {
+	return /** @lends libs/rest.prototype */ {
+		/**
+		 * Specified default header values in JSON responce object.
+		 * @alias headers
+		 * @type {Object}
+		 */
 		headers: {
 			'Accept-Encoding': 'gzip, deflate',
 			'Cache-Control': 'no-cache',
 			'Content-Type': 'text/plain;charset=UTF-8'
 		},
 		/**
-		 * Description
-		 * @method init
-		 * @param {} opts
-		 * @return ThisExpression
+		 * Initializing server settings.
+		 * @param {Object} opts Defined default server configuration where <code>host</code> is IP Address or
+		 * domain name,  <code>port</code> server port number and <code>secure</code> communications protocol
+		 * HTTP or HTTPS.
+		 * 
+		 * @return {Object} rest Scope to the current instance.
+		 *
+		 * @example
+		 * require('indigojs').service.init();
+		 *
+		 * @example
+		 * require('indigojs').service.init({
+		 *		host:'localhost',
+		 *		port: 80
+		 *	});
 		 */
 		init: function(opts) {
 			opts = opts || indigo.appconf.get('service') || {};
@@ -33,68 +71,81 @@ module.exports = function rest() {
 			return this;
 		},
 		/**
-		 * Description
-		 * @method get
-		 * @param {} path
-		 * @param {} data
-		 * @param {} callback
-		 * @return 
+		 * This function used to request a LIST of entities or to SHOW details for one entity.
+		 * @param {String} path Canonical path of the router.
+		 * @param {Object} data An object that is sent to the server with the request.
+		 * @param {Function} callback A callback function that is executed if the request completed.
+		 *
+		 * @example
+		 * require('indigojs').service.get('/routerBase/getPath', null, function(err, result, req, res) {
+		 * 	...
+		 * });
 		 */
 		get: function(path, data, callback) {
 			this.request('GET', path, data, callback);
 		},
 		/**
-		 * Description
-		 * @method post
-		 * @param {} path
-		 * @param {} data
-		 * @param {} callback
-		 * @return 
+		 * Executing HTTP POST requests contain their data in the body of the request. 
+		 * @param {String} path Canonical path of the router.
+		 * @param {Object} data An object that is sent to the server with the request.
+		 * @param {Function} callback A callback function that is executed if the request completed.
+		 *
+		 * @example
+		 * require('indigojs').service.post('/routerBase/postPath', {'key':'value'}, function(err, result, req, res) {
+		 * 	...
+		 * });
 		 */
 		post: function(path, data, callback) {
 			this.request('POST', path, data, callback);
 		},
 		/**
-		 * Description
-		 * @method put
-		 * @param {} path
-		 * @param {} data
-		 * @param {} callback
-		 * @return 
+		 * The function sending request and translated as UPDATE or REPLACE an entity. 
+		 * @param {String} path Canonical path of the router.
+		 * @param {Object} data An object that is sent to the server with the request.
+		 * @param {Function} callback A callback function that is executed if the request completed.
+		 *
+		 * @example
+		 * require('indigojs').service.put('/routerBase/putPath', {'id':123, 'key':'value'}, function(err, result, req, res) {
+		 * 	...
+		 * });
 		 */
 		put: function(path, data, callback) {
 			this.request('PUT', path, data, callback);
 		},
 		/**
-		 * Description
-		 * @method delete
-		 * @param {} path
-		 * @param {} data
-		 * @param {} callback
-		 * @return 
+		 * The function requests are used to delete an entity.
+		 * @param {String} path Canonical path of the router.
+		 * @param {Object} data An object that is sent to the server with the request.
+		 * @param {Function} callback A callback function that is executed if the request completed.
+		 *
+		 * @example
+		 * require('indigojs').service.put('/routerBase/deletePath', {'id':123}, function(err, result, req, res) {
+		 * 	...
+		 * });
 		 */
 		delete: function(path, data, callback) {
 			this.request('DELETE', path, data, callback);
 		},
 		/**
-		 * Description
-		 * @method patch
-		 * @param {} path
-		 * @param {} data
-		 * @param {} callback
-		 * @return 
+		 * The function perform a partial update of an entity.
+		 * @param {String} path Canonical path of the router.
+		 * @param {Object} data An object that is sent to the server with the request.
+		 * @param {Function} callback A callback function that is executed if the request completed.
+		 *
+		 * @example
+		 * require('indigojs').service.patch('/routerBase/patchPath', {'id':123, 'key':'value'}, function(err, result, req, res) {
+		 * 	...
+		 * });
 		 */
 		patch: function(path, data, callback) {
 			this.request('PATCH', path, data, callback);
 		},
 		/**
-		 * Description
-		 * @method request
-		 * @param {} method
-		 * @param {} path
-		 * @param {} data
-		 * @param {} callback
-		 * @return 
+		 * The inner function for building REST requests and executing from <code>get/post/put/delete/patch</code> functions.
+		 * @param {String} method HTTP method <code>GET/POST/PUT/DELETE/PATCH</code>.
+		 * @param {String} path Canonical path of the router.
+		 * @param {Object} data An object that is sent to the server with the request.
+		 * @param {Function} callback A callback function that is executed if the request completed.
 		 */
 		request: function(method, path, data, callback) {
 
@@ -155,4 +206,10 @@ module.exports = function rest() {
 			req.end();
 		}
 	};
-};
+}
+
+/**
+ * @module rest
+ * @see {@link libs/rest}
+ */
+module.exports = rest;

@@ -1,21 +1,49 @@
-indigojs
+indigoJS
 ========
 
-Open terminal
+###Getting started
 
-1) Install NodeJS http://nodejs.org/download/
+######1. Download and install Install NodeJS
 
-2) "npm install" (install node packages)
+<pre>
+ http://nodejs.org/download/
+</pre>
 
-3) "npm start" (run node server)
+######2. Create your project directory
 
-4) Open browser copy and paste URL from console
+<pre>
+ mkdir myapp
+ cd myapp
+</pre>
 
-5) Run "make account" / "make helloworld" / "make firststep"
+######3. Download indigoJS framework
 
+<pre>
+ npm install indigojs
+</pre>
 
-Localization
+######4. Check the project optional generator attributes.
 
-http://localhost:8585/account/ru/templates/login
+<pre>
+ ./generator --help
+</pre>
 
-http://localhost:8585/indigo/account/ru/templates/login
+######5. Create a project using generator.
+
+<pre>
+ ./generator -n myapp
+</pre>
+
+######6. Start your server
+
+<pre>
+npm start:
+</pre>
+
+###Default structure of a project
+
+<pre>
+npm start:
+</pre>
+
+###Please read our API's documentation.

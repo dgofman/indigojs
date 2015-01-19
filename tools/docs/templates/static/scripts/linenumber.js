@@ -8,6 +8,10 @@
 
         numbered = source.innerHTML.split('\n');
         numbered = numbered.map(function(item) {
+            var math = item.match(/@alias.*.js#/);
+            if (math) {
+                return '<span id="' + item.split('#')[1] + '"></span>' + item;
+            }
             counter++;
             return '<span id="line' + counter + '"></span>' + item;
         });

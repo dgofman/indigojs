@@ -4,7 +4,7 @@ module.exports = function (grunt) {
     var SRC = '../../';
     var DIST = './dist';
     var TMPL = './templates';
-    
+
     grunt.initConfig({
 
         clean: {
@@ -15,7 +15,7 @@ module.exports = function (grunt) {
 
         jsdoc: {
             dist: {
-                src: [SRC + 'indigo.js', SRC + 'libs/errorHandler.js', SRC + 'libs/middleware.js', SRC + 'README.md'],
+                src: [SRC + 'README.md', SRC + 'indigo.js', SRC + 'libs/**/*'],
                 options: {
                     destination: DIST,
                     configure: './conf.json',
@@ -39,7 +39,12 @@ module.exports = function (grunt) {
         'jsdoc:dist',
     ]);
 
+    grunt.registerTask('copy', 'Copy sourceloader', function() {
+        grunt.file.copy('./sourceloader.html', DIST + '/sourceloader.html');
+    });
+
     grunt.registerTask('default', 'Run tasks', function() {
-        grunt.task.run(['doc']);
+        process.env.projectVersion = require('../../package.json').version;
+        grunt.task.run(['doc', 'copy']);
     });
 };

@@ -4,7 +4,7 @@ module.exports = function (grunt) {
     var SRC = '../../';
     var DIST = './dist';
     var TMPL = './templates';
-    
+
     grunt.initConfig({
 
         clean: {

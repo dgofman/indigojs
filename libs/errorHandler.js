@@ -83,7 +83,7 @@ var errorHandler = function(appconf) {
  * @memberof libs/errorHandler.prototype
  * @alias injectErrorHandler
  * @param {Object} err Contains information about errors.
- * @return Object
+ * @return {Object} error JSON object with error infomation.
  */
 errorHandler.injectErrorHandler = function(err) {
 	return errorHandler.error('ERROR_INJECT', err,
@@ -96,7 +96,7 @@ errorHandler.injectErrorHandler = function(err) {
  * @memberof libs/errorHandler.prototype
  * @alias lessErrorHandler
  * @param {Object} err Contains information about errors.
- * @return Object
+ * @return {Object} error JSON object with error infomation.
  */
 errorHandler.lessErrorHandler = function(err) {
 	return errorHandler.error('ERROR_LESS_PARSING', err, 'Unable to parse file. Code: %UID%');
@@ -109,7 +109,7 @@ errorHandler.lessErrorHandler = function(err) {
  * @param {String} errorId Error id assigning for each function hanlder.
  * @param {Object} err Contains information about errors.
  * @param {String} message Error description.
- * @return Object
+ * @return {Object} error JSON object with error infomation.
  */
 errorHandler.error = function(errorId, err, message) {
 	var uid = new Date().getTime().toString();

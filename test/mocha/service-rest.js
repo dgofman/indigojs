@@ -23,7 +23,7 @@ describe('Testing REST API\'s', function () {
 	});
 
 	it('should test GET', function(done) {
-		indigo.service.get('/firststep/REST', params, function(err, result, req, res) {
+		indigo.service.get('/firststep/REST', null, function(err, result, req, res) {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'GET');

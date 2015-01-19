@@ -27,7 +27,7 @@ var expressSession = require('express-session');
  * @mixin libs/session
  *
  * @param {Object} appconf An application configuration.
- * @return {express.Session} Instance to the <code>express:Session</code> module.
+ * @return {express-session} expressSession Instance to the <code>express-session</code> module.
  * 
  * @see {@link libs/session.js}
  * @see {@link https://www.npmjs.com/package/express-sessions}

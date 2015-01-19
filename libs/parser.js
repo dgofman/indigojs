@@ -24,7 +24,7 @@ var bodyParser = require('body-parser');
  * @module
  * @mixin libs/parser
  *
- * @return {express.bodyParser} JSON request parameters.
+ * @return {express.bodyParser} bodyParser JSON request parameters.
  * 
  * @see {@link libs/parser.js}
  * @see {@link https://www.npmjs.com/package/body-parser}

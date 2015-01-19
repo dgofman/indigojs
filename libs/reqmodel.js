@@ -18,7 +18,7 @@
  * @module
  * @mixin libs/reqmodel
  *
- * @return {Object} List of properties assigning to <code>req.model</code> for rendering in EJS templates.
+ * @return {Object} model List of properties assigning to <code>req.model</code> for rendering in EJS templates.
  *
  * @see {@link libs/routers#init}
  * @see {@link libs/reqmodel.js}

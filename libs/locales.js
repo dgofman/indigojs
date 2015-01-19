@@ -86,6 +86,7 @@ var locales =
 	 * Initializing current user locale and returnig locallization map of localized messages.
 	 * @param {express.Request} req Defines an object to provide client request information.
 	 * @param {String} [locale] User language code.
+	 * @return {Object} locale Collection of localization messages.
 	 */
 	init: function(req, locale) {
 		setLocale(req, locale);

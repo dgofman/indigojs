@@ -64,18 +64,15 @@ function addSignatureParams(f) {
 }
 
 function addSignatureReturns(f) {
-    var returnTypes = helper.getSignatureReturns( f );
+    var returnTypes = helper.getSignatureReturns(f);
 
-    f.signature = '<span class="signature">' + (f.signature || '') + '</span>' + '<span class="type-signature">' + (returnTypes.length ? ' &rarr; {' + returnTypes.join( '|' ) + '}' : '') + '</span>';
-    /*var returnTypes = helper.getSignatureReturns(f);
-    
     f.signature = '<span class="signature">'+(f.signature || '') + '</span>';
-    
+
     console.log(returnTypes)
 
     if (returnTypes.length) {
         f.signature += '<span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">'+(returnTypes.length ? '{'+returnTypes.join('|')+'}' : '')+'</span>';
-    }*/
+    }
 }
 
 function addSignatureTypes(f) {

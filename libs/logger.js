@@ -26,6 +26,8 @@ var pine = require('pine');
  * @module
  * @mixin libs/logger
  * @param {Object} appconf An application configuration.
+ * @return {pine} pine Reference to <code>pine</code> library.
+ *
  * @requires pine
  */
 function logger(appconf) {

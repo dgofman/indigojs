@@ -65,7 +65,7 @@ var indigo =
 	/**
 	 * Initialization of module members by using JSON configuration object.
 	 * @param {JSON|String} appconf Path to the <code>app.json</code> file or application configuration object.
-	 * @return {Object} appconf
+	 * @return {Object} appconf Return reference to the  configuration object.
 	 */
 	init: function(appconf) {
 		if (typeof(appconf) === 'string') { //path to app.json
@@ -263,7 +263,7 @@ var indigo =
 	 * Return object with key/value pair when values will be localized base on client locale request.
 	 * @param {express.Request} req Defines an object to provide client request information.
 	 * @param {String} [keyName='locale'] Customize <code>req.params</code> key name refering to locale code.
-	 * @return Object
+	 * @return {Object} locale Collection of localization messages.
 	 */
 	getLocales: function(req, keyName) {
 		req.params = req.params || {};
@@ -276,7 +276,7 @@ var indigo =
 	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
 	 * @param {String} url Client request to the locale file. 
 	 * @param {String} [redirectURL] Redirect URL in case <code>url</code> could not verify.
-	 * @return String
+	 * @return {String} url New URL base on web appllication directory defined in locale dependencies.
 	 */
 	getNewURL: function(req, res, url, redirectURL) {
 		if (!req.session.locale) {

@@ -1,6 +1,11 @@
 [![Indigo Logo](http://www.indigojs.com/img/smallogo.png)](http://indigojs.com/)
 
 
+[![NPM Version][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+[![Test Coverage][coveralls-image]][coveralls-url]
+
+
 ###Getting started
 
 ######1. Download and install Install NodeJS

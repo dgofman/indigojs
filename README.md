@@ -1,5 +1,5 @@
-indigoJS
-========
+[![Indigo Logo](http://www.indigojs.com/img/smallogo.png)](http://indigojs.com/)
+
 
 ###Getting started
 

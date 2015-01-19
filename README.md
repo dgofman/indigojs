@@ -1,10 +1,7 @@
 [![Indigo Logo](http://www.indigojs.com/img/smallogo.png)](http://indigojs.com/)
 
 
-[![NPM Version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Test Coverage][coveralls-image]][coveralls-url]
-
+[![NPM version](https://badge.fury.io/js/indigojs.svg)](http://badge.fury.io/js/indigojs) [![Build Status](https://api.travis-ci.org/dgofman/indigojs.svg?branch=master)](https://travis-ci.org/dgofman/indigojs)
 
 ###Getting started
 

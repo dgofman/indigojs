@@ -6,8 +6,6 @@ node_js:
 
 script:
   - "npm run-script cover"
-  - "npm run-script lint"
-  - "npm run-script test-travis"
 
 after_script:
-  - "npm install coveralls@2.10.0 && cat ./coverage/lcov.info | coveralls"
+  - "npm install coveralls && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"

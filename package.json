@@ -8,6 +8,7 @@
     "account": "nodemon --debug examples/account/index.js",
     "helloworld": "nodemon --debug examples/helloworld/index.js",
     "firststep": "nodemon --debug examples/firststep/index.js",
+    "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha test/mocha test/unittest --report lcovonly -- -R spec --check-leaks",
     "start": "make account"
   },
   "homepage": "https://github.com/dgofman/indigojs.git",

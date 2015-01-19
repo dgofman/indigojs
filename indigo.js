@@ -21,22 +21,22 @@ global.__appDir = process.cwd();
 debug('__appDir: %s', __appDir);
 
 /**
- * An indigoJS is the simples localization framework library running on node platform.
+ * indigoJS is the simplest localization and templating framework running on node platform.
  *
- * indigoJS is dynamic library and allowing varius number of configurations from 
- * the JSON file. By default indigoJS assigning a server port number from system environment
- * <code>process.env.PORT</code> if this varible is not defined on the host server indigoJS reading
- * server properties from the JSON file. In case we would like to force always starting server on the port
+ * indigoJS is a flexible library, allowing multiple configurations from 
+ * the JSON file. By default indigoJS assigns a server port number from a system environment
+ * <code>process.env.PORT</code> if this varible is not defined on the host server, indigoJS reads
+ * the server properties from the JSON file. In case we would like to force, always start server on the port
  * defined in the <code>app.json</code> we should assign true value to the <code>force</code> property, by
  * default this field is ommited. 
  *
- * The <code>cache</code> property setting the header cache value for static files (in the socconds). 
- * By assign to zero it will prevent browser for caching.
+ * The <code>cache</code> property sets the header cache value for static files (in the seconds). 
+ * By assigning it to zero it will prevent browser from caching.
  *
- * The property <code>appdir</code> specifying path to the all web static resources.
+ * The property <code>appdir</code> specifies path to the all web static resources.
  *
- * By defining the <code>environment</code> varibale as <code>prod</code> indigo including minifying version of
- * the static resources (*.min.js, *.min.css, compressed less) that simulating file output in deployed server, by
+ * By defining the <code>environment</code> variable as <code>prod</code> indigo including a minifying version of
+ * the static resources (*.min.js, *.min.css, compressed less) that simulates file output in deployed server, by
  * default the value set's to <code>dev</code>.
  *
  * @example
@@ -222,7 +222,7 @@ var indigo =
 	},
 
 	/**
-	 * Explicitly closing http server using by unittests.
+	 * Explicitly closing http server by using unittests.
 	 * @param {Function} done Callback function executing after services are terminated.
 	 */
 	close: function(done) {

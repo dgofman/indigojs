@@ -8,7 +8,7 @@ var debug = require('debug')('indigo:locales'),
 	localeMap = {};
 
 /**
- * This module which exposes the locale-determination logic for resource 
+ * This module exposes the locale-determination logic for resource 
  * bundles implementation that needs to produce localized messages.
  *
  * @version 1.0
@@ -22,7 +22,7 @@ var locales =
 	{
 
 	/**
-	 * Collection of localization objects where key pointing to locale code and value map 
+	 * Collection of localization objects where key points to locale code and value map 
 	 * of key and value of localization messages.
 	 * @type {Object}
 	 */
@@ -83,7 +83,7 @@ var locales =
 	},
 
 	/**
-	 * Initializing current user locale and returnig locallization map of localized messages.
+	 * Initializing current user locale and returning locallization map of localized messages.
 	 * @param {express.Request} req Defines an object to provide client request information.
 	 * @param {String} [locale] User language code.
 	 * @return {Object} locale Collection of localization messages.
@@ -95,7 +95,7 @@ var locales =
 };
 
 /**
- * Determinate user language code base on URL parameter or browser language settings.
+ * Determine user language code base on URL parameter or browser language settings.
  * @memberof libs/locales.prototype
  * @param {express.Request} req Defines an object to provide client request information.
  * @param {String} [locale] User language code.
@@ -125,7 +125,7 @@ function setLocale(req, locale) {
 }
 
 /**
- * Saving current language code into <code>express.Request</code> session.
+ * Save current language code into <code>express.Request</code> session.
  * @memberof libs/locales.prototype
  * @param {express.Request} req Defines an object to provide client request information.
  * @param {String} locale User language code.
@@ -141,7 +141,7 @@ function saveToSession(req, locale) {
 }
 
 /**
- * Traversing all locales files under locale directory.
+ * Traverse all locales files under locale directory.
  * @memberof libs/locales.prototype
  * @param {Object} appconf JSON object represents application configuration.
  * @access protected

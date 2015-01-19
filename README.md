@@ -40,10 +40,10 @@ indigoJS
 npm start:
 </pre>
 
-###Default structure of a Project
+###Default structure of a project
 
 <pre>
 npm start:
 </pre>
 
-###Please read our API documentation.
+###Please read our API's documentation.

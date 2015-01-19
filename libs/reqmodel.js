@@ -1,14 +1,14 @@
 'use strict';
 
 /**
- * This module creating properties initializing on each router <code>express.Request</code> and assigning to <code>req.model</code>.
+ * This module creates properties initializing on each router <code>express.Request</code> and assigning to <code>req.model</code>.
  * 
- * Based on <code>environment</code> value definded in <code>app.json</code> effecting includes at runtime
+ * Based on <code>environment</code> value definded in <code>app.json</code> is included at runtime
  * original source or compiled (<code>minify</code>) files by using keys <code>extCSS</code> and <code>extJS</code>.
  *
- * The object <code>locality</code> defined user locality information such as languge code.
+ * The object <code>locality</code> defined user locality information such as language code.
  *
- * The <code>locales</code> object refering to the values of localization messages. This object builds based on 
+ * The <code>locales</code> object refers to the values of localization messages. This object builds based on 
  * your files names in your <code>locales</code> directory plus localization keys.
  *
  * The <code>routerBase</code> providing path for the current router.

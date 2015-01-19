@@ -5,7 +5,7 @@ var debug = require('debug')('indigo:routers'),
 	fs = require('fs');
 
 /**
- * Router class handling any HTTP request starting from the route base name.
+ * Router class handling any HTTP request starting from the route base path.
  *
  * @version 1.0
  *
@@ -91,23 +91,23 @@ var routers =
 };
 
 /**
- * This function evaluating the router configuration and initializing routing rules.
- * A router is an isolated the requests from the client by a route path. The main parameter from the router 
+ * This function evaluates the router configuration and initializes routing rules.
+ * A router isolates the requests from the client by a route path. The main parameter from the router 
  * instances is <code>base</code> name. For handling all routing requests in the same class we may return 
  * just name (Example 1).
  *
  * Each router path may extend implementation of the the business logic in the multiple controllers.
- * What helps to reduce numbers of lines in the same file. For this reason we need specify the path into 
+ * What helps to reduce numbers of lines in the same file. For this reason we need to specify the path into 
  * controllers directories (Example 2).
  *
- * IndigoJS routers executing five sequential phases 
+ * IndigoJS routers process five sequential phases 
  * <code>derivation/interception/implementation/middleware/integration</code>. For the security reasons indogoJS 
- * protecting access to <code>derivation</code> and <code>integration</code> phases. The router may handling and 
+ * protects access to <code>derivation</code> and <code>integration</code> phases. The router may handle and 
  * prevent propagation to the next phase starting from <code>interception</code> phase (Example 3).
  *
- * The next phase <code>implementation</code> resolving in router/controller (Example 4).
+ * The next phase <code>implementation</code> resolves in router/controller (Example 4).
  *
- * The <code>middleware</code> phase usually handling all requests to the static resourses (Example 5).
+ * The <code>middleware</code> phase usually handles all requests to the static resourses (Example 5).
  *
  * @example
  * Example 1

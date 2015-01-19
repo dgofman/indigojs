@@ -1,49 +1,64 @@
 {
-	"name": "indigojs",
-	"version": "1.1.3",
-	"description": "IndigoJS is an open source, JavaScript/NodeJS localization framework",
-	"main": "indigo.js",
-	"scripts": {
-		"test": "make test-unit",
-		"account": "nodemon --debug examples/account/index.js",
-		"helloworld": "nodemon --debug examples/helloworld/index.js",
-		"firststep": "nodemon --debug examples/firststep/index.js",
-		"start": "make account"
-	},
-	"homepage": "https://github.com/dgofman/indigojs.git",
-	"author": "David Gofman <dgofman@gmail.com>",
-	"private": false,
-	"publishConfig": {
-		"registry": "https://registry.npmjs.org/"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/dgofman/indigojs.git"
-	},
-	"dependencies": {
-		"debug": "~2.1.0",
-		"express": "~4.1.2",
-		"express-session": "~1.8.2",
-		"body-parser": "~1.9.0",
-		"pine": "~1.0.0",
-		"cjson": "~0.3.0",
-		"fs": "~0.0.2",
-		"ejs": "~1.0.0",
-		"querystring": "~0.2.0",
-		"less": "~2.2.0",
-		"stdio": "~0.2.7",
-		"fs-extra": "~0.14.0"
-	},
-	"devDependencies": {
-		"nodemon": "~1.2.1",
-		"assert": "~1.1.2",
-		"mocha": "~2.0.1",
-		"superagent": "~0.20.0",
-		"istanbul": "~0.3.2",
-		"jshint": "~2.5.8",
-		"socket.io": "~1.2.0",
-		"mongoose": "~3.8.19"
-	},
-	"readmeFilename": "README.md",
-	"license": "MIT"
+  "name": "indigojs",
+  "version": "1.1.3",
+  "description": "IndigoJS is an open source, JavaScript/NodeJS localization framework",
+  "main": "indigo.js",
+  "scripts": {
+    "test": "make test-unit",
+    "account": "nodemon --debug examples/account/index.js",
+    "helloworld": "nodemon --debug examples/helloworld/index.js",
+    "firststep": "nodemon --debug examples/firststep/index.js",
+    "start": "make account"
+  },
+  "homepage": "https://github.com/dgofman/indigojs.git",
+  "author": "David Gofman <dgofman@gmail.com>",
+  "private": false,
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dgofman/indigojs.git"
+  },
+  "dependencies": {
+    "debug": "~2.1.0",
+    "express": "~4.1.2",
+    "express-session": "~1.8.2",
+    "body-parser": "~1.9.0",
+    "pine": "~1.0.0",
+    "cjson": "~0.3.0",
+    "fs": "~0.0.2",
+    "ejs": "~1.0.0",
+    "querystring": "~0.2.0",
+    "less": "~2.2.0",
+    "stdio": "~0.2.7",
+    "fs-extra": "~0.14.0"
+  },
+  "devDependencies": {
+    "nodemon": "~1.2.1",
+    "assert": "~1.1.2",
+    "mocha": "~2.0.1",
+    "superagent": "~0.20.0",
+    "istanbul": "~0.3.2",
+    "jshint": "~2.5.8",
+    "socket.io": "~1.2.0",
+    "mongoose": "~3.8.19"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dgofman/indigojs/issues"
+  },
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "keywords": [
+    "node",
+    "nodejs",
+    "localization",
+    "template",
+    "EJS",
+    "express",
+    "rest"
+  ]
 }

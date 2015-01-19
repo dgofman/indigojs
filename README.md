@@ -25,25 +25,45 @@ indigoJS
 ######4. Check the project optional generator attributes.
 
 <pre>
- ./generator --help
+ ./node_modules/indigojs/generator --help
 </pre>
 
 ######5. Create a project using generator.
 
 <pre>
- ./generator -n myapp
+ ./node_modules/indigojs/generator -n myapp
 </pre>
 
-######6. Start your server
+######6. Download dependency modules
 
 <pre>
-npm start:
+ npm install
+</pre>
+
+######7. Start your server
+
+<pre>
+npm start
 </pre>
 
 ###Default structure of a project
 
 <pre>
-npm start:
+./config
+./locales
+./locales/en
+./routers
+./routers/controllers
+./web
+./web/default
+./web/default/css
+./web/default/js
+./web/default/js/vendor
+./web/default/js/views
+./web/default/templates
+./web/en
 </pre>
 
 ###Please read our API's documentation.
+
+http://www.indigojs.com/docs/index.html

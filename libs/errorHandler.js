@@ -69,7 +69,7 @@ var errorHandler = function(appconf) {
 			if (url && url.length > 0){
 				res.redirect(url);
 			} else {
-				res.render(__appDir + (template || '/examples/templates/errors.html'), model);
+				res.render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), model);
 			}
 			return;
 		}

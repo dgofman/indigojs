@@ -16,7 +16,7 @@
 
 	"errors": {
 		"path": null,
-		"template": null,
+		"template": "/examples/templates/errors.html",
 		"404": "",
 		"500": "",
 		"503": ""

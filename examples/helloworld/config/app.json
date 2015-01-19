@@ -6,6 +6,10 @@
 		"appdir": "/examples/helloworld/web"
 	},
 
+	"errors": {
+		"template": "/examples/templates/errors.html"
+	},
+
 	"locales": {
 		"path": "/examples/helloworld/locales"
 	},

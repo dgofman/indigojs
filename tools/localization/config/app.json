@@ -6,6 +6,10 @@
 		"appdir": "/tools/localization/web"
 	},
 
+	"errors": {
+		"template": "/examples/templates/errors.html"
+	},
+
 	"locales": {
 		"default": "en-us",
 		"path": "/tools/localization/locales"

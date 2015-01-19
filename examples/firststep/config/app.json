@@ -15,6 +15,7 @@
 	],
 
 	"errors": {
+		"template": "/examples/templates/errors.html",
 		"404": "https://www.google.com/404"
 	}
 }

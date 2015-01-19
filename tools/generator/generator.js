@@ -12,11 +12,11 @@ var stdio = require('stdio'),
 		return;
 	}
 
-	var ops = stdio.getopt({
+	var defaultPort = 8125, ops = stdio.getopt({
 		'version': {key: 'v', description: 'output the version number'},
 		'name': {key: 'n', args: 1, mandatory: true, description: 'application name'},
-		'dir': {key: 'd', args: 1, description: 'path to the webroot directory  (defaults to /web)'},
-		'port': {key: 'p', args: 1, description: 'server port number  (defaults 8125)'},
+		'dir': {key: 'd', args: 1, description: 'path to the webroot directory (defaults to /web)'},
+		'port': {key: 'p', args: 1, description: 'server port number  (defaults ' + defaultPort + ')'},
 		'uri': {key: 'u', args: 1, description: 'default routing path/uri (defaults /app)'},
 		'routers': {key: 'r', args: 1, description: 'path to the directory with routing files (defaults to /routers)'},
 		'locales': {key: 'l', args: 1, description: 'path to the directory with localization files (defaults to /locales)'},
@@ -35,7 +35,7 @@ var stdio = require('stdio'),
 
 	lines = fs.readFileSync(__dirname + '/app.json', 'utf-8').
 						replace('{{env}}', ops.env || 'dev').
-						replace('{{port}}', ops.port || 8125).
+						replace('{{port}}', ops.port || defaultPort).
 						replace('{{appdir}}', ops.dir || '/web').
 						replace('{{locales}}', ops.locales || '/locales').
 						replace('{{routers}}', ops.routers || '/routers');
@@ -63,7 +63,7 @@ var stdio = require('stdio'),
 	console.log('\nPlease run commands:');
 	console.log('npm install');
 	console.log('npm start');
-	console.log('\nURL: http://localhost:%s%s/index', ops.port || 80, ops.uri || '/app');
+	console.log('\nURL: http://localhost:%s%s/index', ops.port || defaultPort, ops.uri || '/app');
 })();
 
 function createFile(dir, file, lines) {

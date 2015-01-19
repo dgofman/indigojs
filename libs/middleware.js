@@ -61,7 +61,7 @@ function middleware(appconf) {
 							});
 					});
 				} else {
-					res.sendfile(appdir + newUrl);
+					res.sendFile(appdir + newUrl);
 				}
 			} else {
 				res.status(404);

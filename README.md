@@ -1,7 +1,9 @@
 [![Indigo Logo](http://www.indigojs.com/img/smallogo.png)](http://indigojs.com/)
 
 
-[![NPM version](https://badge.fury.io/js/indigojs.svg)](http://badge.fury.io/js/indigojs) [![Build Status](https://api.travis-ci.org/dgofman/indigojs.svg?branch=master)](https://travis-ci.org/dgofman/indigojs) [![Coverage Status](https://coveralls.io/repos/dgofman/indigojs/badge.svg?branch=master)](https://coveralls.io/r/dgofman/indigojs?branch=master) [![Dependency Status](https://david-dm.org/dgofman/indigojs.svg)](https://david-dm.org/dgofman/indigojs) [![devDependency Status](https://david-dm.org/dgofman/indigojs/dev-status.svg)](https://david-dm.org/dgofman/indigojs#info=devDependencies)
+[![NPM version](https://badge.fury.io/js/indigojs.svg)](http://badge.fury.io/js/indigojs) [![Build Status](https://api.travis-ci.org/dgofman/indigojs.svg?branch=master)](https://travis-ci.org/dgofman/indigojs) [![Coverage Status](https://coveralls.io/repos/dgofman/indigojs/badge.svg?branch=master)](https://coveralls.io/r/dgofman/indigojs?branch=master) [![Dependency Status](https://david-dm.org/dgofman/indigojs.svg)](https://david-dm.org/dgofman/indigojs) [![devDependency Status](https://david-dm.org/dgofman/indigojs/dev-status.svg)](https://david-dm.org/dgofman/indigojs#info=devDependencies) [![Build status](https://ci.appveyor.com/api/projects/status/7wyiswf86a9inmju?svg=true)](https://ci.appveyor.com/project/dgofman/indigojs)
+
+
 
 ###Getting started
 
@@ -28,12 +30,20 @@
 
 ```
  ./node_modules/indigojs/generator --help
+
+ Windows OS
+
+ .\node_modules\indigojs\generator --help
 ```
 
 ######5. Create a project using generator.
 
 ```
  ./node_modules/indigojs/generator -n myapp
+
+ Windows OS
+
+ .\node_modules\indigojs\generator -n myapp
 ```
 
 ######6. Download dependency modules

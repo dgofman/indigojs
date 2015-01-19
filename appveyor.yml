@@ -22,7 +22,7 @@ test_script:
   - node --version
   - npm --version
   # Run test
-  - make test
+  - npm run-script test
 
 # Don't actually build.
 build: off

@@ -178,7 +178,7 @@ var indigo =
 			var url = '/' + req.session.locale + '/templates/' + req.params.routerPath + '/' + req.params.pageId + '.html',
 				newUrl = indigo.getNewURL(req, res, url);
 			debug('template: %s -> %s', url, newUrl);
-			res.sendfile(appdir + newUrl);
+			res.sendFile(appdir + newUrl);
 		});
 
 		routers.init(app, appconf, reqModel);

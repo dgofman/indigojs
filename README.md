@@ -1,7 +1,7 @@
 [![Indigo Logo](http://www.indigojs.com/img/smallogo.png)](http://indigojs.com/)
 
 
-[![NPM version](https://badge.fury.io/js/indigojs.svg)](http://badge.fury.io/js/indigojs) [![Build Status](https://api.travis-ci.org/dgofman/indigojs.svg?branch=master)](https://travis-ci.org/dgofman/indigojs)
+[![NPM version](https://badge.fury.io/js/indigojs.svg)](http://badge.fury.io/js/indigojs) [![Build Status](https://api.travis-ci.org/dgofman/indigojs.svg?branch=master)](https://travis-ci.org/dgofman/indigojs) [![Coverage Status](https://coveralls.io/repos/dgofman/indigojs/badge.svg?branch=master)](https://coveralls.io/r/dgofman/indigojs?branch=master)
 
 ###Getting started
 

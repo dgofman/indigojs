@@ -22,7 +22,7 @@
  npm install indigojs
 ```
 
-######4. Check the project optional generator attributes.
+######4. Check the project generator attributes.
 
 ```
  ./node_modules/indigojs/generator --help

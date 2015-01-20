@@ -12,7 +12,8 @@ var reqModel, http,
 	logger, locales;
 
 /**
- * Absolute path to application directory.
+ * Global variable defined absolute path to application directory.
+ * @global
  * @alias __appDir
  * @type {String}
  */

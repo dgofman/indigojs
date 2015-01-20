@@ -133,8 +133,9 @@ errorHandler.error = function(errorId, err, message) {
  * @param {Number} [errorCode=400] HTTP error code.
  */
 errorHandler.json = function(req, res, errorKey, errorCode) {
-	var locales = indigo.getLocales(req);
-	res.json(errorCode || 400, { error: locales.errors ? locales.errors[errorKey] : errorKey });
+	var locales = indigo.getLocales(req),
+		args = [errorCode || 400, { error: locales.errors ? locales.errors[errorKey] : errorKey }];
+	res.status ? res.status(args[0]).json(args[1]) : res.json.apply(null, args); //temporary workaround between (latest express and old mocha)
 };
 
 /**

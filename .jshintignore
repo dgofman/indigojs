@@ -1,5 +1,5 @@
 examples/**/*/vendor
-tools/localization/web/js/vendor
+tools/localization/web/default/js/vendor/
 tools/generator/web/default/js/vendor
 tools/docs/dist
 tools/docs/templates

@@ -20,7 +20,25 @@ define([
 					app = angular.module(appName, []);
 
 				$('input[type=file]').change(function () {
-					$('#appConfFile').val(this.value);
+					if (this.files.length) {
+						if (this.files[0].type !== 'application/json') {
+							alert('Please select a app.json configuration file');
+						} else {
+							var data = new FormData();
+							data.append('file-0', this.files[0]);
+							$.ajax({
+								url: '/localization/appConf',
+								data: data,
+								cache: false,
+								contentType: false,
+								processData: false,
+								type: 'POST',
+								success: function(data){
+									alert(data);
+								}
+							});
+						}
+					}
 				});
 
 				app.service('appService', function($rootScope) {

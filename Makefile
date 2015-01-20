@@ -42,8 +42,8 @@ localetool: killnode
 	node tools/localization/index.js </dev/null &
 	open "http://localhost:8888/localization/index"
 
-debug: clear
-	DEBUG=indigo:* & nodemon --debug .
+debug:
+	clear & DEBUG=indigo:* & nodemon --debug .
 
 killnode:
 	killall -9 node || true

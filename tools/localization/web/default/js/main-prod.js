@@ -2,13 +2,13 @@
 
 require.config({
 	paths: {
-		jquery: '/js/vendor/jquery-2.1.1',
-		angular: '/js/vendor/angular-1.3.8',
-		jqGrid: '/js/vendor/jquery.jqGrid-4.7.0',
+		jquery: 'vendor/jquery-2.1.1.min',
+		angular: 'vendor/angular-1.3.8.min',
+		jqGrid: 'vendor/jquery.jqGrid-4.7.0.min',
 
-		gridController: '/js/controllers/GridController',
+		gridController: 'controllers/GridController',
 
-		socketio: '/socket.io/socket.io'
+		socketio: '../../../socket.io/socket.io'
 	},
 
 	shim: {

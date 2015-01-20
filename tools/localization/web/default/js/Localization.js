@@ -19,6 +19,10 @@ define([
 					gridCntlName = 'gridController',
 					app = angular.module(appName, []);
 
+				$('input[type=file]').change(function () {
+					$('#appConfFile').val(this.value);
+				});
+
 				app.service('appService', function($rootScope) {
 					return {
 						data: {},

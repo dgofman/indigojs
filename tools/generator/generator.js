@@ -53,7 +53,7 @@ var stdio = require('stdio'),
 						replace('{{routers}}', ops.routers || '/routers');
 	createFile(dir, '/router.js', lines);
 
-	dir = dir + '/controllers';
+	dir = './controllers';
 	lines = fs.readFileSync(__dirname + '/controller.js', 'utf-8');
 	createFile(dir, '/controller.js', lines);
 	fse.copySync(__dirname + '/web', './web');

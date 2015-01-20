@@ -1,8 +1,10 @@
 {
 	"pageTitle": "Indigo Localization",
-	"appConfig": "App Config File",
-	"selectApp": "Browse to app.json",
-	"filter": "Filter",
+	"appConfig": "Config File",
+	"selectApp": "Select app.json",
+	"browse" : "Browse",
+	"filter": "Template Filter",
+	"fileName": "File Name",
 	"language": "Language",
 	"key": "Key Language",
 	"localized": "Localized",

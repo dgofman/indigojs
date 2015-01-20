@@ -23,7 +23,9 @@ define([
 			colModel: [ {name: 'Column1', index: 'Column1', width: 90}, 
 						{name: 'Column2', index: 'Column2', width: 100, align: 'center'},
 						{name: 'Column3', index: 'Column3', width: 100, align: 'center'} ], 
-			viewrecords: true
+			viewrecords: true,
+			width: null,
+			shrinkToFit: false
 		});
 	};
 });

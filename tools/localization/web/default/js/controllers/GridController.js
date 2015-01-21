@@ -3,15 +3,24 @@
 define([
 	'jquery',
 	'angular'
-], function($, angular) {
+], function($) {
 
-	var appServiceEventHandler = function(evt, key) {
-		console.log(evt, key, $, angular);
+	var grid,
+		gridData,
+		parentdWidth = 0;
+
+	var fileLoadedHandler = function(evt, files) {
+		//gridData = files;
+		createGrid();
 	};
 
-	var createGrid = function(element, parentdWidth, data) {
-		var grid = element.find('.jqgrid'),
-			width = 0,
+	var createGrid = function() {
+		if (grid) {
+			parentdWidth = grid.parent().width();
+			grid.GridUnload();
+		}
+
+		var width = 0,
 			columns = window.Localization.columns || {},
 			colModel = [ {name: 'key', index: 'key', width: 200}, 
 						{name: 'locale', index: 'locale', width: 500, align: 'center'},
@@ -22,33 +31,30 @@ define([
 		}
 		colModel[i].width = parentdWidth - width;
 
-		grid.jqGrid({
+		grid = $('.jqGridContainer > .jqgrid').jqGrid({
 			colNames: [columns.key, 
 						 columns.localized,
 						 columns.path], 
 			datatype: 'local',
-			data: data,
+			data: gridData,
 			colModel: colModel, 
 			viewrecords: false,
 			shrinkToFit: false,
 			width: null
 		});
-		return grid;
 	};
 
-	return function (appService, $scope, $element) {
-		$scope.$on('appServiceChanged', appServiceEventHandler);
+	return function (appService, $scope) {
+		$scope.$on('FILE_LOADED_EVENT', fileLoadedHandler);
 
-		var grid = createGrid($element, 0),
-			parentdWidth,
-			win = $(window).bind('resize', function() {
-				if (grid.parent().width() === 0) {
-					setTimeout(function() { win.trigger('resize'); }, 100);
-				} else if (grid.parent().width() !== parentdWidth) {
-					parentdWidth = grid.parent().width();
-					grid.GridUnload();
-					grid = createGrid($element, parentdWidth);
-				}
+		createGrid();
+
+		var win = $(window).bind('resize', function() {
+			if (grid.parent().width() === 0) {
+				setTimeout(function() { win.trigger('resize'); }, 100);
+			} else if (grid.parent().width() !== parentdWidth) {
+				createGrid();
+			}
 		}).trigger('resize');
 	};
 });

@@ -15,19 +15,14 @@ define([
 		localization.prototype = {
 
 			initialize: function(params) {
-				var appName = 'app',
+				var appName = 'indigo',
 					gridCntlName = 'gridController',
 					app = angular.module(appName, []);
 
 				app.service('appService', function($rootScope) {
 					return {
-						data: {},
-						set: function(key, value) {
-							this.data[key] = value;
-							$rootScope.$broadcast('appServiceChanged', key);
-						},
-						get: function(key) {
-							return this.data[key];
+						files: function(files) {
+							$rootScope.$broadcast('FILE_LOADED_EVENT', files);
 						}
 					};
 				});
@@ -35,22 +30,50 @@ define([
 				this.div = $(params.el);
 
 				this.div.find('.jqGridContainer').attr('ng-controller', gridCntlName);
-				app.controller(gridCntlName, ['appService', '$scope', '$element', gridController]);
 
-				app.run(function($rootScope) {
-					var language = $('#language');
-					language.change(function() {
-						var option = language.find('option:selected');
-						$rootScope.localizedLocale = {'key': option.val().toUpperCase(), 'name': option.text()};
-						$rootScope.$apply();
-					});
-					language.trigger('change');
-				});
+				app.controller(gridCntlName, ['appService', '$scope', gridController]);
+
+				app.run(['appService', '$rootScope', '$http', $.proxy(this.afterRender, this)]);
 
 				angular.bootstrap(this.div[0], [appName]);
+			},
 
-				this.div.show();
-				$('div.loading').hide();
+			afterRender: function(appService, $rootScope, $http) {
+				var self = this,
+					files = [],
+					filters = $('#filter option'),
+					language = $('#language');
+
+				language.change(function() {
+					var option = language.find('option:selected');
+					$rootScope.localizedLocale = {'key': option.val().toUpperCase(), 'name': option.text()};
+					$rootScope.$apply();
+				});
+				language.trigger('change');
+
+				$.each(filters, function(index, option) {
+					if (option.value !== 'all') {
+						self.loadFile($http, option.text, function(data) {
+							files.push({name: option.text, data: data});
+							if (files.length === filters.length - 1) { //excelude all
+								self.div.show();
+								$('div.loading').hide();
+								appService.files(files);
+							}
+						});
+					}
+				});
+			},
+
+			loadFile: function($http, path, cb) {
+				$http.post('/localization/file', {path: path})
+					.success(function(data) {
+						cb(data);
+					})
+					.error(function(data, status, headers, config) {
+						console.error(data, status, headers, config);
+						cb(null);
+					});
 			}
 		};
 

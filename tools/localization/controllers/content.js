@@ -24,6 +24,12 @@ module.exports = function(router) {
 
 		indigo.render(req, res, '/index');
 	});
+
+	router.post('/file', function(req, res) {
+		var localeDir = __appDir + indigo.appconf.get('locales:path'),
+			file = require(localeDir + '/' + req.body.path);
+		res.json(file);
+	});
 };
 
 function fileList() {

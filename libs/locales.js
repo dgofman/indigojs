@@ -5,7 +5,7 @@ var debug = require('debug')('indigo:locales'),
 	fs = require('fs'),
 	rules = require('./locales/accept-rules.json'),
 	defaultLocale = 'en-us',
-	localeMap = {};
+	defLocale, localeMap = {};
 
 /**
  * This module exposes the locale-determination logic for resource 
@@ -58,8 +58,8 @@ var locales =
 	 * @param {Object} appconf JSON object represents application configuration.
 	 */
 	config: function(appconf) {
-		this.defLocale = appconf.get('locales:default') || defaultLocale;
-		localeMap[this.defLocale] = { __lookup__: [], __localName__: this.defLocale };
+		this.defLocale = defLocale = appconf.get('locales:default') || defaultLocale;
+		localeMap[defLocale] = { __lookup__: [], __localName__: defLocale };
 
 		var localeDir = __appDir + appconf.get('locales:path');
 		if (fs.existsSync(localeDir)) {
@@ -124,7 +124,7 @@ function setLocale(req, locale) {
 				}
 			}
 		}
-		saveToSession(req, this.defLocale);
+		saveToSession(req, defLocale);
 	} else {
 		saveToSession(req, req.session.locale);
 	}

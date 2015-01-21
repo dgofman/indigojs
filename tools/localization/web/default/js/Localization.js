@@ -39,7 +39,7 @@ define([
 
 				app.run(function($rootScope) {
 					var language = $('#language');
-					language.change(function(e) {
+					language.change(function() {
 						var option = language.find('option:selected');
 						$rootScope.localizedLocale = {'key': option.val().toUpperCase(), 'name': option.text()};
 						$rootScope.$apply();

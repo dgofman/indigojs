@@ -5,27 +5,50 @@ define([
 	'angular'
 ], function($, angular) {
 
-	var grid = null,
-		appServiceEventHandler = function(evt, key) {
-			console.log(evt, key, $, angular);
+	var appServiceEventHandler = function(evt, key) {
+		console.log(evt, key, $, angular);
 	};
 
-	return function (appService, $scope, $element) {
-		var columns = window.Localization.columns || {};
+	var createGrid = function(element, parentdWidth, data) {
+		var grid = element.find('.jqgrid'),
+			width = 0,
+			columns = window.Localization.columns || {},
+			colModel = [ {name: 'key', index: 'key', width: 200}, 
+						{name: 'locale', index: 'locale', width: 500, align: 'center'},
+						{name: 'path', index: 'path'} ];
 
-		$scope.$on('appServiceChanged', appServiceEventHandler);
+		for (var i = 0; i < colModel.length - 1; i++) {
+			width += colModel[i].width;
+		}
+		colModel[i].width = parentdWidth - width;
 
-		grid = $element.find('.jqgrid');
 		grid.jqGrid({
 			colNames: [columns.key, 
 						 columns.localized,
 						 columns.path], 
-			colModel: [ {name: 'Column1', index: 'Column1', width: 90}, 
-						{name: 'Column2', index: 'Column2', width: 100, align: 'center'},
-						{name: 'Column3', index: 'Column3', width: 100, align: 'center'} ], 
-			viewrecords: true,
-			width: null,
-			shrinkToFit: false
+			datatype: 'local',
+			data: data,
+			colModel: colModel, 
+			viewrecords: false,
+			shrinkToFit: false,
+			width: null
 		});
+		return grid;
+	};
+
+	return function (appService, $scope, $element) {
+		$scope.$on('appServiceChanged', appServiceEventHandler);
+
+		var grid = createGrid($element, 0),
+			parentdWidth,
+			win = $(window).bind('resize', function() {
+				if (grid.parent().width() === 0) {
+					setTimeout(function() { win.trigger('resize'); }, 100);
+				} else if (grid.parent().width() !== parentdWidth) {
+					parentdWidth = grid.parent().width();
+					grid.GridUnload();
+					grid = createGrid($element, parentdWidth);
+				}
+		}).trigger('resize');
 	};
 });

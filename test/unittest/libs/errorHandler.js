@@ -93,7 +93,8 @@ describe('libs/errorHandler', function () {
 	});
 
 	it('should test default error 400', function (done) {
-		var errorKey = 'invalidAccount',
+		var errorCode = 400,
+			errorKey = 'invalidAccount',
 			locale = 'en-us',
 			errors = locales.localeMap[locale].errors,
 			req = {
@@ -101,14 +102,41 @@ describe('libs/errorHandler', function () {
 					locale: locale
 				}
 			},res = {
-				json: function(errorCode, model) {
-					assert.equal(errorCode, 400);
+				status: function(statusCode) {
+					assert.equal(statusCode, errorCode);
+					return res;
+				},
+				json: function(model) {
 					debug('error: %s', errors[errorKey]);
 					assert.equal(model.error, errors[errorKey]);
 					done();
 				}
 			};
 
+		errorHandler.json(req, res, errorKey);
+	});
+
+	it('should test if error.json is missing', function (done) {
+		var errorCode = 400,
+			errorKey = 'invalidAccount',
+			locale = 'en-us',
+			errors = locales.localeMap[locale].errors,
+			req = {
+				session: {
+					locale: locale
+				}
+			},res = {
+				status: function(statusCode) {
+					assert.equal(statusCode, errorCode);
+					return res;
+				},
+				json: function(model) {
+					locales.localeMap[locale].errors = errors;
+					assert.equal(model.error, errorKey);
+					done();
+				}
+			};
+		locales.localeMap[locale].errors = null;
 		errorHandler.json(req, res, errorKey);
 	});
 
@@ -122,9 +150,11 @@ describe('libs/errorHandler', function () {
 					locale: locale
 				}
 			},res = {
-				json: function(errorCode, model) {
-					assert.equal(errorCode, errorCode);
-					debug('error: %s', errors[errorKey]);
+				status: function(statusCode) {
+					assert.equal(statusCode, errorCode);
+					return res;
+				},
+				json: function(model) {
 					assert.equal(model.error, errors[errorKey]);
 					done();
 				}

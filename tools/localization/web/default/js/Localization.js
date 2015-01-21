@@ -19,10 +19,6 @@ define([
 					gridCntlName = 'gridController',
 					app = angular.module(appName, []);
 
-				$('input[type=file]').change(function () {
-					$('#appConfFile').val(this.value);
-				});
-
 				app.service('appService', function($rootScope) {
 					return {
 						data: {},
@@ -42,32 +38,21 @@ define([
 				app.controller(gridCntlName, ['appService', '$scope', '$element', gridController]);
 
 				app.run(function($rootScope) {
-					console.log($rootScope);
+					var language = $('#language');
+					language.change(function() {
+						var option = language.find('option:selected');
+						$rootScope.localizedLocale = {'key': option.val().toUpperCase(), 'name': option.text()};
+						$rootScope.$apply();
+					});
+					language.trigger('change');
 				});
 
 				angular.bootstrap(this.div[0], [appName]);
+
+				this.div.show();
+				$('div.loading').hide();
 			}
 		};
 
 		return localization;
-
-	/*return Backbone.View.extend({
-		events: {
-			'click .submit': 'submit'
-		},
-
-		initialize: function() {
-			this.div = $(this.el);
-
-			socket = io.connect();
-			socket.on('localize', function(data) {
-				this.div.find('#msg').val(data);
-			});
-		},
-
-		submit: function(e) {
-			e.preventDefault();
-			socket.emit('localize', 'TO DO');
-		}
-	});*/
 });

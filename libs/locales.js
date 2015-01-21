@@ -4,8 +4,8 @@ var debug = require('debug')('indigo:locales'),
 	indigo = require('../indigo'),
 	fs = require('fs'),
 	rules = require('./locales/accept-rules.json'),
-	defLocale = 'en-us',
-	localeMap = {};
+	defaultLocale = 'en-us',
+	defLocale, localeMap = {};
 
 /**
  * This module exposes the locale-determination logic for resource 
@@ -36,6 +36,12 @@ var locales =
 	errorFiles: {},
 
 	/**
+	 * Default language code 
+	 * @type {String}
+	 */
+	defLocale: {},
+
+	/**
 	 * This method executed once reading <code>locales</code> setting defined in appconf.json 
 	 * and building tree of locale messages <code>localeMap</code> at start time.
 	 *
@@ -52,8 +58,8 @@ var locales =
 	 * @param {Object} appconf JSON object represents application configuration.
 	 */
 	config: function(appconf) {
-		defLocale = appconf.get('locales:default') || defLocale;
-		localeMap[defLocale] = { __lookup__: [], __localName__:defLocale };
+		this.defLocale = defLocale = appconf.get('locales:default') || defaultLocale;
+		localeMap[defLocale] = { __lookup__: [], __localName__: defLocale };
 
 		var localeDir = __appDir + appconf.get('locales:path');
 		if (fs.existsSync(localeDir)) {

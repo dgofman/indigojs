@@ -134,7 +134,7 @@ errorHandler.error = function(errorId, err, message) {
  */
 errorHandler.json = function(req, res, errorKey, errorCode) {
 	var locales = indigo.getLocales(req);
-	res.json(errorCode || 400, { error: locales.errors ? locales.errors[errorKey] : errorKey });
+	res.status(errorCode || 400).json( { error: locales.errors ? locales.errors[errorKey] : errorKey } );
 };
 
 /**

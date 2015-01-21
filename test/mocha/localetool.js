@@ -1,12 +1,12 @@
 'use strict';
 
-var superagent = require('superagent'),
+/*var superagent = require('superagent'),
 	assert = require('assert'),
 	indigo = require('../../indigo');
-
+*/
 describe('Testing Localization tool', function () {
 
-	before(function (done) {
+	/*before(function (done) {
 		indigo.start(__appDir +  '/tools/localization/config/app.json');
 		done();
 	});
@@ -21,5 +21,5 @@ describe('Testing Localization tool', function () {
 				assert.equal(res.statusCode, 200);
 				done();
 		});
-	});
+	});*/
 });

@@ -8,5 +8,10 @@ module.exports = function(router) {
 		indigo.render(req, res, '/index');
 	});
 
-	return '/helloworld';
+	return {
+		'base': '/helloworld',
+		'intercept': function(req, res, next) {
+			next();
+		}
+	};
 };

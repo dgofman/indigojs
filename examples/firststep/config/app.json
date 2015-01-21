@@ -1,6 +1,9 @@
 {
+	"environment": "prod",
+
 	"server": {
 		"port": 8787,
+		"force": true,
 		"appdir": "/examples/firststep/web"
 	},
 
@@ -15,7 +18,6 @@
 	],
 
 	"errors": {
-		"template": "/examples/templates/errors.html",
 		"404": "https://www.google.com/404"
 	}
 }

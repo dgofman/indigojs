@@ -116,6 +116,30 @@ describe('libs/errorHandler', function () {
 		errorHandler.json(req, res, errorKey);
 	});
 
+	it('should test if error.json is missing', function (done) {
+		var errorCode = 400,
+			errorKey = 'invalidAccount',
+			locale = 'en-us',
+			errors = locales.localeMap[locale].errors,
+			req = {
+				session: {
+					locale: locale
+				}
+			},res = {
+				status: function(statusCode) {
+					assert.equal(statusCode, errorCode);
+					return res;
+				},
+				json: function(model) {
+					locales.localeMap[locale].errors = errors;
+					assert.equal(model.error, errorKey);
+					done();
+				}
+			};
+		locales.localeMap[locale].errors = null;
+		errorHandler.json(req, res, errorKey);
+	});
+
 	it('should test custom error 500', function (done) {
 		var errorCode = 500,
 			errorKey = 'invalidAccount',
@@ -131,7 +155,6 @@ describe('libs/errorHandler', function () {
 					return res;
 				},
 				json: function(model) {
-					debug('error: %s', errors[errorKey]);
 					assert.equal(model.error, errors[errorKey]);
 					done();
 				}

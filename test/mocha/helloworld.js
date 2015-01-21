@@ -23,4 +23,12 @@ describe('Testing HelloWorld example', function () {
 				done();
 		});
 	});
+
+	it('should test GET default 404 error', function(done){
+		superagent.get('http://localhost:8686/helloworld/us/NoIndex')
+			.end(function(err, res) {
+				assert.equal(res.statusCode, 404);
+				done();
+		});
+	});
 });

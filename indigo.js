@@ -207,8 +207,13 @@ var indigo =
 		// Set the folder where the pages are kept
 		app.set('views', appdir);
 
-		// Start the server
-		http = require('http').createServer(app);
+		/**
+		 * Reference to HTTP server.
+		 * @memberof indigo
+		 * @alias logger
+		 * @type {Object}
+		 */
+		indigo.http = http = require('http').createServer(app);
 
 		if (before) {
 			before(http, app);

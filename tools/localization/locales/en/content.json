@@ -1,19 +1,11 @@
 {
 	"pageTitle": "Indigo Localization",
-	"appConfig": "Config File",
-	"selectApp": "Select app.json",
-	"browse" : "Browse",
-	"filter": "Template Filter",
-	"fileName": "File Name",
+	"filter": "Filter Files",
 	"language": "Language",
 	"key": "Key Language",
 	"localized": "Localized",
 	"path": "Path",
-	"default": "Default",
-	"preview": "Preview",
 	"wordWrap": "Word Wrap",
-	"saveFile": "Save File",
 	"save": "Save",
-	"cancel": "Cancel",
 	"copyright": "Copyright @ 2014"
 }

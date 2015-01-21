@@ -1,57 +1,105 @@
 @import './common.less';
+@import './loading.less';
 
-.fieldset {
-	margin: 10px 0;
+.container {
+	margin-top: 20px;
+}
+
+input, select, textarea {
+	border-radius: 5px;
+	border: 1px solid;
+	border-color: #a9a9a9;
+	background-color: white;
+	text-indent: 5px;
+	height: 22px;
+	color: gray;
+}
+
+textarea[disabled] {
+	background-color: @gray;
+}
+
+.fildset {
 
 	label {
 		float: left;
+		padding-right: 5px;
 	}
 
 	span {
 		overflow: hidden;
 		display: block;
-		padding: 0 4px 0 10px;
 
 		* {
 			width: 100%;
-			height: 22px;
-		}
-
-		input, select {
-			border-radius: 5px;
-			border: 1px solid;
-			border-color: #a9a9a9;
-			background-color: white;
-			text-indent: 5px;
-			color: gray;
 		}
 	}
 }
 
-.fileContainer {
-	padding-right: 110px;
-	margin-right: -100px;
-	float: left;
+.filter {
+	width: 100%;
 }
 
-.fileUpload {
-	position: relative;
-	overflow: hidden;
-	max-width: 100px;
-	padding: 1px;
-
-	input {
-		position: absolute;
-		top: 0;
-		right: 0;
-		margin: 0;
-		padding: 0;
-		opacity: 0;
-		filter: alpha(opacity=0);
-	}
+.language {
+	width: 300px;
+	float: right;
+	margin-left: 10px;
 }
 
 .jqGridContainer {
 	width: 100%;
 	float: left;
+	margin-top: @margin;
+}
+
+.details {
+	height: 85px;
+	margin-top: @margin;
+
+	> div {
+		height: 100%;
+	}
+
+	textarea {
+		height: 100%;
+		width: 100%;
+	}
+
+	.footer {
+		float: right;
+
+		input {
+			float: left;
+			margin: 0 5px 0 0;
+		}
+
+		button {
+			margin-top: 10px;
+			width: 120px;
+		}
+	}
+}
+
+.columnLeft {
+	width: 150px;
+	float: left;
+	display:table;
+
+	> div {
+		display:table-cell;
+		vertical-align: middle;
+		text-align: center;
+	}
+}
+
+.columnRight {
+	width: 100%;
+}
+
+.footer {
+	font-weight: bold;
+
+	.text-right {
+		color: #4B0082;
+	}
 }

@@ -15,11 +15,11 @@
 </head>
 <body>
 	<div id="wrap">
-		<div class="wrapper">
+		<div class="wrapper" style="display: none">
 			<%- inject(req, 'templates/content.html') %>
+			<%- inject(req, 'templates/footer.html') %>
 		</div>
-
-		<%- inject(req, 'templates/footer.html') %>
+		<div class="loading"></div>
 	</div>
 </body>
 </html>

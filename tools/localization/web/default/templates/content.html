@@ -1,17 +1,10 @@
 <div class="container">
 	<div class="row">
-		<div class="fildset language">
-			<label><%= locales.content.language %></label>
-			<span><select id="language">
-				<% for(var i = 0; i < langcode.length; i++) {%>
-					<option value="<%= langcode[i][0] %>" <% if (langcode[i][0] === defaultLocale.key) { %> selected <% } %> ><%= langcode[i][1] %></option>
-				<% } %>
-			</select></span>
-		</div>
+		<button class="btn btn-custom-blue add-btn" data-toggle="modal" data-target="#addRowDialog" disabled>Add Row</button>
 		<div class="fildset filter">
 			<label><%= locales.content.filter %></label>
 			<span><select id="filter">
-				<option value="all">All</option>
+				<option value="all"><%= locales.content.all %></option>
 				<% for(var i = 0; i < filters.length; i++) {%>
 					<option><%= filters[i] %></option>
 				<% } %>
@@ -21,36 +14,35 @@
 
 	<div class="row">
 		<div class="jqGridContainer">
-			<table class="jqgrid"></table>
+			<table id="jqgrid" class="jqgrid"></table>
 		</div>
 	</div>
 
 	<div class="row col-md-12, fildset details">
 		<div class="columnLeft">
-			<div>
+			<div class="default">
 				<span><%= defaultLocale.name %></span>
 				<b><%= defaultLocale.key.toUpperCase() %></b>
 			</div>
 		</div>
 		<span><div class="columnRight">
-			<textarea class="localized" rows="3" wrap="off" disabled></textarea>
+			<textarea class="default" rows="3" wrap disabled></textarea>
 		</div></span>
 	</div>
 
 	<div class="row col-md-12, fildset details">
 		<div class="columnLeft">
-			<div>
+			<div class='localized'>
 				<span>{{localizedLocale.name}}</span>
 				<b>{{localizedLocale.key}}</b>
 			</div>
 		</div>
 		<span><div class="columnRight">
-			<textarea class="localized" rows="3" wrap="off"></textarea>
+			<textarea class="localized" rows="3" wrap></textarea>
 		</div></span>
 		<div class="footer">
-			<input type="checkbox" class="wordWrap"><span><%= locales.content.wordWrap %></span>
-
-			<button class="btn btn-custom"><%= locales.content.save %></button>
+			<button class="btn btn-custom-gray" data-toggle="modal" data-target="#createlDialog"><%= locales.content.createFile %></button>
+			<button class="btn btn-custom-blue"><%= locales.content.save %></button>
 		</div>
 	</div>
 </div>

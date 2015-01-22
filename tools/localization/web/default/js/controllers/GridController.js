@@ -9,6 +9,7 @@ define([
 		gridData = [],
 		fileMap = {},
 		localeMap = {},
+		defKeys,
 		defaultTxt,
 		localizedTxt,
 		localizedSpan,
@@ -22,7 +23,7 @@ define([
 
 		gridData = [];
 
-		var defKeys = parseGridData(locale, def);
+		defKeys = parseGridData(locale, def);
 		delete items[locale];
 
 		for (locale in items) {
@@ -61,10 +62,14 @@ define([
 		return keys;
 	};
 
-	var createGrid = function() {
+	var createGrid = function(isReset) {
 		if (grid) {
 			parentdWidth = grid.parent().width();
 			grid.GridUnload();
+		}
+
+		if (isReset) {
+			reset();
 		}
 
 		$.each(gridData, function(index, row) {
@@ -98,11 +103,23 @@ define([
 			},
 			beforeSelectRow: function(rowid, e) {
 				if (e.target.className.indexOf('del-column') !== -1) {
-					alert("Do you want to delete row")
+					var modal = $('#deletelDialog').modal();
+					modal.find('.btn-primary').click(function() {
+						var selRow = grid.getLocalRow(rowid);
+						var rows = fileMap[selRow.path];
+						$.each(rows, function(index, row) {
+							if (row.key === selRow.key) {
+								fileMap[selRow.path].splice(index, 1);
+								gridData = fileMap[selRow.path];
+								createGrid(true);
+								return false;
+							}
+						});
+						modal.modal('hide');
+					});
 					return false;
-				} else {
-					return true;
 				}
+				return true;
 			},
 			onSelectRow: function(rowid, celname){
 				var row = grid.getLocalRow(rowid);
@@ -124,7 +141,7 @@ define([
 		localizedB.text('');
 	};
 
-	return function (appService, $scope) {
+	return function (appService, $scope, $http) {
 		$scope.$on('FILE_LOADED_EVENT', fileLoadedHandler);
 
 		defaultTxt = $('.default');
@@ -138,13 +155,7 @@ define([
 			}
 		});
 
-		var addButton = $('.add-btn').click(function() {
-			var value = filter.val();
-			fileMap[value].splice(0, 0, { 'path': value, 'locale': value.split('/')[0] });
-			gridData = fileMap[value];
-			reset();
-			createGrid();
-		});
+		var addButton = $('.add-btn');
 
 		var filter = $('#filter').change(function() {
 			gridData = [];
@@ -157,17 +168,16 @@ define([
 				gridData = gridData.concat(fileMap[this.value]);
 				addButton.removeAttr('disabled');
 			}
-			reset();
-			createGrid();
+			createGrid(true);
 			if (grid.width() !== grid.parent().width()) {
 				createGrid();
 			}
 		});
 
-		var modal = $('#modalDialog'),
-			modalBody = modal.on('show.bs.modal', function() {
+		var createlDialog = $('#createlDialog'),
+			createModalBody = createlDialog.on('show.bs.modal', function() {
 				var errors = window.Localization.errors,
-					body = $(this).html(modalBody);
+					body = $(this).html(createModalBody);
 				body.find('.btn-primary').click(function() {
 					var language = body.find('.language').val(),
 						fileName = body.find('.fileName').val(),
@@ -196,16 +206,37 @@ define([
 					}
 					addButton.removeAttr('disabled');
 
-					reset();
-					createGrid();
-
-					modal.modal('hide');
+					createGrid(true);
+					createlDialog.modal('hide');
 				});
 			}).html();
 
-		$.each(modal.find('.language option'), function(index, option) {
+		$.each(createlDialog.find('.language option'), function(index, option) {
 			localeMap[option.value] = option.text;
 		});
+
+		var addModal = $('#addRowDialog'),
+			addModalBody = addModal.on('show.bs.modal', function() {
+				var body = $(this).html(addModalBody);
+				body.find('.btn-primary').click(function() {
+					var newKey = body.find('.langKey').val(),
+						fileName = filter.val(),
+						arr = fileName.split('/'),
+						rows = fileMap[fileName];
+					for (var i = 0; i < rows.length; i++) {
+						if (rows[i].key === newKey) {
+							body.find('.error').show();
+							return;
+						}
+					}
+					rows.splice(0, 0, { 'key': newKey, 'path': fileName, 'locale': arr[0],
+										'default': (defKeys[arr[1]] || {})[newKey] });
+					gridData = rows;
+					createGrid(true);
+
+					addModal.modal('hide');
+				});
+			}).html();
 
 		createGrid();
 

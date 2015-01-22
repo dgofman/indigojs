@@ -31,7 +31,7 @@ define([
 
 				this.div.find('.jqGridContainer').attr('ng-controller', gridCntlName);
 
-				app.controller(gridCntlName, ['appService', '$scope', gridController]);
+				app.controller(gridCntlName, ['appService', '$scope', '$http', gridController]);
 
 				app.run(['appService', '$rootScope', '$http', $.proxy(this.afterRender, this)]);
 

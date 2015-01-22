@@ -3,6 +3,7 @@
 require.config({
 	paths: {
 		jquery: 'vendor/jquery-2.1.1.min',
+		bootstrap: 'vendor/bootstrap-3.0.2.min',
 		angular: 'vendor/angular-1.3.8.min',
 		jqGrid: 'vendor/jquery.jqGrid-4.7.0.min',
 
@@ -18,6 +19,9 @@ require.config({
 		'angular': {
 			exports : 'angular'
 		},
+		'bootstrap': {
+			deps: ['jquery']
+		},
 		'jqGrid': {
 			deps: ['jquery']
 		}
@@ -27,7 +31,8 @@ require.config({
 // Let's kick off the application
 require([
 	'Localization',
-	'jqGrid'
+	'jqGrid',
+	'bootstrap'
 ], function(Localization) {
 	new Localization({el:'.wrapper'});
 });

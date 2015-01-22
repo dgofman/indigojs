@@ -1,0 +1,5 @@
+{
+	"emptyFile": "Please provide a file name",
+	"fileExists": "The file already exists",
+	"errorSaveFile": "Cannot save or create file(s)"
+}

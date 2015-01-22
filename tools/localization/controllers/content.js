@@ -18,7 +18,7 @@ module.exports = function(router) {
 	});
 
 	router.get('/:locale/index', function(req, res) {
-		req.model.defaultLocale = {key: locales.defLocale.toLowerCase(), name: langcode[locales.defLocale]};
+		req.model.defaultLocale = {key: locales.defLocale, name: langcode[locales.defLocale]};
 		req.model.filters = fileList();
 		req.model.langcode = sortLangCode;
 

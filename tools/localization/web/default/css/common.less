@@ -13,8 +13,6 @@ html body {
   font-family: @font_normal;
   background-color: @gray;
   color: @black;
-  margin: 0;
-  padding: 0;
 }
 
 .button {
@@ -22,7 +20,7 @@ html body {
 	cursor: hand;
 }
 
-.btn-custom {
+.btn-custom-blue {
   background-color: hsl(201, 98%, 30%) !important;
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0291de", endColorstr="#016297");
@@ -37,4 +35,34 @@ html body {
   color: #fff !important;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.23);
   -webkit-font-smoothing: antialiased;
+}
+
+.btn-custom-gray {
+  background-color: hsl(75, 8%, 60%) !important;
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#9da190");
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#ffffff), to(#9da190));
+  background-image: -moz-linear-gradient(top, #ffffff, #9da190);
+  background-image: -ms-linear-gradient(top, #ffffff, #9da190);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #9da190));
+  background-image: -webkit-linear-gradient(top, #ffffff, #9da190);
+  background-image: -o-linear-gradient(top, #ffffff, #9da190);
+  background-image: linear-gradient(#ffffff, #9da190);
+  border-color: #9da190 #9da190 hsl(75, 8%, 50%);
+  color: #333 !important;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.66);
+  -webkit-font-smoothing: antialiased;
+}
+
+.error {
+  display: none;
+  color: #C55F5F;
+  font-weight: bold;
+  font-size: 12px;
+  margin-top: 2px;
+  text-align: center;
+}
+
+.modal-backdrop {
+  bottom: 0;
 }

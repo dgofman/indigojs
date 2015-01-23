@@ -1,6 +1,5 @@
 <div class="container">
 	<div class="row">
-		<button class="btn btn-custom-blue add-btn" data-toggle="modal" data-target="#addRowDialog" disabled>Add Row</button>
 		<div class="fildset filter">
 			<label><%= locales.content.filter %></label>
 			<span><select id="filter">
@@ -21,8 +20,8 @@
 	<div class="row col-md-12, fildset details">
 		<div class="columnLeft">
 			<div class="default">
-				<span><%= defaultLocale.name %></span>
-				<b><%= defaultLocale.key.toUpperCase() %></b>
+				<span>{{defaultLocale.name}}</span>
+				<b>{{defaultLocale.key}} %></b>
 			</div>
 		</div>
 		<span><div class="columnRight">
@@ -38,11 +37,12 @@
 			</div>
 		</div>
 		<span><div class="columnRight">
-			<textarea class="localized" rows="3" wrap></textarea>
+			<textarea class="localized" rows="3" wrap ng-disabled="selectedRowId == null"></textarea>
 		</div></span>
 		<div class="footer">
+			<button class="btn btn-custom-gray" data-toggle="modal" data-target="#newDialog" ng-disabled="selectedFile == 'all'"><%= locales.content.newRecord %></button>
 			<button class="btn btn-custom-gray" data-toggle="modal" data-target="#createlDialog"><%= locales.content.createFile %></button>
-			<button class="btn btn-custom-blue"><%= locales.content.save %></button>
+			<button class="btn btn-custom-blue btn-save"><%= locales.content.save %></button>
 		</div>
 	</div>
 </div>

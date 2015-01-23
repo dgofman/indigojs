@@ -5,21 +5,27 @@ define([
 	'angular'
 ], function($) {
 
-	var grid,
+	var rootScope,
+		grid,
 		gridData = [],
 		fileMap = {},
 		localeMap = {},
+		defaultLocale = {},
 		defKeys,
 		defaultTxt,
 		localizedTxt,
 		localizedSpan,
 		localizedB,
 		parentdWidth = 0,
-		selectedRowid = null;
+		selectedRowId = null;
 
 	var fileLoadedHandler = function(evt, items) {
 		var locale = window.Localization.defaultLocale,
 			def = items[locale] || items[locale = locale.split('-')[0]];
+
+		defaultLocale = {'key': locale.toUpperCase(), 'name': localeMap[locale], 'locale': locale};
+
+		rootScope.defaultLocale = defaultLocale;
 
 		gridData = [];
 
@@ -45,9 +51,9 @@ define([
 				fileData.push({ 'key': key,
 								'localized': item.data[key],
 								'path': item.path,
+								'name': item.name,
 								'locale': locale,
-								'original': item.data[key],
-								'default': defKeys ? defKeys[item.name][key] : item.data[key]});
+								'original': item.data[key] });
 			}
 
 			fileData = fileData.sort(function(a, b) {
@@ -72,11 +78,8 @@ define([
 			reset();
 		}
 
-		$.each(gridData, function(index, row) {
-			row.id = index + 1;
-		});
-
 		var width = 0,
+			deletedRows = [],
 			columns = window.Localization.columns || {},
 			colModel = [ { width: 24, cellattr: function (rowId, tv, rawObject, cm, rdata) {
 								return ' class="glyphicon glyphicon-trash del-column"';
@@ -85,6 +88,13 @@ define([
 						 {name: 'key', index: 'key', width: 300}, 
 						 {name: 'localized', index: 'localized', width: parentdWidth - 575 - 1}, //col1 + col2 + col4
 						 {name: 'path', index: 'path', width: 250} ];
+
+		$.each(gridData, function(index, row) {
+			row.id = index + 1;
+			if (defKeys[row.name][row.key] === undefined) {
+				deletedRows.push(row.id);
+			}
+		});
 
 		grid = $('.jqGridContainer > .jqgrid').jqGrid({
 			colNames: [ '', 
@@ -103,18 +113,39 @@ define([
 			},
 			beforeSelectRow: function(rowid, e) {
 				if (e.target.className.indexOf('del-column') !== -1) {
-					var modal = $('#deletelDialog').modal();
-					modal.find('.btn-primary').click(function() {
-						var selRow = grid.getLocalRow(rowid);
-						var rows = fileMap[selRow.path];
-						$.each(rows, function(index, row) {
-							if (row.key === selRow.key) {
-								fileMap[selRow.path].splice(index, 1);
-								gridData = fileMap[selRow.path];
-								createGrid(true);
-								return false;
+					var selRow = grid.getLocalRow(rowid),
+						modal = $('#deletelDialog').modal(),
+						checkbox = modal.find('.deleteOther > input');
+					modal.find('.deleteOther').toggle(selRow.locale === defaultLocale.locale);
+
+					modal.find('.btn-primary').one('click', function() {
+						var deleteRow = function(path) {
+							var rows = fileMap[path];
+							$.each(rows, function(index, row) {
+								if (row.key === selRow.key) {
+									fileMap[path].splice(index, 1);
+									return false;
+								}
+							});
+						}
+						if (selRow.locale === defaultLocale.locale) {
+							delete defKeys[selRow.name][selRow.key];
+
+							if (checkbox.is(':checked')) {
+								$.each(fileMap, function(path, rows) {
+									if (path.split('/')[1] === selRow.name) {
+										deleteRow(path);
+									}
+								});
+							} else {
+								deleteRow(selRow.path);
 							}
-						});
+						} else {
+							deleteRow(selRow.path);
+						}
+
+						gridData = fileMap[selRow.path];
+						createGrid(true);
 						modal.modal('hide');
 					});
 					return false;
@@ -123,25 +154,41 @@ define([
 			},
 			onSelectRow: function(rowid, celname){
 				var row = grid.getLocalRow(rowid);
-				defaultTxt.val(row['default']);
-				localizedTxt.val(row['localized']);
-				selectedRowid = rowid;
+				defaultTxt.val(defKeys[row.name][row.key]);
+				localizedTxt.val(row.localized);
+				rootScope.selectedRowId = selectedRowId = rowid;
+				rootScope.$apply();
 
-				localizedSpan.text(localeMap[row['locale']]);
-				localizedB.text(row['locale'].toUpperCase());
+				localizedSpan.text(localeMap[row.locale]);
+				localizedB.text(row.locale.toUpperCase());
+			},
+			gridComplete: function () {
+				var table = $(this);
+				for (var i = 0; i < deletedRows.length; i++) {
+					table.find('#' + deletedRows[i] + ' td').css('background-color', 'rgb(252, 196, 196)');
+				}
 			}
 		});
 	};
 
+	var createVerify = function() {
+		createGrid(true);
+		if (grid.width() !== grid.parent().width()) {
+			createGrid();
+		}
+	}
+
 	var reset = function() {
-		selectedRowid = null;
 		defaultTxt.val('');
 		localizedTxt.val('');
 		localizedSpan.text('');
 		localizedB.text('');
+		rootScope.selectedRowId = selectedRowId = null;
+		rootScope.$apply();
 	};
 
-	return function (appService, $scope, $http) {
+	return function (appService, $rootScope, $scope, $http) {
+		rootScope = $rootScope;
 		$scope.$on('FILE_LOADED_EVENT', fileLoadedHandler);
 
 		defaultTxt = $('.default');
@@ -150,63 +197,68 @@ define([
 		localizedB = $('.columnLeft>.localized>b');
 
 		localizedTxt.keyup(function() {
-			if (selectedRowid !== null) {
-				grid.setCell(selectedRowid, 'localized', this.value);
+			if (selectedRowId !== null) {
+				var row = grid.getLocalRow(selectedRowId);
+				grid.setCell(selectedRowId, 'localized', this.value);
+				if (defaultLocale.locale === row.locale) {
+					defKeys[row.name][row.key] = this.value;
+					defaultTxt.val(this.value);
+				}
 			}
 		});
 
-		var addButton = $('.add-btn');
+		$rootScope.selectedFile = 'all';
 
 		var filter = $('#filter').change(function() {
 			gridData = [];
+			$rootScope.selectedFile = this.value;
+			$rootScope.$apply();
 			if (this.value === 'all') {
 				for(var path in fileMap) {
 					gridData = gridData.concat(fileMap[path]);
 				}
-				addButton.attr('disabled', 'disabled');
 			} else {
 				gridData = gridData.concat(fileMap[this.value]);
-				addButton.removeAttr('disabled');
 			}
-			createGrid(true);
-			if (grid.width() !== grid.parent().width()) {
-				createGrid();
-			}
+			createVerify();
 		});
 
 		var createlDialog = $('#createlDialog'),
 			createModalBody = createlDialog.on('show.bs.modal', function() {
 				var errors = window.Localization.errors,
-					body = $(this).html(createModalBody);
+					body = $(this).html(createModalBody),
+					copyFrom = body.find('.copyFrom'),
+					fileInput = body.find('.fileName');
+				fileInput.val(copyFrom.val().split('/')[1].replace('.json', ''));
+				copyFrom.change(function() {
+					fileInput.val(this.value.split('/')[1].replace('.json', ''));
+				});
 				body.find('.btn-primary').click(function() {
 					var language = body.find('.language').val(),
-						fileName = body.find('.fileName').val(),
-						copyFrom = body.find('.copyFrom').val();
-					if (fileName.trim() === '') {
+						fileName = fileInput.val() + '.json',
+						fullName = language + '/' + fileName;
+					if (fileInput.val().trim() === '') {
 						return body.find('.error').text(errors.emptyFile).show();
 					}
-					fileName = language + '/' + fileName + '.json';
 
-					if (fileMap[fileName]) {
+					if (fileMap[fullName]) {
 						return body.find('.error').text(errors.fileExists).show();
 					}
 
-					filter.append($('<option selected></option>').val(fileName).html(fileName));
+					filter.append($('<option selected></option>').val(fullName).html(fullName));
 
-					if (copyFrom === 'none') {
-						gridData = fileMap[fileName] = [];
-					} else {
-						var data = JSON.parse(JSON.stringify(fileMap[copyFrom]));
-						$.each(data, function(index, row) {
-							row['localized'] = '';
-							row['locale'] = language;
-							row['path'] = fileName;
-						});
-						gridData = fileMap[fileName] = data;
+					var data = JSON.parse(JSON.stringify(fileMap[copyFrom.val()]));
+					$.each(data, function(index, row) {
+						row['localized'] = '';
+						row['locale'] = language;
+						row['path'] = fullName;
+					});
+					gridData = fileMap[fullName] = data;
+					if (!defKeys[fileName]) {
+						defKeys[fileName] = {};
 					}
-					addButton.removeAttr('disabled');
 
-					createGrid(true);
+					createVerify();
 					createlDialog.modal('hide');
 				});
 			}).html();
@@ -215,30 +267,44 @@ define([
 			localeMap[option.value] = option.text;
 		});
 
-		var addModal = $('#addRowDialog'),
-			addModalBody = addModal.on('show.bs.modal', function() {
-				var body = $(this).html(addModalBody);
+		var newModal = $('#newRowDialog'),
+			newModalBody = newModal.on('show.bs.modal', function() {
+				var body = $(this).html(newModalBody);
 				body.find('.btn-primary').click(function() {
-					var newKey = body.find('.langKey').val(),
+					var newKey = body.find('.langKey').val().trim(),
 						fileName = filter.val(),
-						arr = fileName.split('/'),
-						rows = fileMap[fileName];
+						rows = fileMap[fileName],
+						arr1 = fileName.split('/');
 					for (var i = 0; i < rows.length; i++) {
 						if (rows[i].key === newKey) {
 							body.find('.error').show();
 							return;
 						}
 					}
-					rows.splice(0, 0, { 'key': newKey, 'path': fileName, 'locale': arr[0],
-										'default': (defKeys[arr[1]] || {})[newKey] });
+
+					$.each(fileMap, function(fileName, rows) {
+						var arr2 = fileName.split('/');
+						if (arr1[1] === arr2[1]) {
+							rows.splice(0, 0, { 'key': newKey, 'path': fileName, 'name': arr2[1], 'locale': arr2[0] });
+						}
+					});
+
+					if (defKeys[arr1[1]]) {
+						defKeys[arr1[1]][newKey] = '';
+					}
+
 					gridData = rows;
 					createGrid(true);
 
-					addModal.modal('hide');
+					newModal.modal('hide');
 				});
 			}).html();
 
 		createGrid();
+
+		$('.btn-save').click(function() {
+			console.log(fileMap);
+		});
 
 		var win = $(window).bind('resize', function() {
 			if (grid.parent().width() === 0) {

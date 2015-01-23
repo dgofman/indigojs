@@ -16,7 +16,7 @@
 			'errorSaveFile': '<%= locales.errors.errorSaveFile %>'
 		},
 
-		defaultLocale: '<%= defaultLocale.key %>'
+		defaultLocale: '<%= defaultLocale %>'
 	}
 </script>
 
@@ -43,14 +43,13 @@
 						<label><%= locales.content.language %></label>
 						<span><select class="language">
 							<% for(var i = 0; i < langcode.length; i++) {%>
-								<option value="<%= langcode[i][0] %>" <% if (langcode[i][0] === defaultLocale.key) { %> selected <% } %> ><%= langcode[i][1] %></option>
+								<option value="<%= langcode[i][0] %>" <% if (langcode[i][0] === defaultLocale) { %> selected <% } %> ><%= langcode[i][1] %></option>
 							<% } %>
 						</select></span>
 					</div>
 					<div class="fildset">
 						<label><%= locales.content.copyFrom %></label>
 						<span><select class="copyFrom">
-							<option value="none"><%= locales.content.none %></option>
 							<% for(var i = 0; i < filters.length; i++) {%>
 								<option><%= filters[i] %></option>
 							<% } %>
@@ -83,7 +82,8 @@
 					<%= locales.content.deleteMessage %>
 				</div>
 				<div class="modal-footer">
-					 <button type="button" class="btn btn-default" data-dismiss="modal"><%= locales.content.cancel %></button>
+					<div class="deleteOther"><input type="checkbox"><%= locales.content.deleteOther %></div>
+					<button type="button" class="btn btn-default" data-dismiss="modal"><%= locales.content.cancel %></button>
 					<button type="button" class="btn btn-primary"><%= locales.content.delete %></button>
 				</div>
 			</div><!-- /.modal-content -->
@@ -91,12 +91,12 @@
 	</div><!-- /.modal -->
 
 	<!-- Modal -->
-	<div class="modal fade" id="addRowDialog" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal fade" id="newRowDialog" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title"><%= locales.content.addRowTile %></h4>
+					<h4 class="modal-title"><%= locales.content.newTile %></h4>
 				</div>
 				<div class="modal-body">
 					<div class="fildset">
@@ -108,7 +108,7 @@
 				</div>
 				<div class="modal-footer">
 					 <button type="button" class="btn btn-default" data-dismiss="modal"><%= locales.content.cancel %></button>
-					<button type="button" class="btn btn-primary"><%= locales.content.add %></button>
+					<button type="button" class="btn btn-primary"><%= locales.content.create %></button>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->

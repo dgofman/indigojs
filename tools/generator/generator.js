@@ -13,13 +13,14 @@ var stdio = require('stdio'),
 	}
 
 	var defaultPort = 8125, ops = stdio.getopt({
-		'version': {key: 'v', description: 'output the version number'},
+		'version': {key: 'v', description: 'display product version'},
 		'name': {key: 'n', args: 1, mandatory: true, description: 'application name'},
-		'dir': {key: 'd', args: 1, description: 'path to the webroot directory (defaults to /web)'},
+		'dir': {key: 'd', args: 1, description: 'path to the webroot directory (defaults /web)'},
 		'port': {key: 'p', args: 1, description: 'server port number  (defaults ' + defaultPort + ')'},
 		'uri': {key: 'u', args: 1, description: 'default routing path/uri (defaults /app)'},
-		'routers': {key: 'r', args: 1, description: 'path to the directory with routing files (defaults to /routers)'},
-		'locales': {key: 'l', args: 1, description: 'path to the directory with localization files (defaults to /locales)'},
+		'routers': {key: 'r', args: 1, description: 'path to the routers files (defaults /routers)'},
+		'controllers': {key: 'c', args: 1, description: 'path to the controllers directory (defaults /controllers)'},
+		'locales': {key: 'l', args: 1, description: 'path to the localization files directory (defaults /locales)'},
 		'env': {key: 'e', args: 1, description: 'software environment (dev/prod)'}
 	});
 
@@ -50,13 +51,14 @@ var stdio = require('stdio'),
 	dir = '.' + (ops.routers || '/routers');
 	lines = fs.readFileSync(__dirname + '/router.js', 'utf-8').
 						replace('{{uri}}', ops.uri || '/app').
-						replace('{{routers}}', ops.routers || '/routers');
+						replace('{{routers}}', ops.routers || '/routers').
+						replace('{{controllers}}', ops.controllers || '/controllers');
 	createFile(dir, '/router.js', lines);
 
-	dir = './controllers';
+	dir = '.' + (ops.controllers || '/controllers');
 	lines = fs.readFileSync(__dirname + '/controller.js', 'utf-8');
 	createFile(dir, '/controller.js', lines);
-	fse.copySync(__dirname + '/web', './web');
+	fse.copySync(__dirname + '/web', '.' + (ops.dir || '/web'));
 
 	console.log('\nThank you for using IndigoJS!');
 

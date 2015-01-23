@@ -5,49 +5,306 @@ define([
 	'angular'
 ], function($) {
 
-	var grid,
-		gridData,
-		parentdWidth = 0;
+	var rootScope,
+		grid,
+		gridData = [],
+		fileMap = {},
+		localeMap = {},
+		defaultLocale = {},
+		defKeys,
+		defaultTxt,
+		localizedTxt,
+		localizedSpan,
+		localizedB,
+		parentdWidth = 0,
+		selectedRowId = null;
 
-	var fileLoadedHandler = function(evt, files) {
-		//gridData = files;
+	var fileLoadedHandler = function(evt, items) {
+		var locale = window.Localization.defaultLocale,
+			def = items[locale] || items[locale = locale.split('-')[0]];
+
+		defaultLocale = {'key': locale.toUpperCase(), 'name': localeMap[locale], 'locale': locale};
+
+		rootScope.defaultLocale = defaultLocale;
+
+		gridData = [];
+
+		defKeys = parseGridData(locale, def);
+		delete items[locale];
+
+		for (locale in items) {
+			parseGridData(locale, items[locale], defKeys);
+		}
+
 		createGrid();
 	};
 
-	var createGrid = function() {
+	var parseGridData = function(locale, items, defKeys) {
+		var keys = {};
+
+		for (var i = 0; i < items.length; i++) {
+			var item = items[i],
+				fileData = [];
+			keys[item.name] = {};
+			for (var key in item.data) {
+				keys[item.name][key] = item.data[key];
+				fileData.push({ 'key': key,
+								'localized': item.data[key],
+								'path': item.path,
+								'name': item.name,
+								'locale': locale,
+								'original': item.data[key] });
+			}
+
+			fileData = fileData.sort(function(a, b) {
+				if(a.key < b.key) { return -1; }
+				if(a.key > b.key) { return 1; }
+				return 0;
+			});
+			gridData = gridData.concat(fileData);
+			fileMap[item.path] = fileData;
+		}
+
+		return keys;
+	};
+
+	var createGrid = function(isReset) {
 		if (grid) {
 			parentdWidth = grid.parent().width();
 			grid.GridUnload();
 		}
 
-		var width = 0,
-			columns = window.Localization.columns || {},
-			colModel = [ {name: 'key', index: 'key', width: 200}, 
-						{name: 'locale', index: 'locale', width: 500, align: 'center'},
-						{name: 'path', index: 'path'} ];
-
-		for (var i = 0; i < colModel.length - 1; i++) {
-			width += colModel[i].width;
+		if (isReset) {
+			reset();
 		}
-		colModel[i].width = parentdWidth - width;
+
+		var width = 0,
+			deletedRows = [],
+			columns = window.Localization.columns || {},
+			colModel = [ { width: 24, cellattr: function (rowId, tv, rawObject, cm, rdata) {
+								return ' class="glyphicon glyphicon-trash del-column"';
+							}
+						},
+						 {name: 'key', index: 'key', width: 300}, 
+						 {name: 'localized', index: 'localized', width: parentdWidth - 575 - 1}, //col1 + col2 + col4
+						 {name: 'path', index: 'path', width: 250} ];
+
+		$.each(gridData, function(index, row) {
+			row.id = index + 1;
+			if (defKeys[row.name][row.key] === undefined) {
+				deletedRows.push(row.id);
+			}
+		});
 
 		grid = $('.jqGridContainer > .jqgrid').jqGrid({
-			colNames: [columns.key, 
-						 columns.localized,
-						 columns.path], 
+			colNames: [ '', 
+						columns.key, 
+						columns.localized,
+						columns.path], 
 			datatype: 'local',
 			data: gridData,
-			colModel: colModel, 
-			viewrecords: false,
+			colModel: colModel,
+			localReader: {repeatitems: false},
 			shrinkToFit: false,
-			width: null
+			width: null,
+			rowNum: 99999,
+			rowattr: function (rd) {
+				return {'class': 'jqgrid-column'};
+			},
+			beforeSelectRow: function(rowid, e) {
+				if (e.target.className.indexOf('del-column') !== -1) {
+					var selRow = grid.getLocalRow(rowid),
+						modal = $('#deletelDialog').modal(),
+						checkbox = modal.find('.deleteOther > input');
+					modal.find('.deleteOther').toggle(selRow.locale === defaultLocale.locale);
+
+					modal.find('.btn-primary').one('click', function() {
+						var deleteRow = function(path) {
+							var rows = fileMap[path];
+							$.each(rows, function(index, row) {
+								if (row.key === selRow.key) {
+									fileMap[path].splice(index, 1);
+									return false;
+								}
+							});
+						}
+						if (selRow.locale === defaultLocale.locale) {
+							delete defKeys[selRow.name][selRow.key];
+
+							if (checkbox.is(':checked')) {
+								$.each(fileMap, function(path, rows) {
+									if (path.split('/')[1] === selRow.name) {
+										deleteRow(path);
+									}
+								});
+							} else {
+								deleteRow(selRow.path);
+							}
+						} else {
+							deleteRow(selRow.path);
+						}
+
+						gridData = fileMap[selRow.path];
+						createGrid(true);
+						modal.modal('hide');
+					});
+					return false;
+				}
+				return true;
+			},
+			onSelectRow: function(rowid, celname){
+				var row = grid.getLocalRow(rowid);
+				defaultTxt.val(defKeys[row.name][row.key]);
+				localizedTxt.val(row.localized);
+				rootScope.selectedRowId = selectedRowId = rowid;
+				rootScope.$apply();
+
+				localizedSpan.text(localeMap[row.locale]);
+				localizedB.text(row.locale.toUpperCase());
+			},
+			gridComplete: function () {
+				var table = $(this);
+				for (var i = 0; i < deletedRows.length; i++) {
+					table.find('#' + deletedRows[i] + ' td').css('background-color', 'rgb(252, 196, 196)');
+				}
+			}
 		});
 	};
 
-	return function (appService, $scope) {
+	var createVerify = function() {
+		createGrid(true);
+		if (grid.width() !== grid.parent().width()) {
+			createGrid();
+		}
+	}
+
+	var reset = function() {
+		defaultTxt.val('');
+		localizedTxt.val('');
+		localizedSpan.text('');
+		localizedB.text('');
+		rootScope.selectedRowId = selectedRowId = null;
+		rootScope.$apply();
+	};
+
+	return function (appService, $rootScope, $scope, $http) {
+		rootScope = $rootScope;
 		$scope.$on('FILE_LOADED_EVENT', fileLoadedHandler);
 
+		defaultTxt = $('.default');
+		localizedTxt = $('.localized');
+		localizedSpan = $('.columnLeft>.localized>span');
+		localizedB = $('.columnLeft>.localized>b');
+
+		localizedTxt.keyup(function() {
+			if (selectedRowId !== null) {
+				var row = grid.getLocalRow(selectedRowId);
+				grid.setCell(selectedRowId, 'localized', this.value);
+				if (defaultLocale.locale === row.locale) {
+					defKeys[row.name][row.key] = this.value;
+					defaultTxt.val(this.value);
+				}
+			}
+		});
+
+		$rootScope.selectedFile = 'all';
+
+		var filter = $('#filter').change(function() {
+			gridData = [];
+			$rootScope.selectedFile = this.value;
+			$rootScope.$apply();
+			if (this.value === 'all') {
+				for(var path in fileMap) {
+					gridData = gridData.concat(fileMap[path]);
+				}
+			} else {
+				gridData = gridData.concat(fileMap[this.value]);
+			}
+			createVerify();
+		});
+
+		var createlDialog = $('#createlDialog'),
+			createModalBody = createlDialog.on('show.bs.modal', function() {
+				var errors = window.Localization.errors,
+					body = $(this).html(createModalBody),
+					copyFrom = body.find('.copyFrom'),
+					fileInput = body.find('.fileName');
+				fileInput.val(copyFrom.val().split('/')[1].replace('.json', ''));
+				copyFrom.change(function() {
+					fileInput.val(this.value.split('/')[1].replace('.json', ''));
+				});
+				body.find('.btn-primary').click(function() {
+					var language = body.find('.language').val(),
+						fileName = fileInput.val() + '.json',
+						fullName = language + '/' + fileName;
+					if (fileInput.val().trim() === '') {
+						return body.find('.error').text(errors.emptyFile).show();
+					}
+
+					if (fileMap[fullName]) {
+						return body.find('.error').text(errors.fileExists).show();
+					}
+
+					filter.append($('<option selected></option>').val(fullName).html(fullName));
+
+					var data = JSON.parse(JSON.stringify(fileMap[copyFrom.val()]));
+					$.each(data, function(index, row) {
+						row['localized'] = '';
+						row['locale'] = language;
+						row['path'] = fullName;
+					});
+					gridData = fileMap[fullName] = data;
+					if (!defKeys[fileName]) {
+						defKeys[fileName] = {};
+					}
+
+					createVerify();
+					createlDialog.modal('hide');
+				});
+			}).html();
+
+		$.each(createlDialog.find('.language option'), function(index, option) {
+			localeMap[option.value] = option.text;
+		});
+
+		var newModal = $('#newRowDialog'),
+			newModalBody = newModal.on('show.bs.modal', function() {
+				var body = $(this).html(newModalBody);
+				body.find('.btn-primary').click(function() {
+					var newKey = body.find('.langKey').val().trim(),
+						fileName = filter.val(),
+						rows = fileMap[fileName],
+						arr1 = fileName.split('/');
+					for (var i = 0; i < rows.length; i++) {
+						if (rows[i].key === newKey) {
+							body.find('.error').show();
+							return;
+						}
+					}
+
+					$.each(fileMap, function(fileName, rows) {
+						var arr2 = fileName.split('/');
+						if (arr1[1] === arr2[1]) {
+							rows.splice(0, 0, { 'key': newKey, 'path': fileName, 'name': arr2[1], 'locale': arr2[0] });
+						}
+					});
+
+					if (defKeys[arr1[1]]) {
+						defKeys[arr1[1]][newKey] = '';
+					}
+
+					gridData = rows;
+					createGrid(true);
+
+					newModal.modal('hide');
+				});
+			}).html();
+
 		createGrid();
+
+		$('.btn-save').click(function() {
+			console.log(fileMap);
+		});
 
 		var win = $(window).bind('resize', function() {
 			if (grid.parent().width() === 0) {

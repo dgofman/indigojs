@@ -20,10 +20,13 @@ textarea[disabled] {
 }
 
 .fildset {
+	clear: both;
+	margin-top: @margin;
 
 	label {
 		float: left;
 		padding-right: 5px;
+		min-width: 90px;
 	}
 
 	span {
@@ -36,16 +39,6 @@ textarea[disabled] {
 	}
 }
 
-.filter {
-	width: 100%;
-}
-
-.language {
-	width: 300px;
-	float: right;
-	margin-left: 10px;
-}
-
 .jqGridContainer {
 	width: 100%;
 	float: left;
@@ -53,7 +46,7 @@ textarea[disabled] {
 }
 
 .details {
-	height: 85px;
+	height: 65px;
 	margin-top: @margin;
 
 	> div {
@@ -67,11 +60,6 @@ textarea[disabled] {
 
 	.footer {
 		float: right;
-
-		input {
-			float: left;
-			margin: 0 5px 0 0;
-		}
 
 		button {
 			margin-top: 10px;
@@ -101,5 +89,40 @@ textarea[disabled] {
 
 	.text-right {
 		color: #4B0082;
+	}
+}
+
+.modal-dialog {
+	position:absolute;
+	top:50% !important;
+	left: 50% !important;
+	margin: -150px 0 0 -200px;
+	width:400px;
+	height:300px;
+}
+
+.jqgrid-column {
+	text-indent: 4px;
+
+	td:eq(2) {
+		font-weight: bold !important;
+		color: red;
+	}
+}
+
+.del-column {
+	width: 24px;
+	text-indent: 0;
+	padding: 5px !important;
+	cursor: pointer;
+	margin-left: -4px;
+}
+
+.deleteOther {
+	float: left;
+
+	input {
+		float: left;
+		margin: 0 5px 0 0;
 	}
 }

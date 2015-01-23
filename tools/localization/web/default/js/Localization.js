@@ -21,8 +21,8 @@ define([
 
 				app.service('appService', function($rootScope) {
 					return {
-						files: function(files) {
-							$rootScope.$broadcast('FILE_LOADED_EVENT', files);
+						fileItems: function(items) {
+							$rootScope.$broadcast('FILE_LOADED_EVENT', items);
 						}
 					};
 				});
@@ -31,7 +31,7 @@ define([
 
 				this.div.find('.jqGridContainer').attr('ng-controller', gridCntlName);
 
-				app.controller(gridCntlName, ['appService', '$scope', gridController]);
+				app.controller(gridCntlName, ['appService', '$rootScope', '$scope', '$http', gridController]);
 
 				app.run(['appService', '$rootScope', '$http', $.proxy(this.afterRender, this)]);
 
@@ -40,7 +40,8 @@ define([
 
 			afterRender: function(appService, $rootScope, $http) {
 				var self = this,
-					files = [],
+					items = {},
+					count = 0,
 					filters = $('#filter option'),
 					language = $('#language');
 
@@ -54,11 +55,16 @@ define([
 				$.each(filters, function(index, option) {
 					if (option.value !== 'all') {
 						self.loadFile($http, option.text, function(data) {
-							files.push({name: option.text, data: data});
-							if (files.length === filters.length - 1) { //excelude all
+							var  arr = option.text.split('/'),
+								files = items[arr[0]];
+							if (!files) {
+								items[arr[0]] = files = [];
+							}
+							files.push({name: arr[1], path: option.text, data: data});
+							if (++count === filters.length - 1) { //excelude all
 								self.div.show();
 								$('div.loading').hide();
-								appService.files(files);
+								appService.fileItems(items);
 							}
 						});
 					}

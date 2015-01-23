@@ -1,0 +1,37 @@
+@progressBG: #cccccc;
+@progressWidth: 100%;
+@progressHeight: 25px;
+@progressBorder: 8px;
+@progressColors: 
+		-45deg,
+		rgba(51, 153, 255, 1) 25%,
+		rgba(0, 128, 255, 1) 25%,
+		rgba(0, 128, 255, 1) 50%,
+		rgba(51, 153, 255, 1) 50%,
+		rgba(51, 153, 255, 1) 75%,
+		rgba(0, 128, 255, 1) 75%,
+		rgba(0, 128, 255, 1);
+
+/* Firefox */
+progress {
+	background: @progressBG!important;
+	height: @progressHeight + 2;
+	width: @progressWidth;
+	border-radius: @progressBorder;
+}
+progress::-moz-progress-bar {
+	border-radius: @progressBorder;
+	background-image: -moz-linear-gradient(@progressColors);
+}
+
+/* Chrome */
+progress::-webkit-progress-bar {
+	background: @progressBG;
+	height: @progressHeight;
+	width: @progressWidth;
+	border-radius: @progressBorder;
+}
+progress::-webkit-progress-value {
+	border-radius: @progressBorder;
+	background-image: -webkit-linear-gradient(@progressColors);
+}

@@ -20,8 +20,8 @@ module.exports = function(router, app) {
 	});
 
 	router.get('/index', function(req, res) {
-		var locale = indigo.getLocale(req);
-		res.redirect(router.conf.base + '/' + locale + '/index');
+		indigo.getLocale(req);
+		res.redirect(router.conf.base + '/' + req.session.locale + '/index');
 	});
 
 	return conf;

@@ -32,7 +32,9 @@ describe('libs/errorHandler', function () {
 	});
 
 	it('should validate err 500', function (done) {
-		errorHandler(appconf)(true, null, {
+		errorHandler(appconf)(true, {
+				url: '/foo.html'
+			}, {
 			statusCode: 500,
 			render: function(url, model) {
 				assert.equal(model.code, 500);
@@ -44,7 +46,9 @@ describe('libs/errorHandler', function () {
 	});
 
 	it('should validate err 503', function (done) {
-		errorHandler(appconf)(true, null, {
+		errorHandler(appconf)(true, {
+				url: '/foo.html'
+			}, {
 			statusCode: 503,
 			render: function(url, model) {
 				assert.equal(model.code, 503);
@@ -56,7 +60,9 @@ describe('libs/errorHandler', function () {
 	});
 
 	it('should validate err 911', function (done) {
-		errorHandler(appconf)(true, null, {
+		errorHandler(appconf)(true, {
+				url: '/foo.html'
+			}, {
 			statusCode: 911,
 			render: function(url, model) {
 				assert.equal(model.code, 911);

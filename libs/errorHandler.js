@@ -64,7 +64,7 @@ var errorHandler = function(appconf) {
 				model.details = 'Please contact your system administrator.';
 			}
 
-			errorHandler.error('ERROR_' + res.statusCode, err, model.message);
+			errorHandler.error('ERROR2_' + res.statusCode, err, model.message, req.url);
 
 			if (url && url.length > 0){
 				res.redirect(url);
@@ -109,12 +109,13 @@ errorHandler.lessErrorHandler = function(err) {
  * @param {String} errorId Error id assigning for each function hanlder.
  * @param {Object} err Contains information about errors.
  * @param {String} message Error description.
+ * @param {String} [details] Error details.
  * @return {Object} error JSON object with error infomation.
  */
-errorHandler.error = function(errorId, err, message) {
+errorHandler.error = function(errorId, err, message, details) {
 	var uid = new Date().getTime().toString();
 	debug(err.toString());
-	indigo.logger.error('%s: %s - ', errorId, uid, err.toString());
+	indigo.logger.error('%s: %s - ', errorId, uid, err.toString(), details || '');
 	return {
 		id: errorId,
 		uid: uid,

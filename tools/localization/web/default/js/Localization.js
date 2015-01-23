@@ -3,8 +3,7 @@
 define([
 	'jquery',
 	'angular',
-	'gridController',
-	'socketio'
+	'gridController'
 ], function($, angular, gridController) {
 
 	var localization = function(params) {

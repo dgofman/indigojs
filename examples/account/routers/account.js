@@ -9,7 +9,7 @@ module.exports = function(router) {
 	});
 
 	router.get('/:locale/login', function(req, res) {
-		var locales = indigo.getLocales(req);
+		var locales = indigo.getLocale(req);
 		req.model.pageTitle = locales.account.pageTitle; //set title in templates/head.html 
 		indigo.render(req, res, '/login', locales);
 	});

@@ -247,7 +247,7 @@ var indigo =
 			req.model = JSON.parse(reqModel);
 		}
 
-		req.model.locales = locales || indigo.getLocales(req);
+		req.model.locales = locales || indigo.getLocale(req);
 		req.model.req = req;
 
 		if (fileName.indexOf('.') === -1) {
@@ -271,7 +271,7 @@ var indigo =
 	 * @param {String} [keyName='locale'] Customize <code>req.params</code> key name refering to locale code.
 	 * @return {Object} locale Collection of localization messages.
 	 */
-	getLocales: function(req, keyName) {
+	getLocale: function(req, keyName) {
 		req.params = req.params || {};
 		return locales.init(req, req.params[keyName || 'locale']);
 	},
@@ -286,7 +286,7 @@ var indigo =
 	 */
 	getNewURL: function(req, res, url, redirectURL) {
 		if (!req.session.locale) {
-			indigo.getLocales(req);
+			indigo.getLocale(req);
 		}
 
 		if ( !fs.existsSync(appdir + url) && 

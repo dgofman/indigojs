@@ -5,7 +5,7 @@ module.exports = function(router, app) {
 	var conf = {
 		'base': '{{uri}}',
 		'controllers': [
-			'{{routers}}/controllers'
+			'/controllers'
 		]
 	};
 

@@ -2,12 +2,12 @@
 
 var stdio = require('stdio'),
 	fs = require('fs'),
-	fse = require('fs-extra');
+	fse = require('fs-extra'),
+	pkg = require('../../package.json');
 
 (function() {
 
 	if (process.argv.slice(2).indexOf('-v') !== -1) {
-		var pkg = require('../../package.json');
 		console.log(pkg.name + ' ' + pkg.version);
 		return;
 	}
@@ -24,7 +24,9 @@ var stdio = require('stdio'),
 		'env': {key: 'e', args: 1, description: 'software environment (dev/prod)'}
 	});
 
-	var lines = fs.readFileSync(__dirname + '/package.json', 'utf-8').replace('{{name}}', ops.name),
+	var lines = fs.readFileSync(__dirname + '/package.json', 'utf-8').
+								replace('{{name}}', ops.name).
+								replace('{{version}}', pkg.version),
 		dir = '.';
 	createFile(dir, '/package.json', lines);
 

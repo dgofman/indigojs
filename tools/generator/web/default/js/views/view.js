@@ -5,7 +5,7 @@ define([
 ], function($){
 	return {
 		initialize: function() {
-			$('h1').css('padding', '20px');
+			$('h1').animate({opacity: 1}, 'slow');
 		}
 	};
 });

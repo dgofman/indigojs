@@ -86,7 +86,7 @@ describe('UnitTests Indigo APIs', function () {
 				}
 			};
 
-		locales = indigo.getLocales(req, 'countryCode'); //req.params.countryCode
+		locales = indigo.getLocale(req, 'countryCode'); //req.params.countryCode
 
 		indigo.render(req, res, '/login', locales);
 	});

@@ -12,8 +12,7 @@
 
 		errors: {
 			'emptyFile': '<%= locales.errors.emptyFile %>',
-			'fileExists': '<%= locales.errors.fileExists %>',
-			'errorSaveFile': '<%= locales.errors.errorSaveFile %>'
+			'fileExists': '<%= locales.errors.fileExists %>'
 		},
 
 		defaultLocale: '<%= defaultLocale %>'
@@ -109,6 +108,27 @@
 				<div class="modal-footer">
 					 <button type="button" class="btn btn-default" data-dismiss="modal"><%= locales.content.cancel %></button>
 					<button type="button" class="btn btn-primary"><%= locales.content.create %></button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+	<!-- Modal -->
+	<div class="modal fade" id="saveDialog" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title"><%= locales.content.saveTile %></h4>
+				</div>
+				<div class="modal-body">
+					<progress value="0" max="100"></progress>
+					<div class="error">
+						<%= locales.errors.errorSaveFile %>
+						<p></p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal"><%= locales.content.close %></button>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->

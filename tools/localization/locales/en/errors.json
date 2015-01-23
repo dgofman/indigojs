@@ -1,6 +1,6 @@
 {
-	"emptyFile": "Please provide a file name.",
-	"fileExists": "The file already exists.",
-	"errorSaveFile": "Cannot save or create file(s).",
-	"duplicateKey": "The Language Key already defined."
+    "duplicateKey": "The Language Key already defined.",
+    "emptyFile": "Please provide a file name.",
+    "errorSaveFile": "Cannot save or create file(s).",
+    "fileExists": "The file already exists."
 }

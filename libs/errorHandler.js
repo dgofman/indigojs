@@ -133,7 +133,7 @@ errorHandler.error = function(errorId, err, message) {
  * @param {Number} [errorCode=400] HTTP error code.
  */
 errorHandler.json = function(req, res, errorKey, errorCode) {
-	var locales = indigo.getLocales(req);
+	var locales = indigo.getLocale(req);
 	res.status(errorCode || 400).json( { error: locales.errors ? locales.errors[errorKey] : errorKey } );
 };
 

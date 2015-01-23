@@ -7,15 +7,10 @@ require.config({
 		angular: 'vendor/angular-1.3.8',
 		jqGrid: 'vendor/jquery.jqGrid-4.7.0',
 
-		gridController: 'controllers/GridController',
-
-		socketio: '../../../socket.io/socket.io'
+		gridController: 'controllers/GridController'
 	},
 
 	shim: {
-		'socketio': {
-			exports: 'io'
-		},
 		'angular': {
 			exports : 'angular'
 		},

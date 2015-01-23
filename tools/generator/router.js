@@ -1,5 +1,7 @@
 'use strict';
 
+var indigo = require('indigojs');
+
 module.exports = function(router, app) {
 
 	var conf = {
@@ -9,14 +11,17 @@ module.exports = function(router, app) {
 		]
 	};
 
-	//Redirect root / to /{{uri}}/en/index
 	app.get('/', function(req, res) {
-		res.redirect(router.conf.base + '/en/index');
+		res.redirect(router.conf.base + '/index');
 	});
 
-	//Redirect /{{uri}}/index to /{{uri}}/en/index
+	router.get('/', function(req, res) {
+		res.redirect(router.conf.base + '/index');
+	});
+
 	router.get('/index', function(req, res) {
-		res.redirect(router.conf.base + '/en/index');
+		var locale = indigo.getLocale(req);
+		res.redirect(router.conf.base + '/' + locale + '/index');
 	});
 
 	return conf;

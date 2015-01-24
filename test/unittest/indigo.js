@@ -16,7 +16,7 @@ describe('UnitTests Indigo APIs', function () {
 
 	it('should init app', function (done) {
 		indigo.init(__appDir + '/examples/account/config/app.json');
-		assert.equal(indigo.appconf.server.appdir, '/examples/account/web');
+		assert.equal(indigo.appconf.server.webdir, '/examples/account/web');
 		done();
 	});
 

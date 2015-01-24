@@ -27,7 +27,7 @@ var stdio = require('stdio'),
 	var lines = fs.readFileSync(__dirname + '/package.json', 'utf-8').
 								replace('{{name}}', ops.name).
 								replace('{{version}}', pkg.version),
-		dir = '.';
+	dir = '.';
 	createFile(dir, '/package.json', lines);
 
 	lines = fs.readFileSync(__dirname + '/index.js', 'utf-8');
@@ -39,7 +39,7 @@ var stdio = require('stdio'),
 	lines = fs.readFileSync(__dirname + '/app.json', 'utf-8').
 						replace('{{env}}', ops.env || 'dev').
 						replace('{{port}}', ops.port || defaultPort).
-						replace('{{appdir}}', ops.dir || '/web').
+						replace('{{webdir}}', ops.dir || '/web').
 						replace('{{locales}}', ops.locales || '/locales').
 						replace('{{routers}}', ops.routers || '/routers');
 	createFile(dir + '/config', '/app.json', lines);

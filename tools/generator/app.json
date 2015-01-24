@@ -3,7 +3,7 @@
 
 	"server": {
 		"port": {{port}},
-		"appdir": "{{appdir}}",
+		"webdir": "{{webdir}}",
 		"cache": 3600 /* seconds, 0 - no-cache */
 	},
 

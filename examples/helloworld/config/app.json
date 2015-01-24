@@ -3,7 +3,7 @@
 
 	"server": {
 		"port": 8686,
-		"appdir": "/examples/helloworld/web"
+		"webdir": "/examples/helloworld/web"
 	},
 
 	"locales": {

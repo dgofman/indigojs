@@ -8,7 +8,7 @@ var debug = require('debug')('indigo:main'),
 	errorHandler = require('./libs/errorHandler');
 
 var reqModel, http,
-	appdir, portNumber,
+	webdir, portNumber,
 	logger, locales;
 
 /**
@@ -34,7 +34,7 @@ debug('__appDir: %s', __appDir);
  * The <code>cache</code> property sets the header cache value for static files (in the seconds). 
  * By assigning it to zero it will prevent browser from caching.
  *
- * The property <code>appdir</code> specifies path to the all web static resources.
+ * The property <code>webdir</code> specifies path to the all web static resources.
  *
  * By defining the <code>environment</code> variable as <code>prod</code> indigo including a minifying version of
  * the static resources (*.min.js, *.min.css, compressed less) that simulates file output in deployed server, by
@@ -47,7 +47,7 @@ debug('__appDir: %s', __appDir);
  *		"port": 8585,
  *		"force": true,
  *		"cache": 86400,
- *		"appdir": "/examples/account/web",
+ *		"webdir": "/examples/account/web",
  *		...
  *	},
  *	"environment": "dev"
@@ -95,7 +95,7 @@ var indigo =
 
 		appconf.environment = appconf.environment  || 'dev';
 
-		appdir = __appDir + appconf.get('server:appdir');
+		webdir = __appDir + appconf.get('server:webdir');
 
 		locales = require('./libs/locales');
 
@@ -153,7 +153,7 @@ var indigo =
 	 * });
 	 *
 	 * @example
-	 * require('indigojs').start({server:80, appdir:"/web"});
+	 * require('indigojs').start({server:80, webdir:"/web"});
 	 *
 	 * @param {JSON|String} appconf Path to the app.json file or application configuration object.
 	 * @param {Function} [before] Callback function before starting http server.
@@ -169,7 +169,7 @@ var indigo =
 
 		app.use(require(appconf.get('server:session:path') || './libs/session')(appconf)); //enabled req.session
 
-		app.use('/', express.static(appdir));
+		app.use('/', express.static(webdir));
 
 		//http://localhost:8585/indigo/account/en/templates/login
 		app.use('/indigo/:routerPath/:locale/templates/:pageId', function(req, res) {
@@ -179,7 +179,7 @@ var indigo =
 			var url = '/' + req.session.locale + '/templates/' + req.params.routerPath + '/' + req.params.pageId + '.html',
 				newUrl = indigo.getNewURL(req, res, url);
 			debug('template: %s -> %s', url, newUrl);
-			res.sendFile(appdir + newUrl);
+			res.sendFile(webdir + newUrl);
 		});
 
 		routers.init(app, appconf, reqModel);
@@ -193,7 +193,7 @@ var indigo =
 			var newUrl = indigo.getNewURL(req, null, '/' + req.session.locale + '/' + url, '/' + url);
 			debug('inject: %s -> %s', url, newUrl);
 			try {
-				req.model.filename = appdir + newUrl;
+				req.model.filename = webdir + newUrl;
 				return ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
 			} catch(err) {
 				return errorHandler.injectErrorHandler(err).message;
@@ -205,7 +205,7 @@ var indigo =
 		app.engine('.html', ejs.__express);
 
 		// Set the folder where the pages are kept
-		app.set('views', appdir);
+		app.set('views', webdir);
 
 		/**
 		 * Reference to HTTP server.
@@ -256,7 +256,7 @@ var indigo =
 		var newUrl = indigo.getNewURL(req, res, '/' + req.session.locale + '/' + fileName, '/' + fileName);
 		debug('render: %s -> %s', req.url, newUrl);
 
-		fileName = appdir + newUrl;
+		fileName = webdir + newUrl;
 		res.setHeader && res.setHeader('lang', req.model.locality.langugage);
 		if (!fs.existsSync(fileName)) {
 			res.status(404);
@@ -277,6 +277,14 @@ var indigo =
 	},
 
 	/**
+	 * Return path to application webroot directory.
+	 * @return {String} webdir Absolute path to webroot directory.
+	 */
+	getWebDir: function() {
+		return webdir;
+	},
+
+	/**
 	 * Verify path to existing file in application web directory based of locale rule in <code>libs/locales/accept-rules.json</code>.
 	 * @param {express.Request} req Defines an object to provide client request information.
 	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
@@ -289,18 +297,18 @@ var indigo =
 			indigo.getLocale(req);
 		}
 
-		if ( !fs.existsSync(appdir + url) && 
+		if ( !fs.existsSync(webdir + url) && 
 			url.indexOf('/' + req.session.locale +'/') !== -1) { //try to get file from another locale directory
 			debug('getNewURL=%s locale=%s lookup=%s', url, req.session.locale, req.session.localeLookup);
 			for (var index in req.session.localeLookup) {
 				var newUrl = url.replace('/' + req.session.locale + '/', '/' + req.session.localeLookup[index] + '/');
-				if (fs.existsSync(appdir + newUrl)) {
+				if (fs.existsSync(webdir + newUrl)) {
 					res && res.setHeader && res.setHeader('Referer', newUrl);
 					return newUrl;
 				}
 			}
 		}
-		if (!fs.existsSync(appdir + url)) {
+		if (!fs.existsSync(webdir + url)) {
 			url = redirectURL || req.url || url;
 		}
 		return url;

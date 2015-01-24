@@ -23,8 +23,8 @@ var debug = require('debug')('indigo:middleware'),
 function middleware(appconf) {
 
 	var isDev = appconf.get('environment') === 'dev',
-		appdir = __appDir + appconf.get('server:appdir'),
-		indigo = require('../indigo');
+		indigo = require('../indigo'),
+		webdir = indigo.getWebDir();
 
 	/**
 	 * @memberOf sourceloader
@@ -37,17 +37,17 @@ function middleware(appconf) {
 			var newUrl = indigo.getNewURL(req, res, req.url),
 				cache = parseInt(appconf.get('server:cache'));
 
-			if (fs.existsSync(appdir + newUrl) && 
+			if (fs.existsSync(webdir + newUrl) && 
 				req.originalUrl.indexOf(newUrl) === -1) {
 				res.setHeader && res.setHeader('Cache-Control', 'public, max-age=' + 
 						(!isNaN(cache) ? cache : 3600)); //or one hour
 
 				debug('redirect: %s -> %s', req.url, newUrl);
 				if (newUrl.lastIndexOf('.less') !== -1) {
-					fs.readFile(appdir + newUrl, function(error, data) {
+					fs.readFile(webdir + newUrl, function(error, data) {
 						data = data.toString();
 						less.render(data, {
-								filename: appdir + newUrl,
+								filename: webdir + newUrl,
 								compress: !isDev
 							}, function (error, result) {
 								res.set('Content-Type', 'text/css');
@@ -61,11 +61,11 @@ function middleware(appconf) {
 							});
 					});
 				} else {
-					res.sendFile(appdir + newUrl);
+					res.sendFile(webdir + newUrl);
 				}
 			} else {
 				res.status(404);
-				res.setHeader && res.setHeader('path', appdir + newUrl);
+				res.setHeader && res.setHeader('path', webdir + newUrl);
 				next('middleware');
 			}
 			return;

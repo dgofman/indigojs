@@ -94,7 +94,7 @@ describe('Testing REST API\'s', function () {
 	it('should get ECONNREFUSED calling request function', function(done) {
 		rest().init({
 				host:'localhost',
-				port: 80
+				port: 8123
 			}).request('GET', '/firststep/REST', null, function(err, result, req, res) {
 				assert.equal(res.statusCode, 500);
 				assert.equal(err.code, 'ECONNREFUSED');
@@ -102,7 +102,7 @@ describe('Testing REST API\'s', function () {
 		});
 	});
 
-	it('should get ECONNREFUSED calling request function', function(done) {
+	it('should get ECONNRESET calling request function', function(done) {
 		rest().init({
 				host:'localhost',
 				port: 8787

@@ -5,8 +5,10 @@
 </head>
 <body>
 
-	<div class="container">
-		<% include content.html %>
+	<div class="wrapped">
+		<div class="container">
+			<% include content.html %>
+		</div>
 	</div>
 
 	<%- inject(req, 'templates/footer.html') %>

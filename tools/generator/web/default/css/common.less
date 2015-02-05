@@ -9,8 +9,20 @@
 @font_normal: 12px Arial,Helvetica,sans-serif;
 @font_bold: bold @font_normal;
 
-html body {
+html, body {
+	height: 100%;
 	font: @font_normal;
 	background-color: @white;
 	color: @black;
+}
+
+.wrapped {
+	min-height: 96%;
+	overflow: auto;
+}
+.footer {
+	bottom: 0;
+	left: 0;
+	position: relative;
+	width:100%;
 }

@@ -16,13 +16,17 @@ html, body {
 	color: @black;
 }
 
-.wrapped {
-	min-height: 96%;
-	overflow: auto;
-}
-.footer {
+body {
+	> .wrapper {
+		min-height: 96%;
+		overflow: auto;
+	}
+
+	> .footer {
 	bottom: 0;
-	left: 0;
-	position: relative;
-	width:100%;
+		left: 0;
+		position: relative;
+		width:100%;
+		font-weight: bold;
+	}
 }

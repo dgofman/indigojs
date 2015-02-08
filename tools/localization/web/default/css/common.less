@@ -9,10 +9,26 @@
 @font_normal: Arial,Helvetica,Sans;
 @font_bold: "Arial Black",Impact,"Sans Bold";
 
-html body {
-  font-family: @font_normal;
+html, body {
+  height: 100%;
+  font: @font_normal;
   background-color: @gray;
   color: @black;
+}
+
+body {
+  > .wrapper {
+    min-height: 96%;
+    overflow: auto;
+  }
+
+  > .footer {
+    bottom: 0;
+    left: 0;
+    position: relative;
+    width:100%;
+    font-weight: bold;
+  }
 }
 
 .button {

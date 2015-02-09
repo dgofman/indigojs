@@ -312,6 +312,15 @@ var indigo =
 			url = redirectURL || req.url || url;
 		}
 		return url;
+	},
+
+	/**
+	 * Import a module under <code>libs</code> directory.
+	 * @param {String} module File name.
+	 * @return {Object} module.
+	 */
+	libs: function(module) {
+		return require('./libs/' + module);
 	}
 };
 

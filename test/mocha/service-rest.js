@@ -67,6 +67,16 @@ describe('Testing REST API\'s', function () {
 		});
 	});
 
+	it('should test error 404', function(done) {
+		indigo.service.init({
+				host:'localhost',
+				port:80
+			}).get('/firststep/REST', params, function(err, result, req, res) {
+				assert.equal(res.statusCode, 404);
+				done();
+		});
+	});
+
 	it('should test ECONNRESET error', function(done) {
 		indigo.service.init({
 				host:'localhost',

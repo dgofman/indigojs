@@ -133,6 +133,12 @@ describe('UnitTests Indigo APIs', function () {
 		assert.equal(indigo.getNewURL(req, null, '/foo'), '/foo');
 		done();
 	});
+
+	it('should test libs module(s)', function (done) {
+		var errorHandler = require('../../libs/errorHandler');
+		assert.equal(errorHandler, indigo.libs('errorHandler'));
+		done();
+	});
 });
 
 function fixPath(path) {

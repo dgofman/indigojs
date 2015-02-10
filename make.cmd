@@ -57,12 +57,6 @@ goto :eof
 	start "" "http://localhost:8787/firststep/index"
 goto :eof
 
-:localetool
-	call :killnode
-	start /WAIT /B node tools/localization/index.js
-	start "" "http://localhost:8888/localization/index"
-goto :eof
-
 :debug
 	cls
 	SET DEBUG=indigo:* & nodemon --debug .

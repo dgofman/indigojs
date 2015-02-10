@@ -83,9 +83,9 @@ var locales =
 					}
 				}
 			}
-
-			localelookup(appconf);
 		}
+
+		localelookup(appconf);
 	},
 
 	/**

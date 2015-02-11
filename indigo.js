@@ -64,23 +64,17 @@ var indigo =
 	{
 
 	/**
-	 * Initialization of module members by using JSON configuration object.
+	 * Creating <code>appconf</code> object.
 	 * @param {JSON|String} appconf Path to the <code>app.json</code> file or application configuration object.
-	 * @return {Object} appconf Return reference to the  configuration object.
+	 * @return {Object} appconf Return reference to the configuration object.
 	 */
-	init: function(appconf) {
+	getAppConf: function(appconf) {
 		if (typeof(appconf) === 'string') { //path to app.json
 			debug('indigo.init appconf - %s', appconf);
 			appconf = require('cjson').load(appconf);
 		}
 
-		/**
-		 * JSON object represents application configuration.
-		 * @memberof indigo
-		 * @alias appconf
-		 * @type {Object}
-		 */
-		this.appconf = appconf;
+		appconf.environment = appconf.environment  || 'dev';
 
 		appconf.get = function(path) {
 			var value = this,
@@ -93,7 +87,22 @@ var indigo =
 			return value;
 		};
 
-		appconf.environment = appconf.environment  || 'dev';
+		return appconf;
+	},
+
+	/**
+	 * Initialization of module members by using JSON configuration object.
+	 * @param {JSON|String} appconf Path to the <code>app.json</code> file or application configuration object.
+	 * @return {Object} appconf Return reference to the  configuration object.
+	 */
+	init: function(appconf) {
+		/**
+		 * JSON object represents application configuration.
+		 * @memberof indigo
+		 * @alias appconf
+		 * @type {Object}
+		 */
+		this.appconf = appconf = this.getAppConf(appconf);
 
 		webdir = __appDir + appconf.get('server:webdir');
 

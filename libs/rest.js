@@ -38,6 +38,7 @@ function rest() {
 	return /** @lends libs/rest.prototype */ {
 		/**
 		 * Specified default header values in JSON responce object.
+		 * @memberof libs/rest.prototype 
 		 * @alias headers
 		 * @type {Object}
 		 */

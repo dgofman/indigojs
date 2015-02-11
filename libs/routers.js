@@ -51,7 +51,7 @@ var routers =
 		locales = locales || indigo.locales;
 
 		// dynamically include routers
-		var middleware = require('./middleware')(appconf),
+		var middleware = require('./middleware')(appconf, this.moduleWebDir),
 			routersDir = appconf.get('routers'),
 			/**
 			 * @memberOf sourceloader

@@ -20,17 +20,21 @@ var debug = require('debug')('indigo:middleware'),
  * @mixin libs/middleware
  * @param {Object} appconf JSON object represents application configuration.
  */
-function middleware(appconf) {
+function middleware(appconf, webdir) {
 
 	var isDev = appconf.get('environment') === 'dev',
-		indigo = global.__indigo,
-		webdir = indigo.getWebDir();
+		indigo = global.__indigo;
 
 	/**
 	 * @memberOf sourceloader
 	 * @alias middleware.js#handler
 	 */
 	return function(req, res, next) {
+
+		req.moduleWebDir =  function() {
+			return webdir;
+		};
+
 		if (!res._headerSent && req.method === 'GET') {
 			debug(req.method, req.url, req.originalUrl);
 

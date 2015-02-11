@@ -12,16 +12,6 @@ var reqModel, http,
 	logger, locales;
 
 /**
- * Global variable defined absolute path to application directory.
- * @global
- * @alias __appDir
- * @type {String}
- */
-global.__appDir = process.cwd(); 
-
-debug('__appDir: %s', __appDir);
-
-/**
  * indigoJS is the simplest localization and templating framework running on node platform.
  *
  * indigoJS is a flexible library, allowing multiple configurations from 
@@ -332,6 +322,26 @@ var indigo =
 		return require('./libs/' + module);
 	}
 };
+
+/**
+ * Global variable defined absolute path to application directory.
+ * @global
+ * @alias __appDir
+ * @type {String}
+ */
+global.__appDir = process.cwd();
+
+/**
+ * Global instance to the <code>indigo</code> module.
+ * @global
+ * @alias __indigo
+ * @type {Object}
+ */
+if (!global.__indigo) {
+	global.__indigo = indigo;
+}
+
+debug('__appDir: %s', __appDir);
 
 /**
  * @module indigo

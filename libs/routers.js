@@ -49,7 +49,7 @@ var routers =
 
 		debug('router::routersDir', routersDir);
 
-		routers.loadModule(routersDir, function(route) {
+		routers.loadModule(appconf, routersDir, function(route) {
 			var router = express.Router(),
 				conf = {};
 
@@ -79,7 +79,7 @@ var routers =
 			debug('router::base - %s, controllers: %s', conf.base, conf.controllers);
 
 			// dynamically include controllers
-			routers.loadModule(conf.controllers, function(controller) {
+			routers.loadModule(appconf, conf.controllers, function(controller) {
 				controller(router);
 			});
 
@@ -198,12 +198,14 @@ routers.routerConf = function(middleware, opt) {
  * This function verifying and loading routers and controllers.
  * @memberof libs/routers.prototype
  * @alias loadModule
+ * @param {Object} appconf JSON object represents application configuration.
  * @param {Array} dirs List of directories with javascript files.
  * @param {Function} callback Returns loaded module to the function handler.
  */
-routers.loadModule = function(dirs, callback) { 
+routers.loadModule = function(appconf, dirs, callback) {
+	var parentDir = __appDir + (appconf.moduleDir || '');
 	for (var index in dirs) {
-		var dir = __appDir + dirs[index];
+		var dir = parentDir + dirs[index];
 		debug('router::dir - %s', dir);
 		if (fs.existsSync(dir) && fs.lstatSync(dir).isDirectory()) {
 			fs.readdirSync(dir).forEach(function (file) {

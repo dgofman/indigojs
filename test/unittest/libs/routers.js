@@ -6,12 +6,12 @@ var routers = require('../../../libs/routers'),
 describe('libs/routers', function () {
 
 	it('should test directory with non JS files', function (done) {
-		routers.loadModule(['/examples/account/config']);
+		routers.loadModule({}, ['/examples/account/config']);
 		done();
 	});
 
 	it('should test invalid directory', function (done) {
-		routers.loadModule(['/examples/account/foo']);
+		routers.loadModule({}, ['/examples/account/foo']);
 		done();
 	});
 
@@ -27,7 +27,7 @@ describe('libs/routers', function () {
 			get: function() { return null; }
 		};
 
-		routers.loadModule = function(routers) {
+		routers.loadModule = function(appconf, routers) {
 			routers.loadModule = loadModule;
 			assert.ok(routers instanceof Array);
 			assert.equal(routers[0], '/routers');

@@ -326,7 +326,7 @@ var indigo =
 };
 
 function moduleWebDir(req) {
-	return req && req.moduleWebDir ? moduleWebDir() : indigo.getWebDir();
+	return req && req.moduleWebDir ? req.moduleWebDir() : indigo.getWebDir();
 }
 
 /**

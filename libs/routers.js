@@ -76,11 +76,6 @@ var routers =
 					router.route(path)
 						.all(function(req, res, next) {
 							debug(req.method, req.url, req.originalUrl);
-							/* istanbul ignore next */
-							req.moduleDir = function() {
-								return routers.moduleDir;
-							};
-							/* istanbul ignore next */
 							req.moduleWebDir =  function() {
 								return routers.moduleWebDir;
 							};

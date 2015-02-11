@@ -34,12 +34,14 @@ var routers =
 	 */
 	init: function(appconf, reqModel, app) {
 
+		var indigo = global.__indigo;
+
 		if (!reqModel) {
-			reqModel = global.__indigo.libs('reqmodel')(appconf);
+			reqModel = JSON.stringify(indigo.libs('reqmodel')(appconf));
 		}
 
 		if (!app) {
-			app = global.__indigo.app;
+			app = indigo.app;
 		}
 
 		// dynamically include routers

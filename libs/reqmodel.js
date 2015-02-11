@@ -48,7 +48,7 @@ function reqmodel(appconf) {
 	var env = appconf.get('environment'),
 		minify = env === 'dev' ? '' : '.min';
 
-	return JSON.stringify({
+	return {
 		environment: env,
 		minify: minify,
 		extCSS: minify + '.css',
@@ -56,7 +56,7 @@ function reqmodel(appconf) {
 		locality: {},
 		locales: {},
 		routerBase: ''
-	});
+	};
 }
 
 /**

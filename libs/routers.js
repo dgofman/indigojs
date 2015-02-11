@@ -34,6 +34,9 @@ var routers =
 	 */
 	init: function(appconf, reqModel, app) {
 
+		this.moduleDir = __appDir + (appconf.get('server:moduleDir') || '');
+		this.moduleWebDir = this.moduleDir + appconf.get('server:webdir');
+
 		var indigo = global.__indigo;
 
 		if (!reqModel) {
@@ -68,19 +71,39 @@ var routers =
 				enumerable: true
 			});
 
-			router.get = function(path, callback) {
-				router.route(path)
-					.all(function(req, res, next) {
-						debug(req.method, req.url, req.originalUrl);
-						req.model = JSON.parse(reqModel);
-						req.model.routerBase = conf.base;
-						if (conf.intercept) {
-							conf.intercept(req, res, next);
-						} else {
-							next();
-						}
-					}).get(callback);
+			var requestHook = function(method) {
+				return function(path, callback) {
+					router.route(path)
+						.all(function(req, res, next) {
+							debug(req.method, req.url, req.originalUrl);
+							/* istanbul ignore next */
+							req.moduleDir = function() {
+								return routers.moduleDir;
+							};
+							/* istanbul ignore next */
+							req.moduleWebDir =  function() {
+								return routers.moduleWebDir;
+							};
+							if (conf.methods[method]) { //include default model into req.model
+								req.model = JSON.parse(reqModel);
+								req.model.routerBase = conf.base;
+								if (conf.intercept) {
+									conf.intercept(req, res, next);
+								} else {
+									next();
+								}
+							} else {
+								next();
+							}
+						})[method](callback);
+				};
 			};
+
+			router.get = requestHook('get');
+			router.post = requestHook('post');
+			router.put = requestHook('put');
+			router.delete = requestHook('delete');
+			router.patch = requestHook('patch');
 
 			conf = routers.routerConf(middleware, route(router, app));
 
@@ -200,6 +223,7 @@ routers.routerConf = function(middleware, opt) {
 	} else {
 		conf.base = conf.base || '/route';
 	}
+	conf.methods = conf.methods || {'get': true};
 	conf.middleware = conf.middleware || middleware;
 	return conf;
 };
@@ -213,9 +237,8 @@ routers.routerConf = function(middleware, opt) {
  * @param {Function} callback Returns loaded module to the function handler.
  */
 routers.loadModule = function(appconf, dirs, callback) {
-	var parentDir = __appDir + (appconf.get('server:moduleDir') || '');
 	for (var index in dirs) {
-		var dir = parentDir + dirs[index];
+		var dir = this.moduleDir + dirs[index];
 		debug('router::dir - %s', dir);
 		if (fs.existsSync(dir) && fs.lstatSync(dir).isDirectory()) {
 			fs.readdirSync(dir).forEach(function (file) {

@@ -192,7 +192,7 @@ var indigo =
 			var newUrl = indigo.getNewURL(req, null, '/' + req.session.locale + '/' + url, '/' + url);
 			debug('inject: %s -> %s', url, newUrl);
 			try {
-				req.model.filename = webdir + newUrl;
+				req.model.filename = moduleWebDir(req) + newUrl;
 				return ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
 			} catch(err) {
 				return errorHandler.injectErrorHandler(err).message;
@@ -255,7 +255,7 @@ var indigo =
 		var newUrl = indigo.getNewURL(req, res, '/' + req.session.locale + '/' + fileName, '/' + fileName);
 		debug('render: %s -> %s', req.url, newUrl);
 
-		fileName = webdir + newUrl;
+		fileName = moduleWebDir(req) + newUrl;
 		res.setHeader && res.setHeader('lang', req.model.locality.langugage);
 		if (!fs.existsSync(fileName)) {
 			res.status(404);
@@ -279,7 +279,7 @@ var indigo =
 	 * Return path to application webroot directory.
 	 * @return {String} webdir Absolute path to webroot directory.
 	 */
-	getWebDir: function() {
+	getWebDir: function(req) {
 		return webdir;
 	},
 
@@ -292,22 +292,24 @@ var indigo =
 	 * @return {String} url New URL base on web appllication directory defined in locale dependencies.
 	 */
 	getNewURL: function(req, res, url, redirectURL) {
+		var dir = moduleWebDir(req);
+
 		if (!req.session.locale) {
 			indigo.getLocale(req);
 		}
 
-		if ( !fs.existsSync(webdir + url) && 
+		if ( !fs.existsSync(dir + url) && 
 			url.indexOf('/' + req.session.locale +'/') !== -1) { //try to get file from another locale directory
 			debug('getNewURL=%s locale=%s lookup=%s', url, req.session.locale, req.session.localeLookup);
 			for (var index in req.session.localeLookup) {
 				var newUrl = url.replace('/' + req.session.locale + '/', '/' + req.session.localeLookup[index] + '/');
-				if (fs.existsSync(webdir + newUrl)) {
+				if (fs.existsSync(dir + newUrl)) {
 					res && res.setHeader && res.setHeader('Referer', newUrl);
 					return newUrl;
 				}
 			}
 		}
-		if (!fs.existsSync(webdir + url)) {
+		if (!fs.existsSync(dir + url)) {
 			url = redirectURL || req.url || url;
 		}
 		return url;
@@ -322,6 +324,10 @@ var indigo =
 		return require('./libs/' + module);
 	}
 };
+
+function moduleWebDir(req) {
+	return req && req.moduleWebDir ? moduleWebDir() : indigo.getWebDir();
+}
 
 /**
  * Global variable defined absolute path to application directory.

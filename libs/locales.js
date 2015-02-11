@@ -1,7 +1,7 @@
 'use strict';
 
-var debug = require('debug')('indigo:locales'),
-	indigo = require('../indigo'),
+var indigo = global.__indigo,
+	debug = require('debug')('indigo:locales'),
 	fs = require('fs'),
 	rules = require('./locales/accept-rules.json'),
 	defaultLocale = 'en-us',

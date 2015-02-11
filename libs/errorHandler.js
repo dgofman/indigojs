@@ -39,7 +39,7 @@ var debug = require('debug')('indigo:errorHandler'),
  */
 var errorHandler = function(appconf) {
 
-	indigo = require('../indigo');
+	indigo = global.__indigo;
 
 	return function(err, req, res, next) {
 		if (err) {

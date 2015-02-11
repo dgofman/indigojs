@@ -1,7 +1,7 @@
 'use strict';
 
-var debug = require('debug')('indigo:rest'),
-	indigo = require('../indigo'),
+var indigo = global.__indigo,
+	debug = require('debug')('indigo:rest'),
 	querystring = require('querystring'),
 	http = require('http'),
 	https = require('https');

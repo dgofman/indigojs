@@ -23,7 +23,7 @@ var debug = require('debug')('indigo:middleware'),
 function middleware(appconf) {
 
 	var isDev = appconf.get('environment') === 'dev',
-		indigo = require('../indigo'),
+		indigo = global.__indigo,
 		webdir = indigo.getWebDir();
 
 	/**

@@ -1,17 +1,20 @@
 'use strict';
 
 var routers = require('../../../libs/routers'),
-	assert = require('assert');
+	assert = require('assert'),
+	appconf = {
+		get: function() { return null; }
+	};
 
 describe('libs/routers', function () {
 
 	it('should test directory with non JS files', function (done) {
-		routers.loadModule({}, ['/examples/account/config']);
+		routers.loadModule(appconf, ['/examples/account/config']);
 		done();
 	});
 
 	it('should test invalid directory', function (done) {
-		routers.loadModule({}, ['/examples/account/foo']);
+		routers.loadModule(appconf, ['/examples/account/foo']);
 		done();
 	});
 
@@ -22,10 +25,7 @@ describe('libs/routers', function () {
 	});
 
 	it('should validate default router path', function (done) {
-		var loadModule = routers.loadModule,
-			appconf = {
-			get: function() { return null; }
-		};
+		var loadModule = routers.loadModule;
 
 		routers.loadModule = function(appconf, routers) {
 			routers.loadModule = loadModule;

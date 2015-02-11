@@ -28,11 +28,19 @@ var routers =
 	 *	...
 	 *}
 	 *
-	 * @param {express} app Instance of the application server.
 	 * @param {Object} appconf JSON object represents application configuration.
-	 * @param {Object} reqModel Reference to {@link libs/reqmodel} object what will be assign to <code>req.model</code> for each router request.
+	 * @param {Object} [reqModel] Reference to {@link libs/reqmodel} object what will be assign to <code>req.model</code> for each router request.
+	 * @param {express} [app] Instance of the application server.
 	 */
-	init: function(app, appconf, reqModel) {
+	init: function(appconf, reqModel, app) {
+
+		if (!reqModel) {
+			reqModel = global.__indigo.libs('reqmodel')(appconf);
+		}
+
+		if (!app) {
+			app = global.__indigo.app;
+		}
 
 		// dynamically include routers
 		var middleware = require('./middleware')(appconf),

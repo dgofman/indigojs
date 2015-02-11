@@ -181,7 +181,7 @@ var indigo =
 			res.sendFile(webdir + newUrl);
 		});
 
-		routers.init(app, appconf, reqModel);
+		routers.init(appconf, reqModel, app);
 
 		/**
 		 * @memberOf sourceloader
@@ -337,6 +337,7 @@ global.__appDir = process.cwd();
  * @alias __indigo
  * @type {Object}
  */
+/* istanbul ignore next */
 if (!global.__indigo) {
 	global.__indigo = indigo;
 }

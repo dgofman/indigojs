@@ -33,6 +33,6 @@ describe('libs/routers', function () {
 			assert.equal(routers[0], '/routers');
 			done();
 		};
-		routers.init(null, appconf);
+		routers.init(appconf);
 	});
 });

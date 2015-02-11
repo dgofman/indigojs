@@ -203,7 +203,7 @@ routers.routerConf = function(middleware, opt) {
  * @param {Function} callback Returns loaded module to the function handler.
  */
 routers.loadModule = function(appconf, dirs, callback) {
-	var parentDir = __appDir + (appconf.moduleDir || '');
+	var parentDir = __appDir + (appconf.get('server:moduleDir') || '');
 	for (var index in dirs) {
 		var dir = parentDir + dirs[index];
 		debug('router::dir - %s', dir);

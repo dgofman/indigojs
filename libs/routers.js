@@ -31,8 +31,9 @@ var routers =
 	 * @param {Object} appconf JSON object represents application configuration.
 	 * @param {Object} [reqModel] Reference to {@link libs/reqmodel} object what will be assign to <code>req.model</code> for each router request.
 	 * @param {express} [app] Instance of the application server.
+	 * @param {Object} [locales] Reference to <code>/lib/locales</code>.
 	 */
-	init: function(appconf, reqModel, app) {
+	init: function(appconf, reqModel, app, locales) {
 
 		this.moduleDir = __appDir + (appconf.get('server:moduleDir') || '');
 		this.moduleWebDir = this.moduleDir + appconf.get('server:webdir');
@@ -46,6 +47,8 @@ var routers =
 		if (!app) {
 			app = indigo.app;
 		}
+
+		locales = locales || indigo.locales;
 
 		// dynamically include routers
 		var middleware = require('./middleware')(appconf),
@@ -100,7 +103,7 @@ var routers =
 			router.delete = requestHook('delete');
 			router.patch = requestHook('patch');
 
-			conf = routers.routerConf(middleware, route(router, app));
+			conf = routers.routerConf(middleware, route(router, app, locales));
 
 			app.use(conf.base, router);
 
@@ -108,7 +111,7 @@ var routers =
 
 			// dynamically include controllers
 			routers.loadModule(appconf, conf.controllers, function(controller) {
-				controller(router);
+				controller(router, locales);
 			});
 
 			router.use(conf.middleware);

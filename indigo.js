@@ -96,7 +96,13 @@ var indigo =
 
 		webdir = __appDir + appconf.get('server:webdir');
 
-		locales = require('./libs/locales');
+		/**
+		 * Reference to <code>libs/locales</code>.
+		 * @memberof indigo
+		 * @alias locales
+		 * @type {Object}
+		 */
+		this.locales = locales = require('./libs/locales');
 
 		/**
 		 * Reference to logging API's.
@@ -181,7 +187,7 @@ var indigo =
 			res.sendFile(webdir + newUrl);
 		});
 
-		routers.init(appconf, reqModel, app);
+		routers.init(appconf, reqModel, app, locales);
 
 		/**
 		 * @memberOf sourceloader
@@ -279,7 +285,7 @@ var indigo =
 	 * Return path to application webroot directory.
 	 * @return {String} webdir Absolute path to webroot directory.
 	 */
-	getWebDir: function(req) {
+	getWebDir: function() {
 		return webdir;
 	},
 

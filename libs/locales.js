@@ -61,7 +61,7 @@ var locales =
 		this.defLocale = defLocale = appconf.get('locales:default') || defaultLocale;
 		localeMap[defLocale] = { __lookup__: [], __localName__: defLocale };
 
-		var localeDir = __appDir + appconf.get('locales:path');
+		var localeDir = __appDir + (appconf.get('server:moduleDir') || '') + appconf.get('locales:path');
 		if (fs.existsSync(localeDir)) {
 			var dirs = fs.readdirSync(localeDir);
 			for (var d in dirs) {
@@ -85,7 +85,7 @@ var locales =
 			}
 		}
 
-		localelookup(appconf);
+		localelookup(localeDir, appconf);
 	},
 
 	/**
@@ -149,11 +149,11 @@ function saveToSession(req, locale) {
 /**
  * Traverse all locales files under locale directory.
  * @memberof libs/locales.prototype
- * @param {Object} appconf JSON object represents application configuration.
+ * @param {String} localeDir Absolute path to <code>locale</code> directory.
  * @access protected
  */
-function localelookup(appconf) {
-	var file = __appDir + appconf.get('locales:path') + '/accept-rules.json';
+function localelookup(localeDir) {
+	var file = localeDir + '/accept-rules.json';
 	if (fs.existsSync(file)) {
 		var customRules = require(file);
 		for (var code in customRules) {

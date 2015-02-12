@@ -8,6 +8,15 @@ var reqmodel = require('../../../libs/reqmodel'),
 
 describe('libs/reqmodel', function () {
 
+	it('should assign to default dev environment', function (done) {
+		var conf = reqmodel(appconf);
+		assert.equal(conf.environment, 'dev');
+		assert.equal(conf.minify, '');
+		assert.equal(conf.extCSS, '.css');
+		assert.equal(conf.extJS, '.js');
+		done();
+	});
+
 	it('should verify environment is dev', function (done) {
 		appconf.environment = 'dev';
 		var conf = reqmodel(appconf);

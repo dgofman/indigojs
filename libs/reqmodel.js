@@ -51,6 +51,7 @@ function reqmodel(appconf) {
 		env = 'prod';
 	}
 
+	env = env || 'dev';
 	minify = env === 'dev' ? '' : '.min';
 
 	return {

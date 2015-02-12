@@ -76,7 +76,7 @@ npm start
 ./web/en
 ```
 
-## Plugins
+### Plugins
 
 - [Localization Tool](https://www.npmjs.com/package/indigo-locale)
 

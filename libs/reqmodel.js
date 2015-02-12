@@ -45,8 +45,13 @@
  */
 function reqmodel(appconf) {
 
-	var env = appconf.get('environment'),
-		minify = env === 'dev' ? '' : '.min';
+	var minify, env = appconf.get('environment');
+
+	if (process.env.NODE_ENV === 'production') {
+		env = 'prod';
+	}
+
+	minify = env === 'dev' ? '' : '.min';
 
 	return {
 		environment: env,

@@ -76,6 +76,11 @@ npm start
 ./web/en
 ```
 
+## Plugins
+
+- [Localization Tool](https://www.npmjs.com/package/indigo-locale)
+
+
 ### License
 
 [MIT](http://opensource.org/licenses/mit-license.php)

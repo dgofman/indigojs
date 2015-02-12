@@ -220,6 +220,13 @@ var indigo =
 		 */
 		indigo.http = http = require('http').createServer(app);
 
+		var modules = appconf.get('modules');
+		for (var index in modules) {
+			try {
+				require(modules[index]).init();
+			} catch (e) {}
+		}
+
 		if (before) {
 			before(http, app);
 		}

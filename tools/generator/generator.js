@@ -17,7 +17,7 @@ var stdio = require('stdio'),
 		'name': {key: 'n', args: 1, mandatory: true, description: 'application name'},
 		'dir': {key: 'd', args: 1, description: 'path to the webroot directory (defaults /web)'},
 		'port': {key: 'p', args: 1, description: 'server port number  (defaults ' + defaultPort + ')'},
-		'uri': {key: 'u', args: 1, description: 'default routing path/uri (defaults /app)'},
+		'uri': {key: 'u', args: 1, description: 'default routing path/uri (defaults /%APPNAME%)'},
 		'routers': {key: 'r', args: 1, description: 'path to the routers files (defaults /routers)'},
 		'controllers': {key: 'c', args: 1, description: 'path to the controllers directory (defaults /controllers)'},
 		'locales': {key: 'l', args: 1, description: 'path to the localization files directory (defaults /locales)'},
@@ -52,7 +52,7 @@ var stdio = require('stdio'),
 
 	dir = '.' + (ops.routers || '/routers');
 	lines = fs.readFileSync(__dirname + '/router.js', 'utf-8').
-						replace('{{uri}}', ops.uri || '/app').
+						replace('{{uri}}', ops.uri || '/' + ops.name).
 						replace('{{routers}}', ops.routers || '/routers').
 						replace('{{controllers}}', ops.controllers || '/controllers');
 	createFile(dir, '/router.js', lines);

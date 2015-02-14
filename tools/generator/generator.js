@@ -67,7 +67,7 @@ var stdio = require('stdio'),
 	console.log('\nPlease run commands:');
 	console.log('npm install');
 	console.log('npm start');
-	console.log('\nURL: http://localhost:%s%s/index', ops.port || defaultPort, ops.uri || '/app');
+	console.log('\nURL: http://localhost:%s%s/index', ops.port || defaultPort, ops.uri || '/' + ops.name);
 })();
 
 function createFile(dir, file, lines) {

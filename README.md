@@ -1,11 +1,11 @@
 [![Indigo Logo](http://www.indigojs.com/img/smallogo.png)](http://indigojs.com/)
 
 
-[![NPM version](https://badge.fury.io/js/indigojs.svg?1.1.28)](http://badge.fury.io/js/indigojs) [![Build Status](https://api.travis-ci.org/dgofman/indigojs.svg?branch=master&1.1.28)](https://travis-ci.org/dgofman/indigojs) [![Coverage Status](https://coveralls.io/repos/dgofman/indigojs/badge.svg?branch=master&1.1.28)](https://coveralls.io/r/dgofman/indigojs?branch=master) [![Dependency Status](https://david-dm.org/dgofman/indigojs.svg?1.1.28)](https://david-dm.org/dgofman/indigojs) [![devDependency Status](https://david-dm.org/dgofman/indigojs/dev-status.svg?1.1.28)](https://david-dm.org/dgofman/indigojs#info=devDependencies) [![Build status](https://ci.appveyor.com/api/projects/status/7wyiswf86a9inmju?svg=true&1.1.28)](https://ci.appveyor.com/project/dgofman/indigojs)
+[![NPM version](https://badge.fury.io/js/indigojs.svg?1.1.29)](http://badge.fury.io/js/indigojs) [![Build Status](https://api.travis-ci.org/dgofman/indigojs.svg?branch=master&1.1.29)](https://travis-ci.org/dgofman/indigojs) [![Coverage Status](https://coveralls.io/repos/dgofman/indigojs/badge.svg?branch=master&1.1.29)](https://coveralls.io/r/dgofman/indigojs?branch=master) [![Dependency Status](https://david-dm.org/dgofman/indigojs.svg?1.1.29)](https://david-dm.org/dgofman/indigojs) [![devDependency Status](https://david-dm.org/dgofman/indigojs/dev-status.svg?1.1.29)](https://david-dm.org/dgofman/indigojs#info=devDependencies) [![Build status](https://ci.appveyor.com/api/projects/status/7wyiswf86a9inmju?svg=true&1.1.29)](https://ci.appveyor.com/project/dgofman/indigojs)
 
 [![NPM](https://nodei.co/npm/indigojs.png?downloads=true&downloadRank=true)](https://www.npmjs.com/package/indigojs)
 
-###Getting started
+### Getting started
 
 ###### 1. Download and install Install NodeJS
 

@@ -1,6 +1,6 @@
 {
   "name": "indigojs",
-  "version": "1.1.27",
+  "version": "1.1.28",
   "description": "IndigoJS is an open source, JavaScript/NodeJS localization framework",
   "main": "indigo.js",
   "scripts": {

@@ -1,32 +1,32 @@
 [![Indigo Logo](http://www.indigojs.com/img/smallogo.png)](http://indigojs.com/)
 
 
-[![NPM version](https://badge.fury.io/js/indigojs.svg?1.1.27)](http://badge.fury.io/js/indigojs) [![Build Status](https://api.travis-ci.org/dgofman/indigojs.svg?branch=master&1.1.27)](https://travis-ci.org/dgofman/indigojs) [![Coverage Status](https://coveralls.io/repos/dgofman/indigojs/badge.svg?branch=master&1.1.27)](https://coveralls.io/r/dgofman/indigojs?branch=master) [![Dependency Status](https://david-dm.org/dgofman/indigojs.svg?1.1.27)](https://david-dm.org/dgofman/indigojs) [![devDependency Status](https://david-dm.org/dgofman/indigojs/dev-status.svg?1.1.27)](https://david-dm.org/dgofman/indigojs#info=devDependencies) [![Build status](https://ci.appveyor.com/api/projects/status/7wyiswf86a9inmju?svg=true&1.1.27)](https://ci.appveyor.com/project/dgofman/indigojs)
+[![NPM version](https://badge.fury.io/js/indigojs.svg?1.1.28)](http://badge.fury.io/js/indigojs) [![Build Status](https://api.travis-ci.org/dgofman/indigojs.svg?branch=master&1.1.28)](https://travis-ci.org/dgofman/indigojs) [![Coverage Status](https://coveralls.io/repos/dgofman/indigojs/badge.svg?branch=master&1.1.28)](https://coveralls.io/r/dgofman/indigojs?branch=master) [![Dependency Status](https://david-dm.org/dgofman/indigojs.svg?1.1.28)](https://david-dm.org/dgofman/indigojs) [![devDependency Status](https://david-dm.org/dgofman/indigojs/dev-status.svg?1.1.28)](https://david-dm.org/dgofman/indigojs#info=devDependencies) [![Build status](https://ci.appveyor.com/api/projects/status/7wyiswf86a9inmju?svg=true&1.1.28)](https://ci.appveyor.com/project/dgofman/indigojs)
 
-
+[![NPM](https://nodei.co/npm/indigojs.png?downloads=true&downloadRank=true)](https://www.npmjs.com/package/indigojs)
 
 ###Getting started
 
-######1. Download and install Install NodeJS
+###### 1. Download and install Install NodeJS
 
 ```
  http://nodejs.org/download/
 ```
 
-######2. Create your project directory
+###### 2. Create your project directory
 
 ```
  mkdir myapp
  cd myapp
 ```
 
-######3. Download indigoJS framework
+###### 3. Download indigoJS framework
 
 ```
  npm install indigojs
 ```
 
-######4. Check the project generator attributes.
+###### 4. Check the project generator attributes.
 
 ```
  ./node_modules/indigojs/generator --help
@@ -36,7 +36,7 @@
  .\node_modules\indigojs\generator --help
 ```
 
-######5. Create a project using generator.
+###### 5. Create a project using generator.
 
 ```
  ./node_modules/indigojs/generator -n myapp
@@ -46,19 +46,19 @@
  .\node_modules\indigojs\generator -n myapp
 ```
 
-######6. Download dependency modules
+###### 6. Download dependency modules
 
 ```
  npm install
 ```
 
-######7. Start your server
+###### 7. Start your server
 
 ```
 npm start
 ```
 
-###Default structure of a project
+### Default structure of a project
 
 ```
 ./config
@@ -85,6 +85,6 @@ npm start
 
 [MIT](http://opensource.org/licenses/mit-license.php)
 
-###Please read our API's documentation.
+### Please read our API's documentation.
 
 http://www.indigojs.com/docs/index.html

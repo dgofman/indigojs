@@ -34,13 +34,8 @@ module.exports = function(router, app) {
 						compress: !isDev
 					}, function (error, result) {
 						res.set('Content-Type', 'text/css');
-						if (!error) {
-							res.write(result.css);
-							res.end();
-						} else {
-							errorHandler.error('ERROR_LESS_PARSING', error, 'Unable to parse file. Code: %UID%');
-							res.send(data);
-						}
+						res.write(result.css);
+						res.end();
 					});
 			});
 			return;

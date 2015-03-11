@@ -68,6 +68,10 @@ var routers =
 			var router = express.Router(),
 				conf = {};
 
+			router.moduleWebDir = function() {
+				return routers.moduleWebDir;
+			};
+
 			Object.defineProperty(router, 'conf', {
 				get: function() { return conf; },
 				enumerable: true
@@ -78,9 +82,7 @@ var routers =
 					router.route(path)
 						.all(function(req, res, next) {
 							debug(req.method, req.url, req.originalUrl);
-							req.moduleWebDir =  function() {
-								return routers.moduleWebDir;
-							};
+							req.moduleWebDir = router.moduleWebDir;
 							if (conf.methods[method]) { //include default model into req.model
 								req.model = JSON.parse(reqModel);
 								req.model.routerBase = conf.base;
@@ -240,7 +242,12 @@ routers.loadModule = function(appconf, dirs, callback) {
 		if (fs.existsSync(dir) && fs.lstatSync(dir).isDirectory()) {
 			fs.readdirSync(dir).forEach(function (file) {
 				if(file.substr(-3) === '.js') {
-					callback(require(dir + '/' + file.split('.')[0]));
+					try {
+						callback(require(dir + '/' + file.split('.')[0]));
+					} catch (e) {
+						/* istanbul ignore next */
+						console.log('Cannot loading \'%s\' :', dir + '/' + file, e);
+					}
 				}
 			});
 		}

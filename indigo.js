@@ -111,13 +111,6 @@ var indigo =
 		 * @type {Object}
 		 */
 		this.logger = logger = require(appconf.get('logger:path') || './libs/logger')(appconf);
-		/**
-		 * Reference to debugging utility.
-		 * @memberof indigo
-		 * @alias debug
-		 * @type {Function}
-		 */
-		this.debug = require('debug');
 
 		var service = require(appconf.get('service:path') || './libs/rest')();
 
@@ -198,7 +191,7 @@ var indigo =
 			var newUrl = indigo.getNewURL(req, null, '/' + req.session.locale + '/' + url, '/' + url);
 			debug('inject: %s -> %s', url, newUrl);
 			try {
-				req.model.filename = moduleWebDir(req) + newUrl;
+				req.model.filename = getModuleWebDir(req) + newUrl;
 				return ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
 			} catch(err) {
 				return errorHandler.injectErrorHandler(err).message;
@@ -268,7 +261,7 @@ var indigo =
 		var newUrl = indigo.getNewURL(req, res, '/' + req.session.locale + '/' + fileName, '/' + fileName);
 		debug('render: %s -> %s', req.url, newUrl);
 
-		fileName = moduleWebDir(req) + newUrl;
+		fileName = getModuleWebDir(req) + newUrl;
 		res.setHeader && res.setHeader('lang', req.model.locality.langugage);
 		if (!fs.existsSync(fileName)) {
 			res.status(404);
@@ -305,7 +298,7 @@ var indigo =
 	 * @return {String} url New URL base on web appllication directory defined in locale dependencies.
 	 */
 	getNewURL: function(req, res, url, redirectURL) {
-		var dir = moduleWebDir(req);
+		var dir = getModuleWebDir(req);
 
 		if (!req.session.locale) {
 			indigo.getLocale(req);
@@ -329,6 +322,14 @@ var indigo =
 	},
 
 	/**
+	 * Reference to debugging utility.
+	 * @memberof indigo
+	 * @alias debug
+	 * @type {Function}
+	 */
+	debug: require('debug'),
+
+	/**
 	 * Import a module under <code>libs</code> directory.
 	 * @param {String} module File name.
 	 * @return {Object} module.
@@ -337,12 +338,22 @@ var indigo =
 		return require('./libs/' + module);
 	},
 
+	/**
+	 * Include Express directory handler.
+	 * @param {String} path URI path.
+	 * @param {String} webdir Absolute path to the web directory.
+	 */
 	static: function(path, webdir) {
 		this.app.use(path, express.static(webdir));
 	}
 };
 
-function moduleWebDir(req) {
+/**
+ * Return path of the current plugin/module webroot directory.
+ * @param {express.Request} req Defines an object to provide client request information.
+ * @return {String} webdir Absolute path to module webroot directory.
+ */
+function getModuleWebDir(req) {
 	return req && req.moduleWebDir ? req.moduleWebDir() : indigo.getWebDir();
 }
 

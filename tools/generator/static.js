@@ -1,6 +1,6 @@
 'use strict';
 
-var indigo = require('indigojs'),
+var indigo = global.__indigo,
 	debug = indigo.debug('indigo:static'),
 	errorHandler = indigo.libs('errorHandler'),
 	fs = require('fs'),
@@ -8,7 +8,8 @@ var indigo = require('indigojs'),
 
 module.exports = function(router, app) {
 
-	var path = '/static';
+	var base = '/static',
+		path = '^' + base;
 
 	app.use(path + '/*(.css)$', function(req, res) {
 		return res.redirect(req.originalUrl.replace(/\.css$/, '.less'));
@@ -17,7 +18,7 @@ module.exports = function(router, app) {
 	app.use(path + '/*(.less)$', function(req, res, next) {
 
 		var filename = req.originalUrl.split('/').splice(-1)[0],
-			lessFile = indigo.getWebDir() + '/default/less/' + filename,
+			lessFile = router.moduleWebDir() + '/default/less/' + filename,
 			cache = parseInt(indigo.appconf.get('server:cache')),
 			isDev = indigo.appconf.get('environment') === 'dev';
 
@@ -47,5 +48,5 @@ module.exports = function(router, app) {
 		next();
 	});
 
-	return path;
+	return base;
 };

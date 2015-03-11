@@ -174,7 +174,7 @@ var indigo =
 
 		app.use(require(appconf.get('server:session:path') || './libs/session')(appconf)); //enabled req.session
 
-		app.use('/', express.static(webdir));
+		this.static('/', webdir);
 
 		//http://localhost:8585/indigo/account/en/templates/login
 		app.use('/indigo/:routerPath/:locale/templates/:pageId', function(req, res) {
@@ -335,6 +335,10 @@ var indigo =
 	 */
 	libs: function(module) {
 		return require('./libs/' + module);
+	},
+
+	static: function(path, webdir) {
+		this.app.use(path, express.static(webdir));
 	}
 };
 

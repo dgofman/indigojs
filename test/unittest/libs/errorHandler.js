@@ -22,11 +22,16 @@ describe('libs/errorHandler', function () {
 			}, 
 			{
 			statusCode: 404,
-			render: function(url, model) {
-				assert.equal(model.code, 404);
-				assert.equal(model.message, 'Not Found');
-				assert.equal(model.details, 'The requested URL was not found on this server: <code>/foo.html</code>');
-				done();
+			status: function(code) {
+				assert.equal(code, 202);
+				return {
+					render: function(url, model) {
+						assert.equal(model.code, 404);
+						assert.equal(model.message, 'Not Found');
+						assert.equal(model.details, 'The requested URL was not found on this server: <code>/foo.html</code>');
+						done();
+					}
+				};
 			}
 		}, null);
 	});
@@ -36,11 +41,16 @@ describe('libs/errorHandler', function () {
 				url: '/foo.html'
 			}, {
 			statusCode: 500,
-			render: function(url, model) {
-				assert.equal(model.code, 500);
-				assert.equal(model.message, 'Internal Server Error');
-				assert.equal(model.details, 'The server encountered an unexpected condition.');
-				done();
+			status: function(code) {
+				assert.equal(code, 202);
+				return {
+					render: function(url, model) {
+						assert.equal(model.code, 500);
+						assert.equal(model.message, 'Internal Server Error');
+						assert.equal(model.details, 'The server encountered an unexpected condition.');
+						done();
+					}
+				};
 			}
 		}, null);
 	});
@@ -50,25 +60,36 @@ describe('libs/errorHandler', function () {
 				url: '/foo.html'
 			}, {
 			statusCode: 503,
-			render: function(url, model) {
-				assert.equal(model.code, 503);
-				assert.equal(model.message, 'Service Unavailable');
-				assert.equal(model.details, 'Connection refuse.');
-				done();
+			status: function(code) {
+				assert.equal(code, 202);
+				return {
+					render: function(url, model) {
+						assert.equal(model.code, 503);
+						assert.equal(model.message, 'Service Unavailable');
+						assert.equal(model.details, 'Connection refuse.');
+						done();
+					}
+				};
 			}
 		}, null);
 	});
 
 	it('should validate err 911', function (done) {
+		appconf.errors.template = null;
 		errorHandler(appconf)(true, {
 				url: '/foo.html'
 			}, {
 			statusCode: 911,
-			render: function(url, model) {
-				assert.equal(model.code, 911);
-				assert.equal(model.message, 'System Error');
-				assert.equal(model.details, 'Please contact your system administrator.');
-				done();
+			status: function(code) {
+				assert.equal(code, 202);
+				return {
+					render: function(url, model) {
+						assert.equal(model.code, 911);
+						assert.equal(model.message, 'System Error');
+						assert.equal(model.details, 'Please contact your system administrator.');
+						done();
+					}
+				};
 			}
 		}, null);
 	});
@@ -89,12 +110,6 @@ describe('libs/errorHandler', function () {
 	it('should test injectErrorHandler', function (done) {
 		var error = {error:'ERROR'};
 		assert.equal(errorHandler.injectErrorHandler(error).error, error.toString());
-		done();
-	});
-
-	it('should test lessErrorHandler', function (done) {
-		var error = {error:'ERROR'};
-		assert.equal(errorHandler.lessErrorHandler(error).error, error.toString());
 		done();
 	});
 

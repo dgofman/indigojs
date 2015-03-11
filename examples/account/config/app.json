@@ -1,5 +1,5 @@
 {
-	"environment": "dev",
+	"environment": "prod",
 
 	"server": {
 		"port": 8585,

@@ -51,6 +51,9 @@ var stdio = require('stdio'),
 	createFile(dir, '/common.json', lines);
 
 	dir = '.' + (ops.routers || '/routers');
+	lines = fs.readFileSync(__dirname + '/static.js', 'utf-8');
+	createFile(dir, '/static.js', lines);
+
 	lines = fs.readFileSync(__dirname + '/router.js', 'utf-8').
 						replace('{{uri}}', ops.uri || '/' + ops.name).
 						replace('{{routers}}', ops.routers || '/routers').
@@ -61,6 +64,12 @@ var stdio = require('stdio'),
 	lines = fs.readFileSync(__dirname + '/controller.js', 'utf-8');
 	createFile(dir, '/controller.js', lines);
 	fse.copySync(__dirname + '/web', '.' + (ops.dir || '/web'));
+
+	dir = './resources/nginx/conf';
+	lines = fs.readFileSync(__dirname + '/resources/nginx/conf/nginx.conf', 'utf-8').
+							replace('{{webdir}}', process.cwd() + (ops.dir || '/web')).
+							replace('{{port}}', ops.port || defaultPort);
+	createFile(dir, '/nginx.conf', lines);
 
 	console.log('\nThank you for using IndigoJS!');
 

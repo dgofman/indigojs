@@ -69,7 +69,7 @@ var errorHandler = function(appconf) {
 			if (url && url.length > 0){
 				res.redirect(url);
 			} else {
-				res.render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), model);
+				res.status(202).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), model);
 			}
 			return;
 		}
@@ -88,18 +88,6 @@ var errorHandler = function(appconf) {
 errorHandler.injectErrorHandler = function(err) {
 	return errorHandler.error('ERROR_INJECT', err,
 		'<h3>Internal error. Please contact your system administrator</h3><br/>Code: %UID%');
-};
-
-/**
- * Error handler compiles less files to css.
- * @see {@link sourceloader.middleware.js#handler libs/middleware}
- * @memberof libs/errorHandler.prototype
- * @alias lessErrorHandler
- * @param {Object} err Contains information about errors.
- * @return {Object} error JSON object with error infomation.
- */
-errorHandler.lessErrorHandler = function(err) {
-	return errorHandler.error('ERROR_LESS_PARSING', err, 'Unable to parse file. Code: %UID%');
 };
 
 /**

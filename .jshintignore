@@ -1,5 +1,5 @@
 examples/**/*/vendor
-tools/generator/web/default/js/vendor
+tools/generator/web/static/js/vendor
 tools/docs/dist
 tools/docs/templates
 tools/builder

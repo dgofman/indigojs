@@ -3,21 +3,21 @@
 define([
 	'jquery',
 	'backbone',
-	'models/UserModel',
-	'text!login' 
-], function($, Backbone, User, template){
+	'userModel'
+], function($, Backbone, User){
 
 	return Backbone.View.extend({
 		events: {
 			'submit form.login-form': 'submit'
 		},
 
-		initialize: function() {
-			this.div = $(this.el);
+		initialize: function(options) {
+			this.div = $(options.el);
+			this.template = options.template;
 		},
 
 		render: function () {
-			this.div.html(template);
+			this.div.html(this.template);
 		},
 
 		submit: function(e) {

@@ -20,6 +20,9 @@ module.exports = function(router) {
 
 	return {
 		'base': '/account',
+		'middleware': function(req, res, next) {
+			next();
+		},
 		'controllers': [
 			'/examples/account/controllers'
 		]

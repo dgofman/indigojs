@@ -2,8 +2,8 @@
 
 define([
 	'backbone',
-	'views/LoginView', 
-	'views/ResetView'
+	'account/views/LoginView', 
+	'account/views/ResetView'
 ], function (Backbone, LoginView, ResetView) {
 
 	var el = '.wrapper',
@@ -24,12 +24,12 @@ define([
 		}
 	});
 
-	var initialize = function() {
+	var initialize = function(login, reset) {
 		console.log("account/router/AccountRouter::initialize");
 
 		//Create views
-		loginView = new LoginView({el:el});
-		resetView = new ResetView({el:el});
+		loginView = new LoginView({el:el, template:login});
+		resetView = new ResetView({el:el, template:reset});
 
 		new AccountRouter();
 

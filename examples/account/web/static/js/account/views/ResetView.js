@@ -3,9 +3,8 @@
 define([
 	'jquery',
 	'backbone',
-	'models/userModel',
-	'text!reset' 
-], function($, Backbone, User, template){
+	'userModel'
+], function($, Backbone, User){
 
 	return Backbone.View.extend({
 		events: {
@@ -13,12 +12,13 @@ define([
 			'click .cancel': 'cancel'
 		},
 
-		initialize: function() {
-			this.div = $(this.el);
+		initialize: function(options) {
+			this.div = $(options.el);
+			this.template = options.template;
 		},
 
 		render: function () {
-			this.div.html(template);
+			this.div.html(this.template);
 		},
 
 		cancel: function(e) {

@@ -5,17 +5,16 @@ BASE = .
 ISTANBUL = ./node_modules/.bin/istanbul
 JSHINT = ./node_modules/.bin/jshint
 MOCHA = ./node_modules/.bin/mocha
-UMOCHA = ./node_modules/.bin/_mocha
 
 main: clean lint killnode test-unit test-mocha
 
 cover: clean killnode
-	$(ISTANBUL) cover $(UMOCHA) \
+	$(ISTANBUL) cover $(MOCHA) \
 		test/mocha \
 		test/unittest
 
 test-unit:
-	@NODE_ENV=test $(UMOCHA) \
+	@NODE_ENV=test $(MOCHA) \
 		test/unittest \
 		--reporter $(REPORTER) \
 		$(MOCHA_OPTS)

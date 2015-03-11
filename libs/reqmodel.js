@@ -59,6 +59,7 @@ function reqmodel(appconf) {
 		minify: minify,
 		extCSS: minify + '.css',
 		extJS: minify + '.js',
+		extLESS: env === 'dev' ? '.less' : '.css',
 		locality: {},
 		locales: {},
 		routerBase: ''

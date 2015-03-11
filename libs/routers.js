@@ -51,8 +51,7 @@ var routers =
 		locales = locales || indigo.locales;
 
 		// dynamically include routers
-		var middleware = require('./middleware')(appconf, this.moduleWebDir),
-			routersDir = appconf.get('routers'),
+		var routersDir = appconf.get('routers'),
 			/**
 			 * @memberOf sourceloader
 			 * @alias routers.js#errorHandler
@@ -103,7 +102,7 @@ var routers =
 			router.delete = requestHook('delete');
 			router.patch = requestHook('patch');
 
-			conf = routers.routerConf(middleware, route(router, app, locales));
+			conf = routers.routerConf(route(router, app, locales));
 
 			app.use(conf.base, router);
 
@@ -114,7 +113,9 @@ var routers =
 				controller(router, locales);
 			});
 
-			router.use(conf.middleware);
+			if (typeof conf.middleware === 'function') {
+				router.use(conf.middleware);
+			}
 
 			router.use(errorHandler(appconf));
 		});
@@ -208,13 +209,12 @@ var routers =
  * @memberof libs/routers.prototype
  * @alias routerConf
  *
- * @param {Object} middleware Reference to {@link libs/middleware} module.
  * @param {Object|String} [opt] Return configuration parameters from the router class. 
  * In case of <code>opt</code> is undefined the default router pass will assign to root '/route' or you 
  * can override by returning base name as string or an object <code>{base:'/myroute'}</code>
  * @return {Object} conf New router configuration object.
  */
-routers.routerConf = function(middleware, opt) {
+routers.routerConf = function(opt) {
 	var conf = opt || {};
 	if (typeof opt === 'string') {
 		conf = {base: opt};
@@ -222,7 +222,6 @@ routers.routerConf = function(middleware, opt) {
 		conf.base = conf.base || '/route';
 	}
 	conf.methods = conf.methods || {'get': true};
-	conf.middleware = conf.middleware || middleware;
 	return conf;
 };
 

@@ -7,7 +7,6 @@ SET BASE=.
 SET ISTANBUL=node_modules\.bin\istanbul
 SET JSHINT=node_modules\.bin\jshint
 SET MOCHA=node_modules\.bin\mocha
-SET UMOCHA=node_modules\.bin\_mocha
 SET _MOCHA=node_modules\mocha\bin\_mocha
 
 if "%1"=="" goto :main else goto :eof
@@ -31,7 +30,7 @@ goto :eof
 goto :eof
 
 :test-unit
-	SET NODE_ENV=test & %UMOCHA% test\unittest --reporter %REPORTER% %MOCHA_OPTS%
+	SET NODE_ENV=test & %MOCHA% test\unittest --reporter %REPORTER% %MOCHA_OPTS%
 goto :eof
 
 :test-mocha

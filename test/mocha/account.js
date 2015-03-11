@@ -101,4 +101,12 @@ describe('Testing Account Controllers', function () {
 				done();
 		});
 	});
+
+	it('should test middleware handler call', function(done) {
+		superagent.post('http://localhost:8585/account/todo')
+			.end(function(err, res) {
+				assert.equal(res.statusCode, 404);
+				done();
+		});
+	});
 });

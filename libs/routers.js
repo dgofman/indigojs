@@ -112,7 +112,7 @@ var routers =
 
 			// dynamically include controllers
 			routers.loadModule(appconf, conf.controllers, function(controller) {
-				controller(router, locales);
+				controller(router, app, locales);
 			});
 
 			if (typeof conf.middleware === 'function') {

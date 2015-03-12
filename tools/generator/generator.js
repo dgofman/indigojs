@@ -67,7 +67,7 @@ var stdio = require('stdio'),
 
 	dir = './resources/nginx/conf';
 	lines = fs.readFileSync(__dirname + '/resources/nginx/conf/nginx.conf', 'utf-8').
-							replace('{{webdir}}', process.cwd() + (ops.dir || '/web')).
+							replace('{{webdir}}', (process.cwd() + ops.dir || '/web').replace(/\\/g, '/')).
 							replace('{{port}}', ops.port || defaultPort);
 	createFile(dir, '/nginx.conf', lines);
 

@@ -124,7 +124,9 @@ describe('Testing REST API\'s', function () {
 	});
 
 	it('should test parsing error', function(done) {
-		indigo.service.get('/firststep/TEST', params, function(err, result, req, res) {
+		var service = indigo.service;
+		service.headers['Content-Type'] = 'text/plain;charset=UTF-8';
+		service.get('/firststep/TEST', params, function(err, result, req, res) {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err.message, 'Unexpected token H');
 			assert.equal(result, 'HELLO WORLD!');

@@ -122,7 +122,7 @@ var indigo =
 		 */
 		if (!this.service) {
 			Object.defineProperty(this, 'service', {
-				get: function() { return Object.create(service).init(); },
+				get: function() { return Object.create(service).init(appconf.get('service')); },
 				enumerable: true
 			});
 		}

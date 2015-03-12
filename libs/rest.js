@@ -45,7 +45,7 @@ function rest() {
 		headers: {
 			'Accept-Encoding': 'gzip, deflate',
 			'Cache-Control': 'no-cache',
-			'Content-Type': 'text/plain;charset=UTF-8'
+			'Content-Type': 'application/json;charset=UTF-8'
 		},
 		/**
 		 * Initializing server settings.

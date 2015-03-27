@@ -69,96 +69,104 @@ function rest() {
 			this.host = opts.host;
 			this.port = opts.port;
 			this.secure = opts.secure;
+			this.timeout = opts.timeout;
 			return this;
 		},
 		/**
 		 * This function used to request a LIST of entities or to SHOW details for one entity.
-		 * @param {String} path Canonical path of the router.
-		 * @param {Object} data An object that is sent to the server with the request.
 		 * @param {Function} callback A callback function that is executed if the request completed.
+		 * @param {String} path Canonical path of the router.
+		 * @param {Object} [data] An object that is sent to the server with the request.
+		 * @param {Object} [query] URL query parameters.
 		 *
 		 * @example
-		 * require('indigojs').service.get('/routerBase/getPath', null, function(err, result, req, res) {
+		 * require('indigojs').service.get(function(err, result, req, res) {
 		 * 	...
-		 * });
+		 * }, '/routerBase/getPath', null, {'framework': 'indigojs'});
 		 */
-		get: function(path, data, callback) {
-			this.request('GET', path, data, callback);
+		get: function(callback, path, data, query) {
+			this.request(callback, 'GET', path, data, query);
 		},
 		/**
 		 * Executing HTTP POST requests contain their data in the body of the request. 
-		 * @param {String} path Canonical path of the router.
-		 * @param {Object} data An object that is sent to the server with the request.
 		 * @param {Function} callback A callback function that is executed if the request completed.
+		 * @param {String} path Canonical path of the router.
+		 * @param {Object} [data] An object that is sent to the server with the request.
+		 * @param {Object} [query] URL query parameters.
 		 *
 		 * @example
-		 * require('indigojs').service.post('/routerBase/postPath', {'key':'value'}, function(err, result, req, res) {
+		 * require('indigojs').service.post(function(err, result, req, res) {
 		 * 	...
-		 * });
+		 * }, '/routerBase/postPath', {'key':'value'});
 		 */
-		post: function(path, data, callback) {
-			this.request('POST', path, data, callback);
+		post: function(callback, path, data, query) {
+			this.request(callback, 'POST', path, data, query);
 		},
 		/**
 		 * The function sending request and translated as UPDATE or REPLACE an entity. 
-		 * @param {String} path Canonical path of the router.
-		 * @param {Object} data An object that is sent to the server with the request.
 		 * @param {Function} callback A callback function that is executed if the request completed.
+		 * @param {String} path Canonical path of the router.
+		 * @param {Object} [data] An object that is sent to the server with the request.
+		 * @param {Object} [query] URL query parameters.
 		 *
 		 * @example
-		 * require('indigojs').service.put('/routerBase/putPath', {'id':123, 'key':'value'}, function(err, result, req, res) {
+		 * require('indigojs').service.put(function(err, result, req, res) {
 		 * 	...
-		 * });
+		 * }, '/routerBase/putPath', {'id':123, 'key':'value'});
 		 */
-		put: function(path, data, callback) {
-			this.request('PUT', path, data, callback);
+		put: function(callback, path, data, query) {
+			this.request(callback, 'PUT', path, data, query);
 		},
 		/**
 		 * The function requests are used to delete an entity.
-		 * @param {String} path Canonical path of the router.
-		 * @param {Object} data An object that is sent to the server with the request.
 		 * @param {Function} callback A callback function that is executed if the request completed.
+		 * @param {String} path Canonical path of the router.
+		 * @param {Object} [data] An object that is sent to the server with the request.
+		 * @param {Object} [query] URL query parameters.
 		 *
 		 * @example
-		 * require('indigojs').service.put('/routerBase/deletePath', {'id':123}, function(err, result, req, res) {
+		 * require('indigojs').service.put(function(err, result, req, res) {
 		 * 	...
-		 * });
+		 * }, '/routerBase/deletePath', {'id':123});
 		 */
-		delete: function(path, data, callback) {
-			this.request('DELETE', path, data, callback);
+		delete: function(callback, path, data, query) {
+			this.request(callback, 'DELETE', path, data, query);
 		},
 		/**
 		 * The function perform a partial update of an entity.
-		 * @param {String} path Canonical path of the router.
-		 * @param {Object} data An object that is sent to the server with the request.
 		 * @param {Function} callback A callback function that is executed if the request completed.
+		 * @param {String} path Canonical path of the router.
+		 * @param {Object} [data] An object that is sent to the server with the request.
+		 * @param {Object} [query] URL query parameters.
 		 *
 		 * @example
-		 * require('indigojs').service.patch('/routerBase/patchPath', {'id':123, 'key':'value'}, function(err, result, req, res) {
+		 * require('indigojs').service.patch(function(err, result, req, res) {
 		 * 	...
-		 * });
+		 * }, '/routerBase/patchPath', {'id':123, 'key':'value'});
 		 */
-		patch: function(path, data, callback) {
-			this.request('PATCH', path, data, callback);
+		patch: function(callback, path, data, query) {
+			this.request(callback, 'PATCH', path, data, query);
 		},
 		/**
 		 * The inner function for building REST requests and executing from <code>get/post/put/delete/patch</code> functions.
+		 * @param {Function} callback A callback function that is executed if the request completed.
 		 * @param {String} method HTTP method <code>GET/POST/PUT/DELETE/PATCH</code>.
 		 * @param {String} path Canonical path of the router.
-		 * @param {Object} data An object that is sent to the server with the request.
-		 * @param {Function} callback A callback function that is executed if the request completed.
+		 * @param {Object} [data] An object that is sent to the server with the request.
+		 * @param {Object} [query] URL query parameters.
 		 */
-		request: function(method, path, data, callback) {
+		request: function(callback, method, path, data, query) {
 
-			var content = data ? JSON.stringify(data) : '';
+			if (query && Object.keys(query).length) {
+				path += (path.indexOf('?') === -1 ? '?' : '&') + querystring.stringify(query);
+			}
 
-			this.headers['Content-Length'] = content.length;
-
-			if (method === 'GET') {
-				path += '?' + querystring.stringify(data);
+			if (method === 'GET' && data && Object.keys(data).length) {
+				path += (path.indexOf('?') === -1 ? '?' : '&') + querystring.stringify(data);
 			}
 
 			var server, req,
+				self = this,
 				options = {
 					host: this.host,
 					port: this.port,
@@ -173,8 +181,9 @@ function rest() {
 				server = options.port !== 80 ? https : http;
 			}
 
+			options.scheme = (server === https  ? 'HTTPS' : 'HTTP');
+
 			debug('options -> %s', JSON.stringify(options, null, 2));
-			debug('is HTTPS -> %s', server === https);
 
 			req = server.request(options, function(res) {
 				var responseString = '';
@@ -188,9 +197,7 @@ function rest() {
 					try {
 						callback(null, JSON.parse(responseString), req, res);
 					} catch (e) {
-						debug('error - %s', e.message);
-						debug('result - %s', responseString);
-						callback(e, responseString, req, res);
+						callback(null, responseString, req, res);
 					}
 				});
 			});
@@ -200,7 +207,18 @@ function rest() {
 				callback(err, null, req, {statusCode: 500, message: 'Internal Server Error', err: err});
 			});
 
+			req.on('socket', function (socket) {
+				if (self.timeout !== undefined) {
+					socket.setTimeout(self.timeout);
+					socket.on('timeout', function() {
+						req.abort();
+					});
+				}
+			});
+
 			if (method !== 'GET') {
+				var content = data ? JSON.stringify(data) : '';
+				this.headers['Content-Length'] = content.length;
 				req.write(content);
 			}
 

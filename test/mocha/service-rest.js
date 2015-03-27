@@ -18,63 +18,84 @@ describe('Testing REST API\'s', function () {
 
 	it('should verify rest properties', function(done) {
 		assert.equal(indigo.service.host, 'localhost');
-		assert.equal(indigo.service.port, '8787');
+		assert.equal(indigo.service.port, 8787);
 		done();
 	});
 
 	it('should test GET', function(done) {
-		indigo.service.get('/firststep/REST', null, function(err, result, req, res) {
+		indigo.service.get(function(err, result, req, res) {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'GET');
+			assert(req._header, 'GET /firststep/REST?user=dgofman HTTP/1.1');
 			done();
-		});
+		}, '/firststep/REST', null, {'user': 'dgofman'});
+	});
+
+	it('should test GET with query param', function(done) {
+		indigo.service.get(function(err, result, req, res) {
+			assert.equal(res.statusCode, 200);
+			assert.equal(err, null, 'no errors');
+			assert.equal(result.method, 'GET');
+			assert(req._header, 'GET /firststep/REST?v1&user=dgofman HTTP/1.1');
+			done();
+		}, '/firststep/REST?v1', null, {'user': 'dgofman'});
+	});
+
+	it('should test GET with query param and body', function(done) {
+		indigo.service.get(function(err, result, req, res) {
+			assert.equal(res.statusCode, 200);
+			assert.equal(err, null, 'no errors');
+			assert.equal(result.method, 'GET');
+			assert(req._header, 'GET /firststep/REST?user=dgofman&dob=01%2F25%2F1975 HTTP/1.1');
+			done();
+		}, '/firststep/REST', {'dob': '01/25/1975'}, {'user': 'dgofman'});
 	});
 
 	it('should test POST', function(done) {
-		indigo.service.post('/firststep/REST', params, function(err, result, req, res) {
+		indigo.service.post(function(err, result, req, res) {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'POST');
 			done();
-		});
+		}, '/firststep/REST', params);
 	});
 
 	it('should test PUT', function(done) {
-		indigo.service.put('/firststep/REST', params, function(err, result, req, res) {
+		indigo.service.put(function(err, result, req, res) {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'PUT');
 			done();
-		});
+		}, '/firststep/REST', params);
 	});
 
 	it('should test DELETE', function(done) {
-		indigo.service.delete('/firststep/REST', params, function(err, result, req, res) {
+		indigo.service.delete(function(err, result, req, res) {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'DELETE');
 			done();
-		});
+		}, '/firststep/REST', params);
 	});
 
 	it('should test PATCH', function(done) {
-		indigo.service.patch('/firststep/REST', params, function(err, result, req, res) {
+		indigo.service.patch(function(err, result, req, res) {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'PATCH');
 			done();
-		});
+		}, '/firststep/REST', params);
 	});
 
 	it('should test error', function(done) {
 		indigo.service.init({
 				host:'localhost',
 				port:80
-			}).get('/firststep/REST', params, function(err, result, req, res) {
+			}).get(function(err, result, req, res) {
 				assert.notEqual(res.statusCode, 200);
 				done();
-		});
+		}, '/firststep/REST', params);
 	});
 
 	it('should test ECONNRESET error', function(done) {
@@ -82,11 +103,11 @@ describe('Testing REST API\'s', function () {
 				host:'localhost',
 				port:8787,
 				secure:true
-			}).get('/firststep/REST', params, function(err, result, req, res) {
+			}).get(function(err, result, req, res) {
 				assert.equal(res.statusCode, 500);
 				assert.equal(err.code, 'ECONNRESET');
 				done();
-		});
+		}, '/firststep/REST', params);
 	});
 
 	it('should get ECONNREFUSED error', function(done) {
@@ -94,44 +115,55 @@ describe('Testing REST API\'s', function () {
 				host:'localhost',
 				port: 8765,
 				secure: true
-			}).get('/firststep/REST', params, function(err, result, req, res) {
+			}).get(function(err, result, req, res) {
 				assert.equal(res.statusCode, 500);
 				assert.equal(err.code, 'ECONNREFUSED');
 				done();
-		});
+		}, '/firststep/REST', params);
 	});
 
 	it('should get ECONNREFUSED calling request function', function(done) {
 		rest().init({
 				host:'localhost',
 				port: 8123
-			}).request('GET', '/firststep/REST', null, function(err, result, req, res) {
+			}).request(function(err, result, req, res) {
 				assert.equal(res.statusCode, 500);
 				assert.equal(err.code, 'ECONNREFUSED');
 				done();
-		});
+		}, 'GET', '/firststep/REST');
 	});
 
 	it('should get ECONNRESET calling request function', function(done) {
 		rest().init({
 				host:'localhost',
 				port: 8787
-			}).request('GET', '/firststep/REST', null, function(err, result, req, res) {
+			}).request(function(err, result, req, res) {
 				assert.equal(res.statusCode, 500);
 				assert.equal(err.code, 'ECONNRESET');
 				done();
-		});
+		}, 'POST', '/firststep/REST');
+	});
+
+	it('should test request timeout/abort', function(done) {
+		rest().init({
+				host:'www.yahoo.com',
+				port:80,
+				timeout: 1
+			}).request(function(err, result, req, res) {
+				assert.equal(res.statusCode, 500);
+				assert.equal(err.code, 'ECONNRESET');
+				done();
+		}, 'GET', '/index.html');
 	});
 
 	it('should test parsing error', function(done) {
 		var service = indigo.service;
 		service.headers['Content-Type'] = 'text/plain;charset=UTF-8';
-		service.get('/firststep/TEST', params, function(err, result, req, res) {
+		service.get(function(err, result, req, res) {
 			assert.equal(res.statusCode, 200);
-			assert.equal(err.message, 'Unexpected token H');
 			assert.equal(result, 'HELLO WORLD!');
 			done();
-		});
+		}, '/firststep/TEST', params);
 	});
 });
  

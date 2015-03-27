@@ -2,7 +2,6 @@
 
 var indigo = global.__indigo,
 	debug = indigo.debug('indigo:static'),
-	errorHandler = indigo.libs('errorHandler'),
 	fs = require('fs'),
 	less = require('less');
 

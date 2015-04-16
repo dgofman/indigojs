@@ -217,7 +217,7 @@ function rest() {
 			});
 
 			if (method !== 'GET') {
-				var content = data ? JSON.stringify(data) : '';
+				var content = data ? JSON.stringify(data) : String(data);
 				this.headers['Content-Length'] = content.length;
 				req.write(content);
 			}

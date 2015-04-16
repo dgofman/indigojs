@@ -165,7 +165,7 @@ function rest() {
 				path += (path.indexOf('?') === -1 ? '?' : '&') + querystring.stringify(data);
 			}
 
-			var server, req,
+			var server, content, req,
 				self = this,
 				options = {
 					host: this.host,
@@ -174,6 +174,11 @@ function rest() {
 					method: method,
 					path: path
 				};
+
+			if (method !== 'GET') {
+				content = typeof(data) === 'string' ? data : JSON.stringify(data) || '';
+				options.headers['Content-Length'] = content.length;
+			}
 
 			if (this.secure !== undefined) {
 				server = this.secure ? https : http;
@@ -216,13 +221,7 @@ function rest() {
 				}
 			});
 
-			if (method !== 'GET') {
-				var content = data ? JSON.stringify(data) : '';
-				this.headers['Content-Length'] = content.length;
-				req.write(content);
-			}
-
-			req.end();
+			req.end(content);
 		}
 	};
 }

@@ -153,7 +153,7 @@ describe('Testing REST API\'s', function () {
 				assert.equal(res.statusCode, 500);
 				assert.equal(err.code, 'ECONNRESET');
 				done();
-		}, 'GET', '/index.html');
+		}, 'POST', '/index.html', 'YAHOO!!!');
 	});
 
 	it('should test parsing error', function(done) {

@@ -243,7 +243,10 @@ routers.loadModule = function(appconf, dirs, callback) {
 			fs.readdirSync(dir).forEach(function (file) {
 				if(file.substr(-3) === '.js') {
 					try {
-						callback(require(dir + '/' + file.split('.')[0]));
+						var module = require(dir + '/' + file.split('.')[0]);
+						if (typeof module === 'function') {
+							callback(module);
+						}
 					} catch (e) {
 						/* istanbul ignore next */
 						console.log('Cannot loading \'%s\' :', dir + '/' + file, e);

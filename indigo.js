@@ -198,6 +198,22 @@ var indigo =
 			}
 		};
 
+		/**
+		 * @memberOf sourceloader
+		 * @alias indigo.js#localsLocale
+		 */
+		app.locals.locale = function(req, localeKey) {
+			var locales = indigo.getLocale(req),
+				rest = [];
+			localeKey.split('.').forEach(function(name) {
+				locales = locales[name];
+			});
+			for (var i = 2; i < arguments.length; i++) {
+				rest.push(arguments[i]);
+			}
+			return indigo.substitute(locales, rest);
+		};
+
 		// Using the .html extension instead of
 		// having to name the views as *.ejs
 		app.engine('.html', ejs.__express);
@@ -230,6 +246,20 @@ var indigo =
 				after(http, app);
 			}
 		});
+	},
+
+	/**
+	 * Substitutes "{n}" tokens within the specified string with the respective arguments passed in.
+	 * @param {String} str The string to make substitutions in. This string can contain special tokens of the form {n}, where n is a zero based index, that will be replaced with the additional parameters found at that index if specified.
+	 * @param {String} rest — Additional parameters that can be substituted in the str parameter at each {n} location, where n is an integer (zero based) index value into the array of values specified.
+	 */
+	substitute: function(str, rest) {
+		if (str) {
+			rest.forEach(function(value, index) {
+				str = str.replace(new RegExp('\\{' + index + '\\}', 'g'), value);
+			});
+		}
+		return str || '';
 	},
 
 	/**

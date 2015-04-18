@@ -64,7 +64,7 @@ var routers =
 
 		debug('router::routersDir', routersDir);
 
-		routers.loadModule(appconf, routersDir, function(route) {
+		routers.loadModule(routersDir, function(route) {
 			var router = express.Router(),
 				conf = {};
 
@@ -111,7 +111,7 @@ var routers =
 			debug('router::base - %s, controllers: %s', conf.base, conf.controllers);
 
 			// dynamically include controllers
-			routers.loadModule(appconf, conf.controllers, function(controller) {
+			routers.loadModule(conf.controllers, function(controller) {
 				controller(router, app, locales);
 			});
 
@@ -231,31 +231,47 @@ routers.routerConf = function(opt) {
  * This function verifying and loading routers and controllers.
  * @memberof libs/routers.prototype
  * @alias loadModule
- * @param {Object} appconf JSON object represents application configuration.
- * @param {Array} dirs List of directories with javascript files.
+ * @param {Array} list List of directories or files.
  * @param {Function} callback Returns loaded module to the function handler.
  */
-routers.loadModule = function(appconf, dirs, callback) {
-	for (var index in dirs) {
-		var dir = this.moduleDir + dirs[index];
-		debug('router::dir - %s', dir);
-		if (fs.existsSync(dir) && fs.lstatSync(dir).isDirectory()) {
-			fs.readdirSync(dir).forEach(function (file) {
-				if(file.substr(-3) === '.js') {
-					try {
-						var module = require(dir + '/' + file.split('.')[0]);
-						if (typeof module === 'function') {
-							callback(module);
-						}
-					} catch (e) {
-						/* istanbul ignore next */
-						console.log('Cannot loading \'%s\' :', dir + '/' + file, e);
+routers.loadModule = function(list, callback) {
+	for (var index in list) {
+		var path = this.moduleDir + list[index];
+		if (fs.existsSync(path)) {
+			debug('router::dir - %s', path);
+			if (fs.lstatSync(path).isDirectory()) {
+				fs.readdirSync(path).forEach(function (file) {
+					if(file.substr(-3) === '.js') {
+						loadModule(path + '/', file.split('.')[0], callback);
 					}
-				}
-			});
+				});
+			} else {
+				debug('router::file - %s', path);
+				loadModule('', path, callback);
+			}
 		}
 	}
 };
+
+/**
+ * Loading JavaScript modules.
+ * @param {String} dir Directory path.
+ * @param {String} file File name.
+ * @param {Function} callback Returns loaded module to the function handler.
+ * @private
+ */
+function loadModule(dir, file, callback) {
+	try {
+		var module = require(dir + file);
+		if (typeof module === 'function') {
+			return callback(module);
+		} else {
+			console.error('Expecting a function type \'%s\' :', dir + file);
+		}
+	} catch (e) {
+		console.error('Cannot loading \'%s\' :', dir + file, e);
+	}
+}
 
 /**
  * @module routers

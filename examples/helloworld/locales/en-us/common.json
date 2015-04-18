@@ -1,5 +1,6 @@
 {
 	"pageTitle": "Hello World",
 	"head": "Hello World",
-	"copyright": "Copyright 2014"
+	"poweredBy": "Powered By indigoJS",
+	"copyright": "Copyright {0}"
 }

@@ -1,12 +1,13 @@
 {
   "name": "indigojs",
-  "version": "1.1.36",
+  "version": "1.1.37",
   "description": "IndigoJS is an open source, JavaScript/NodeJS localization framework",
   "main": "indigo.js",
   "scripts": {
     "account": "nodemon --debug examples/account/index.js",
     "helloworld": "nodemon --debug examples/helloworld/index.js",
     "firststep": "nodemon --debug examples/firststep/index.js",
+    "lint": "./node_modules/.bin/jshint . --config .jshintrc",
     "test": "./node_modules/.bin/mocha test/unittest --reporter spec --check-leaks",
     "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/mocha test/mocha test/unittest --report lcovonly -- -R spec --check-leaks",
     "start": "make account"

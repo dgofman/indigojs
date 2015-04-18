@@ -9,12 +9,22 @@ var routers = require('../../../libs/routers'),
 describe('libs/routers', function () {
 
 	it('should test directory with non JS files', function (done) {
-		routers.loadModule(appconf, ['/examples/account/config']);
+		routers.loadModule(['/examples/account/config']);
+		done();
+	});
+
+	it('should test loading invalid mixin module (module.exports = {})', function (done) {
+		routers.loadModule(['/libs/locales.js']);
+		done();
+	});
+
+	it('should test invalid module', function (done) {
+		routers.loadModule(['/README.md']);
 		done();
 	});
 
 	it('should test invalid directory', function (done) {
-		routers.loadModule(appconf, ['/examples/account/foo']);
+		routers.loadModule(['/examples/account/foo']);
 		done();
 	});
 
@@ -27,7 +37,7 @@ describe('libs/routers', function () {
 	it('should validate default router path', function (done) {
 		var loadModule = routers.loadModule;
 
-		routers.loadModule = function(appconf, routers) {
+		routers.loadModule = function(routers) {
 			routers.loadModule = loadModule;
 			assert.ok(routers instanceof Array);
 			assert.equal(routers[0], '/routers');

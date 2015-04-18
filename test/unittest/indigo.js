@@ -91,6 +91,18 @@ describe('UnitTests Indigo APIs', function () {
 		indigo.render(req, res, '/login', locales);
 	});
 
+	it('should test substitute', function (done) {
+		var result = indigo.substitute('Hello {0}', ['David']);
+		assert.equal(result, 'Hello David');
+		done();
+	});
+
+	it('should test substitute str is null', function (done) {
+		var result = indigo.substitute(null, ['David']);
+		assert.equal(result, '');
+		done();
+	});
+
 	it('should get 404 status code', function (done) {
 		var req = {
 				session: {},

@@ -3,13 +3,12 @@
 	"version": "0.0.0",
 	"main": "index.js",
 	"scripts": {
-		"builder": "node ./node_modules/indigojs/tools/builder/index.js",
 		"start": "node ."
 	},
 	"private": true,
 	"dependencies": {
 		"indigojs": "~{{version}}",
-		"less": "~2.4.0"
+		"less": "~2.5.0"
 	},
 	"devDependencies": {
 	}

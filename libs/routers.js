@@ -265,8 +265,6 @@ function loadModule(dir, file, callback) {
 		var module = require(dir + file);
 		if (typeof module === 'function') {
 			return callback(module);
-		} else {
-			console.error('Expecting a function type \'%s\' :', dir + file);
 		}
 	} catch (e) {
 		console.error('Cannot loading \'%s\' :', dir + file, e);

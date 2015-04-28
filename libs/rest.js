@@ -224,6 +224,8 @@ function rest() {
 					});
 				}
 			});
+			
+			delete this.headers['Content-Length'];
 
 			req.end(content);
 		}

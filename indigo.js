@@ -375,6 +375,18 @@ var indigo =
 	 */
 	static: function(path, webdir) {
 		this.app.use(path, express.static(webdir));
+	},
+
+	/**
+	 * Render an error template.
+	 * @param {Object} err Contains information about errors.
+	 * @param {express.Request} req Defines an object to provide client request information.
+	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
+	 */
+	error: function(err, req, res) {
+		errorHandler.render(err, req, res, function() {
+			res.status(400).json(null); //no errors
+		});
 	}
 };
 

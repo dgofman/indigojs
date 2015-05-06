@@ -41,7 +41,7 @@ var errorHandler = function(appconf) {
 
 	indigo = global.__indigo;
 
-	return function(err, req, res, next) {
+	return errorHandler.render = function(err, req, res, next) {
 		if (err) {
 
 			var model = {
@@ -73,7 +73,7 @@ var errorHandler = function(appconf) {
 			}
 			return;
 		}
-		next(err);
+		next();
 	};
 };
 

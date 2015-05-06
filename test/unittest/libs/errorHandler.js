@@ -10,9 +10,24 @@ describe('libs/errorHandler', function () {
 
 	var appconf = indigo.init(__appDir + '/examples/account/config/app.json');
 
+
 	it('should validate err is null', function (done) {
 		errorHandler(null)(null, null, null, function() {
 			done();
+		});
+	});
+
+	it('should validate err is null', function (done) {
+		indigo.error(null, null, {
+			status: function(code) {
+				assert.equal(code, 400);
+				return {
+					json: function(error) {
+						assert.equal(error, null);
+						done();
+					}
+				};
+			}
 		});
 	});
 

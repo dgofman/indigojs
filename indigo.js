@@ -61,6 +61,15 @@ var indigo =
 	getAppConf: function(appconf) {
 		if (typeof(appconf) === 'string') { //path to app.json
 			debug('indigo.init appconf - %s', appconf);
+			if (appconf.indexOf('.json') === -1) {
+				if (process.env.CONFIG_ENV &&
+					fs.existsSync(appconf + '-' + process.env.CONFIG_ENV + '.json')) {
+						appconf += '-' + process.env.CONFIG_ENV + '.json';
+				} else {
+					appconf += '.json';
+				}
+			}
+
 			appconf = require('cjson').load(appconf);
 		}
 

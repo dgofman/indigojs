@@ -1,6 +1,6 @@
 {
   "name": "indigojs",
-  "version": "1.1.40",
+  "version": "1.1.41",
   "description": "IndigoJS is an open source, JavaScript/NodeJS localization framework",
   "main": "indigo.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "url": "https://github.com/dgofman/indigojs.git"
   },
   "dependencies": {
-    "debug": "~2.1.1",
+    "debug": "~2.2.0",
     "express": "~4.12.2",
     "express-session": "~1.11.1",
     "body-parser": "~1.12.0",

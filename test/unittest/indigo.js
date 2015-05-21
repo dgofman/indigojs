@@ -7,6 +7,20 @@ var acceptLanguage = 'en-gb, en-us';
 
 describe('UnitTests Indigo APIs', function () {
 
+	it('should test dynamic CONFIG_ENV setting', function(done) {
+		var appconf;
+
+		process.env['CONFIG_ENV'] = 'test';
+		appconf = indigo.init(__appDir +  '/examples/firststep/config/app');
+		assert.equal(appconf.get('environment'), 'testing');
+
+		process.env['CONFIG_ENV'] = null;
+		appconf = indigo.init(__appDir +  '/examples/firststep/config/app');
+		assert.equal(appconf.get('environment'), 'prod');
+
+		done();
+	});
+
 	it('should test JSON custom configuration', function (done) {
 		var appconfig = indigo.init({parent: {child1: 1, child2: 2}});
 		assert.equal(appconfig.get('parent:child1'), 1);

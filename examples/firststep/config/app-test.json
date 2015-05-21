@@ -1,0 +1,23 @@
+{
+	"environment": "testing",
+
+	"server": {
+		"port": 8787,
+		"force": true,
+		"webdir": "/examples/firststep/web"
+	},
+
+	"service": {
+		"host": "localhost",
+		"port": 8787,
+		"secure": false
+	},
+
+	"routers": [
+		"/examples/firststep/routers"
+	],
+
+	"errors": {
+		"404": "https://www.google.com/404"
+	}
+}

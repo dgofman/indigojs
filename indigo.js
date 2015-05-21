@@ -62,9 +62,9 @@ var indigo =
 		if (typeof(appconf) === 'string') { //path to app.json
 			debug('indigo.init appconf - %s', appconf);
 			if (appconf.indexOf('.json') === -1) {
-				if (process.env.CONFIG_ENV &&
-					fs.existsSync(appconf + '-' + process.env.CONFIG_ENV + '.json')) {
-						appconf += '-' + process.env.CONFIG_ENV + '.json';
+				var env = (process.env.CONFIG_ENV || '').toLowerCase().trim();
+				if (fs.existsSync(appconf + '-' + env + '.json')) {
+					appconf += '-' + env + '.json';
 				} else {
 					appconf += '.json';
 				}

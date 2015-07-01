@@ -102,8 +102,8 @@ errorHandler.injectErrorHandler = function(err) {
  */
 errorHandler.error = function(errorId, err, message, details) {
 	var uid = new Date().getTime().toString();
-	debug(err.toString());
-	indigo.logger.error('%s: %s - ', errorId, uid, err.toString(), details || '');
+	debug(err.stack || err.toString());
+	indigo.logger.error('%s: %s - %s [%s]', errorId, uid, details || '', err.stack || err.toString());
 	return {
 		id: errorId,
 		uid: uid,

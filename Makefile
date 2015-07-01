@@ -13,8 +13,7 @@ cover: clean killnode
 	$(ISTANBUL) cover $(_MOCHA) \
 		test/mocha \
 		test/unittest \
-		--report lcovonly -- \
-		--reporter $(REPORTER) \
+		-- --reporter $(REPORTER) \
 		$(MOCHA_OPTS)
 
 test-unit:

@@ -26,7 +26,7 @@ goto :eof
 :cover
 	call :clean
 	call :killnode
-	cmd /c %ISTANBUL% cover "%_MOCHA%" test/mocha test/unittest --report lcovonly -- --reporter %REPORTER% %MOCHA_OPTS%
+	cmd /c %ISTANBUL% cover "%_MOCHA%" test/mocha test/unittest -- --reporter %REPORTER% %MOCHA_OPTS%
 goto :eof
 
 :test-unit

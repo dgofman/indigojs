@@ -14,7 +14,7 @@ describe('UnitTests Indigo APIs', function () {
 		appconf = indigo.init(__appDir +  '/examples/firststep/config/app');
 		assert.equal(appconf.get('environment'), 'testing');
 
-		process.env['CONFIG_ENV'] = null;
+		process.env['CONFIG_ENV'] = '';
 		appconf = indigo.init(__appDir +  '/examples/firststep/config/app');
 		assert.equal(appconf.get('environment'), 'prod');
 

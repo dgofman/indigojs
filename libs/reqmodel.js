@@ -11,7 +11,7 @@
  * The <code>locales</code> object refers to the values of localization messages. This object builds based on 
  * your files names in your <code>locales</code> directory plus localization keys.
  *
- * The <code>routerBase</code> providing path for the current router.
+ * The <code>contextPath</code> providing path for the current router.
  *
  * @version 1.0
  *
@@ -41,7 +41,7 @@
  * &lt;link rel="stylesheet" href="css/bootstrap&lt;%= extCSS %&gt;" media="screen"&gt;
  * &lt;link rel="stylesheet" type="text/css" href="css/custom.less"&gt;
  *
- * &lt;script src="js/vendor/require-2.1.15&lt;%= extJS %&gt;" data-main="js&lt;%= routerBase %&gt;/main-&lt;%= environment %&gt;"&gt;&lt;/script&gt;
+ * &lt;script src="js/vendor/require-2.1.15&lt;%= extJS %&gt;" data-main="js&lt;%= contextPath %&gt;/main-&lt;%= environment %&gt;"&gt;&lt;/script&gt;
  */
 function reqmodel(appconf) {
 
@@ -62,7 +62,7 @@ function reqmodel(appconf) {
 		extLESS: env === 'dev' ? '.less' : '.css',
 		locality: {},
 		locales: {},
-		routerBase: ''
+		contextPath: ''
 	};
 }
 

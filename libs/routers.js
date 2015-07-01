@@ -85,7 +85,7 @@ var routers =
 							req.moduleWebDir = router.moduleWebDir;
 							if (conf.methods[method]) { //include default model into req.model
 								req.model = JSON.parse(reqModel);
-								req.model.routerBase = conf.base;
+								req.model.contextPath = conf.base;
 								if (conf.intercept) {
 									conf.intercept(req, res, next);
 								} else {

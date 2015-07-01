@@ -82,7 +82,7 @@ function rest() {
 		 * @example
 		 * require('indigojs').service.get(function(err, result, req, res) {
 		 * 	...
-		 * }, '/routerBase/getPath', null, {'framework': 'indigojs'});
+		 * }, '/contextPath/getPath', null, {'framework': 'indigojs'});
 		 */
 		get: function(callback, path, data, query) {
 			this.request(callback, 'GET', path, data, query);
@@ -97,7 +97,7 @@ function rest() {
 		 * @example
 		 * require('indigojs').service.post(function(err, result, req, res) {
 		 * 	...
-		 * }, '/routerBase/postPath', {'key':'value'});
+		 * }, '/contextPath/postPath', {'key':'value'});
 		 */
 		post: function(callback, path, data, query) {
 			this.request(callback, 'POST', path, data, query);
@@ -112,7 +112,7 @@ function rest() {
 		 * @example
 		 * require('indigojs').service.put(function(err, result, req, res) {
 		 * 	...
-		 * }, '/routerBase/putPath', {'id':123, 'key':'value'});
+		 * }, '/contextPath/putPath', {'id':123, 'key':'value'});
 		 */
 		put: function(callback, path, data, query) {
 			this.request(callback, 'PUT', path, data, query);
@@ -127,7 +127,7 @@ function rest() {
 		 * @example
 		 * require('indigojs').service.put(function(err, result, req, res) {
 		 * 	...
-		 * }, '/routerBase/deletePath', {'id':123});
+		 * }, '/contextPath/deletePath', {'id':123});
 		 */
 		delete: function(callback, path, data, query) {
 			this.request(callback, 'DELETE', path, data, query);
@@ -142,7 +142,7 @@ function rest() {
 		 * @example
 		 * require('indigojs').service.patch(function(err, result, req, res) {
 		 * 	...
-		 * }, '/routerBase/patchPath', {'id':123, 'key':'value'});
+		 * }, '/contextPath/patchPath', {'id':123, 'key':'value'});
 		 */
 		patch: function(callback, path, data, query) {
 			this.request(callback, 'PATCH', path, data, query);

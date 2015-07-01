@@ -11,7 +11,10 @@ main: clean lint killnode test-unit test-mocha
 cover: clean killnode
 	$(ISTANBUL) cover $(MOCHA) \
 		test/mocha \
-		test/unittest
+		test/unittest \
+		--report lcovonly -- \
+		--reporter $(REPORTER) \
+		$(MOCHA_OPTS)",
 
 test-unit:
 	@NODE_ENV=test $(MOCHA) \

@@ -9,7 +9,7 @@
     "firststep": "nodemon --debug examples/firststep/index.js",
     "lint": "./node_modules/.bin/jshint . --config .jshintrc",
     "test": "./node_modules/.bin/mocha test/unittest --reporter spec --check-leaks",
-    "cover": "./node_modules/.bin/istanbul cover ./node_modules/bin/_mocha test/mocha test/unittest --report lcovonly -- --reporter spec --check-leaks",
+    "cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha test/mocha test/unittest --report lcovonly -- --reporter spec --check-leaks",
     "start": "make account"
   },
   "homepage": "https://github.com/dgofman/indigojs.git",

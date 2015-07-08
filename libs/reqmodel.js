@@ -54,15 +54,17 @@ function reqmodel(appconf) {
 	env = env || 'dev';
 	minify = env === 'dev' ? '' : '.min';
 
-	return {
-		environment: env,
-		minify: minify,
-		extCSS: minify + '.css',
-		extJS: minify + '.js',
-		extLESS: env === 'dev' ? '.less' : '.css',
-		locality: {},
-		locales: {},
-		contextPath: ''
+	return function(req) {
+		return {
+			environment: env,
+			minify: minify,
+			extCSS: minify + '.css',
+			extJS: minify + '.js',
+			extLESS: env === 'dev' ? '.less' : '.css',
+			locality: {},
+			locales: {},
+			contextPath: req && req.session.contextPath || ''
+		};
 	};
 }
 

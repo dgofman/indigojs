@@ -9,7 +9,7 @@ var reqmodel = require('../../../libs/reqmodel'),
 describe('libs/reqmodel', function () {
 
 	it('should assign to default dev environment', function (done) {
-		var conf = reqmodel(appconf);
+		var conf = reqmodel(appconf)();
 		assert.equal(conf.environment, 'dev');
 		assert.equal(conf.minify, '');
 		assert.equal(conf.extCSS, '.css');
@@ -19,7 +19,7 @@ describe('libs/reqmodel', function () {
 
 	it('should verify environment is dev', function (done) {
 		appconf.environment = 'dev';
-		var conf = reqmodel(appconf);
+		var conf = reqmodel(appconf)();
 		assert.equal(conf.environment, 'dev');
 		assert.equal(conf.minify, '');
 		assert.equal(conf.extCSS, '.css');
@@ -29,7 +29,7 @@ describe('libs/reqmodel', function () {
 
 	it('should verify environment is prod', function (done) {
 		appconf.environment = 'prod';
-		var conf = reqmodel(appconf);
+		var conf = reqmodel(appconf)();
 		assert.equal(conf.environment, 'prod');
 		assert.equal(conf.minify, '.min');
 		assert.equal(conf.extCSS, '.min.css');
@@ -42,7 +42,7 @@ describe('libs/reqmodel', function () {
 			env = process.env.NODE_ENV;
 		appconf.environment = 'dev';
 		process.env.NODE_ENV = 'production';
-		conf = reqmodel(appconf);
+		conf = reqmodel(appconf)();
 		assert.equal(conf.environment, 'prod');
 		assert.equal(conf.minify, '.min');
 		assert.equal(conf.extCSS, '.min.css');

@@ -136,8 +136,7 @@ var indigo =
 			});
 		}
 
-		reqModel = JSON.stringify(
-				require(appconf.get('server:reqmodel:path') || './libs/reqmodel')(appconf));
+		this.reqModel = reqModel = require(appconf.get('server:reqmodel:path') || './libs/reqmodel')(appconf);
 
 		portNumber = process.env.PORT || appconf.get('server:port');
 		if (appconf.get('server:force')) {
@@ -180,7 +179,7 @@ var indigo =
 
 		//http://localhost:8585/indigo/account/en/templates/login
 		app.use('/indigo/:routerPath/:locale/templates/:pageId', function(req, res) {
-			req.model = JSON.parse(reqModel);
+			req.model = reqModel(req);
 			locales.init(req, req.params.locale);
 
 			var url = '/' + req.session.locale + '/templates/' + req.params.routerPath + '/' + req.params.pageId + '.html',
@@ -288,7 +287,7 @@ var indigo =
 	 */
 	render: function(req, res, fileName, locales) {
 		if (!req.model) {
-			req.model = JSON.parse(reqModel);
+			req.model = reqModel(req);
 		}
 
 		req.model.locales = locales || indigo.getLocale(req);

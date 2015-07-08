@@ -41,7 +41,7 @@ var routers =
 		var indigo = global.__indigo;
 
 		if (!reqModel) {
-			reqModel = JSON.stringify(indigo.libs('reqmodel')(appconf));
+			reqModel = indigo.reqModel;
 		}
 
 		if (!app) {
@@ -84,7 +84,7 @@ var routers =
 							debug(req.method, req.url, req.originalUrl);
 							req.moduleWebDir = router.moduleWebDir;
 							if (conf.methods[method]) { //include default model into req.model
-								req.model = JSON.parse(reqModel);
+								req.model = reqModel(req);
 								req.model.contextPath = conf.base;
 								if (conf.intercept) {
 									conf.intercept(req, res, next);

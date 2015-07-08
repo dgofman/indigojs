@@ -87,7 +87,7 @@ describe('UnitTests Indigo APIs', function () {
 					countryCode: 'ru'
 				},
 				session: {},
-				model: require(__appDir + '/libs/reqmodel')(indigo.appconf),
+				model: require(__appDir + '/libs/reqmodel')(indigo.appconf)(),
 				headers: {
 					'accept-language': acceptLanguage
 				}

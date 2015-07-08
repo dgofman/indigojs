@@ -119,9 +119,9 @@ var indigo =
 		 * @alias logger
 		 * @type {Object}
 		 */
-		this.logger = logger = require(appconf.get('logger:path') || './libs/logger')(appconf);
+		this.logger = logger = require(this.appconfPath('logger:path') || './libs/logger')(appconf);
 
-		var service = require(appconf.get('service:path') || './libs/rest')();
+		var service = require(this.appconfPath('service:path') || './libs/rest')();
 
 		/**
 		 * Reference to REST-based api.
@@ -136,7 +136,7 @@ var indigo =
 			});
 		}
 
-		this.reqModel = reqModel = require(appconf.get('server:reqmodel:path') || './libs/reqmodel')(appconf);
+		this.reqModel = reqModel = require(this.appconfPath('server:reqmodel:path') || './libs/reqmodel')(appconf);
 
 		portNumber = process.env.PORT || appconf.get('server:port');
 		if (appconf.get('server:force')) {
@@ -171,9 +171,9 @@ var indigo =
 
 		var app = this.app = express();
 
-		app.use(require(appconf.get('server:parser:path') || './libs/parser')(appconf)); //enabled req.body
+		app.use(require(this.appconfPath('server:parser:path') || './libs/parser')(appconf)); //enabled req.body
 
-		app.use(require(appconf.get('server:session:path') || './libs/session')(appconf)); //enabled req.session
+		app.use(require(this.appconfPath('server:session:path') || './libs/session')(appconf)); //enabled req.session
 
 		this.static('/', webdir);
 
@@ -306,6 +306,16 @@ var indigo =
 			res.setHeader && res.setHeader('path', fileName);
 		}
 		res.render(fileName, req.model);
+	},
+
+	/**
+	 * Return path to the custom module.
+	 * @param {String} key The property name/path defined in configuration file.
+	 * @return {String} path Absolute path to the file from the current project directory.
+	 */
+	appconfPath: function(key) {
+		var path = this.appconf.get(key);
+		return path ? __appDir + path : null;
 	},
 
 	/**

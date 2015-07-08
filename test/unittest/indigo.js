@@ -117,6 +117,15 @@ describe('UnitTests Indigo APIs', function () {
 		done();
 	});
 
+	it('should test appconfPath', function (done) {
+		var path = indigo.appconfPath('server:invalidProperty');
+		assert.equal(path, null);
+
+		path = indigo.appconfPath('server:webdir');
+		assert.equal(fixPath(path), fixPath(__appDir + '/examples/account/web'));
+		done();
+	});
+
 	it('should get 404 status code', function (done) {
 		var req = {
 				session: {},

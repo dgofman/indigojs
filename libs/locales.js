@@ -4,6 +4,7 @@ var indigo = global.__indigo,
 	debug = require('debug')('indigo:locales'),
 	fs = require('fs'),
 	rules = require('./locales/accept-rules.json'),
+	cjson = require('cjson'),
 	defaultLocale = 'en-us',
 	defLocale, localeMap = {};
 
@@ -74,7 +75,7 @@ var locales =
 							arr = file.split('.');
 						if (arr.length > 1 && arr[1] === 'json') {
 							try {
-								localeMap[localeName][arr[0]] = require(localeDir + '/' + localeName + '/' + file);
+								localeMap[localeName][arr[0]] = cjson.load(localeDir + '/' + localeName + '/' + file);
 							} catch (e) {
 								this.errorFiles[localeDir + '/' + localeName + '/' + file] = e;
 								indigo.logger.error('FILE: %s, ERROR: %s', localeDir + '/' + localeName + '/' + file, e.toString());
@@ -155,7 +156,7 @@ function saveToSession(req, locale) {
 function localelookup(localeDir) {
 	var file = localeDir + '/accept-rules.json';
 	if (fs.existsSync(file)) {
-		var customRules = require(file);
+		var customRules = cjson.load(file);
 		for (var code in customRules) {
 			rules[code] = customRules[code];
 		}

@@ -22,7 +22,7 @@ describe('libs/locales', function () {
 		fs.writeFileSync(fileName, 'HELLO WORLD');
 		locales.config(appconf);
 		fs.unlinkSync(fileName);
-		assert.equal(locales.errorFiles[fileName].name, 'SyntaxError');
+		assert.equal(locales.errorFiles[fileName].name, 'Error');
 		done();
 	});
 

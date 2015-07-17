@@ -45,18 +45,18 @@ var errorHandler = function(appconf) {
 		if (err) {
 
 			var model = {
-					code: res.statusCode
+					code: err.statusCode || res.statusCode
 				},
 				template = appconf.get('errors:template'),
-				url = appconf.get('errors:' + res.statusCode);
+				url = appconf.get('errors:' + model.code);
 
-			if (res.statusCode === 404) {
+			if (model.code === 404) {
 				model.message = 'Not Found';
 				model.details = 'The requested URL was not found on this server: <code>' + req.url + '</code>';
-			} else if (res.statusCode ===500) {
+			} else if (model.code ===500) {
 				model.message = 'Internal Server Error';
 				model.details = 'The server encountered an unexpected condition.';
-			} else if (res.statusCode ===503) {
+			} else if (model.code ===503) {
 				model.message = 'Service Unavailable';
 				model.details = 'Connection refuse.';
 			} else {
@@ -64,7 +64,7 @@ var errorHandler = function(appconf) {
 				model.details = 'Please contact your system administrator.';
 			}
 
-			errorHandler.error('ERROR2_' + res.statusCode, err, model.message, req.url);
+			errorHandler.error('ERROR2_' + model.code, JSON.stringify(err), model.message, req.url);
 
 			if (url && url.length > 0){
 				res.redirect(url);

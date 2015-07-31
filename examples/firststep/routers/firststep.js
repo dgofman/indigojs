@@ -37,5 +37,9 @@ module.exports = function(router) {
 		res.send('HELLO WORLD!');
 	});
 
+	router.get('/invalidTemplate', function(req, res) {
+		indigo.render(req, res, '/invalidTemplate');
+	});
+
 	return '/firststep';
 };

@@ -45,4 +45,13 @@ describe('Testing Indigo API\'s', function () {
 			indigo.close(done);
 		});
 	});
+
+	it('should test rendering error', function (done) {
+		indigo.start(__appDir +  '/examples/firststep/config/app.json', null, function() {
+			var req = superagent.get('http://localhost:8787/firststep/invalidTemplate')
+				.end(function(err, res) {
+					indigo.close(done);
+			});
+		});
+	});
 });

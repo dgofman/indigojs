@@ -305,7 +305,14 @@ var indigo =
 			res.status(404);
 			res.setHeader && res.setHeader('path', fileName);
 		}
-		res.render(fileName, req.model);
+		res.render(fileName, req.model, function(err, result) {
+			if (err) {
+				console.error(err);
+				indigo.error(err, req, res);
+			} else {
+				res.send(result);
+			}
+		});
 	},
 
 	/**

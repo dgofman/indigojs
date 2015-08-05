@@ -64,7 +64,7 @@ var errorHandler = function(appconf) {
 				model.details = 'Please contact your system administrator.';
 			}
 
-			errorHandler.error('ERROR2_' + model.code, JSON.stringify(err), model.message, req.url);
+			errorHandler.error('ERROR2_' + model.code, err instanceof Error ? err : JSON.stringify(err), model.message, req.url);
 
 			if (url && url.length > 0){
 				res.redirect(url);

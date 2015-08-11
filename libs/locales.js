@@ -69,24 +69,37 @@ var locales =
 				var localeName = dirs[d];
 				if (fs.lstatSync(localeDir + '/' + localeName).isDirectory()) {
 					localeMap[localeName] = { __lookup__: [], __localName__:localeName };
-					var files = fs.readdirSync(localeDir + '/' + localeName);
-					for (var f in files) {
-						var file = files[f],
-							arr = file.split('.');
-						if (arr.length > 1 && arr[1] === 'json') {
-							try {
-								localeMap[localeName][arr[0]] = cjson.load(localeDir + '/' + localeName + '/' + file);
-							} catch (e) {
-								this.errorFiles[localeDir + '/' + localeName + '/' + file] = e;
-								indigo.logger.error('FILE: %s, ERROR: %s', localeDir + '/' + localeName + '/' + file, e.toString());
-							}
-						}
-					}
+					this.parse(localeDir + '/' + localeName, localeMap[localeName]);
 				}
 			}
 		}
 
 		localelookup(localeDir, appconf);
+	},
+
+	/**
+	 * Loading locale files and building locales object.
+	 *
+	 * @param {String} dirName Absolute path to json files.
+	 * @param {Object} parent Locales properties.
+	 */
+	parse: function(dirName, parent) {
+		var files = fs.readdirSync(dirName);
+		for (var f in files) {
+			var file = files[f],
+				arr = file.split('.');
+			if (arr.length > 1 && arr[1] === 'json') {
+				try {
+					parent[arr[0]] = cjson.load(dirName + '/' + file);
+				} catch (e) {
+					this.errorFiles[dirName + '/' + file] = e;
+					indigo.logger.error('FILE: %s, ERROR: %s', dirName + '/' + file, e.toString());
+				}
+			} else if (fs.lstatSync(dirName + '/' + file).isDirectory()) {
+				parent[file] = {};
+				this.parse(dirName + '/' + file, parent[file]);
+			}
+		}
 	},
 
 	/**

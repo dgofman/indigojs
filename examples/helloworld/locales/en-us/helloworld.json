@@ -1,0 +1,8 @@
+{
+	"menu1": "Menu 1",
+	"menu2": "Menu 2",
+	"menu3": "Menu 3",
+
+	"input_promt": "Enter a text {0}",
+	"long_text": "indigoJS is a flexible library, allowing multiple configurations from the JSON file. By default indigoJS assigns a server port number from a system environment process.env.PORT if this varible is not defined on the host server, indigoJS reads the server properties from the JSON file. In case we would like to force, always start server on the port defined in the app.json we should assign true value to the force property, by default this field is ommited."
+}

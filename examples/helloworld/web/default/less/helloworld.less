@@ -1,0 +1,64 @@
+@import './common.less';
+@import './components/button.less';
+@import './components/checkbox.less';
+@import './components/dropdown';
+@import './components/fieldset.less';
+@import './components/ellipsis';
+@import './components/tooltip.less';
+
+.helloworld {
+	.appLayout();
+
+	font: 13px @fontawesome;
+
+	margin-top: 20px;
+	padding: 0 25px;
+
+	& > div {
+		margin-top:10px;
+
+		&> * {
+			margin-left: 10px;
+		}
+	}
+
+	.indigoButton span {
+		background: url("@{images}/indigo.png") no-repeat;
+		height: 30px;
+		line-height: 30px;
+		padding-left: 35px;
+	}
+
+	input {
+		height: 28px;
+		text-indent: 5px;
+	}
+
+	.ellipsis1, .ellipsis2 {
+		height: 100px;
+	}
+
+	.ellipsis1, .ellipsis2 {
+		.gradient(#ffffff, #D9E1E8);
+		width: 200px;
+		border: @border;
+		border-radius: @border-radius;
+		margin: 0 20px;
+		padding: 5px;
+		float: left;
+	}
+
+	.ellipsis1 {
+		.line-ellipsis();
+	}
+
+	.ellipsis2 {
+		.ellipsis, .ellipsis:before {
+			.ellipsisHeight(6);
+		}
+
+		.ellipsis:after {
+			.ellipsisWidth(7); //'...Read me'
+		}
+	}
+}

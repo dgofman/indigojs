@@ -11,6 +11,9 @@
 		},
 		"parser": {
 			"path": null
+		},
+		"reqmodel": {
+			"path": "/examples/account/libs/custom-reqmodel"
 		}
 	},
 

@@ -6,8 +6,11 @@ var superagent = require('superagent'),
 
 describe('Testing libs/static.js', function () {
 
+	var port;
+
 	before(function (done) {
-		indigo.start(__appDir +  '/examples/account/config/app.json');
+		indigo.start(__appDir +  '/examples/helloworld/config/app.json');
+		port = indigo.appconf.get('server:port');
 		done();
 	});
 
@@ -16,34 +19,36 @@ describe('Testing libs/static.js', function () {
 	});
 
 	it('should test redirect CSS to LESS', function(done) {
-		superagent.get('http://localhost:8585/static/css/custom.css')
+		superagent.get('http://localhost:' + port + '/static/css/helloworld.css')
 			.end(function(err, res) {
 				assert.equal(res.type, 'text/css');
-				assert.equal(res.redirects.toString(), 'http://localhost:8585/static/css/custom.less');
+				assert.equal(res.redirects.toString(), 'http://localhost:' + port + '/static/css/helloworld.less');
+				assert.equal(res.header['cache-control'], 'public, max-age=86400');
+				done();
+		});
+	});
+
+	it('should test default cache header value', function(done) {
+		indigo.appconf.server.cache = null;
+		superagent.get('http://localhost:' + port + '/static/css/common.less')
+			.end(function(err, res) {
+				assert.equal(res.type, 'text/css');
+				assert.ok(res.text.indexOf('.footer .powered {') !== -1);
+				assert.equal(res.header['cache-control'], 'public, max-age=3600');
 				done();
 		});
 	});
 
 	it('should test invalid path to static CSS', function(done) {
-		superagent.get('http://localhost:8585/static/invalid_custom.css')
+		superagent.get('http://localhost:' + port + '/static/invalid.css')
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 404);
 				done();
 		});
 	});
 
-	it('should test LESS to CSS response', function(done) {
-		indigo.appconf.server.cache = null;
-		superagent.get('http://localhost:8585/static/css/custom.less')
-			.end(function(err, res) {
-				assert.equal(res.type, 'text/css');
-				assert.ok(res.text.indexOf('html{background-color') !== -1);
-				done();
-		});
-	});
-
 	it('should test invalid path to static LESS', function(done) {
-		superagent.get('http://localhost:8585/static/css/invalid_custom.less')
+		superagent.get('http://localhost:' + port + '/static/css/invalid.less')
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 404);
 				done();

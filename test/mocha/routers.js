@@ -6,8 +6,11 @@ var superagent = require('superagent'),
 
 describe('Testing Account Routers', function () {
 
+	var port;
+
 	before(function (done) {
 		indigo.start(__appDir +  '/examples/account/config/app.json');
+		port = indigo.appconf.get('server:port');
 		done();
 	});
 
@@ -16,7 +19,7 @@ describe('Testing Account Routers', function () {
 	});
 
 	it('should request to US login page', function(done){
-		superagent.get('http://localhost:8585/account/us/login')
+		superagent.get('http://localhost:' + port + '/account/us/login')
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 200);
 				assert.equal(res.headers['content-type'], 'text/html; charset=utf-8');
@@ -25,7 +28,7 @@ describe('Testing Account Routers', function () {
 	});
 
 	it('should load RU login template', function(done){
-		superagent.get('http://localhost:8585/account/ru/templates/login')
+		superagent.get('http://localhost:' + port + '/account/ru/templates/login')
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 200);
 				assert.equal(res.headers['content-type'], 'text/html; charset=utf-8');
@@ -34,7 +37,7 @@ describe('Testing Account Routers', function () {
 	});
 
 	it('should test Referer header value', function(done){
-		superagent.get('http://localhost:8585/account/us/templates/reset')
+		superagent.get('http://localhost:' + port + '/account/us/templates/reset')
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 200);
 				assert.equal(res.headers['referer'], '/default//templates/account/reset.html');
@@ -43,7 +46,7 @@ describe('Testing Account Routers', function () {
 	});
 
 	it('should test template Referer', function(done){
-		superagent.get('http://localhost:8585/indigo/account/ru/templates/login')
+		superagent.get('http://localhost:' + port + '/indigo/account/ru/templates/login')
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 200);
 				assert.equal(res.headers['referer'], '/default/templates/account/login.html');

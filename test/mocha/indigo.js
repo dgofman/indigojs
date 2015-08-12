@@ -19,7 +19,8 @@ describe('Testing Indigo API\'s', function () {
 
 	it('should test app.locals.inject', function(done) {
 		indigo.start(__appDir +  '/examples/firststep/config/app.json', null, function() {
-			var req = superagent.get('http://localhost:8787/firststep/index')
+			var port = indigo.appconf.get('server:port');
+			var req = superagent.get('http://localhost:' + port + '/firststep/index')
 				.end(function() {
 					var injectErrorHandler = errorHandler.injectErrorHandler;
 					errorHandler.injectErrorHandler = function() {
@@ -48,8 +49,9 @@ describe('Testing Indigo API\'s', function () {
 
 	it('should test rendering error', function (done) {
 		indigo.start(__appDir +  '/examples/firststep/config/app.json', null, function() {
-			var req = superagent.get('http://localhost:8787/firststep/invalidTemplate')
-				.end(function(err, res) {
+			var port = indigo.appconf.get('server:port');
+			superagent.get('http://localhost:' + port + '/firststep/invalidTemplate')
+				.end(function() {
 					indigo.close(done);
 			});
 		});

@@ -1,8 +1,8 @@
-<div class="footer navbar-fixed-bottom">
-	<div style="position: absolute; right: 10px;">
-		<%= locales.common.poweredBy %>
-	</div>
+<div class="footer">
+	<a href="http://indigojs.com" class="powered">
+		Powered By indigo
+	</a>
 	<div class="text-center">
-		<%- locale(req, 'common.copyright', 2015) %>
+		<%- locale(req, 'common.copyright', new Date().getFullYear()) %>
 	</div>
 </div>

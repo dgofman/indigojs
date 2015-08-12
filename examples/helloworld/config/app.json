@@ -3,6 +3,7 @@
 
 	"server": {
 		"port": 8686,
+		"cache": 86400, /*0 - no-cache*/
 		"webdir": "/examples/helloworld/web"
 	},
 

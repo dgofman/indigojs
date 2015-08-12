@@ -1,0 +1,45 @@
+@import '../constant.less';
+
+.dropdown {
+
+	div, .dropdown-menu {
+		width: 200px;
+		height: 24px;
+		border: 1px solid #333;
+		padding: 0;
+		background: #fff;
+		color: #666;
+		border-radius: 0;
+		line-height: 23px;
+		text-indent: 7px;
+		font-weight: normal;
+		color: black;
+	}
+
+	.dropdown-menu {
+		padding: 0;
+
+		li:hover {
+			background-color: #076bcd;
+			color: #fff;
+		}
+	}
+
+	span {
+		width: 28px;
+		height: 24px;
+		background: url('@{images}/dropcomn.png') no-repeat;
+		float: right;
+		margin: -1px -28px;
+		.cursor();
+
+		&:hover {
+			background-image: url('@{images}/dropcomh.png');
+		}
+	}
+
+	.dropdown-menu {
+		height: auto;
+		margin-top: -1px;
+	}
+}

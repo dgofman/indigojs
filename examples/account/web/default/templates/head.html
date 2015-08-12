@@ -6,7 +6,7 @@
 
 <title><%= pageTitle %></title>
 
-<link rel="stylesheet" href="/static/css/bootstrap<%= extCSS %>" media="screen">
-<link rel="stylesheet" type="text/css" href="/static/css/custom<%= extLESS %>">
+<link rel="stylesheet" href="<%= baseStaticUrl %>/css/bootstrap<%= extCSS %>" media="screen">
+<link rel="stylesheet" type="text/css" href="<%= baseStaticUrl %>/css/custom<%= extLESS %>">
 
-<script src="/static/js/vendor/require-2.1.15<%= extJS %>" data-main="/static/js<%= contextPath %>/main-<%= environment %>"></script>
+<script src="<%= baseStaticUrl %>/js/vendor/require-2.1.15<%= extJS %>" data-main="<%= baseStaticUrl %>/js<%= contextPath %>/main-<%= environment %>"></script>

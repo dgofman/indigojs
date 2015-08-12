@@ -11,13 +11,13 @@ module.exports = function(router, app) {
 	var base = '/static',
 		path = '^' + base;
 
-	app.use(path + '/*(.css)$', function(req, res) {
+	app.use(path + '/css/*(.css)$', function(req, res) {
 		return res.redirect(req.originalUrl.replace(/\.css$/, '.less'));
 	});
 
-	app.use(path + '/*(.less)$', function(req, res, next) {
+	app.use(path + '/css/*(.less)$', function(req, res, next) {
 
-		var filename = req.originalUrl.split('/').splice(-1)[0],
+		var filename = req.params[0] + req.params[1],
 			lessFile = router.moduleWebDir() + '/default/less/' + filename,
 			cache = parseInt(indigo.appconf.get('server:cache')),
 			isDev = indigo.appconf.get('environment') === 'dev';

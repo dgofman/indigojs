@@ -6,8 +6,11 @@ var superagent = require('superagent'),
 
 describe('Testing FirstStep example', function () {
 
+	var port;
+
 	before(function (done) {
 		indigo.start(__appDir +  '/examples/firststep/config/app.json');
+		port = indigo.appconf.get('server:port');
 		done();
 	});
 
@@ -16,7 +19,7 @@ describe('Testing FirstStep example', function () {
 	});
 
 	it('should test GET', function(done){
-		superagent.get('http://localhost:8787/firststep/index')
+		superagent.get('http://localhost:' + port + '/firststep/index')
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 200);
 				assert.equal(res.headers['content-type'], 'text/html; charset=utf-8');
@@ -25,7 +28,7 @@ describe('Testing FirstStep example', function () {
 	});
 
 	it('should test GET', function(done){
-		superagent.get('http://localhost:8787/firststep/index')
+		superagent.get('http://localhost:' + port + '/firststep/index')
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 200);
 				assert.equal(res.headers['content-type'], 'text/html; charset=utf-8');

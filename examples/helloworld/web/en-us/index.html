@@ -9,16 +9,83 @@
 	};
 </script>
 
+<style>
+	.ellipsis:after {
+		content: '...<%= locales.common.readmore %>';
+	}
+</style>
+
 </head>
 
 <body>
-	<div id="wrap">
-		<div class="page">
-			<div class="wrapper">
-				<h1></h1>
-			</div>
-			<% include footer.html %>
+	<div class="container helloworld">
+		<h1></h1>
+
+		<div class="clearfix">
+			<button class="left"><%= locales.misc.components.button %></button>
+			<button class="right indigoButton"><span><%= locales.misc.components.imageButton %></span></button>
 		</div>
+
+		<div>
+			<span class="indigo-checkbox">
+				<input type="checkbox" id="checkbox1"/>
+				<label for="checkbox1" unselectable="on"><%= locales.misc.components.checkbox1 %></label>
+			</span>
+
+			<span class="indigo-checkbox">
+				<input type="checkbox" id="checkbox2"/>
+				<label for="checkbox2" unselectable="on"><%= locales.misc.components.checkbox2 %></label>
+			</span>
+		</div>
+
+		<div>
+			<div class="dropdown">
+				<div data-toggle="dropdown">
+					<%= locales.helloworld.menu1 %>
+					<span class="arrow"></span>
+				</div>
+				<ul class="dropdown-menu">
+					<li><%= locales.helloworld.menu1 %></li>
+					<li><%= locales.helloworld.menu2 %></li>
+					<li><%= locales.helloworld.menu3 %></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="fieldset">
+			<div class="left">
+				<button><%= locales.misc.components.button %></button>
+			</div>
+			<span>
+				<input text="" placeholder="<%- locale(req, 'helloworld.input_promt', 1) %>"/>
+			</span>
+		</div>
+
+		<div class="fieldset">
+			<div class="right">
+				<button><%= locales.misc.components.button %></button>
+			</div>
+			<span>
+				<input text="" placeholder="<%- locale(req, 'helloworld.input_promt', 2) %>"/>
+			</span>
+		</div>
+
+		<div class="clearfix">
+			<div class="ellipsis1">
+				<div class="indigo_tooltip" trigger=".ellipsis1" style="width: 400px; margin-left: -120px">
+					<%= locales.helloworld.long_text %>
+				</div>
+				<%= locales.helloworld.long_text %>
+			</div>
+			<div class="ellipsis2">
+				<div class="indigo_tooltip" trigger=".ellipsis2">
+					<%= locales.helloworld.long_text %>
+				</div>
+				<div class="ellipsis"><span><%= locales.helloworld.long_text %></span></div>
+			</div>
+		</div>
+
 	</div>
+	<% include footer.html %>
 </body>
 </html>

@@ -5,44 +5,56 @@ define([
 ], function($){
 	var tooltip, active;
 	return tooltip = {
-		initialize: function() {
+		initialize: function(isTriggerText, timeout) {
 			var indigo_tooltips = $('.indigo_tooltip');
 
 			for (var i = 0; i < indigo_tooltips.length; i++) {
-				this.init_tooltip($(indigo_tooltips[i]));
+				this.init_tooltip($(indigo_tooltips[i]), 'trigger', isTriggerText, timeout);
 			}
 		},
 
-		init_tooltip: function(indigo_tooltip) {
-			var trigger = $(indigo_tooltip.attr('trigger'));
+		init_tooltip: function(indigo_tooltip, trigger, isTriggerText, timeout) {
+			var marginTop = parseInt(indigo_tooltip.css('margin-top')),
+				marginLeft = parseInt(indigo_tooltip.css('margin-left')),
+				parentWidth = 0;
 
-			if (!parseInt(indigo_tooltip.css('margin-top'))) {
-				indigo_tooltip.css('margin-top', '-' + (parseInt(indigo_tooltip.css('height')) + 10) + 'px');
+			timeout = timeout || 500;
+
+			indigo_tooltip.mouseover(function() {
+				tooltip.close_tooltip(timeout, indigo_tooltip);
+			});
+			indigo_tooltip.mouseout(function() {
+				tooltip.close_tooltip(timeout);
+			});
+
+			if (typeof(trigger) === 'string') {
+				trigger = $(indigo_tooltip.attr(trigger));
 			}
 
-			if (!parseInt(indigo_tooltip.css('margin-left'))) {
-				indigo_tooltip.css('margin-left', '-' + 
-					((parseInt(trigger.css('width')) - parseInt(indigo_tooltip.css('width'))) / 2) + 'px');
-			}
-
-			if (trigger.length) {
-				trigger.mouseover(function() {
-					tooltip.close_tooltip(indigo_tooltip);
+			if (trigger && trigger.length) {
+				parentWidth = parseInt(trigger.css('width'));
+				trigger.mouseover(function(e) {
+					if (isTriggerText) {
+						indigo_tooltip.text(e.currentTarget.innerText);
+					}
+					tooltip.close_tooltip(timeout, indigo_tooltip);
 				});
 				trigger.mouseout(function() {
-					tooltip.close_tooltip();
+					tooltip.close_tooltip(timeout);
 				});
+			}
 
-				indigo_tooltip.mouseover(function() {
-					tooltip.close_tooltip(indigo_tooltip);
-				});
-				indigo_tooltip.mouseout(function() {
-					tooltip.close_tooltip();
-				});
+			if (marginTop > 0) {
+				indigo_tooltip.css('margin-top', '-' + (parseInt(indigo_tooltip.css('height')) + marginTop) + 'px');
+			}
+
+			if (marginLeft > 0) {
+				indigo_tooltip.css('margin-left', '-' + 
+					(parseInt(indigo_tooltip.css('width')) / 2 - parentWidth / 2 + marginLeft) + 'px');
 			}
 		},
 
-		close_tooltip: function(indigo_tooltip) {
+		close_tooltip: function(timeout, indigo_tooltip) {
 			active = active || indigo_tooltip;
 			clearInterval(active.interval);
 			if (indigo_tooltip) {
@@ -53,7 +65,7 @@ define([
 				active.interval = setInterval(function() {
 					clearInterval(active.interval);
 					active.css('display', 'none');
-				}, 500);
+				}, timeout);
 			}
 		}
 	};

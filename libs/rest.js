@@ -191,24 +191,26 @@ function rest() {
 			debug('options -> %s', JSON.stringify(options, null, 2));
 
 			req = server.request(options, function(res) {
-				if (res.statusCode >= 200 && res.statusCode <= 226) {
-					var responseString = '';
-					res.setEncoding('utf-8');
+				var data, responseString = '';
+				res.setEncoding('utf-8');
 
-					res.on('data', function(data) {
-						responseString += data;
-					});
+				res.on('data', function(data) {
+					responseString += data;
+				});
 
-					res.on('end', function() {
-						try {
-							callback(null, JSON.parse(responseString), req, res);
-						} catch (e) {
-							callback(null, responseString, req, res);
-						}
-					});
-				} else {
-					callback({statusCode: res.statusCode}, null, req, res);
-				}
+				res.on('end', function() {
+					try {
+						data = JSON.parse(responseString);
+					} catch (e) {
+						data = responseString;
+					}
+
+					if (res.statusCode >= 200 && res.statusCode <= 226) {
+						callback(null, data, req, res);
+					} else {
+						callback({statusCode: res.statusCode, data: data}, null, req, res);
+					}
+				});
 			});
 
 			req.on('error', function(err) {

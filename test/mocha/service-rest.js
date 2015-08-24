@@ -165,25 +165,5 @@ describe('Testing REST API\'s', function () {
 			done();
 		}, '/firststep/TEST', params);
 	});
-
-	it('should test invalid statusCode', function(done) {
-		var service = indigo.service,
-			http = require('http'),
-			originalRequest = http.request;
-
-		http.request = function(options, callback) {
-			callback({statusCode:301});
-			return {
-				on: function() {},
-				end: function() {}
-			};
-		};
-
-		service.get(function(err, result, req, res) {
-			http.request = originalRequest;
-			assert.equal(res.statusCode, 301);
-			done();
-		}, '/firststep/TEST');
-	});
 });
  

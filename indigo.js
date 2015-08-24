@@ -171,9 +171,9 @@ var indigo =
 
 		var app = this.app = express();
 
-		app.use(require(this.appconfPath('server:parser:path') || './libs/parser')(appconf)); //enabled req.body
+		require(this.appconfPath('server:parser:path') || './libs/parser')(app, appconf); //enabled req.body
 
-		app.use(require(this.appconfPath('server:session:path') || './libs/session')(appconf)); //enabled req.session
+		require(this.appconfPath('server:session:path') || './libs/session')(app, appconf); //enabled req.session
 
 		this.static('/', webdir);
 

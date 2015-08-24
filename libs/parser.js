@@ -24,15 +24,20 @@ var bodyParser = require('body-parser');
  * @module
  * @mixin libs/parser
  *
- * @return {express.bodyParser} bodyParser JSON request parameters.
- * 
+ * @param {express} app Instance of the application server.
+ * @param {Object} appconf An application configuration.
+ *
  * @see {@link libs/parser.js}
  * @see {@link https://www.npmjs.com/package/body-parser}
  *
  * @requires body-parser
  */
-function parser() {
-	return bodyParser.json();
+function parser(app, appconf) {
+	// parse application/x-www-form-urlencoded
+	app.use(bodyParser.urlencoded({ extended: appconf.get('server:parser:extended') || false }));
+
+	// parse application/json
+	app.use(bodyParser.json());
 }
 
 /**

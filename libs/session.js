@@ -26,21 +26,21 @@ var expressSession = require('express-session');
  * @module
  * @mixin libs/session
  *
+ * @param {express} app Instance of the application server.
  * @param {Object} appconf An application configuration.
- * @return {express-session} expressSession Instance to the <code>express-session</code> module.
- * 
+ *
  * @see {@link libs/session.js}
  * @see {@link https://www.npmjs.com/package/express-sessions}
  *
  * @requires express-session
  */
-function session(appconf) {
+function session(app, appconf) {
 	var opts = {
 		secret: appconf.get('server:session:session-key') || 'key_' + new Date().getTime(),
 		resave: true,
 		saveUninitialized: true
 	};
-	return expressSession(opts);
+	app.use(expressSession(opts));
 }
 
 /**

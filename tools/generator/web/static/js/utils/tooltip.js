@@ -55,17 +55,21 @@ define([
 		},
 
 		close_tooltip: function(timeout, indigo_tooltip) {
-			active = active || indigo_tooltip;
-			clearInterval(active.interval);
+			if (active) {
+				clearInterval(active.interval);
+				if (indigo_tooltip) {
+					active.css('display', 'none');
+				} else {
+					active.interval = setInterval(function() {
+						clearInterval(active.interval);
+						active.css('display', 'none');
+					}, timeout);
+				}
+			}
+
 			if (indigo_tooltip) {
-				active.css('display', 'none');
 				indigo_tooltip.css('display', 'block');
 				active = indigo_tooltip;
-			} else {
-				active.interval = setInterval(function() {
-					clearInterval(active.interval);
-					active.css('display', 'none');
-				}, timeout);
 			}
 		}
 	};

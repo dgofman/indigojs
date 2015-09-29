@@ -165,5 +165,16 @@ describe('Testing REST API\'s', function () {
 			done();
 		}, '/firststep/TEST', params);
 	});
+
+	it('should test POST Content-Type=x-www-form-urlencoded', function(done) {
+		var service = indigo.service;
+		service.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+		indigo.service.post(function(err, result, req, res) {
+			assert.equal(res.statusCode, 200);
+			assert.equal(err, null, 'no errors');
+			assert.equal(result.method, 'POST');
+			done();
+		}, '/firststep/REST', params);
+	});
 });
  

@@ -166,6 +166,7 @@ function rest() {
 			}
 
 			var server, content, req,
+				urlencoded = this.headers['Content-Type'].indexOf('x-www-form-urlencoded') !== -1,
 				self = this,
 				options = {
 					host: this.host,
@@ -175,9 +176,9 @@ function rest() {
 					path: path
 				};
 
-			if (method !== 'GET') {
-				content = typeof(data) === 'string' ? data : JSON.stringify(data) || '';
-				options.headers['Content-Length'] = content.length;
+			if (method !== 'GET' || urlencoded) {
+				content = typeof(data) === 'string' ? data : urlencoded ? querystring.stringify(data) : JSON.stringify(data) || '';
+				options.headers['Content-Length'] = Buffer.byteLength(content);
 			}
 
 			if (this.secure !== undefined) {

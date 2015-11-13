@@ -33,10 +33,6 @@ module.exports = function(router) {
 		res.json({ 'method': 'PATCH' });
 	});
 
-	router.get('/TEST', function(req, res) {
-		res.send('HELLO WORLD!');
-	});
-
 	router.get('/invalidTemplate', function(req, res) {
 		indigo.render(req, res, '/invalidTemplate');
 	});

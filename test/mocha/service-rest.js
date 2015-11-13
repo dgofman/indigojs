@@ -17,8 +17,8 @@ describe('Testing REST API\'s', function () {
 	});
 
 	it('should verify rest properties', function(done) {
-		assert.equal(indigo.service.host, 'localhost');
-		assert.equal(indigo.service.port, 8787);
+		assert.equal(indigo.service.opts.host, 'localhost');
+		assert.equal(indigo.service.opts.port, 8787);
 		done();
 	});
 
@@ -88,61 +88,6 @@ describe('Testing REST API\'s', function () {
 		}, '/firststep/REST', params);
 	});
 
-	it('should test error', function(done) {
-		indigo.service.init({
-				host:'localhost',
-				port:80
-			}).get(function(err, result, req, res) {
-				assert.notEqual(res.statusCode, 200);
-				done();
-		}, '/firststep/REST', params);
-	});
-
-	it('should test ECONNRESET error', function(done) {
-		indigo.service.init({
-				host:'localhost',
-				port:8787,
-				secure:true
-			}).get(function(err, result, req, res) {
-				assert.equal(res.statusCode, 500);
-				assert.equal(err.code, 'ECONNRESET');
-				done();
-		}, '/firststep/REST', params);
-	});
-
-	it('should get ECONNREFUSED error', function(done) {
-		indigo.service.init({
-				host:'localhost',
-				port: 8765,
-				secure: true
-			}).get(function(err, result, req, res) {
-				assert.equal(res.statusCode, 500);
-				assert.equal(err.code, 'ECONNREFUSED');
-				done();
-		}, '/firststep/REST', params);
-	});
-
-	it('should get ECONNREFUSED calling request function', function(done) {
-		rest().init({
-				host:'localhost',
-				port: 8123
-			}).request(function(err, result, req, res) {
-				assert.equal(res.statusCode, 500);
-				assert.equal(err.code, 'ECONNREFUSED');
-				done();
-		}, 'GET', '/firststep/REST');
-	});
-
-	it('should get ECONNRESET calling request function', function(done) {
-		rest().init({
-				host:'localhost',
-				port: 8787
-			}).request(function(err, result, req, res) {
-				assert.equal(res.statusCode, 500);
-				assert.equal(err.code, 'ECONNRESET');
-				done();
-		}, 'POST', '/firststep/REST');
-	});
 
 	it('should test request timeout/abort', function(done) {
 		rest().init({
@@ -154,27 +99,6 @@ describe('Testing REST API\'s', function () {
 				assert.equal(err.code, 'ECONNRESET');
 				done();
 		}, 'POST', '/index.html', 'YAHOO!!!');
-	});
-
-	it('should test parsing error', function(done) {
-		var service = indigo.service;
-		service.headers['Content-Type'] = 'text/plain; charset=UTF-8';
-		service.get(function(err, result, req, res) {
-			assert.equal(res.statusCode, 200);
-			assert.equal(result, 'HELLO WORLD!');
-			done();
-		}, '/firststep/TEST', params);
-	});
-
-	it('should test POST Content-Type=x-www-form-urlencoded', function(done) {
-		var service = indigo.service;
-		service.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-		indigo.service.post(function(err, result, req, res) {
-			assert.equal(res.statusCode, 200);
-			assert.equal(err, null, 'no errors');
-			assert.equal(result.method, 'POST');
-			done();
-		}, '/firststep/REST', params);
 	});
 });
  

@@ -1,10 +1,7 @@
 'use strict';
 
 var indigo = global.__indigo,
-	debug = require('debug')('indigo:rest'),
-	querystring = require('querystring'),
-	http = require('http'),
-	https = require('https');
+	orchestrator = require('proxy-orchestrator');
 
 /**
  * indigoJS <code>rest</code> module is a simple yet powerful representation of your RESTful API.
@@ -37,17 +34,6 @@ function rest() {
 
 	return /** @lends libs/rest.prototype */ {
 		/**
-		 * Specified default header values in JSON responce object.
-		 * @memberof libs/rest.prototype 
-		 * @alias headers
-		 * @type {Object}
-		 */
-		headers: {
-			'Accept-Encoding': 'gzip, deflate',
-			'Cache-Control': 'no-cache',
-			'Content-Type': 'application/json;charset=UTF-8'
-		},
-		/**
 		 * Initializing server settings.
 		 * @param {Object} opts Defined default server configuration where <code>host</code> is IP Address or
 		 * domain name,  <code>port</code> server port number and <code>secure</code> communications protocol
@@ -66,9 +52,7 @@ function rest() {
 		 */
 		init: function(opts) {
 			opts = opts || indigo.appconf.get('service') || {};
-			this.host = opts.host;
-			this.port = opts.port;
-			this.secure = opts.secure;
+			this.opts = opts;
 			this.timeout = opts.timeout;
 			return this;
 		},
@@ -156,81 +140,22 @@ function rest() {
 		 * @param {Object} [query] URL query parameters.
 		 */
 		request: function(callback, method, path, data, query) {
+			var self = this,
+				opts = this.opts,
+				proxy = orchestrator({
+					host: opts.host,
+					port: opts.port,
+					secure: opts.secure,
+				}).request(callback, method, path, data, query);
 
-			if (query && Object.keys(query).length) {
-				path += (path.indexOf('?') === -1 ? '?' : '&') + querystring.stringify(query);
-			}
-
-			if (method === 'GET' && data && Object.keys(data).length) {
-				path += (path.indexOf('?') === -1 ? '?' : '&') + querystring.stringify(data);
-			}
-
-			var server, content, req,
-				urlencoded = this.headers['Content-Type'].indexOf('x-www-form-urlencoded') !== -1,
-				self = this,
-				options = {
-					host: this.host,
-					port: this.port,
-					headers: this.headers,
-					method: method,
-					path: path
-				};
-
-			if (method !== 'GET' || urlencoded) {
-				content = typeof(data) === 'string' ? data : urlencoded ? querystring.stringify(data) : JSON.stringify(data) || '';
-				options.headers['Content-Length'] = Buffer.byteLength(content);
-			}
-
-			if (this.secure !== undefined) {
-				server = this.secure ? https : http;
-			} else {
-				server = options.port !== 80 ? https : http;
-			}
-
-			options.scheme = (server === https  ? 'HTTPS' : 'HTTP');
-
-			debug('options -> %s', JSON.stringify(options, null, 2));
-
-			req = server.request(options, function(res) {
-				var data, responseString = '';
-				res.setEncoding('utf-8');
-
-				res.on('data', function(data) {
-					responseString += data;
-				});
-
-				res.on('end', function() {
-					try {
-						data = JSON.parse(responseString);
-					} catch (e) {
-						data = responseString;
-					}
-
-					if (res.statusCode >= 200 && res.statusCode <= 226) {
-						callback(null, data, req, res);
-					} else {
-						callback({statusCode: res.statusCode, data: data}, null, req, res);
-					}
-				});
-			});
-
-			req.on('error', function(err) {
-				debug('error - %s', err);
-				callback(err, null, req, {statusCode: 500, message: 'Internal Server Error', err: err});
-			});
-
-			req.on('socket', function (socket) {
+			proxy.on('socket', function (socket) {
 				if (self.timeout !== undefined) {
 					socket.setTimeout(self.timeout);
 					socket.on('timeout', function() {
-						req.abort();
+						proxy.abort();
 					});
 				}
 			});
-			
-			delete this.headers['Content-Length'];
-
-			req.end(content);
 		}
 	};
 }

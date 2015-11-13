@@ -38,6 +38,8 @@ function rest() {
 		 * @param {Object} opts Defined default server configuration where <code>host</code> is IP Address or
 		 * domain name,  <code>port</code> server port number and <code>secure</code> communications protocol
 		 * HTTP or HTTPS.
+		 * @param {express.Request} req Defines an object to provide client request information.
+	 	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
 		 * 
 		 * @return {Object} rest Scope to the current instance.
 		 *
@@ -50,9 +52,15 @@ function rest() {
 		 *		port: 80
 		 *	});
 		 */
-		init: function(opts) {
+		init: function(opts, req, res) {
 			opts = opts || indigo.appconf.get('service') || {};
 			this.opts = opts;
+			this.server = orchestrator({
+				host: opts.host,
+				port: opts.port,
+				secure: opts.secure
+			}, req, res);
+			this.headers = this.server.headers;
 			this.timeout = opts.timeout;
 			return this;
 		},
@@ -141,12 +149,7 @@ function rest() {
 		 */
 		request: function(callback, method, path, data, query) {
 			var self = this,
-				opts = this.opts,
-				proxy = orchestrator({
-					host: opts.host,
-					port: opts.port,
-					secure: opts.secure,
-				}).request(callback, method, path, data, query);
+				proxy = this.server.request(callback, method, path, data, query);
 
 			proxy.on('socket', function (socket) {
 				if (self.timeout !== undefined) {

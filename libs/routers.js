@@ -84,8 +84,7 @@ var routers =
 							debug(req.method, req.url, req.originalUrl);
 							req.moduleWebDir = router.moduleWebDir;
 							if (conf.methods[method]) { //include default model into req.model
-								req.model = reqModel(req);
-								req.model.contextPath = conf.base;
+								req.model = reqModel(req, conf.base);
 								if (conf.intercept) {
 									conf.intercept(req, res, next);
 								} else {

@@ -43,12 +43,12 @@ var errorHandler = function(appconf) {
 
 	return errorHandler.render = function(err, req, res, next) {
 		if (err) {
-
-			var model = {
-					code: err.statusCode || res.statusCode
-				},
+			var model = req.model || {},
+				code = err.statusCode || res.statusCode,
 				template = appconf.get('errors:template'),
-				url = appconf.get('errors:' + model.code);
+				url = appconf.get('errors:' + code);
+
+			model.code = code;
 
 			if (model.code === 404) {
 				model.message = 'Not Found';
@@ -64,12 +64,14 @@ var errorHandler = function(appconf) {
 				model.details = 'Please contact your system administrator.';
 			}
 
-			errorHandler.error('ERROR2_' + model.code, err instanceof Error ? err : JSON.stringify(err), model.message, req.url);
+			if (!req.headers || req.headers['error_verbose'] !== 'false') {
+				errorHandler.error('ERROR2_' + model.code, err instanceof Error ? err : JSON.stringify(err), model.message, req.url);
+			}
 
 			if (url && url.length > 0){
 				res.redirect(url);
 			} else {
-				res.status(202).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), model);
+				res.status(model.code).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), model);
 			}
 			return;
 		}

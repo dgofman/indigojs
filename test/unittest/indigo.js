@@ -47,7 +47,6 @@ describe('UnitTests Indigo APIs', function () {
 				}
 			},res = {
 				render: function(url, model) {
-					console.log(fixPath(url), fixPath(__appDir) + '/examples/account/web/en/login.html');
 					assert.equal(fixPath(url), fixPath(__appDir) + '/examples/account/web/en/login.html');
 					assert.equal(model.locality.locale, 'en-gb');
 					assert.equal(model.locality.langugage, 'en');

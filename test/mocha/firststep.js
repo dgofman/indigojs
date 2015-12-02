@@ -18,7 +18,7 @@ describe('Testing FirstStep example', function () {
 		indigo.close(done);
 	});
 
-	it('should test GET', function(done){
+	it('should test GET', function(done) {
 		superagent.get('http://localhost:' + port + '/firststep/index')
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 200);
@@ -27,7 +27,7 @@ describe('Testing FirstStep example', function () {
 		});
 	});
 
-	it('should test GET', function(done){
+	it('should test GET', function(done) {
 		superagent.get('http://localhost:' + port + '/firststep/index')
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 200);

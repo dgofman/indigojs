@@ -47,6 +47,17 @@ describe('Testing Indigo API\'s', function () {
 		});
 	});
 
+	it('should test rendering error with error_verbose=false', function (done) {
+		indigo.start(__appDir +  '/examples/firststep/config/app.json', null, function() {
+			var port = indigo.appconf.get('server:port');
+			superagent.get('http://localhost:' + port + '/firststep/invalidTemplate')
+				.set('error_verbose', false)
+				.end(function() {
+					indigo.close(done);
+			});
+		});
+	});
+
 	it('should test rendering error', function (done) {
 		indigo.start(__appDir +  '/examples/firststep/config/app.json', null, function() {
 			var port = indigo.appconf.get('server:port');

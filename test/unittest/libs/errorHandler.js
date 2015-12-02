@@ -38,7 +38,7 @@ describe('libs/errorHandler', function () {
 			{
 			statusCode: 404,
 			status: function(code) {
-				assert.equal(code, 202);
+				assert.equal(code, 404);
 				return {
 					render: function(url, model) {
 						assert.equal(model.code, 404);
@@ -57,7 +57,7 @@ describe('libs/errorHandler', function () {
 			}, {
 			statusCode: 500,
 			status: function(code) {
-				assert.equal(code, 202);
+				assert.equal(code, 500);
 				return {
 					render: function(url, model) {
 						assert.equal(model.code, 500);
@@ -76,7 +76,7 @@ describe('libs/errorHandler', function () {
 			}, {
 			statusCode: 503,
 			status: function(code) {
-				assert.equal(code, 202);
+				assert.equal(code, 503);
 				return {
 					render: function(url, model) {
 						assert.equal(model.code, 503);
@@ -96,7 +96,7 @@ describe('libs/errorHandler', function () {
 			}, {
 			statusCode: 911,
 			status: function(code) {
-				assert.equal(code, 202);
+				assert.equal(code, 911);
 				return {
 					render: function(url, model) {
 						assert.equal(model.code, 911);

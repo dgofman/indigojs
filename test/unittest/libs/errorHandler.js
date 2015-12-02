@@ -8,11 +8,16 @@ var debug = require('debug')('indigo:test'),
 
 describe('libs/errorHandler', function () {
 
-	var appconf = indigo.init(__appDir + '/examples/account/config/app.json');
+	var appconf,
+		defaultError = {'error': 'ERROR'};
 
+	before(function (done) {
+		appconf = indigo.init(__appDir + '/examples/account/config/app.json');
+		done();
+	});
 
 	it('should validate err is null', function (done) {
-		errorHandler(null)(null, null, null, function() {
+		errorHandler.render(null, null, null, function() {
 			done();
 		});
 	});
@@ -32,7 +37,7 @@ describe('libs/errorHandler', function () {
 	});
 
 	it('should validate err 404', function (done) {
-		errorHandler(appconf)(true, {
+		errorHandler.render(defaultError, {
 				url: '/foo.html'
 			}, 
 			{
@@ -52,7 +57,7 @@ describe('libs/errorHandler', function () {
 	});
 
 	it('should validate err 500', function (done) {
-		errorHandler(appconf)(true, {
+		errorHandler.render(defaultError, {
 				url: '/foo.html'
 			}, {
 			statusCode: 500,
@@ -71,7 +76,7 @@ describe('libs/errorHandler', function () {
 	});
 
 	it('should validate err 503', function (done) {
-		errorHandler(appconf)(true, {
+		errorHandler.render(defaultError, {
 				url: '/foo.html'
 			}, {
 			statusCode: 503,
@@ -91,7 +96,7 @@ describe('libs/errorHandler', function () {
 
 	it('should validate err 911', function (done) {
 		appconf.errors.template = null;
-		errorHandler(appconf)(true, {
+		errorHandler.render(defaultError, {
 				url: '/foo.html'
 			}, {
 			statusCode: 911,
@@ -111,7 +116,7 @@ describe('libs/errorHandler', function () {
 
 	it('should test redirect', function (done) {
 		appconf.errors['404'] = 'http://www.google.com/indigojs';
-		errorHandler(appconf)(true, {
+		errorHandler.render(defaultError, {
 				url: '/foo.html'
 			}, {
 				statusCode: 404,

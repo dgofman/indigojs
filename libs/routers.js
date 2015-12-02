@@ -113,7 +113,7 @@ var routers =
 				router.use(conf.middleware);
 			}
 
-			router.use(indigo.errorHandler(appconf));
+			router.use(indigo.errorHandler.render);
 		});
 	}
 };

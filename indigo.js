@@ -412,7 +412,7 @@ var indigo =
 	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
 	 */
 	error: function(err, req, res) {
-		errorHandler.render(this.appconf, err, req, res, function() {
+		errorHandler.render(err, req, res, function() {
 			res.status(400).json(null); //no errors
 		});
 	}

@@ -36,16 +36,12 @@ var indigo = global.__indigo;
  * @mixin libs/errorHandler
  * @param {Object} appconf An application configuration.
  */
-var errorHandler = function(appconf) {
+var errorHandler = {};
 
-	return function(err, req, res, next) {
-		errorHandler.render(appconf, err, req, res, next);
-	};
-};
-
-errorHandler.render = function(appconf, err, req, res, next) {
+errorHandler.render = function(err, req, res, next) {
 	if (err) {
-		var model = req.model || {},
+		var appconf = indigo.appconf,
+			model = req.model || {},
 			code = err.statusCode || res.statusCode,
 			template = appconf.get('errors:template'),
 			url = appconf.get('errors:' + code);
@@ -108,13 +104,13 @@ errorHandler.error = function(errorId, err, message, details) {
 	var error = err instanceof Error ? err : JSON.stringify(err || ''),
 		err_stack = error.stack || error.toString(),
 		uid = isNaN(errorId) ? Date.now() : errorId;
-	message = message || '';
+	message = (message || '').replace('%UID%', uid);
 	indigo.logger.error(message + ',  uid=' + uid + ' - ' + (details || '') + ' [' + err_stack + ']' );
 	return {
 		id: errorId,
 		uid: uid,
 		error: err_stack,
-		message: message.replace('%UID%', uid)
+		message: message
 	};
 };
 

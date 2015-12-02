@@ -18,6 +18,7 @@
 	],
 
 	"errors": {
+		"path": "/libs/errorHandler",
 		"404": "https://www.google.com/404"
 	}
 }

@@ -52,11 +52,12 @@ var routers =
 
 		// dynamically include routers
 		var routersDir = appconf.get('routers'),
+			errorHandler = appconf.get('errors:path'),
 			/**
 			 * @memberOf sourceloader
 			 * @alias routers.js#errorHandler
 			 */
-			errorHandler = require(appconf.get('errors:path') || './errorHandler');
+			errorHandler = require(errorHandler ? __appDir + errorHandler : './errorHandler');
 
 		if (!routersDir) {
 			routersDir =  ['/routers'];

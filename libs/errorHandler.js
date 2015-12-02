@@ -41,12 +41,13 @@ var errorHandler = {};
 errorHandler.render = function(err, req, res, next) {
 	if (err) {
 		var appconf = indigo.appconf,
-			model = errorHandler.getErrorModel(err, req, res),
+			error = null,
+			model = this.getErrorModel(err, req, res),
 			template = appconf.get('errors:template'),
 			url = appconf.get('errors:' + model.code);
 
 		if (!req.headers || req.headers['error_verbose'] !== 'false') {
-			errorHandler.error(model.errorCode, err, err.errorMessage || model.message, req.url);
+			error = this.error(model.errorCode, err, err.errorMessage || model.message, req.url);
 		}
 
 		if (url && url.length > 0){
@@ -54,7 +55,10 @@ errorHandler.render = function(err, req, res, next) {
 		} else {
 			res.status(model.code).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), model);
 		}
-		return model;
+		return {
+			error: error,
+			model: model
+		};
 	}
 	next();
 };
@@ -100,7 +104,7 @@ errorHandler.getErrorModel = function(err, req, res) {
  * @return {Object} error JSON object with error infomation.
  */
 errorHandler.injectErrorHandler = function(err) {
-	return errorHandler.error('ERROR_INJECT', err,
+	return this.error('ERROR_INJECT', err,
 		'<h3>Internal error. Please contact your system administrator</h3><br/>Code: %UID%');
 };
 

@@ -56,6 +56,7 @@ function reqmodel(appconf) {
 
 	return function(req, contextPath) {
 		return {
+			req: req,
 			environment: env,
 			minify: minify,
 			extCSS: minify + '.css',

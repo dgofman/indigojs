@@ -1,7 +1,6 @@
 'use strict';
 
-var debug = require('debug')('indigo:errorHandler'),
-	indigo = global.__indigo;
+var indigo = global.__indigo;
 
 /**
  * This is the default expection handler module assigned for each router and reporting an error 
@@ -57,19 +56,19 @@ errorHandler.render = function(appconf, err, req, res, next) {
 		if (model.code === 404) {
 			model.message = 'Not Found';
 			model.details = 'The requested URL was not found on this server: <code>' + req.url + '</code>';
-		} else if (model.code ===500) {
+		} else if (model.code === 500) {
 			model.message = 'Internal Server Error';
 			model.details = 'The server encountered an unexpected condition.';
-		} else if (model.code ===503) {
+		} else if (model.code === 503) {
 			model.message = 'Service Unavailable';
 			model.details = 'Connection refuse.';
 		} else {
-			model.message = 'System Error';
+			model.message = 'IDGJS_ERROR_' + model.code;
 			model.details = 'Please contact your system administrator.';
 		}
 
 		if (!req.headers || req.headers['error_verbose'] !== 'false') {
-			errorHandler.error(err.errorCode || 'IDGJS_ERROR_' + model.code, err instanceof Error ? err : JSON.stringify(err), model.message, req.url);
+			errorHandler.error(model.errorCode, err, err.errorMessage || model.message, req.url);
 		}
 
 		if (url && url.length > 0){
@@ -106,13 +105,15 @@ errorHandler.injectErrorHandler = function(err) {
  * @return {Object} error JSON object with error infomation.
  */
 errorHandler.error = function(errorId, err, message, details) {
-	var uid = new Date().getTime().toString();
-	debug(err.stack || err.toString());
-	indigo.logger.error('%s: %s - %s [%s]', errorId, uid, details || '', err.stack || err.toString());
+	var error = err instanceof Error ? err : JSON.stringify(err || ''),
+		err_stack = error.stack || error.toString(),
+		uid = isNaN(errorId) ? Date.now() : errorId;
+	message = message || '';
+	indigo.logger.error(message + ',  uid=' + uid + ' - ' + (details || '') + ' [' + err_stack + ']' );
 	return {
 		id: errorId,
 		uid: uid,
-		error: err.toString(),
+		error: err_stack,
 		message: message.replace('%UID%', uid)
 	};
 };

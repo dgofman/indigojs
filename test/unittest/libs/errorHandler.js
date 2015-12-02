@@ -100,7 +100,7 @@ describe('libs/errorHandler', function () {
 				return {
 					render: function(url, model) {
 						assert.equal(model.code, 911);
-						assert.equal(model.message, 'System Error');
+						assert.equal(model.message, 'IDGJS_ERROR_911');
 						assert.equal(model.details, 'Please contact your system administrator.');
 						done();
 					}
@@ -122,9 +122,17 @@ describe('libs/errorHandler', function () {
 		}, null);
 	});
 
+	it('should test custome errorID', function (done) {
+		var errorID = 12345,
+			error = errorHandler.error(errorID);
+		assert.equal(error.id, errorID);
+		assert.equal(error.uid, errorID);
+		done();
+	});
+
 	it('should test injectErrorHandler', function (done) {
 		var error = {error:'ERROR'};
-		assert.equal(errorHandler.injectErrorHandler(error).error, error.toString());
+		assert.equal(errorHandler.injectErrorHandler(error).error, JSON.stringify(error));
 		done();
 	});
 

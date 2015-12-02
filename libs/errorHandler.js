@@ -52,6 +52,7 @@ errorHandler.render = function(appconf, err, req, res, next) {
 			url = appconf.get('errors:' + code);
 
 		model.code = code;
+		model.errorCode = err.errorCode;
 
 		if (model.code === 404) {
 			model.message = 'Not Found';
@@ -68,7 +69,7 @@ errorHandler.render = function(appconf, err, req, res, next) {
 		}
 
 		if (!req.headers || req.headers['error_verbose'] !== 'false') {
-			errorHandler.error('ERROR2_' + model.code, err instanceof Error ? err : JSON.stringify(err), model.message, req.url);
+			errorHandler.error(err.errorCode || 'IDGJS_ERROR_' + model.code, err instanceof Error ? err : JSON.stringify(err), model.message, req.url);
 		}
 
 		if (url && url.length > 0){

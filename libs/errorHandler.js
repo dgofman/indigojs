@@ -41,27 +41,9 @@ var errorHandler = {};
 errorHandler.render = function(err, req, res, next) {
 	if (err) {
 		var appconf = indigo.appconf,
-			model = req.model || {},
-			code = err.statusCode || res.statusCode,
+			model = errorHandler.getErrorModel(err, req, res),
 			template = appconf.get('errors:template'),
-			url = appconf.get('errors:' + code);
-
-		model.code = code;
-		model.errorCode = err.errorCode;
-
-		if (model.code === 404) {
-			model.message = 'Not Found';
-			model.details = 'The requested URL was not found on this server: <code>' + req.url + '</code>';
-		} else if (model.code === 500) {
-			model.message = 'Internal Server Error';
-			model.details = 'The server encountered an unexpected condition.';
-		} else if (model.code === 503) {
-			model.message = 'Service Unavailable';
-			model.details = 'Connection refuse.';
-		} else {
-			model.message = 'IDGJS_ERROR_' + model.code;
-			model.details = 'Please contact your system administrator.';
-		}
+			url = appconf.get('errors:' + model.code);
 
 		if (!req.headers || req.headers['error_verbose'] !== 'false') {
 			errorHandler.error(model.errorCode, err, err.errorMessage || model.message, req.url);
@@ -72,9 +54,41 @@ errorHandler.render = function(err, req, res, next) {
 		} else {
 			res.status(model.code).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), model);
 		}
-		return;
+		return model;
 	}
 	next();
+};
+
+/**
+ * Create an error model based on statusCode.
+ * @memberof libs/errorHandler.prototype
+ * @alias json
+ * @param {Object} err Contains information about errors.
+ * @param {express.Request} req Defines an object to provide client request information.
+ * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
+ */
+errorHandler.getErrorModel = function(err, req, res) {
+	var model = req.model || {},
+		code = err.statusCode || res.statusCode;
+
+	model.code = code;
+	model.errorCode = err.errorCode;
+
+	if (model.code === 404) {
+		model.message = 'Not Found';
+		model.details = 'The requested URL was not found on this server: <code>' + req.url + '</code>';
+	} else if (model.code === 500) {
+		model.message = 'Internal Server Error';
+		model.details = 'The server encountered an unexpected condition.';
+	} else if (model.code === 503) {
+		model.message = 'Service Unavailable';
+		model.details = 'Connection refuse.';
+	} else {
+		model.message = 'IDGJS_ERROR_' + model.code;
+		model.details = 'Please contact your system administrator.';
+	}
+
+	return model;
 };
 
 /**

@@ -1,7 +1,7 @@
 'use strict';
 
 var debug = require('debug')('indigo:errorHandler'),
-	indigo;
+	indigo = global.__indigo;
 
 /**
  * This is the default expection handler module assigned for each router and reporting an error 
@@ -39,44 +39,46 @@ var debug = require('debug')('indigo:errorHandler'),
  */
 var errorHandler = function(appconf) {
 
-	indigo = global.__indigo;
-
-	return errorHandler.render = function(err, req, res, next) {
-		if (err) {
-			var model = req.model || {},
-				code = err.statusCode || res.statusCode,
-				template = appconf.get('errors:template'),
-				url = appconf.get('errors:' + code);
-
-			model.code = code;
-
-			if (model.code === 404) {
-				model.message = 'Not Found';
-				model.details = 'The requested URL was not found on this server: <code>' + req.url + '</code>';
-			} else if (model.code ===500) {
-				model.message = 'Internal Server Error';
-				model.details = 'The server encountered an unexpected condition.';
-			} else if (model.code ===503) {
-				model.message = 'Service Unavailable';
-				model.details = 'Connection refuse.';
-			} else {
-				model.message = 'System Error';
-				model.details = 'Please contact your system administrator.';
-			}
-
-			if (!req.headers || req.headers['error_verbose'] !== 'false') {
-				errorHandler.error('ERROR2_' + model.code, err instanceof Error ? err : JSON.stringify(err), model.message, req.url);
-			}
-
-			if (url && url.length > 0){
-				res.redirect(url);
-			} else {
-				res.status(model.code).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), model);
-			}
-			return;
-		}
-		next();
+	return function(err, req, res, next) {
+		errorHandler.render(appconf, err, req, res, next);
 	};
+};
+
+errorHandler.render = function(appconf, err, req, res, next) {
+	if (err) {
+		var model = req.model || {},
+			code = err.statusCode || res.statusCode,
+			template = appconf.get('errors:template'),
+			url = appconf.get('errors:' + code);
+
+		model.code = code;
+
+		if (model.code === 404) {
+			model.message = 'Not Found';
+			model.details = 'The requested URL was not found on this server: <code>' + req.url + '</code>';
+		} else if (model.code ===500) {
+			model.message = 'Internal Server Error';
+			model.details = 'The server encountered an unexpected condition.';
+		} else if (model.code ===503) {
+			model.message = 'Service Unavailable';
+			model.details = 'Connection refuse.';
+		} else {
+			model.message = 'System Error';
+			model.details = 'Please contact your system administrator.';
+		}
+
+		if (!req.headers || req.headers['error_verbose'] !== 'false') {
+			errorHandler.error('ERROR2_' + model.code, err instanceof Error ? err : JSON.stringify(err), model.message, req.url);
+		}
+
+		if (url && url.length > 0){
+			res.redirect(url);
+		} else {
+			res.status(model.code).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), model);
+		}
+		return;
+	}
+	next();
 };
 
 /**

@@ -4,8 +4,7 @@ var debug = require('debug')('indigo:main'),
 	express = require('express'),
 	ejs = require('ejs'),
 	fs = require('fs'),
-	routers = require('./libs/routers'),
-	errorHandler = require('./libs/errorHandler');
+	routers, errorHandler;
 
 var reqModel, http,
 	webdir, portNumber,
@@ -120,6 +119,9 @@ var indigo =
 		 * @type {Object}
 		 */
 		this.logger = logger = require(this.appconfPath('logger:path') || './libs/logger')(appconf);
+
+		routers = require('./libs/routers');
+		errorHandler = require('./libs/errorHandler');
 
 		var service = require(this.appconfPath('service:path') || './libs/rest')();
 
@@ -412,7 +414,7 @@ var indigo =
 	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
 	 */
 	error: function(err, req, res) {
-		errorHandler.render(err, req, res, function() {
+		errorHandler.render(this.appconf, err, req, res, function() {
 			res.status(400).json(null); //no errors
 		});
 	}

@@ -51,13 +51,7 @@ var routers =
 		locales = locales || indigo.locales;
 
 		// dynamically include routers
-		var routersDir = appconf.get('routers'),
-			path = appconf.get('errors:path'),
-			/**
-			 * @memberOf sourceloader
-			 * @alias routers.js#errorHandler
-			 */
-			errorHandler = require(path ? __appDir + path : './errorHandler');
+		var routersDir = appconf.get('routers');
 
 		if (!routersDir) {
 			routersDir =  ['/routers'];
@@ -119,7 +113,7 @@ var routers =
 				router.use(conf.middleware);
 			}
 
-			router.use(errorHandler(appconf));
+			router.use(indigo.errorHandler(appconf));
 		});
 	}
 };

@@ -120,8 +120,9 @@ var indigo =
 		 */
 		this.logger = logger = require(this.appconfPath('logger:path') || './libs/logger')(appconf);
 
+		this.errorHandler = errorHandler = require(this.appconfPath('errors:path') || './libs/errorHandler');
+
 		routers = require('./libs/routers');
-		errorHandler = require('./libs/errorHandler');
 
 		var service = require(this.appconfPath('service:path') || './libs/rest')();
 

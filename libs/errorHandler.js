@@ -41,13 +41,12 @@ var errorHandler = {};
 errorHandler.render = function(err, req, res, next) {
 	if (err) {
 		var appconf = indigo.appconf,
-			error = null,
 			model = this.getErrorModel(err, req, res),
 			template = appconf.get('errors:template'),
 			url = appconf.get('errors:' + model.code);
 
 		if (!req.headers || req.headers['error_verbose'] !== 'false') {
-			error = this.error(model.errorCode, err, err.errorMessage || model.message, req.url);
+			model.error_details = this.error(model.errorCode, err, err.errorMessage || model.message, req.url);
 		}
 
 		if (url && url.length > 0){
@@ -55,10 +54,7 @@ errorHandler.render = function(err, req, res, next) {
 		} else {
 			res.status(model.code).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), model);
 		}
-		return {
-			error: error,
-			model: model
-		};
+		return model;
 	}
 	next();
 };
@@ -128,7 +124,8 @@ errorHandler.error = function(errorId, err, message, details) {
 		id: errorId,
 		uid: uid,
 		error: err_stack,
-		message: message
+		message: message,
+		details: details
 	};
 };
 

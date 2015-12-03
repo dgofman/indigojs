@@ -130,7 +130,7 @@ describe('libs/errorHandler', function () {
 	it('should test custome errorID', function (done) {
 		var errorID = 12345,
 			error = errorHandler.error(errorID);
-		assert.equal(error.id, errorID);
+		assert.equal(error.errorId, errorID);
 		assert.equal(error.uid, errorID);
 		done();
 	});

@@ -45,8 +45,9 @@ errorHandler.render = function(err, req, res, next) {
 			template = appconf.get('errors:template'),
 			url = appconf.get('errors:' + model.code);
 
+		this.setErrorDetails(model, model.errorCode, err, err.errorMessage || model.message);
 		if (!req.headers || req.headers['error_verbose'] !== 'false') {
-			model.error_details = this.error(model.errorCode, err, err.errorMessage || model.message, req.url);
+			indigo.logger.error(model.log_msg);
 		}
 
 		if (url && url.length > 0){
@@ -62,17 +63,19 @@ errorHandler.render = function(err, req, res, next) {
 /**
  * Create an error model based on statusCode.
  * @memberof libs/errorHandler.prototype
- * @alias json
+ * @alias getErrorModel
  * @param {Object} err Contains information about errors.
  * @param {express.Request} req Defines an object to provide client request information.
  * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
  */
 errorHandler.getErrorModel = function(err, req, res) {
-	var model = req.model || {},
+	var req_model = req.model || {},
+		model = req_model.error = {},
 		code = err.statusCode || res.statusCode;
 
 	model.code = code;
 	model.errorCode = err.errorCode;
+	model.url = req.originalUrl || req.url;
 
 	if (model.code === 404) {
 		model.message = 'Not Found';
@@ -88,6 +91,27 @@ errorHandler.getErrorModel = function(err, req, res) {
 		model.details = 'Please contact your system administrator.';
 	}
 
+	return model;
+};
+
+/**
+ * Update error model.
+ * @memberof libs/errorHandler.prototype
+ * @alias updateErrorModel
+ * @param {Object} model Error model.
+ * @param {String|Number} errorId Error id assigning for each function hanlder.
+ * @param {Object} err Contains information about errors.
+ * @param {String} message Error description.
+ * @param {String} [details] Error details.
+ * @return {Object} error JSON object with error infomation.
+ */
+errorHandler.setErrorDetails = function(model, errorId, err, message, details) {
+	model.uid = isNaN(errorId) ? Date.now() : errorId;
+	model.errorId = errorId;
+	
+	model.error = err instanceof Error ? err : JSON.stringify(err || '');
+	model.err_stack = model.error.stack || model.error.toString();
+	model.log_msg = (message || model.message) + ',  uid=' + model.uid + ' - ' + (details || model.details) + ' [' + model.err_stack + ']';
 	return model;
 };
 
@@ -108,25 +132,16 @@ errorHandler.injectErrorHandler = function(err) {
  * Logging an error message and assigning an uinque system id for each error.
  * @memberof libs/errorHandler.prototype
  * @alias error
- * @param {String} errorId Error id assigning for each function hanlder.
+ * @param {String|Number} errorId Error id assigning for each function hanlder.
  * @param {Object} err Contains information about errors.
  * @param {String} message Error description.
  * @param {String} [details] Error details.
  * @return {Object} error JSON object with error infomation.
  */
 errorHandler.error = function(errorId, err, message, details) {
-	var error = err instanceof Error ? err : JSON.stringify(err || ''),
-		err_stack = error.stack || error.toString(),
-		uid = isNaN(errorId) ? Date.now() : errorId;
-	message = (message || '').replace('%UID%', uid);
-	indigo.logger.error(message + ',  uid=' + uid + ' - ' + (details || '') + ' [' + err_stack + ']' );
-	return {
-		id: errorId,
-		uid: uid,
-		error: err_stack,
-		message: message,
-		details: details
-	};
+	var model = this.setErrorDetails({}, errorId, err, message, details);
+	indigo.logger.error(model.log_msg);
+	return model;
 };
 
 /**

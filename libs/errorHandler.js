@@ -45,7 +45,7 @@ errorHandler.render = function(err, req, res, next) {
 			template = appconf.get('errors:template'),
 			url = appconf.get('errors:' + model.code);
 
-		this.setErrorDetails(model, model.errorCode, err, err.errorMessage || model.message);
+		this.setErrorDetails(model, err.errorCode, err, err.errorMessage || model.message);
 		if (!req.headers || req.headers['error_verbose'] !== 'false') {
 			indigo.logger.error(model.log_msg);
 		}
@@ -75,7 +75,6 @@ errorHandler.getErrorModel = function(err, req, res) {
 		code = err.statusCode || res.statusCode;
 
 	model.code = code;
-	model.errorCode = err.errorCode;
 	model.url = req.originalUrl || req.url;
 
 	if (model.code === 404) {
@@ -107,8 +106,8 @@ errorHandler.getErrorModel = function(err, req, res) {
  * @return {Object} error JSON object with error infomation.
  */
 errorHandler.setErrorDetails = function(model, errorId, err, message, details) {
-	model.date = Date.now();
-	model.uid = isNaN(errorId) ? model.date : errorId;
+	model.date = new Date();
+	model.uid = isNaN(errorId) ? model.date.getTime() : errorId;
 	model.errorId = errorId;
 	
 	model.error = err instanceof Error ? err : JSON.stringify(err || '');

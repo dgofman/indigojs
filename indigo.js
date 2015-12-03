@@ -205,7 +205,7 @@ var indigo =
 				req.model.filename = getModuleWebDir(req) + newUrl;
 				return ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
 			} catch(err) {
-				return errorHandler.injectErrorHandler(err).message;
+				return errorHandler.injectErrorHandler(err, req, url).message;
 			}
 		};
 

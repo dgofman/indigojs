@@ -53,7 +53,7 @@ errorHandler.render = function(err, req, res, next) {
 		if (url && url.length > 0){
 			res.redirect(url);
 		} else {
-			res.status(model.code).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), model);
+			res.status(model.code).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), req.model);
 		}
 		return model;
 	}
@@ -69,8 +69,9 @@ errorHandler.render = function(err, req, res, next) {
  * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
  */
 errorHandler.getErrorModel = function(err, req, res) {
-	var req_model = req.model || {},
-		model = req_model.error = {},
+	req.model = req.model || {};
+
+	var model = req.model.error = {},
 		code = err.statusCode || res.statusCode;
 
 	model.code = code;
@@ -106,12 +107,13 @@ errorHandler.getErrorModel = function(err, req, res) {
  * @return {Object} error JSON object with error infomation.
  */
 errorHandler.setErrorDetails = function(model, errorId, err, message, details) {
-	model.uid = isNaN(errorId) ? Date.now() : errorId;
+	model.date = Date.now();
+	model.uid = isNaN(errorId) ? model.date : errorId;
 	model.errorId = errorId;
 	
 	model.error = err instanceof Error ? err : JSON.stringify(err || '');
-	model.err_stack = model.error.stack || model.error.toString();
-	model.log_msg = (message || model.message) + ',  uid=' + model.uid + ' - ' + (details || model.details) + ' [' + model.err_stack + ']';
+	model.log_msg = (message || model.message || '').replace('%UID%', model.uid) + ',  uid=' + model.uid + ' - ' + 
+		(details || model.details || '') + ' [' + (model.error.stack || model.error.toString()) + ']';
 	return model;
 };
 
@@ -121,11 +123,13 @@ errorHandler.setErrorDetails = function(model, errorId, err, message, details) {
  * @memberof libs/errorHandler.prototype
  * @alias injectErrorHandler
  * @param {Object} err Contains information about errors.
+ * @param {express.Request} req Defines an object to provide client request information.
+ * @param {String} url Load URL.
  * @return {Object} error JSON object with error infomation.
  */
-errorHandler.injectErrorHandler = function(err) {
+errorHandler.injectErrorHandler = function(err, req, url) {
 	return this.error('ERROR_INJECT', err,
-		'<h3>Internal error. Please contact your system administrator</h3><br/>Code: %UID%');
+		'<h3>Internal error. Please contact your system administrator</h3><br/>Code: %UID%', url);
 };
 
 /**

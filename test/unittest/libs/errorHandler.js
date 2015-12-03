@@ -46,9 +46,9 @@ describe('libs/errorHandler', function () {
 				assert.equal(code, 404);
 				return {
 					render: function(url, model) {
-						assert.equal(model.code, 404);
-						assert.equal(model.message, 'Not Found');
-						assert.equal(model.details, 'The requested URL was not found on this server: <code>/foo.html</code>');
+						assert.equal(model.error.code, 404);
+						assert.equal(model.error.message, 'Not Found');
+						assert.equal(model.error.details, 'The requested URL was not found on this server: <code>/foo.html</code>');
 						done();
 					}
 				};
@@ -65,9 +65,9 @@ describe('libs/errorHandler', function () {
 				assert.equal(code, 500);
 				return {
 					render: function(url, model) {
-						assert.equal(model.code, 500);
-						assert.equal(model.message, 'Internal Server Error');
-						assert.equal(model.details, 'The server encountered an unexpected condition.');
+						assert.equal(model.error.code, 500);
+						assert.equal(model.error.message, 'Internal Server Error');
+						assert.equal(model.error.details, 'The server encountered an unexpected condition.');
 						done();
 					}
 				};
@@ -84,9 +84,9 @@ describe('libs/errorHandler', function () {
 				assert.equal(code, 503);
 				return {
 					render: function(url, model) {
-						assert.equal(model.code, 503);
-						assert.equal(model.message, 'Service Unavailable');
-						assert.equal(model.details, 'Connection refuse.');
+						assert.equal(model.error.code, 503);
+						assert.equal(model.error.message, 'Service Unavailable');
+						assert.equal(model.error.details, 'Connection refuse.');
 						done();
 					}
 				};
@@ -104,9 +104,9 @@ describe('libs/errorHandler', function () {
 				assert.equal(code, 911);
 				return {
 					render: function(url, model) {
-						assert.equal(model.code, 911);
-						assert.equal(model.message, 'IDGJS_ERROR_911');
-						assert.equal(model.details, 'Please contact your system administrator.');
+						assert.equal(model.error.code, 911);
+						assert.equal(model.error.message, 'IDGJS_ERROR_911');
+						assert.equal(model.error.details, 'Please contact your system administrator.');
 						done();
 					}
 				};

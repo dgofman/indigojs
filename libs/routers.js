@@ -78,13 +78,9 @@ var routers =
 						.all(function(req, res, next) {
 							debug(req.method, req.url, req.originalUrl);
 							req.moduleWebDir = router.moduleWebDir;
-							if (conf.methods[method]) { //include default model into req.model
-								req.model = reqModel(req, conf.base);
-								if (conf.intercept) {
-									conf.intercept(req, res, next);
-								} else {
-									next();
-								}
+							req.model = reqModel(req, conf.base);
+							if (conf.intercept) {
+								conf.intercept(req, res, next);
 							} else {
 								next();
 							}
@@ -217,7 +213,6 @@ routers.routerConf = function(opt) {
 	} else {
 		conf.base = conf.base || '/route';
 	}
-	conf.methods = conf.methods || {'get': true};
 	return conf;
 };
 

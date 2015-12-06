@@ -2,8 +2,7 @@
 
 var superagent = require('superagent'),
 	assert = require('assert'),
-	indigo = require('../../indigo'),
-	errorHandler = require('../../libs/errorHandler');
+	indigo = require('../../indigo');
 
 describe('Testing Indigo API\'s', function () {
 
@@ -22,8 +21,8 @@ describe('Testing Indigo API\'s', function () {
 			var port = indigo.appconf.get('server:port');
 			var req = superagent.get('http://localhost:' + port + '/firststep/index')
 				.end(function() {
-					var injectErrorHandler = errorHandler.injectErrorHandler;
-					errorHandler.injectErrorHandler = function() {
+					var injectErrorHandler = indigo.errorHandler.injectErrorHandler;
+					indigo.errorHandler.injectErrorHandler = function() {
 						return {
 							code: 0,
 							error: 'Not Found',
@@ -33,7 +32,7 @@ describe('Testing Indigo API\'s', function () {
 
 					req.session = {locale:'en'};
 					assert.equal(indigo.app.locals.inject(req, '/foo'), 'PAGE NOT FOUND');
-					errorHandler.injectErrorHandler = injectErrorHandler;
+					indigo.errorHandler.injectErrorHandler = injectErrorHandler;
 					indigo.close(done);
 			});
 		});

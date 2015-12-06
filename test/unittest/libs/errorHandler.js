@@ -1,7 +1,6 @@
 'use strict';
 
 var debug = require('debug')('indigo:test'),
-	errorHandler = require('../../../libs/errorHandler'),
 	indigo = require('../../../indigo'),
 	locales = require('../../../libs/locales'),
 	assert = require('assert');
@@ -17,7 +16,7 @@ describe('libs/errorHandler', function () {
 	});
 
 	it('should validate err is null', function (done) {
-		errorHandler.render(null, null, null, function() {
+		indigo.errorHandler.render(null, null, null, function() {
 			done();
 		});
 	});
@@ -37,7 +36,7 @@ describe('libs/errorHandler', function () {
 	});
 
 	it('should validate err 404', function (done) {
-		errorHandler.render(defaultError, {
+		indigo.errorHandler.render(defaultError, {
 				url: '/foo.html'
 			}, 
 			{
@@ -57,7 +56,7 @@ describe('libs/errorHandler', function () {
 	});
 
 	it('should validate err 500', function (done) {
-		errorHandler.render(defaultError, {
+		indigo.errorHandler.render(defaultError, {
 				url: '/foo.html'
 			}, {
 			statusCode: 500,
@@ -76,7 +75,7 @@ describe('libs/errorHandler', function () {
 	});
 
 	it('should validate err 503', function (done) {
-		errorHandler.render(defaultError, {
+		indigo.errorHandler.render(defaultError, {
 				url: '/foo.html'
 			}, {
 			statusCode: 503,
@@ -96,7 +95,7 @@ describe('libs/errorHandler', function () {
 
 	it('should validate err 911', function (done) {
 		appconf.errors.template = null;
-		errorHandler.render(defaultError, {
+		indigo.errorHandler.render(defaultError, {
 				url: '/foo.html'
 			}, {
 			statusCode: 911,
@@ -116,7 +115,7 @@ describe('libs/errorHandler', function () {
 
 	it('should test redirect', function (done) {
 		appconf.errors['404'] = 'http://www.google.com/indigojs';
-		errorHandler.render(defaultError, {
+		indigo.errorHandler.render(defaultError, {
 				url: '/foo.html'
 			}, {
 				statusCode: 404,
@@ -127,9 +126,49 @@ describe('libs/errorHandler', function () {
 		}, null);
 	});
 
-	it('should test custome errorID', function (done) {
+	it('should test custom model (req.errorModel)', function (done) {
+		var loggerFn = indigo.logger.error,
+			loggerOutput = null,
+			error_model = {
+				code: 1234,
+				message: 'CUSTOM ERROR',
+				details: 'This is my custom error'
+			};
+		indigo.errorHandler.setErrorDetails(error_model, 'MY_ERROR_ID', defaultError);
+
+		indigo.logger.error = function(msg) {
+			loggerOutput = msg;
+		};
+
+		indigo.errorHandler.render(defaultError, {
+				model: {
+					errorModel: error_model
+				}
+			}, 
+			{
+				status: function(code) {
+					assert.equal(code, error_model.code);
+					return {
+						render: function(url, model) {
+							assert.ok(url.indexOf('/indigojs/examples/templates/errors.html') !== -1);
+							assert.ok(!isNaN(model.errorModel.uid));
+							assert.equal(model.errorModel.log_msg, loggerOutput);
+							assert.equal(model.errorModel.error, JSON.stringify(defaultError));
+							assert.equal(model.errorModel.code, error_model.code);
+							assert.equal(model.errorModel.message, error_model.message);
+							assert.equal(model.errorModel.details, error_model.details);
+
+							indigo.logger.error = loggerFn;
+							done();
+						}
+					};
+				}
+		}, null);
+	});
+
+	it('should test defined errorID', function (done) {
 		var errorID = 12345,
-			error = errorHandler.error(errorID);
+			error = indigo.errorHandler.error(errorID);
 		assert.equal(error.errorId, errorID);
 		assert.equal(error.uid, errorID);
 		done();
@@ -137,7 +176,7 @@ describe('libs/errorHandler', function () {
 
 	it('should test injectErrorHandler', function (done) {
 		var error = {error:'ERROR'};
-		assert.equal(errorHandler.injectErrorHandler(error).error, JSON.stringify(error));
+		assert.equal(indigo.errorHandler.injectErrorHandler(error).error, JSON.stringify(error));
 		done();
 	});
 
@@ -162,7 +201,7 @@ describe('libs/errorHandler', function () {
 				}
 			};
 
-		errorHandler.json(req, res, errorKey);
+		indigo.errorHandler.json(req, res, errorKey);
 	});
 
 	it('should test if error.json is missing', function (done) {
@@ -186,7 +225,7 @@ describe('libs/errorHandler', function () {
 				}
 			};
 		locales.localeMap[locale].errors = null;
-		errorHandler.json(req, res, errorKey);
+		indigo.errorHandler.json(req, res, errorKey);
 	});
 
 	it('should test custom error 500', function (done) {
@@ -209,6 +248,6 @@ describe('libs/errorHandler', function () {
 				}
 			};
 
-		errorHandler.json(req, res, errorKey, errorCode);
+		indigo.errorHandler.json(req, res, errorKey, errorCode);
 	});
 });

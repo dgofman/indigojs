@@ -40,12 +40,18 @@ var errorHandler = {};
 
 errorHandler.render = function(err, req, res, next) {
 	if (err) {
+		req.model = req.model || {};
+
+		var model = req.model.errorModel;
+		if (!model) {
+			req.model.errorModel = model = errorHandler.getErrorModel(err, req, res),
+			errorHandler.setErrorDetails(model, err.errorCode, err, err.errorMessage || model.message);
+		}
+
 		var appconf = indigo.appconf,
-			model = this.getErrorModel(err, req, res),
 			template = appconf.get('errors:template'),
 			url = appconf.get('errors:' + model.code);
 
-		this.setErrorDetails(model, err.errorCode, err, err.errorMessage || model.message);
 		if (!req.headers || req.headers['error_verbose'] !== 'false') {
 			indigo.logger.error(model.log_msg);
 		}
@@ -69,8 +75,6 @@ errorHandler.render = function(err, req, res, next) {
  * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
  */
 errorHandler.getErrorModel = function(err, req, res) {
-	req.model = req.model || {};
-
 	var model = req.model.error = {},
 		code = err.statusCode || res.statusCode;
 
@@ -127,7 +131,7 @@ errorHandler.setErrorDetails = function(model, errorId, err, message, details) {
  * @return {Object} error JSON object with error infomation.
  */
 errorHandler.injectErrorHandler = function(err, req, url) {
-	return this.error('ERROR_INJECT', err,
+	return errorHandler.error('ERROR_INJECT', err,
 		'<h3>Internal error. Please contact your system administrator</h3><br/>Code: %UID%', url);
 };
 
@@ -142,7 +146,7 @@ errorHandler.injectErrorHandler = function(err, req, url) {
  * @return {Object} error JSON object with error infomation.
  */
 errorHandler.error = function(errorId, err, message, details) {
-	var model = this.setErrorDetails({}, errorId, err, message, details);
+	var model = errorHandler.setErrorDetails({}, errorId, err, message, details);
 	indigo.logger.error(model.log_msg);
 	return model;
 };
@@ -159,6 +163,17 @@ errorHandler.error = function(errorId, err, message, details) {
 errorHandler.json = function(req, res, errorKey, errorCode) {
 	var locales = indigo.getLocale(req);
 	res.status(errorCode || 400).json( { error: locales.errors ? locales.errors[errorKey] : errorKey } );
+};
+
+/**
+ * Handle 404 Error.
+ * @memberof libs/errorHandler.prototype
+ * @alias notFound
+ */
+errorHandler.notFound = function(app) {
+	app.use(function(req, res, next) {
+		errorHandler.render({statusCode: 404}, req, res, next);
+	});
 };
 
 /**

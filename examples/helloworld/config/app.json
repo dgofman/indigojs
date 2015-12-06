@@ -13,5 +13,9 @@
 	
 	"routers": [
 		"/examples/helloworld/routers"
-	]
+	],
+
+	"errors": {
+		"template": "/examples/templates/errors.html"
+	}
 }

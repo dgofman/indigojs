@@ -225,6 +225,8 @@ var indigo =
 			return indigo.substitute(locales, rest);
 		};
 
+		errorHandler.notFound(app);
+
 		// Using the .html extension instead of
 		// having to name the views as *.ejs
 		app.engine('.html', ejs.__express);

@@ -2,7 +2,6 @@
 
 var indigo = global.__indigo,
 	debug = indigo.debug('indigo:static'),
-	errorHandler = indigo.libs('errorHandler'),
 	fs = require('fs'),
 	less = require('less');
 
@@ -38,7 +37,7 @@ module.exports = function(router, app) {
 							res.write(result.css);
 							res.end();
 						} else {
-							errorHandler.error('ERROR_LESS_PARSING', error, 'Unable to parse file. Code: %UID%');
+							indigo.error(error);
 							res.send(data);
 						}
 					});

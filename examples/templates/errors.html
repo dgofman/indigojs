@@ -2,17 +2,17 @@
 <html lang=en>
   <meta charset=utf-8>
   <link rel="shortcut icon" href="/favicon.ico">
-  <title>Error <%= code %>. <%= message %></title>
+  <title>Error <%= errorModel.code %>. <%= errorModel.message %></title>
   <style>
     html{font:15px arial,sans-serif}
-	p{margin:10px 0;padding:0}
-	div{position:absolute;width:700px;height:200px;top:50%;left:50%;margin:-100px 0 0 -250px}
-	a{text-decoration:none;color:#4B0082;font-weight:bold;font-size:20px}
-	a span{background:#4B0082;color:#fff;padding:4px;margin:2px}
+  p{margin:10px 0;padding:0}
+  div{position:absolute;width:700px;height:200px;top:50%;left:50%;margin:-100px 0 0 -250px}
+  a{text-decoration:none;color:#4B0082;font-weight:bold;font-size:20px}
+  a span{background:#4B0082;color:#fff;padding:4px;margin:2px}
   </style>
   <div>
     <p><a href="http://www.indigo.com" class="logo">indigo<span>JS</span></a></p>
-    <p><b><%= code %>.</b> <span><%= message %></span></p>
-    <p><%- details %></p>
+    <p><b><%= errorModel.code %>.</b> <span><%= errorModel.message %></span></p>
+    <p><%- errorModel.details %></p>
   </div>
  </html>

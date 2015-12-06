@@ -9,10 +9,10 @@ var indigo = require(__appDir + '/indigo');
 module.exports = function(appconf) {
 	var reqmodel = indigo.libs('reqmodel')(appconf);
 
-	return function(req) {
+	return function(req, contextPath) {
 		var model = reqmodel(req);
-		model.baseStaticUrl = '/static';
-		model.imageBaseUrl = model.baseStaticUrl + '/images';
+		model.baseStaticUrl =  '/static';
+		model.imageBaseUrl = contextPath + model.baseStaticUrl + '/images';
 		return model;
 	};
 };

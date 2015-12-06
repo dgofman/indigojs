@@ -126,6 +126,18 @@ describe('libs/errorHandler', function () {
 		}, null);
 	});
 
+	it('should test prevent double redirect', function (done) {
+		indigo.errorHandler.notFound({
+			use: function(fn) {
+				fn({ 
+					headers: {
+						referer: 'http://notfound.html'
+					}
+				}, null, done);
+			}
+		});
+	});
+
 	it('should test custom model (req.errorModel)', function (done) {
 		var loggerFn = indigo.logger.error,
 			loggerOutput = null,

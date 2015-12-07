@@ -80,6 +80,8 @@ var errorHandler = function() {
 				code = err.statusCode || res.statusCode;
 
 			model.code = code;
+			model.date = new Date();
+			model.uid = model.date.getTime();
 			model.url = req.originalUrl || req.url;
 
 			if (model.code === 404) {
@@ -111,8 +113,7 @@ var errorHandler = function() {
 		 * @return {Object} error JSON object with error infomation.
 		 */
 		setErrorDetails: function(model, errorId, err, message, details) {
-			model.date = new Date();
-			model.uid = isNaN(errorId) ? model.date.getTime() : errorId;
+			model.uid = model.uid || (isNaN(errorId) ? Date.now() : errorId);
 			model.errorId = errorId;
 			
 			model.error = err instanceof Error ? err : JSON.stringify(err || '');

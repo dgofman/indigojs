@@ -119,6 +119,8 @@ var indigo =
 		 * @type {Object}
 		 */
 		this.logger = logger = require(this.appconfPath('logger:path') || './libs/logger')(appconf);
+		
+		this.reqModel = reqModel = require(this.appconfPath('server:reqmodel:path') || './libs/reqmodel')(appconf);
 
 		this.errorHandler = errorHandler = require(this.appconfPath('errors:path') || './libs/errorHandler')();
 
@@ -138,8 +140,6 @@ var indigo =
 				enumerable: true
 			});
 		}
-
-		this.reqModel = reqModel = require(this.appconfPath('server:reqmodel:path') || './libs/reqmodel')(appconf);
 
 		portNumber = process.env.PORT || appconf.get('server:port');
 		if (appconf.get('server:force')) {

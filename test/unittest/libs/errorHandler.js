@@ -142,6 +142,7 @@ describe('libs/errorHandler', function () {
 		var loggerFn = indigo.logger.error,
 			loggerOutput = null,
 			error_model = {
+				id: Date.now(),
 				code: 1234,
 				message: 'CUSTOM ERROR',
 				details: 'This is my custom error'
@@ -163,7 +164,7 @@ describe('libs/errorHandler', function () {
 					return {
 						render: function(url, model) {
 							assert.ok(url.indexOf('/indigojs/examples/templates/errors.html') !== -1);
-							assert.ok(!isNaN(model.errorModel.uid));
+							assert.equal(model.errorModel.uid, error_model.uid);
 							assert.equal(model.errorModel.log_msg, loggerOutput);
 							assert.equal(model.errorModel.error, JSON.stringify(defaultError));
 							assert.equal(model.errorModel.code, error_model.code);
@@ -180,9 +181,9 @@ describe('libs/errorHandler', function () {
 
 	it('should test defined errorID', function (done) {
 		var errorID = 12345,
-			error = indigo.errorHandler.error(errorID);
-		assert.equal(error.errorId, errorID);
-		assert.equal(error.uid, errorID);
+			model = indigo.errorHandler.error(errorID);
+		assert.equal(model.errorId, errorID);
+		assert.equal(model.uid, errorID);
 		done();
 	});
 

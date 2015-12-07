@@ -183,7 +183,7 @@ describe('libs/errorHandler', function () {
 		var errorID = 12345,
 			model = indigo.errorHandler.error(errorID);
 		assert.equal(model.errorId, errorID);
-		assert.equal(model.uid, errorID);
+		assert.ok(!isNaN(model.uid));
 		done();
 	});
 

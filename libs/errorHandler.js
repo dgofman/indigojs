@@ -46,7 +46,7 @@ var errorHandler = function() {
 				var model = req.model.errorModel;
 				if (!model) {
 					req.model.errorModel = model = this.getErrorModel(err, req, res),
-					this.setErrorDetails(model, err.errorCode, err, err.errorMessage || model.message);
+					this.setErrorDetails(model, err.errorCode, err, err.errorMessage);
 				}
 
 				var appconf = indigo.appconf,
@@ -113,7 +113,7 @@ var errorHandler = function() {
 		 * @return {Object} error JSON object with error infomation.
 		 */
 		setErrorDetails: function(model, errorId, err, message, details) {
-			model.uid = model.uid || (isNaN(errorId) ? Date.now() : errorId);
+			model.uid = model.uid || Date.now();
 			model.errorId = errorId;
 			
 			model.error = err instanceof Error ? err : JSON.stringify(err || '');

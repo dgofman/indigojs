@@ -179,11 +179,17 @@ function localelookup(localeDir) {
 		var target = localeMap[code] = localeMap[code] || { __lookup__: [], __localName__:code };
 
 		var lookup = rules[code];
-		target.__lookup__ = target.__lookup__.concat(lookup);
-
 		for (var index in lookup) {
-			var locale = lookup[index],
-				source = localeMap[locale],
+			var locale = lookup[index];
+			if (target.__lookup__.indexOf(locale) === -1) {
+				target.__lookup__.push(locale);
+			}
+		}
+
+		for (index in lookup) {
+			locale = lookup[index];
+			
+			var source = localeMap[locale],
 				sourceLocale = true;
 
 			if (!source) {

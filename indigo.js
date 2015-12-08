@@ -301,7 +301,8 @@ var indigo =
 		if (fileName.indexOf('.') === -1) {
 			fileName += '.html'; //attach default HTML extension
 		}
-		var newUrl = indigo.getNewURL(req, res, '/' + req.session.locale + '/' + fileName, '/' + fileName);
+
+		var newUrl = indigo.getNewURL(req, res, '/' + req.session.locale + fileName,  fileName);
 		debug('render: %s -> %s', req.url, newUrl);
 
 		fileName = getModuleWebDir(req) + newUrl;
@@ -364,7 +365,7 @@ var indigo =
 			indigo.getLocale(req);
 		}
 
-		if ( !fs.existsSync(dir + url) && 
+		if (!fs.existsSync(dir + url) && 
 			url.indexOf('/' + req.session.locale +'/') !== -1) { //try to get file from another locale directory
 			debug('getNewURL=%s locale=%s lookup=%s', url, req.session.locale, req.session.localeLookup);
 			for (var index in req.session.localeLookup) {

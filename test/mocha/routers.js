@@ -40,7 +40,7 @@ describe('Testing Account Routers', function () {
 		superagent.get('http://localhost:' + port + '/account/us/templates/reset')
 			.end(function(err, res) {
 				assert.equal(res.statusCode, 200);
-				assert.equal(res.headers['referer'], '/default//templates/account/reset.html');
+				assert.equal(res.headers['referer'], '/default/templates/account/reset.html');
 				done();
 		});
 	});

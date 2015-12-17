@@ -18,9 +18,6 @@ module.exports = function(router, app) {
 	});
 
 	return {
-		'base': '/helloworld',
-		'intercept': function(req, res, next) {
-			next();
-		}
+		'base': '/helloworld'
 	};
 };

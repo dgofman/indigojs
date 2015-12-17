@@ -78,10 +78,9 @@ var routers =
 						.all(function(req, res, next) {
 							debug(req.method, req.url, req.originalUrl);
 							req.moduleWebDir = router.moduleWebDir;
-							req.model = reqModel(req, conf.base);
-							if (conf.intercept) {
-								conf.intercept(req, res, next);
-							} else {
+							var model = reqModel(req, conf.base, next);
+							if(model) {
+								req.model = model;
 								next();
 							}
 						})[method](callback);

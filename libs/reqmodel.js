@@ -42,7 +42,21 @@
  * &lt;link rel="stylesheet" type="text/css" href="css/custom.less"&gt;
  *
  * &lt;script src="js/vendor/require-2.1.15&lt;%= extJS %&gt;" data-main="js&lt;%= contextPath %&gt;/main-&lt;%= environment %&gt;"&gt;&lt;/script&gt;
+ *
+ * You can override this module anytime
+ *
+ * module.exports = function(appconf) {
+ *	var reqmodel = indigo.libs('reqmodel')(appconf);
+ *
+ *	return function(req, contextPath, next) {
+ *		reqmodel(req, contextPath, function() {
+ *			req.model.newModelKey = 'newModelValue';
+ *			next();
+ *		});
+ *	};
+ * };
  */
+
 function reqmodel(appconf) {
 
 	var minify, env = appconf.get('environment');
@@ -54,8 +68,8 @@ function reqmodel(appconf) {
 	env = env || 'dev';
 	minify = env === 'dev' ? '' : '.min';
 
-	return function(req, contextPath) {
-		return {
+	return function(req, contextPath, next) {
+		var model = {
 			req: req,
 			environment: env,
 			minify: minify,
@@ -66,6 +80,13 @@ function reqmodel(appconf) {
 			locales: {},
 			contextPath: contextPath || ''
 		};
+
+		if (typeof next === 'function') {
+			req.model = model;
+			next();
+		} else {
+			return model;
+		}
 	};
 }
 

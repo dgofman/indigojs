@@ -80,28 +80,32 @@ describe('UnitTests Indigo APIs', function () {
 	});
 
 	it('should test RU locale', function (done) {
-		var locales = null,
-			req = {
-				params: {
-					countryCode: 'ru'
-				},
-				session: {},
-				model: require(__appDir + '/libs/reqmodel')(indigo.appconf)(),
-				headers: {
-					'accept-language': acceptLanguage
-				}
-			},res = {
-				render: function(url, model) {
-					assert.equal(model.locality.locale, 'ru');
-					assert.equal(model.locality.langugage, 'ru');
-					assert.equal(locales.account.greeting, 'Здравствуйте');
-					done();
-				}
-			};
+		var req = {
+			baseUrl: '/indigojs',
+			params: {
+				countryCode: 'ru'
+			},
+			session: {},
+			headers: {
+				'accept-language': acceptLanguage
+			}
+		};
+		require(__appDir + '/libs/reqmodel')(indigo.appconf)(req, null, function() {
+			var locales = null,
+				res = {
+					render: function(url, model) {
+						assert.equal(model.contextPath, '/indigojs');
+						assert.equal(model.locality.locale, 'ru');
+						assert.equal(model.locality.langugage, 'ru');
+						assert.equal(locales.account.greeting, 'Здравствуйте');
+						done();
+					}
+				};
 
-		locales = indigo.getLocale(req, 'countryCode'); //req.params.countryCode
+			locales = indigo.getLocale(req, 'countryCode'); //req.params.countryCode
 
-		indigo.render(req, res, '/login', locales);
+			indigo.render(req, res, '/login', locales);
+		});
 	});
 
 	it('should test substitute', function (done) {

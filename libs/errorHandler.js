@@ -176,8 +176,9 @@ var errorHandler = function() {
 			var self = this;
 			app.use(function(req, res, next) {
 				if (!req.headers.referer) {
-					req.model = indigo.reqModel(req);
-					self.render({statusCode: 404}, req, res, next);
+					indigo.reqModel(req,  null, function() {
+						self.render({statusCode: 404}, req, res, next);
+					});
 				} else {
 					next();
 				}

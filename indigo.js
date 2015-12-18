@@ -182,13 +182,14 @@ var indigo =
 
 		//http://localhost:8585/indigo/account/en/templates/login
 		app.use('/indigo/:routerPath/:locale/templates/:pageId', function(req, res) {
-			req.model = reqModel(req);
-			locales.init(req, req.params.locale);
+			reqModel(req, null, function() {
+				locales.init(req, req.params.locale);
 
-			var url = '/' + req.session.locale + '/templates/' + req.params.routerPath + '/' + req.params.pageId + '.html',
-				newUrl = indigo.getNewURL(req, res, url);
-			debug('template: %s -> %s', url, newUrl);
-			res.sendFile(webdir + newUrl);
+				var url = '/' + req.session.locale + '/templates/' + req.params.routerPath + '/' + req.params.pageId + '.html',
+					newUrl = indigo.getNewURL(req, res, url);
+				debug('template: %s -> %s', url, newUrl);
+				res.sendFile(webdir + newUrl);
+			});
 		});
 
 		routers.init(appconf, reqModel, app, locales);
@@ -291,34 +292,38 @@ var indigo =
 	 * @param {Object} [locales] Reference to the object with localization values.
 	 */
 	render: function(req, res, fileName, locales) {
-		if (!req.model) {
-			req.model = reqModel(req);
-		}
+		var next = function() {
+			req.model.locales = locales || indigo.getLocale(req);
+			req.model.req = req;
 
-		req.model.locales = locales || indigo.getLocale(req);
-		req.model.req = req;
-
-		if (fileName.indexOf('.') === -1) {
-			fileName += '.html'; //attach default HTML extension
-		}
-
-		var newUrl = indigo.getNewURL(req, res, '/' + req.session.locale + fileName,  fileName);
-		debug('render: %s -> %s', req.url, newUrl);
-
-		fileName = getModuleWebDir(req) + newUrl;
-		res.setHeader && res.setHeader('lang', req.model.locality.langugage);
-		if (!fs.existsSync(fileName)) {
-			res.status(404);
-			res.setHeader && res.setHeader('path', fileName);
-		}
-
-		res.render(fileName, req.model, function(err, result) {
-			if (err) {
-				indigo.error(err, req, res);
-			} else {
-				res.send(result);
+			if (fileName.indexOf('.') === -1) {
+				fileName += '.html'; //attach default HTML extension
 			}
-		});
+
+			var newUrl = indigo.getNewURL(req, res, '/' + req.session.locale + fileName,  fileName);
+			debug('render: %s -> %s', req.url, newUrl);
+
+			fileName = getModuleWebDir(req) + newUrl;
+			res.setHeader && res.setHeader('lang', req.model.locality.langugage);
+			if (!fs.existsSync(fileName)) {
+				res.status(404);
+				res.setHeader && res.setHeader('path', fileName);
+			}
+
+			res.render(fileName, req.model, function(err, result) {
+				if (err) {
+					indigo.error(err, req, res);
+				} else {
+					res.send(result);
+				}
+			});
+		};
+
+		if (!req.model) {
+			req.model = reqModel(req, null, next);
+		} else {
+			next();
+		}
 	},
 
 	/**

@@ -69,7 +69,7 @@ function reqmodel(appconf) {
 	minify = env === 'dev' ? '' : '.min';
 
 	return function(req, contextPath, next) {
-		var model = {
+		req.model = {
 			req: req,
 			environment: env,
 			minify: minify,
@@ -78,15 +78,10 @@ function reqmodel(appconf) {
 			extLESS: env === 'dev' ? '.less' : '.css',
 			locality: {},
 			locales: {},
-			contextPath: contextPath || ''
+			contextPath: contextPath || req.baseUrl
 		};
 
-		if (typeof next === 'function') {
-			req.model = model;
-			next();
-		} else {
-			return model;
-		}
+		next();
 	};
 }
 

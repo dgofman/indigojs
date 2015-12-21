@@ -100,6 +100,8 @@ var indigo =
 
 		webdir = __appDir + appconf.get('server:webdir');
 
+		this.app = express();
+
 		/**
 		 * Reference to <code>libs/locales</code>.
 		 * @memberof indigo
@@ -165,7 +167,7 @@ var indigo =
 
 		appconf = this.init(appconf);
 
-		var app = this.app = express();
+		var app = this.app;
 
 		require(this.appconfPath('server:parser:path') || './libs/parser')(app, appconf); //enabled req.body
 

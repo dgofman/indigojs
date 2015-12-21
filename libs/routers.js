@@ -78,7 +78,7 @@ var routers =
 						.all(function(req, res, next) {
 							debug(req.method, req.url, req.originalUrl);
 							req.moduleWebDir = router.moduleWebDir;
-							reqModel(req, conf.base, next);
+							reqModel(conf.base, req, res, next);
 						})[method](callback);
 				};
 			};

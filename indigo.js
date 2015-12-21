@@ -182,7 +182,7 @@ var indigo =
 
 		//http://localhost:8585/indigo/account/en/templates/login
 		app.use('/indigo/:routerPath/:locale/templates/:pageId', function(req, res) {
-			reqModel(req, null, function() {
+			reqModel(null, req, res, function() {
 				locales.init(req, req.params.locale);
 
 				var url = '/' + req.session.locale + '/templates/' + req.params.routerPath + '/' + req.params.pageId + '.html',
@@ -320,7 +320,7 @@ var indigo =
 		};
 
 		if (!req.model) {
-			req.model = reqModel(req, null, next);
+			req.model = reqModel(null, req, res, next);
 		} else {
 			next();
 		}

@@ -10,7 +10,7 @@ describe('libs/reqmodel', function () {
 
 	it('should assign to default dev environment', function (done) {
 		var req = {baseUrl: '/indigojs'};
-		reqmodel(appconf)(req, null, function() {
+		reqmodel(appconf)(null, req, null, function() {
 			assert.equal(req.model.contextPath, '/indigojs');
 			assert.equal(req.model.environment, 'dev');
 			assert.equal(req.model.minify, '');
@@ -23,7 +23,7 @@ describe('libs/reqmodel', function () {
 	it('should verify environment is dev', function (done) {
 		appconf.environment = 'dev';
 		var req = {baseUrl: '/indigojs'};
-		reqmodel(appconf)(req, '/newBaseURL', function() {
+		reqmodel(appconf)('/newBaseURL', req, null, function() {
 			assert.equal(req.model.contextPath, '/newBaseURL');
 			assert.equal(req.model.environment, 'dev');
 			assert.equal(req.model.minify, '');
@@ -36,7 +36,7 @@ describe('libs/reqmodel', function () {
 	it('should verify environment is prod', function (done) {
 		appconf.environment = 'prod';
 		var req = {baseUrl: '/indigojs'};
-		reqmodel(appconf)(req, null, function() {
+		reqmodel(appconf)(null, req, null, function() {
 			assert.equal(req.model.environment, 'prod');
 			assert.equal(req.model.minify, '.min');
 			assert.equal(req.model.extCSS, '.min.css');
@@ -50,7 +50,7 @@ describe('libs/reqmodel', function () {
 			env = process.env.NODE_ENV;
 		appconf.environment = 'dev';
 		process.env.NODE_ENV = 'production';
-		reqmodel(appconf)(req, null, function() {
+		reqmodel(appconf)(null, req, null, function() {
 			assert.equal(req.model.environment, 'prod');
 			assert.equal(req.model.minify, '.min');
 			assert.equal(req.model.extCSS, '.min.css');

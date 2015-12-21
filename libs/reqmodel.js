@@ -48,8 +48,8 @@
  * module.exports = function(appconf) {
  *	var reqmodel = indigo.libs('reqmodel')(appconf);
  *
- *	return function(req, contextPath, next) {
- *		reqmodel(req, contextPath, function() {
+ *	return function(contextPath, req, res, next) {
+ *		reqmodel(contextPath, req, res, function() {
  *			req.model.newModelKey = 'newModelValue';
  *			next();
  *		});
@@ -68,7 +68,7 @@ function reqmodel(appconf) {
 	env = env || 'dev';
 	minify = env === 'dev' ? '' : '.min';
 
-	return function(req, contextPath, next) {
+	return function(contextPath, req, res, next) {
 		req.model = {
 			req: req,
 			environment: env,

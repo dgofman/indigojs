@@ -7,18 +7,15 @@ var debug = require('debug')('indigo:main'),
 	routers, errorHandler;
 
 var reqModel, http,
-	webdir, portNumber,
-	logger, locales;
+	webdir, logger, locales;
 
 /**
  * indigoJS is the simplest localization and templating framework running on node platform.
  *
  * indigoJS is a flexible library, allowing multiple configurations from 
  * the JSON file. By default indigoJS assigns a server port number from a system environment
- * <code>process.env.PORT</code> if this varible is not defined on the host server, indigoJS reads
- * the server properties from the JSON file. In case we would like to force, always start server on the port
- * defined in the <code>app.json</code> we should assign true value to the <code>force</code> property, by
- * default this field is ommited. 
+ * <code>process.env.INDIGO_PORT</code> if this varible is not defined on the host server, indigoJS reads
+ * the server properties from the JSON file. 
  *
  * The <code>cache</code> property sets the header cache value for static files (in the seconds). 
  * By assigning it to zero it will prevent browser from caching.
@@ -34,7 +31,6 @@ var reqModel, http,
  *{
  *	"server": {
  *		"port": 8585,
- *		"force": true,
  *		"cache": 86400,
  *		"webdir": "/examples/account/web",
  *		...
@@ -141,10 +137,7 @@ var indigo =
 			});
 		}
 
-		portNumber = process.env.PORT || appconf.get('server:port');
-		if (appconf.get('server:force')) {
-			portNumber = appconf.get('server:port');
-		}
+		this.portNumber = Number(process.env.INDIGO_PORT || appconf.get('server:port'));
 
 		locales.config(appconf); //initialize locales
 
@@ -254,8 +247,8 @@ var indigo =
 			before(http, app);
 		}
 
-		http.listen(Number(portNumber), function() {
-			logger.info('Server is running on port %s', portNumber);
+		http.listen(indigo.portNumber, function() {
+			logger.info('Server is running on port %s', indigo.portNumber);
 			if (after) {
 				after(http, app);
 			}

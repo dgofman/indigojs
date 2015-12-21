@@ -3,7 +3,6 @@
 
 	"server": {
 		"port": 8787,
-		"force": true,
 		"webdir": "/examples/firststep/web"
 	},
 

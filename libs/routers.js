@@ -1,6 +1,7 @@
 'use strict';
 
-var debug = require('debug')('indigo:routers'),
+var indigo = global.__indigo,
+	debug = require('debug')('indigo:routers'),
 	express = require('express'),
 	fs = require('fs');
 
@@ -28,30 +29,32 @@ var routers =
 	 *	...
 	 *}
 	 *
-	 * @param {Object} appconf JSON object represents application configuration.
-	 * @param {Object} [reqModel] Reference to {@link libs/reqmodel} object what will be assign to <code>req.model</code> for each router request.
-	 * @param {express} [app] Instance of the application server.
+	 * @param Object appconf JSON object represents application configuration.
 	 * @param {Object} [locales] Reference to <code>/lib/locales</code>.
+	 * @param {Object} [reqModel] Reference to {@link libs/reqmodel} object what will be assign to <code>req.model</code> for each router request.
 	 */
-	init: function(appconf, reqModel, app, locales) {
+	init: function(appconf, locales, reqModel) {
+		var indigo = global.__indigo,
+			app = indigo.app;
+		locales = locales || indigo.locales;
+		reqModel = reqModel || indigo.reqModel;
 
 		this.moduleDir = __appDir + (appconf.get('server:moduleDir') || '');
 		this.moduleWebDir = this.moduleDir + appconf.get('server:webdir');
 
-		var indigo = global.__indigo;
-
-		if (!reqModel) {
-			reqModel = indigo.reqModel;
-		}
-
-		if (!app) {
-			app = indigo.app;
-		}
-
-		locales = locales || indigo.locales;
-
 		// dynamically include routers
-		var routersDir = appconf.get('routers');
+		var routersDir = appconf.get('routers'),
+			requestHook = function(method, router, conf) {
+				return function(path, callback) {
+					router.route(path)
+						.all(function(req, res, next) {
+							debug(req.method, req.url, req.originalUrl);
+							req.moduleWebDir = router.moduleWebDir;
+							reqModel(conf.base, req, res, next);
+						})[method](callback);
+				};
+			};
+
 
 		if (!routersDir) {
 			routersDir =  ['/routers'];
@@ -72,22 +75,11 @@ var routers =
 				enumerable: true
 			});
 
-			var requestHook = function(method) {
-				return function(path, callback) {
-					router.route(path)
-						.all(function(req, res, next) {
-							debug(req.method, req.url, req.originalUrl);
-							req.moduleWebDir = router.moduleWebDir;
-							reqModel(conf.base, req, res, next);
-						})[method](callback);
-				};
-			};
-
-			router.get = requestHook('get');
-			router.post = requestHook('post');
-			router.put = requestHook('put');
-			router.delete = requestHook('delete');
-			router.patch = requestHook('patch');
+			router.get = requestHook('get', router, conf);
+			router.post = requestHook('post', router, conf);
+			router.put = requestHook('put', router, conf);
+			router.delete = requestHook('delete', router, conf);
+			router.patch = requestHook('patch', router, conf);
 
 			conf = routers.routerConf(route(router, app, locales));
 
@@ -246,12 +238,9 @@ routers.loadModule = function(list, callback) {
  */
 function loadModule(dir, file, callback) {
 	try {
-		var module = require(dir + file);
-		if (typeof module === 'function') {
-			return callback(module);
-		}
+		callback(require(dir + file));
 	} catch (e) {
-		console.error('Cannot loading \'%s\' :', dir + file, e);
+		indigo.logger.error('Cannot loading \'%s\' :', dir + file, e);
 	}
 }
 

@@ -108,7 +108,7 @@ var indigo =
 		 * @alias locales
 		 * @type {Object}
 		 */
-		this.locales = locales = require('./libs/locales');
+		this.locales = locales = require('./libs/locales')();
 
 		/**
 		 * Reference to logging API's.
@@ -187,7 +187,7 @@ var indigo =
 			});
 		});
 
-		routers.init(appconf, reqModel, app, locales);
+		this.addRoute(appconf, locales, reqModel);
 
 		/**
 		 * @memberOf sourceloader
@@ -255,6 +255,16 @@ var indigo =
 				after(http, app);
 			}
 		});
+	},
+
+	/**
+	 * Register application routes
+	 * @param {Object} appconf JSON object represents application configuration.
+	 * @param {Object} [locales] Reference to <code>/lib/locales</code>.
+	 * @param {Object} [reqModel] Reference to {@link libs/reqmodel} object what will be assign to <code>req.model</code> for each router request.
+	 */
+	addRoute: function(appconf, locales, reqModel) {
+		routers.init(appconf, locales, reqModel);
 	},
 
 	/**

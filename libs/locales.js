@@ -5,8 +5,7 @@ var indigo = global.__indigo,
 	fs = require('fs'),
 	rules = require('./locales/accept-rules.json'),
 	cjson = require('cjson'),
-	defaultLocale = 'en-us',
-	defLocale, localeMap = {};
+	defaultLocale = 'en-us';
 
 /**
  * This module exposes the locale-determination logic for resource 
@@ -18,100 +17,101 @@ var indigo = global.__indigo,
  * @mixin libs/locales
  * @requires ./locales/accept-rules.json
  */
-var locales = 
+var locales = function() {
 	/** @lends libs/locales.prototype */
-	{
+	return {
 
-	/**
-	 * Collection of localization objects where key points to locale code and value map 
-	 * of key and value of localization messages.
-	 * @type {Object}
-	 */
-	localeMap: localeMap,
+		/**
+		 * Collection of localization objects where key points to locale code and value map 
+		 * of key and value of localization messages.
+		 * @type {Object}
+		 */
+		localeMap: {},
 
-	/**
-	 * Collection of expections during parsering the locale files, where key is file 
-	 * name and value is error object.
-	 * @type {Object}
-	 */
-	errorFiles: {},
+		/**
+		 * Collection of expections during parsering the locale files, where key is file 
+		 * name and value is error object.
+		 * @type {Object}
+		 */
+		errorFiles: {},
 
-	/**
-	 * Default language code 
-	 * @type {String}
-	 */
-	defLocale: {},
+		/**
+		 * Default language code 
+		 * @type {String}
+		 */
+		defaultLocale: defaultLocale,
 
-	/**
-	 * This method executed once reading <code>locales</code> setting defined in appconf.json 
-	 * and building tree of locale messages <code>localeMap</code> at start time.
-	 *
-	 * @example
-	 * conf/app.json 
-	 *{
-	 *	...
-	 *	"locales": {
-	 *		"default": "en-us",
-	 *		"path": "/src/locales"
-	 *	}
-	 *	...
-	 *}
-	 * @param {Object} appconf JSON object represents application configuration.
-	 */
-	config: function(appconf) {
-		this.defLocale = defLocale = appconf.get('locales:default') || defaultLocale;
-		localeMap[defLocale] = { __lookup__: [], __localName__: defLocale };
+		/**
+		 * This method executed once reading <code>locales</code> setting defined in appconf.json 
+		 * and building tree of locale messages <code>localeMap</code> at start time.
+		 *
+		 * @example
+		 * conf/app.json 
+		 *{
+		 *	...
+		 *	"locales": {
+		 *		"default": "en-us",
+		 *		"path": "/src/locales"
+		 *	}
+		 *	...
+		 *}
+		 * @param {Object} appconf JSON object represents application configuration.
+		 */
+		config: function(appconf) {
+			this.defaultLocale = appconf.get('locales:default') || defaultLocale;
+			this.localeMap[this.defaultLocale] = { __lookup__: [], __localName__: this.defaultLocale };
 
-		var localeDir = __appDir + (appconf.get('server:moduleDir') || '') + appconf.get('locales:path');
-		if (fs.existsSync(localeDir)) {
-			var dirs = fs.readdirSync(localeDir);
-			for (var d in dirs) {
-				var localeName = dirs[d];
-				if (fs.lstatSync(localeDir + '/' + localeName).isDirectory()) {
-					localeMap[localeName] = { __lookup__: [], __localName__:localeName };
-					this.parse(localeDir + '/' + localeName, localeMap[localeName]);
+			var localeDir = __appDir + (appconf.get('server:moduleDir') || '') + appconf.get('locales:path');
+			if (fs.existsSync(localeDir)) {
+				var dirs = fs.readdirSync(localeDir);
+				for (var d in dirs) {
+					var localeName = dirs[d];
+					if (fs.lstatSync(localeDir + '/' + localeName).isDirectory()) {
+						this.localeMap[localeName] = { __lookup__: [], __localName__:localeName };
+						this.parse(localeDir + '/' + localeName, this.localeMap[localeName]);
+					}
 				}
 			}
-		}
 
-		localelookup(localeDir, appconf);
-	},
+			localelookup(localeDir, this);
+		},
 
-	/**
-	 * Loading locale files and building locales object.
-	 *
-	 * @param {String} dirName Absolute path to json files.
-	 * @param {Object} parent Locales properties.
-	 */
-	parse: function(dirName, parent) {
-		var files = fs.readdirSync(dirName);
-		for (var f in files) {
-			var file = files[f],
-				arr = file.split('.');
-			if (arr.length > 1 && arr[1] === 'json') {
-				try {
-					parent[arr[0]] = cjson.load(dirName + '/' + file);
-				} catch (e) {
-					this.errorFiles[dirName + '/' + file] = e;
-					indigo.logger.error('FILE: %s, ERROR: %s', dirName + '/' + file, e.toString());
+		/**
+		 * Loading locale files and building locales object.
+		 *
+		 * @param {String} dirName Absolute path to json files.
+		 * @param {Object} parent Locales properties.
+		 */
+		parse: function(dirName, parent) {
+			var files = fs.readdirSync(dirName);
+			for (var f in files) {
+				var file = files[f],
+					arr = file.split('.');
+				if (arr.length > 1 && arr[1] === 'json') {
+					try {
+						parent[arr[0]] = cjson.load(dirName + '/' + file);
+					} catch (e) {
+						this.errorFiles[dirName + '/' + file] = e;
+						indigo.logger.error('FILE: %s, ERROR: %s', dirName + '/' + file, e.toString());
+					}
+				} else if (fs.lstatSync(dirName + '/' + file).isDirectory()) {
+					parent[file] = {};
+					this.parse(dirName + '/' + file, parent[file]);
 				}
-			} else if (fs.lstatSync(dirName + '/' + file).isDirectory()) {
-				parent[file] = {};
-				this.parse(dirName + '/' + file, parent[file]);
 			}
-		}
-	},
+		},
 
-	/**
-	 * Initializing current user locale and returning locallization map of localized messages.
-	 * @param {express.Request} req Defines an object to provide client request information.
-	 * @param {String} [locale] User language code.
-	 * @return {Object} locale Collection of localization messages.
-	 */
-	init: function(req, locale) {
-		setLocale(req, locale);
-		return localeMap[req.session.locale];
-	}
+		/**
+		 * Initializing current user locale and returning locallization map of localized messages.
+		 * @param {express.Request} req Defines an object to provide client request information.
+		 * @param {String} [locale] User language code.
+		 * @return {Object} locale Collection of localization messages.
+		 */
+		init: function(req, locale) {
+			setLocale(req, locale, this);
+			return this.localeMap[req.session.locale];
+		}
+	};
 };
 
 /**
@@ -121,10 +121,10 @@ var locales =
  * @param {String} [locale] User language code.
  * @access protected
  */
-function setLocale(req, locale) {
+function setLocale(req, locale, locales) {
 	req.session.locale = locale || req.session.locale;
 
-	if (!localeMap[req.session.locale]) {
+	if (!locales.localeMap[req.session.locale]) {
 		debug('sessionID=%', req.sessionID);
 		if (req.headers && req.headers['accept-language']) {
 			var split = req.headers['accept-language'].split(';'); // en-us,en-au;q=0.8,en;q=0.5,ru;q=0.3
@@ -132,15 +132,15 @@ function setLocale(req, locale) {
 				var languages = split[value].split(',');
 				for (var name in languages) {
 					locale = languages[name].toLowerCase();
-					if (locale.indexOf('q=') === -1 && localeMap[locale]) {
-						return saveToSession(req, locale);
+					if (locale.indexOf('q=') === -1 && locales.localeMap[locale]) {
+						return saveToSession(req, locales, locale);
 					}
 				}
 			}
 		}
-		saveToSession(req, defLocale);
+		saveToSession(req, locales, locales.defaultLocale);
 	} else {
-		saveToSession(req, req.session.locale);
+		saveToSession(req, locales, req.session.locale);
 	}
 }
 
@@ -151,12 +151,12 @@ function setLocale(req, locale) {
  * @param {String} locale User language code.
  * @access protected
  */
-function saveToSession(req, locale) {
+function saveToSession(req, locales, locale) {
 	req.session.locale = locale;
-	req.session.localeLookup = localeMap[locale].__lookup__.concat('default');
+	req.session.localeLookup = locales.localeMap[locale].__lookup__.concat('default');
 	if (req.model) {
 		req.model.locality.locale = locale;
-		req.model.locality.langugage = localeMap[locale].__localName__;
+		req.model.locality.langugage = locales.localeMap[locale].__localName__;
 	}
 }
 
@@ -166,7 +166,7 @@ function saveToSession(req, locale) {
  * @param {String} localeDir Absolute path to <code>locale</code> directory.
  * @access protected
  */
-function localelookup(localeDir) {
+function localelookup(localeDir, locales) {
 	var file = localeDir + '/accept-rules.json';
 	if (fs.existsSync(file)) {
 		var customRules = cjson.load(file);
@@ -176,7 +176,7 @@ function localelookup(localeDir) {
 	}
 
 	var traverse = function(code) {
-		var target = localeMap[code] = localeMap[code] || { __lookup__: [], __localName__:code };
+		var target = locales.localeMap[code] = locales.localeMap[code] || { __lookup__: [], __localName__:code };
 
 		var lookup = rules[code];
 		for (var index in lookup) {
@@ -189,7 +189,7 @@ function localelookup(localeDir) {
 		for (index in lookup) {
 			locale = lookup[index];
 			
-			var source = localeMap[locale],
+			var source = locales.localeMap[locale],
 				sourceLocale = true;
 
 			if (!source) {

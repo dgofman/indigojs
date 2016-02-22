@@ -2,7 +2,6 @@
 
 var debug = require('debug')('indigo:test'),
 	indigo = require('../../../indigo'),
-	locales = require('../../../libs/locales'),
 	assert = require('assert');
 
 describe('libs/errorHandler', function () {
@@ -197,7 +196,7 @@ describe('libs/errorHandler', function () {
 		var errorCode = 400,
 			errorKey = 'invalidAccount',
 			locale = 'en-us',
-			errors = locales.localeMap[locale].errors,
+			errors = indigo.locales.localeMap[locale].errors,
 			req = {
 				session: {
 					locale: locale
@@ -221,7 +220,7 @@ describe('libs/errorHandler', function () {
 		var errorCode = 400,
 			errorKey = 'invalidAccount',
 			locale = 'en-us',
-			errors = locales.localeMap[locale].errors,
+			errors = indigo.locales.localeMap[locale].errors,
 			req = {
 				session: {
 					locale: locale
@@ -232,12 +231,12 @@ describe('libs/errorHandler', function () {
 					return res;
 				},
 				json: function(model) {
-					locales.localeMap[locale].errors = errors;
+					indigo.locales.localeMap[locale].errors = errors;
 					assert.equal(model.error, errorKey);
 					done();
 				}
 			};
-		locales.localeMap[locale].errors = null;
+		indigo.locales.localeMap[locale].errors = null;
 		indigo.errorHandler.json(req, res, errorKey);
 	});
 
@@ -245,7 +244,7 @@ describe('libs/errorHandler', function () {
 		var errorCode = 500,
 			errorKey = 'invalidAccount',
 			locale = 'ru',
-			errors = locales.localeMap[locale].errors,
+			errors = indigo.locales.localeMap[locale].errors,
 			req = {
 				session: {
 					locale: locale

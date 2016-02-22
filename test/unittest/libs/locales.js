@@ -1,6 +1,6 @@
 'use strict';
 
-var locales = require('../../../libs/locales'),
+var locales = require('../../../libs/locales')(),
 	fs = require('fs'),
 	indigo = require('../../../indigo'),
 	assert = require('assert');

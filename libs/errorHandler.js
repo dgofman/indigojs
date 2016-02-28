@@ -60,7 +60,7 @@ var errorHandler = function() {
 				if (url && url.length > 0){
 					res.redirect(url);
 				} else {
-					res.status(model.code).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), req.model);
+					res.render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), req.model);
 				}
 				return model;
 			}

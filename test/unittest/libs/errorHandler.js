@@ -22,8 +22,8 @@ describe('libs/errorHandler', function () {
 
 	it('should validate err is null', function (done) {
 		indigo.error(null, null, {
-			status: function(code) {
-				assert.equal(code, 400);
+			status: function(statusCode) {
+				assert.equal(statusCode, 400);
 				return {
 					json: function(error) {
 						assert.equal(error, null);
@@ -40,11 +40,11 @@ describe('libs/errorHandler', function () {
 			}, 
 			{
 			statusCode: 404,
-			status: function(code) {
-				assert.equal(code, 404);
+			status: function(statusCode) {
+				assert.equal(statusCode, 404);
 				return {
 					render: function(url, model) {
-						assert.equal(model.error.code, 404);
+						assert.equal(model.error.statusCode, 404);
 						assert.equal(model.error.message, 'Not Found');
 						assert.equal(model.error.details, 'The requested URL was not found on this server: <code>/foo.html</code>');
 						done();
@@ -59,11 +59,11 @@ describe('libs/errorHandler', function () {
 				url: '/foo.html'
 			}, {
 			statusCode: 500,
-			status: function(code) {
-				assert.equal(code, 500);
+			status: function(statusCode) {
+				assert.equal(statusCode, 500);
 				return {
 					render: function(url, model) {
-						assert.equal(model.error.code, 500);
+						assert.equal(model.error.statusCode, 500);
 						assert.equal(model.error.message, 'Internal Server Error');
 						assert.equal(model.error.details, 'The server encountered an unexpected condition.');
 						done();
@@ -78,11 +78,11 @@ describe('libs/errorHandler', function () {
 				url: '/foo.html'
 			}, {
 			statusCode: 503,
-			status: function(code) {
-				assert.equal(code, 503);
+			status: function(statusCode) {
+				assert.equal(statusCode, 503);
 				return {
 					render: function(url, model) {
-						assert.equal(model.error.code, 503);
+						assert.equal(model.error.statusCode, 503);
 						assert.equal(model.error.message, 'Service Unavailable');
 						assert.equal(model.error.details, 'Connection refuse.');
 						done();
@@ -98,11 +98,11 @@ describe('libs/errorHandler', function () {
 				url: '/foo.html'
 			}, {
 			statusCode: 911,
-			status: function(code) {
-				assert.equal(code, 911);
+			status: function(statusCode) {
+				assert.equal(statusCode, 911);
 				return {
 					render: function(url, model) {
-						assert.equal(model.error.code, 911);
+						assert.equal(model.error.statusCode, 911);
 						assert.equal(model.error.message, 'IDGJS_ERROR_911');
 						assert.equal(model.error.details, 'Please contact your system administrator.');
 						done();
@@ -138,19 +138,13 @@ describe('libs/errorHandler', function () {
 	});
 
 	it('should test custom model (req.errorModel)', function (done) {
-		var loggerFn = indigo.logger.error,
-			loggerOutput = null,
-			error_model = {
+		var error_model = {
 				id: Date.now(),
-				code: 1234,
+				statusCode: 1234,
 				message: 'CUSTOM ERROR',
 				details: 'This is my custom error'
 			};
 		indigo.errorHandler.setErrorDetails(error_model, 'MY_ERROR_ID', defaultError);
-
-		indigo.logger.error = function(msg) {
-			loggerOutput = msg;
-		};
 
 		indigo.errorHandler.render(defaultError, {
 				model: {
@@ -158,19 +152,16 @@ describe('libs/errorHandler', function () {
 				}
 			}, 
 			{
-				status: function(code) {
-					assert.equal(code, error_model.code);
+				status: function(statusCode) {
+					assert.equal(statusCode, error_model.statusCode);
 					return {
 						render: function(url, model) {
 							assert.ok(url.indexOf('/indigojs/examples/templates/errors.html') !== -1);
 							assert.equal(model.errorModel.uid, error_model.uid);
-							assert.equal(model.errorModel.log_msg, loggerOutput);
 							assert.equal(model.errorModel.error, JSON.stringify(defaultError));
-							assert.equal(model.errorModel.code, error_model.code);
+							assert.equal(model.errorModel.statusCode, error_model.statusCode);
 							assert.equal(model.errorModel.message, error_model.message);
 							assert.equal(model.errorModel.details, error_model.details);
-
-							indigo.logger.error = loggerFn;
 							done();
 						}
 					};

@@ -47,20 +47,20 @@ var errorHandler = function() {
 				if (!model) {
 					req.model.errorModel = model = this.getErrorModel(err, req, res),
 					this.setErrorDetails(model, err.errorCode, err, err.errorMessage);
+
+					if (!req.headers || req.headers['error_verbose'] !== 'false') {
+						indigo.logger.error(model.log_msg);
+					}
 				}
 
 				var appconf = indigo.appconf,
 					template = appconf.get('errors:template'),
-					url = appconf.get('errors:' + model.code);
-
-				if (!req.headers || req.headers['error_verbose'] !== 'false') {
-					indigo.logger.error(model.log_msg);
-				}
-
+					url = appconf.get('errors:' + model.statusCode);
+				
 				if (url && url.length > 0){
 					res.redirect(url);
 				} else {
-					res.render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), req.model);
+					res.status(model.statusCode).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), req.model);
 				}
 				return model;
 			}
@@ -76,25 +76,24 @@ var errorHandler = function() {
 		 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
 		 */
 		getErrorModel: function(err, req, res) {
-			var model = req.model.error = {},
-				code = err.statusCode || res.statusCode;
+			var model = req.model.error = {};
 
-			model.code = code;
+			model.statusCode = err.statusCode || res.statusCode;
 			model.date = new Date();
 			model.uid = model.date.getTime();
 			model.url = req.originalUrl || req.url;
 
-			if (model.code === 404) {
+			if (model.statusCode === 404) {
 				model.message = 'Not Found';
 				model.details = 'The requested URL was not found on this server: <code>' + req.url + '</code>';
-			} else if (model.code === 500) {
+			} else if (model.statusCode === 500) {
 				model.message = 'Internal Server Error';
 				model.details = 'The server encountered an unexpected condition.';
-			} else if (model.code === 503) {
+			} else if (model.statusCode === 503) {
 				model.message = 'Service Unavailable';
 				model.details = 'Connection refuse.';
 			} else {
-				model.message = 'IDGJS_ERROR_' + model.code;
+				model.message = 'IDGJS_ERROR_' + model.statusCode;
 				model.details = 'Please contact your system administrator.';
 			}
 

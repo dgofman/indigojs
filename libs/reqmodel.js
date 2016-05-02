@@ -78,7 +78,8 @@ function reqmodel(appconf) {
 			extLESS: env === 'dev' ? '.less' : '.css',
 			locality: {},
 			locales: {},
-			contextPath: contextPath || req.baseUrl
+			contextPath: contextPath || req.baseUrl,
+			__initialized__: Date.now()
 		};
 
 		next();

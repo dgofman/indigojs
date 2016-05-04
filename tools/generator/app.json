@@ -9,7 +9,8 @@
 
 	"locales": {
 		"default": "en",
-		"path": "{{locales}}"
+		"path": "{{locales}}",
+		"monitor": 0 /* check file changes in seconds, 0 - no monitoring */
 	},
 
 	"routers": [

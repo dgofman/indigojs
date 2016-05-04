@@ -42,6 +42,12 @@ var locales = function() {
 		defaultLocale: defaultLocale,
 
 		/**
+		 * Map of locale files modified dates
+		 * @type {Object}
+		 */
+		lastModified: {},
+
+		/**
 		 * This method executed once reading <code>locales</code> setting defined in appconf.json 
 		 * and building tree of locale messages <code>localeMap</code> at start time.
 		 *
@@ -59,6 +65,9 @@ var locales = function() {
 		 */
 		config: function(appconf) {
 			this.defaultLocale = appconf.get('locales:default') || defaultLocale;
+			this.lastModified = {};
+			this.errorFiles = {};
+			this.localeMap = {};
 			this.localeMap[this.defaultLocale] = { __lookup__: [], __localName__: this.defaultLocale };
 
 			var localeDir = __appDir + (appconf.get('server:moduleDir') || '') + appconf.get('locales:path');
@@ -87,16 +96,18 @@ var locales = function() {
 			for (var f in files) {
 				var file = files[f],
 					arr = file.split('.');
+				file = dirName + '/' + file;
 				if (arr.length > 1 && arr[1] === 'json') {
 					try {
-						parent[arr[0]] = cjson.load(dirName + '/' + file);
+						parent[arr[0]] = cjson.load(file);
+						this.lastModified[file] = fs.lstatSync(file).mtime;
 					} catch (e) {
-						this.errorFiles[dirName + '/' + file] = e;
-						indigo.logger.error('FILE: %s, ERROR: %s', dirName + '/' + file, e.toString());
+						this.errorFiles[file] = e;
+						indigo.logger.error('FILE: %s, ERROR: %s', file, e.toString());
 					}
-				} else if (fs.lstatSync(dirName + '/' + file).isDirectory()) {
+				} else if (fs.lstatSync(file).isDirectory()) {
 					parent[file] = {};
-					this.parse(dirName + '/' + file, parent[file]);
+					this.parse(file, parent[file]);
 				}
 			}
 		},
@@ -110,6 +121,29 @@ var locales = function() {
 		init: function(req, locale) {
 			setLocale(req, locale, this);
 			return this.localeMap[req.session.locale];
+		},
+
+		/**
+		 * Monitor changes in locale file.
+		 * @param {Object} appconf JSON object represents application configuration.
+		 */
+		monitor: function(appconf) {
+			var seconds = appconf.get('locales:monitor');
+			if (!seconds) {
+				return;
+			}
+
+			var self = this;
+			clearInterval(self.lastModifiedInterval);
+			self.lastModifiedInterval = setInterval(function() {
+				for (var file in self.lastModified) {
+					if (self.lastModified[file].getTime() !== fs.lstatSync(file).mtime.getTime()) {
+						indigo.logger.info('File updated: ' + file);
+						self.config(appconf);
+						return;
+					}
+				}
+			}, seconds * 1000);
 		}
 	};
 };

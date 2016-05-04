@@ -6,5 +6,6 @@
 	"password": "Password",
 	"resetpwd": "Reset Password",
 	"resettitle": "Reset Password",
-	"greeting": "Hello"
+	"greeting": "Hello",
+	"powered": "Powered By {0}"
 }

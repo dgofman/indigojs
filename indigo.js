@@ -142,6 +142,7 @@ var indigo =
 		this.portNumber = Number(process.env.INDIGO_PORT || appconf.get('server:port'));
 
 		locales.config(appconf); //initialize locales
+		locales.monitor(appconf); //check file changes
 
 		return appconf;
 	},

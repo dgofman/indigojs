@@ -37,4 +37,15 @@ describe('libs/locales', function () {
 		assert.equal(req.session.locale, 'en-us');
 		done();
 	});
+
+	it('should test locales monitor', function (done) {
+		appconf.locales.monitor = .1;
+		locales.config(appconf);
+		for (var file in locales.lastModified) {
+			locales.lastModified[file] = new Date();
+			break;
+		}
+		locales.monitor(appconf);
+		setTimeout(done, 500);
+	});
 });

@@ -32,7 +32,8 @@
 
 	"locales": {
 		"default": "en-us",
-		"path": "/examples/account/locales"
+		"path": "/examples/account/locales",
+		"monitor": 3 /* check file changes in seconds, 0 - no monitoring */
 	},
 
 	"routers": [

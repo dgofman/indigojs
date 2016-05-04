@@ -96,8 +96,8 @@ var locales = function() {
 			for (var f in files) {
 				var file = files[f],
 					arr = file.split('.');
-				file = dirName + '/' + file;
 				if (arr.length > 1 && arr[1] === 'json') {
+					file = dirName + '/' + file;
 					try {
 						parent[arr[0]] = cjson.load(file);
 						this.lastModified[file] = fs.lstatSync(file).mtime;
@@ -105,9 +105,9 @@ var locales = function() {
 						this.errorFiles[file] = e;
 						indigo.logger.error('FILE: %s, ERROR: %s', file, e.toString());
 					}
-				} else if (fs.lstatSync(file).isDirectory()) {
+				} else if (fs.lstatSync(dirName + '/' + file).isDirectory()) {
 					parent[file] = {};
-					this.parse(file, parent[file]);
+					this.parse(dirName + '/' + file, parent[file]);
 				}
 			}
 		},

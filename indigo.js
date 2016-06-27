@@ -200,6 +200,8 @@ var indigo =
 			debug('inject: %s -> %s', url, newUrl);
 			try {
 				req.model.filename = getModuleWebDir(req) + newUrl;
+				req.model.locale = app.locals.locale;
+				req.model.inject = app.locals.inject;
 				return ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
 			} catch(err) {
 				return errorHandler.injectErrorHandler(err, req, url).message;

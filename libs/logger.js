@@ -1,6 +1,6 @@
 'use strict';
 
-var pine = require('pine');
+var winston = require('winston');
 
 /**
  * This module including default a logger class is used to log messages for a specific system.
@@ -8,7 +8,7 @@ var pine = require('pine');
  * From application configuration file can may provide path to another logger source module.
  * 
  * @see {@link libs/locales.js libs/logger}
- * @see {@link https://www.npmjs.com/package/pine}
+ * @see {@link https://www.npmjs.com/package/winston}
  *
  * @example
  * conf/app.json 
@@ -26,24 +26,31 @@ var pine = require('pine');
  * @module
  * @mixin libs/logger
  * @param {Object} appconf An application configuration.
- * @return {pine} pine Reference to <code>pine</code> library.
+ * @return {winston} winston Reference to <code>winston</code> library.
  *
- * @requires pine
  */
+
 function logger(appconf) {
-	var log = pine(':', {
-		transports: {
-			console: {
-				level: appconf.get('logger:level')
-			}
-		}
+	var log = new (winston.Logger)({
+		levels: winston.config.npm.levels,
+		colors: winston.config.npm.colors,
+
+		transports: [
+			new (winston.transports.Console)({
+				level : appconf.get('logger:level') || 'debug',
+				colorize: true
+			})
+		]
 	});
 
-	for (var name in log._impl) {
-		if (typeof log._impl[name] === 'function') {
-			logger[name] = log._impl[name];
-		}
-	}
+
+	log.setLevel = function(level) {
+		log.transports.console.level = level;
+	};
+
+	log.getLevel = function() {
+		return log.transports.console.level;
+	};
 
 	return log;
 }

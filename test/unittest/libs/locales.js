@@ -39,7 +39,7 @@ describe('libs/locales', function () {
 	});
 
 	it('should test locales monitor', function (done) {
-		appconf.locales.monitor = .1;
+		appconf.locales.monitor = 0.1;
 		locales.config(appconf);
 		for (var file in locales.lastModified) {
 			locales.lastModified[file] = new Date();

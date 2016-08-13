@@ -43,26 +43,31 @@ var errorHandler = function() {
 			if (err && req) {
 				req.model = req.model || {};
 
-				var model = req.model.errorModel;
-				if (!model) {
-					req.model.errorModel = model = this.getErrorModel(err, req, res),
-					this.setErrorDetails(model, err.errorCode, err, err.errorMessage);
+				indigo.reqModel(null, req, res, function() {});
+
+				var self = this;
+				if (!req.model.errorModel) {
+					req.model.errorModel = self.getErrorModel(err, req, res),
+					self.setErrorDetails(req.model.errorModel, err.errorCode, err, err.errorMessage);
 
 					if (!req.headers || req.headers['error_verbose'] !== 'false') {
-						indigo.logger.error(model.log_msg);
+						indigo.logger.error(req.model.errorModel.log_msg);
 					}
 				}
 
 				var appconf = indigo.appconf,
 					template = appconf.get('errors:template'),
-					url = appconf.get('errors:' + model.statusCode);
-				
-				if (url && url.length > 0){
-					res.redirect(url);
+					url = appconf.get('errors:' + req.model.errorModel.statusCode);
+				if (!res._headerSent) {
+					if (url && url.length > 0){
+						res.redirect(url);
+					} else {
+						res.status(req.model.errorModel.statusCode).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), req.model);
+					}
 				} else {
-					res.status(model.statusCode).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), req.model);
+					next();
 				}
-				return model;
+				return req.model;
 			}
 			next();
 		},
@@ -76,7 +81,7 @@ var errorHandler = function() {
 		 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
 		 */
 		getErrorModel: function(err, req, res) {
-			var model = req.model.error = {};
+			var model = req.model.errorModel = {};
 
 			model.statusCode = err.statusCode || res.statusCode;
 			model.date = new Date();

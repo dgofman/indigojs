@@ -69,7 +69,7 @@ function reqmodel(appconf) {
 	minify = env === 'dev' ? '' : '.min';
 
 	return function(contextPath, req, res, next) {
-		req.model = {
+		req.model = req.model || {
 			req: req,
 			environment: env,
 			minify: minify,

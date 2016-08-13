@@ -76,6 +76,16 @@ npm start
 ./web/en
 ```
 
+### Deployment
+
+```
+npm install
+
+npm run-script jshint
+
+grunt
+```
+
 ### Plugins
 
 - [Localization Tool](https://www.npmjs.com/package/indigo-locale)

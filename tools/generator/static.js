@@ -7,7 +7,7 @@ var indigo = global.__indigo,
 
 module.exports = function(router, app) {
 
-	var base = '/static',
+	var base = indigo.getStaticDir(),
 		path = '^' + base;
 
 	app.use(path + '/css/*(.css)$', function(req, res) {

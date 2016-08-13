@@ -1,7 +1,7 @@
 'use strict';
 
 require.config({
-	baseUrl: '/static/js',
+	baseUrl: window.__baseStaticPath__ + '/js',
 
 	paths: {
 		jquery: 'vendor/jquery-2.1.1.min',
@@ -16,7 +16,7 @@ require.config({
 });
 
 require([
-	'views/view',
+	'views/view.min',
 	'bootstrap'
 ], function(view){
 	view.initialize();

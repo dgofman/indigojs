@@ -4,6 +4,7 @@
 	"server": {
 		"port": {{port}},
 		"webdir": "{{webdir}}",
+		"staticDir": "{{static}}", /* path to the web/static directory */
 		"cache": 3600 /* seconds, 0 - no-cache */
 	},
 

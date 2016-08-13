@@ -176,6 +176,8 @@ var indigo =
 
 		this.static('/', webdir);
 
+		this.static(this.getStaticDir(), webdir + '/static');
+
 		//http://localhost:8585/indigo/account/en/templates/login
 		app.use('/indigo/:routerPath/:locale/templates/:pageId', function(req, res) {
 			reqModel(null, req, res, function() {
@@ -361,6 +363,29 @@ var indigo =
 	 */
 	getWebDir: function() {
 		return webdir;
+	},
+
+	/**
+	 * Return path to web/static directory defined in app.conf file.
+	 * @return {String} Web path to static directory.
+	 */
+	getStaticDir: function() {
+		return this.appconf.get('server:staticDir') || '/static';
+	},
+
+	/**
+	 * Return command line or shell environment variable or package.json config properties
+	 * @param {String} key Pair key.
+	 * @return {String} Pair value.
+	 */
+	getEnv: function(key) {
+		for (var i in process.argv) {
+			var pair = process.argv[i].split('=');
+			if (pair.length === 2 && pair[0] === key) {
+				return pair[1];
+			}
+		}
+		return process.env[key] || process.env['npm_package_config_' + key];
 	},
 
 	/**

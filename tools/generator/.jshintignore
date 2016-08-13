@@ -1,0 +1,4 @@
+node_modules
+coverage
+{{webdir}}/static/js/vendor
+{{webdir}}/static/js/**/*.min.js

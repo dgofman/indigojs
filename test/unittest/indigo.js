@@ -176,6 +176,26 @@ describe('UnitTests Indigo APIs', function () {
 		assert.equal(errorHandler, indigo.libs('errorHandler'));
 		done();
 	});
+
+	it('should test get package.json config properties', function (done) {
+		assert.equal(indigo.getEnv('INDOGO_DEBUG'), 'true');
+		done();
+	});
+
+	it('should test get env variable', function (done) {
+		assert.equal(indigo.getEnv('CUSTOM_VAR'), undefined);
+		process.env['CUSTOM_VAR'] = 'TEST';
+		assert.equal(indigo.getEnv('CUSTOM_VAR'), 'TEST');
+		done();
+	});
+
+	it('should test get command line arguments', function (done) {
+		process.env['CUSTOM_VAR'] = 'TEST1';
+		assert.equal(indigo.getEnv('CUSTOM_VAR'), 'TEST1');
+		process.argv.push('CUSTOM_VAR=TEST2');
+		assert.equal(indigo.getEnv('CUSTOM_VAR'), 'TEST2');
+		done();
+	});
 });
 
 function fixPath(path) {

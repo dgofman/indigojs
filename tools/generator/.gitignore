@@ -6,7 +6,7 @@ npm-debug.log
 logs
 coverage
 tmp
-dist
+{{webdir}}/static/js/**/*.min.js
 
 # OS generated files #
 ######################

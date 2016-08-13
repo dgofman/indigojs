@@ -8,7 +8,11 @@
 
 <title><%= locales.common.pageTitle %></title>
 
-<link rel="stylesheet" media="screen" href="/static/css/bootstrap<%= extCSS %>">
-<link rel="stylesheet" type="text/css" href="/static/css/common<%= extLESS %>">
+<link rel="stylesheet" media="screen" href="<%- baseStaticPath %>/css/bootstrap<%= extCSS %>">
+<link rel="stylesheet" type="text/css" href="<%- baseStaticPath %>/css/common<%= extLESS %>">
 
-<script src="/static/js/vendor/require-2.1.15<%= extJS %>" data-main="/static/js/main-<%= environment %>"></script>
+<script>
+	window.__baseStaticPath__ = '<%- baseStaticPath %>';
+</script>
+
+<script src="<%- baseStaticPath %>/js/vendor/require-2.1.15<%= extJS %>" data-main="<%- baseStaticPath %>/js/main-<%= environment %>"></script>

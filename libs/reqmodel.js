@@ -59,7 +59,8 @@
 
 function reqmodel(appconf) {
 
-	var minify, env = appconf.get('environment');
+	var minify, env = appconf.get('environment'),
+		staticDir =  global.__indigo.getStaticDir();
 
 	if ((process.env.NODE_ENV || '').trim() === 'production') {
 		env = 'prod';
@@ -79,6 +80,8 @@ function reqmodel(appconf) {
 			locality: {},
 			locales: {},
 			contextPath: contextPath || req.baseUrl,
+			baseStaticPath: staticDir,
+			
 			__initialized__: Date.now()
 		};
 

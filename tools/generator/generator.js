@@ -46,7 +46,7 @@ var stdio = require('stdio'),
 	lines = fs.readFileSync(__dirname + '/.jshintrc', 'utf-8');
 	createFile(dir, '/.jshintrc', lines);
 
-	lines = fs.readFileSync(__dirname + '/.gitignore', 'utf-8');
+	lines = fs.readFileSync(__dirname + '/gitignore', 'utf-8');
 	createFile(dir, '/.gitignore', lines).replace(/{{webdir}}/g, webdir);
 	
 	lines = fs.readFileSync(__dirname + '/.jshintignore', 'utf-8').replace(/{{webdir}}/g, webdir);

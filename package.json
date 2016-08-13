@@ -40,7 +40,7 @@
     "proxy-orchestrator": "~0.0.13"
   },
   "devDependencies": {
-    "mocha": "~2.5.3",
+    "mocha": "~3.0.2",
     "superagent": "~2.1.0",
     "istanbul": "~0.4.4",
     "jshint": "~2.9.2",

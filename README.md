@@ -49,7 +49,7 @@
 ###### 6. Download dependency modules
 
 ```
- npm install
+npm install --production
 ```
 
 ###### 7. Start your server

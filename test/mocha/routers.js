@@ -53,4 +53,13 @@ describe('Testing Account Routers', function () {
 				done();
 		});
 	});
+
+	it('should test router use on error', function(done){
+		superagent.get('http://localhost:' + port + '/account?ROUTER_ERROR=true')
+			.end(function(err, res) {
+				assert.equal(res.statusCode, 503);
+				assert.equal(err.status, 503);
+				done();
+		});
+	});
 });

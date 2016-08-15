@@ -1,6 +1,7 @@
 'use strict';
 
-var indigo = global.__indigo;
+var indigo = global.__indigo,
+	instance;
 
 /**
  * This is the default expection handler module assigned for each router and reporting an error 
@@ -38,14 +39,13 @@ var indigo = global.__indigo;
  */
 var errorHandler = function() {
 
-	return {
+	return instance = {
 		render: function(err, req, res, next) {
 			if (err && req) {
-				req.model = req.model || {};
 
 				indigo.reqModel(null, req, res, function() {});
 
-				var self = this;
+				var self = this || instance;
 				if (!req.model.errorModel) {
 					req.model.errorModel = self.getErrorModel(err, req, res),
 					self.setErrorDetails(req.model.errorModel, err.errorCode, err, err.errorMessage);

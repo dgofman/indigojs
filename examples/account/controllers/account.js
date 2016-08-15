@@ -26,4 +26,13 @@ module.exports = function(router) {
 		}
 		indigo.errorHandler.json(req, res, 'invalidAccount');
 	});
+
+	router.use(function(req, res, next) {
+		if (req.query.ROUTER_ERROR) {
+			res.status(503);
+			next({error: true});
+		} else {
+			next();
+		}
+	});
 };

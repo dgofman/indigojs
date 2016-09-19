@@ -4,7 +4,7 @@ require.config({
 	baseUrl: window.__baseStaticPath__ + '/js',
 
 	paths: {
-		jquery: 'vendor/jquery-2.1.1',
+		jquery: 'vendor/jquery-3.1.0',
 		bootstrap: 'vendor/bootstrap-3.3.2'
 	},
 

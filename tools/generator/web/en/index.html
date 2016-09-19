@@ -4,13 +4,12 @@
 <%- inject(req, 'templates/head.html') %>
 </head>
 <body>
+	<div class="container">
+		<%- inject(req, 'templates/header.html') %>
 
-	<div class="wrapper">
-		<div class="container">
-			<% include content.html %>
-		</div>
+		<% include content.html %>
+
+		<%- inject(req, 'templates/footer.html') %>
 	</div>
-
-	<%- inject(req, 'templates/footer.html') %>
 </body>
 </html>

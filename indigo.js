@@ -178,18 +178,6 @@ var indigo =
 
 		this.static(this.getStaticDir(), webdir + '/static');
 
-		//http://localhost:8585/indigo/account/en/templates/login
-		app.use('/indigo/:routerPath/:locale/templates/:pageId', function(req, res) {
-			reqModel(null, req, res, function() {
-				locales.init(req, req.params.locale);
-
-				var url = '/' + req.session.locale + '/templates/' + req.params.routerPath + '/' + req.params.pageId + '.html',
-					newUrl = indigo.getNewURL(req, res, url);
-				debug('template: %s -> %s', url, newUrl);
-				res.sendFile(webdir + newUrl);
-			});
-		});
-
 		this.addRoute(appconf, locales, reqModel);
 
 		/**

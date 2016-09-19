@@ -45,15 +45,6 @@ describe('Testing Account Routers', function () {
 		});
 	});
 
-	it('should test template Referer', function(done){
-		superagent.get('http://localhost:' + port + '/indigo/account/ru/templates/login')
-			.end(function(err, res) {
-				assert.equal(res.statusCode, 200);
-				assert.equal(res.headers['referer'], '/default/templates/account/login.html');
-				done();
-		});
-	});
-
 	it('should test router use on error', function(done){
 		superagent.get('http://localhost:' + port + '/account?ROUTER_ERROR=true')
 			.end(function(err, res) {

@@ -1,6 +1,6 @@
 {
   "name": "indigojs",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "IndigoJS is an open source, JavaScript/NodeJS localization framework",
   "main": "indigo.js",
   "config": {
@@ -29,10 +29,10 @@
   "dependencies": {
     "debug": "~2.2.0",
     "express": "~4.14.0",
-    "express-session": "~1.14.0",
+    "express-session": "~1.14.1",
     "body-parser": "~1.15.2",
     "cjson": "~0.4.0",
-    "ejs": "~2.5.1",
+    "ejs": "~2.5.2",
     "querystring": "~0.2.0",
     "stdio": "~0.2.7",
     "fs-extra": "~0.30.0",
@@ -42,8 +42,8 @@
   "devDependencies": {
     "mocha": "~3.0.2",
     "superagent": "~2.2.0",
-    "istanbul": "~0.4.4",
-    "jshint": "~2.9.2",
+    "istanbul": "~0.4.5",
+    "jshint": "~2.9.3",
     "less": "~2.7.1"
   },
   "license": "MIT",

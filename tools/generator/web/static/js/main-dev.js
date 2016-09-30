@@ -12,12 +12,14 @@ require.config({
 		bootstrap: {
 			deps: ['jquery']
 		}
-	}
-});
+	},
 
-require([
-	'views/view',
-	'bootstrap'
-], function(view){
-	view.initialize();
+	callback: function() {
+		require([
+			'views/view',
+			'bootstrap'
+		], function(view){
+			view.initialize();
+		});
+	}
 });

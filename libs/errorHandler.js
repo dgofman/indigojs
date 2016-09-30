@@ -41,6 +41,11 @@ var errorHandler = function() {
 
 	return instance = {
 		render: function(err, req, res, next) {
+			try {
+				indigo.logger.error(JSON.stringify(err, null, 2));
+			} catch (e) {
+				indigo.logger.error(err);
+			}
 			if (err && req) {
 
 				indigo.reqModel(null, req, res, function() {});

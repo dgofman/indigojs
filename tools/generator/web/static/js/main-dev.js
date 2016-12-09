@@ -1,7 +1,7 @@
 'use strict';
 
 require.config({
-	baseUrl: window.__baseStaticPath__ + '/js',
+	baseUrl: window.top.__baseStaticPath__ + '/js',
 
 	paths: {
 		jquery: 'vendor/jquery-3.1.0',

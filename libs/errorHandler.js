@@ -41,38 +41,41 @@ var errorHandler = function() {
 
 	return instance = {
 		render: function(err, req, res, next) {
-			try {
-				indigo.logger.error(JSON.stringify(err, null, 2));
-			} catch (e) {
-				indigo.logger.error(err);
-			}
-			if (err && req) {
-
-				indigo.reqModel(null, req, res, function() {});
-
-				var self = this || instance;
-				if (!req.model.errorModel) {
-					req.model.errorModel = self.getErrorModel(err, req, res),
-					self.setErrorDetails(req.model.errorModel, err.errorCode, err, err.errorMessage);
-
-					if (!req.headers || req.headers['error_verbose'] !== 'false') {
-						indigo.logger.error(req.model.errorModel.log_msg);
-					}
+			if (err) {
+				try {
+					indigo.logger.error(JSON.stringify(err, null, 2));
+				} catch (e) {
+					indigo.logger.error(err);
 				}
 
-				var appconf = indigo.appconf,
-					template = appconf.get('errors:template'),
-					url = appconf.get('errors:' + req.model.errorModel.statusCode);
-				if (!res._headerSent) {
-					if (url && url.length > 0){
-						res.redirect(url);
+				if (req) {
+
+					indigo.reqModel(null, req, res, function() {});
+
+					var self = this || instance;
+					if (!req.model.errorModel) {
+						req.model.errorModel = self.getErrorModel(err, req, res),
+						self.setErrorDetails(req.model.errorModel, err.errorCode, err, err.errorMessage);
+
+						if (!req.headers || req.headers['error_verbose'] !== 'false') {
+							indigo.logger.error(req.model.errorModel);
+						}
+					}
+
+					var appconf = indigo.appconf,
+						template = appconf.get('errors:template'),
+						url = appconf.get('errors:' + req.model.errorModel.statusCode);
+					if (!res._headerSent) {
+						if (url && url.length > 0){
+							res.redirect(url);
+						} else {
+							res.status(req.model.errorModel.statusCode).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), req.model);
+						}
 					} else {
-						res.status(req.model.errorModel.statusCode).render(__appDir + (template || '/node_modules/indigojs/examples/templates/errors.html'), req.model);
+						next();
 					}
-				} else {
-					next();
+					return req.model;
 				}
-				return req.model;
 			}
 			next();
 		},
@@ -158,7 +161,7 @@ var errorHandler = function() {
 		 */
 		error: function(errorId, err, message, details) {
 			var model = this.setErrorDetails({}, errorId, err, message, details);
-			indigo.logger.error(model.log_msg);
+			indigo.logger.error(model);
 			return model;
 		},
 

@@ -45,7 +45,7 @@ var errorHandler = function() {
 				try {
 					indigo.logger.error(JSON.stringify(err, null, 2));
 				} catch (e) {
-					indigo.logger.error(err);
+					indigo.logger.error(e);
 				}
 
 				if (req) {

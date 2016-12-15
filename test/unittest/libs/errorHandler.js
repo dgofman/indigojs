@@ -20,6 +20,12 @@ describe('libs/errorHandler', function () {
 		});
 	});
 
+	it('should validate invalid err argument (try/catch)', function (done) {
+		indigo.errorHandler.render({ data: indigo }, null, null, function() {
+			done();
+		});
+	});
+
 	it('should validate err is null', function (done) {
 		indigo.error(null, null, {
 			status: function(statusCode) {

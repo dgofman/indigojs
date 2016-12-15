@@ -362,18 +362,27 @@ var indigo =
 	},
 
 	/**
-	 * Return command line or shell environment variable or package.json config properties
+	 * Return value from system environment or package.json
 	 * @param {String} key Pair key.
 	 * @return {String} Pair value.
 	 */
 	getEnv: function(key) {
+		return process.env[key] || process.env['npm_package_config_' + key];
+	},
+
+	/**
+	 * Return command line arguments
+	 * @return {Object} Pair key and value.
+	 */
+	getArgs: function() {
+		var args = {};
 		for (var i in process.argv) {
 			var pair = process.argv[i].split('=');
-			if (pair.length === 2 && pair[0] === key) {
-				return pair[1];
+			if (pair.length === 2) {
+				args[pair[0]] = pair[1];
 			}
 		}
-		return process.env[key] || process.env['npm_package_config_' + key];
+		return args;
 	},
 
 	/**

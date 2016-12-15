@@ -192,8 +192,10 @@ describe('UnitTests Indigo APIs', function () {
 	it('should test get command line arguments', function (done) {
 		process.env['CUSTOM_VAR'] = 'TEST1';
 		assert.equal(indigo.getEnv('CUSTOM_VAR'), 'TEST1');
-		process.argv.push('CUSTOM_VAR=TEST2');
-		assert.equal(indigo.getEnv('CUSTOM_VAR'), 'TEST2');
+
+		process.argv.push('-myvar=TEST2');
+		var args = indigo.getArgs();
+		assert.equal(args['-myvar'], 'TEST2');
 		done();
 	});
 });

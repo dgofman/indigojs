@@ -10,6 +10,7 @@ describe('Testing FirstStep example', function () {
 
 	before(function (done) {
 		indigo.start(__appDir +  '/examples/firststep/config/app.json');
+		indigo.logger.error = function() {};
 		port = indigo.appconf.get('server:port');
 		done();
 	});

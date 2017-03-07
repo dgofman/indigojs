@@ -2,7 +2,8 @@
 
 var stdio = require('stdio'),
 	fs = require('fs'),
-	fse = require('fs-extra'),
+	path = require('path'),
+	shell = require('shelljs'),
 	pkg = require('../../package.json');
 
 (function() {
@@ -83,7 +84,7 @@ var stdio = require('stdio'),
 
 	lines = fs.readFileSync(__dirname + '/controller.js', 'utf-8');
 	createFile(controllersDir, '/controller.js', lines);
-	fse.copySync(__dirname + '/web', '.' + webdir);
+	copySync(__dirname + '/web', '.' + webdir);
 
 	dir = '/resources/nginx/conf';
 	lines = fs.readFileSync(__dirname + '/resources/nginx/conf/nginx.conf', 'utf-8').
@@ -104,11 +105,25 @@ function createFile(dir, file, lines) {
 	if (dir.substr(0, 1) === '/') {
 		dir = '.' + dir;
 	}
-	fse.mkdirsSync(dir);
 	console.log('creating %s%s', dir, file);
+	shell.mkdir('-p', dir);
 	fs.writeFileSync(dir + file, lines);
 }
 
 function getDir(dir) {
 	return dir.substr(0, 1) === '/' ? dir : '/' + dir;
 }
+
+
+function copySync(src, dest) {
+	if (fs.existsSync(src)) {
+		if (fs.statSync(src).isDirectory()) {
+			shell.mkdir('-p', dest);
+			fs.readdirSync(src).forEach(function(file) {
+				copySync(path.join(src, file), path.join(dest, file));
+			});
+		} else {
+			fs.createReadStream(src).pipe(fs.createWriteStream(dest));
+		}
+	}
+};

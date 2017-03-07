@@ -10,6 +10,7 @@ describe('Testing libs/static.js', function () {
 
 	before(function (done) {
 		indigo.start(__appDir +  '/examples/helloworld/config/app.json');
+		indigo.logger.error = function() {};
 		port = indigo.appconf.get('server:port');
 		done();
 	});

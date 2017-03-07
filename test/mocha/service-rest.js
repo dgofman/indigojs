@@ -96,7 +96,7 @@ describe('Testing REST API\'s', function () {
 				timeout: 1
 			}).request(function(err, result, req, res) {
 				assert.equal(res.statusCode, 500);
-				assert.equal(err.code, 'ECONNRESET');
+				assert.equal(err.error.code, 'ECONNRESET');
 				done();
 		}, 'POST', '/index.html', 'YAHOO!!!');
 	});

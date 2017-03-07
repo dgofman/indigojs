@@ -18,6 +18,7 @@ describe('libs/locales', function () {
 	});
 
 	it('should test try/catch', function (done) {
+		indigo.logger.error = function() {};
 		var fileName = __appDir + '/examples/account/locales/en/invalid.json';
 		fs.writeFileSync(fileName, 'HELLO WORLD');
 		locales.config(appconf);

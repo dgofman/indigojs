@@ -11,6 +11,7 @@ describe('Testing Account Controllers', function () {
 
 	before(function (done) {
 		indigo.start(__appDir +  '/examples/account/config/app.json');
+		indigo.logger.error = function() {};
 		port = indigo.appconf.get('server:port');
 		done();
 	});

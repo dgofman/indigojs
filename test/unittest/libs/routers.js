@@ -1,6 +1,7 @@
 'use strict';
 
-var routers = require('../../../libs/routers'),
+var indigo = require('../../../indigo'),
+	routers = require('../../../libs/routers'),
 	assert = require('assert'),
 	appconf = {
 		get: function() { return null; }
@@ -14,11 +15,13 @@ describe('libs/routers', function () {
 	});
 
 	it('should test loading invalid mixin module (module.exports = {})', function (done) {
+		indigo.logger.error = function() {};
 		routers.loadModule(['/libs/locales.js']);
 		done();
 	});
 
 	it('should test invalid module', function (done) {
+		indigo.logger.error = function() {};
 		routers.loadModule(['/README.md']);
 		done();
 	});

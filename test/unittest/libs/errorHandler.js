@@ -11,6 +11,7 @@ describe('libs/errorHandler', function () {
 
 	before(function (done) {
 		appconf = indigo.init(__appDir + '/examples/account/config/app.json');
+		indigo.logger.error = function() {};
 		done();
 	});
 

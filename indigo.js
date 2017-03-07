@@ -170,10 +170,6 @@ var indigo =
 
 		var app = this.app;
 
-		require(this.appconfPath('server:parser:path') || './libs/parser')(app, appconf); //enabled req.body
-
-		require(this.appconfPath('server:session:path') || './libs/session')(app, appconf); //enabled req.session
-
 		this.static('/', webdir);
 
 		this.static(this.getStaticDir(), webdir + '/static');

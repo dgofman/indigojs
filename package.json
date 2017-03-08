@@ -6,11 +6,14 @@
 	"config": {
 		"INDOGO_DEBUG": true
 	},
+	"presets": [
+    "node6"
+  ],
 	"scripts": {
 		"account": "nodemon --debug examples/account/index.js",
 		"helloworld": "nodemon --debug examples/helloworld/index.js",
 		"firststep": "nodemon --debug examples/firststep/index.js",
-		"lint": "./node_modules/.bin/jshint . --config .jshintrc",
+		"jshint": "./node_modules/.bin/jshint . --config .jshintrc",
 		"test": "./node_modules/.bin/mocha test/unittest --reporter spec --check-leaks",
 		"mocha": "./node_modules/.bin/mocha test/mocha --reporter spec --check-leaks",
 		"cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha test/mocha test/unittest -- --reporter spec --check-leaks",

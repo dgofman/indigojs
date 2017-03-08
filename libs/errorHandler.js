@@ -1,7 +1,6 @@
 'use strict';
 
-var indigo = global.__indigo,
-	instance;
+const indigo = global.__indigo;
 
 /**
  * This is the default expection handler module assigned for each router and reporting an error 
@@ -37,10 +36,12 @@ var indigo = global.__indigo,
  * @mixin libs/errorHandler
  * @param {Object} appconf An application configuration.
  */
-var errorHandler = function() {
+const errorHandler = () => {
+
+	let instance;
 
 	return instance = {
-		render: function(err, req, res, next) {
+		render(err, req, res, next) {
 			if (err) {
 				try {
 					indigo.logger.error(JSON.stringify(err, null, 2));
@@ -50,10 +51,10 @@ var errorHandler = function() {
 
 				if (req) {
 
-					indigo.reqModel(null, req, res, function() {});
+					indigo.reqModel(null, req, res, () => {});
 
-					var self = this || instance;
 					if (!req.model.errorModel) {
+						let self = this || instance;
 						req.model.errorModel = self.getErrorModel(err, req, res),
 						self.setErrorDetails(req.model.errorModel, err.errorCode, err, err.errorMessage);
 
@@ -62,7 +63,7 @@ var errorHandler = function() {
 						}
 					}
 
-					var appconf = indigo.appconf,
+					const appconf = indigo.appconf,
 						template = appconf.get('errors:template'),
 						url = appconf.get('errors:' + req.model.errorModel.statusCode);
 					if (!res._headerSent) {
@@ -88,8 +89,8 @@ var errorHandler = function() {
 		 * @param {express.Request} req Defines an object to provide client request information.
 		 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
 		 */
-		getErrorModel: function(err, req, res) {
-			var model = req.model.errorModel = {};
+		getErrorModel(err, req, res) {
+			const model = req.model.errorModel = {};
 
 			model.statusCode = err.statusCode || res.statusCode;
 			model.date = new Date();
@@ -124,7 +125,7 @@ var errorHandler = function() {
 		 * @param {String} [details] Error details.
 		 * @return {Object} error JSON object with error infomation.
 		 */
-		setErrorDetails: function(model, errorId, err, message, details) {
+		setErrorDetails(model, errorId, err, message, details) {
 			model.uid = model.uid || Date.now();
 			model.errorId = errorId;
 			
@@ -144,7 +145,7 @@ var errorHandler = function() {
 		 * @param {String} url Load URL.
 		 * @return {Object} error JSON object with error infomation.
 		 */
-		injectErrorHandler: function(err, req, url) {
+		injectErrorHandler(err, req, url) {
 			return this.error('ERROR_INJECT', err,
 				'<h3>Internal error. Please contact your system administrator</h3><br/>Code: %UID%', url);
 		},
@@ -159,8 +160,8 @@ var errorHandler = function() {
 		 * @param {String} [details] Error details.
 		 * @return {Object} error JSON object with error infomation.
 		 */
-		error: function(errorId, err, message, details) {
-			var model = this.setErrorDetails({}, errorId, err, message, details);
+		error(errorId, err, message, details) {
+			const model = this.setErrorDetails({}, errorId, err, message, details);
 			indigo.logger.error(model);
 			return model;
 		},
@@ -174,8 +175,8 @@ var errorHandler = function() {
 		 * @param {String} [errorKey] Error code id defined in <code>error.json</code> under locales directory.
 		 * @param {Number} [errorCode=400] HTTP error code.
 		 */
-		json: function(req, res, errorKey, errorCode) {
-			var locales = indigo.getLocale(req);
+		json(req, res, errorKey, errorCode) {
+			const locales = indigo.getLocale(req);
 			res.status(errorCode || 400).json( { error: locales.errors ? locales.errors[errorKey] : errorKey } );
 		},
 
@@ -184,12 +185,11 @@ var errorHandler = function() {
 		 * @memberof libs/errorHandler.prototype
 		 * @alias notFound
 		 */
-		notFound: function(app) {
-			var self = this;
-			app.use(function(req, res, next) {
+		notFound(app) {
+			app.use((req, res, next) => {
 				if (!req.headers.referer) {
-					indigo.reqModel(null, req, res, function() {
-						self.render({statusCode: 404}, req, res, next);
+					indigo.reqModel(null, req, res, () => {
+						this.render({statusCode: 404}, req, res, next);
 					});
 				} else {
 					next();

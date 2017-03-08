@@ -1,6 +1,6 @@
 'use strict';
 
-var indigo = global.__indigo,
+const indigo = global.__indigo,
 	debug = require('debug')('indigo:locales'),
 	fs = require('fs'),
 	rules = require('./locales/accept-rules.json'),
@@ -17,7 +17,7 @@ var indigo = global.__indigo,
  * @mixin libs/locales
  * @requires ./locales/accept-rules.json
  */
-var locales = function() {
+const locales = () => {
 	/** @lends libs/locales.prototype */
 	return {
 
@@ -39,7 +39,7 @@ var locales = function() {
 		 * Default language code 
 		 * @type {String}
 		 */
-		defaultLocale: defaultLocale,
+		defaultLocale,
 
 		/**
 		 * Map of locale files modified dates
@@ -63,21 +63,21 @@ var locales = function() {
 		 *}
 		 * @param {Object} appconf JSON object represents application configuration.
 		 */
-		config: function(appconf) {
+		config(appconf) {
 			this.defaultLocale = appconf.get('locales:default') || defaultLocale;
 			this.lastModified = {};
 			this.errorFiles = {};
 			this.localeMap = {};
 			this.localeMap[this.defaultLocale] = { __lookup__: [], __localName__: this.defaultLocale };
 
-			var localeDir = __appDir + (appconf.get('server:moduleDir') || '') + appconf.get('locales:path');
+			const localeDir = __appDir + (appconf.get('server:moduleDir') || '') + appconf.get('locales:path');
 			if (fs.existsSync(localeDir)) {
-				var dirs = fs.readdirSync(localeDir);
-				for (var d in dirs) {
-					var localeName = dirs[d];
-					if (fs.lstatSync(localeDir + '/' + localeName).isDirectory()) {
+				const dirs = fs.readdirSync(localeDir);
+				for (let d in dirs) {
+					let localeName = dirs[d];
+					if (fs.lstatSync(`${localeDir}/${localeName}`).isDirectory()) {
 						this.localeMap[localeName] = { __lookup__: [], __localName__:localeName };
-						this.parse(localeDir + '/' + localeName, this.localeMap[localeName]);
+						this.parse(`${localeDir}/${localeName}`, this.localeMap[localeName]);
 					}
 				}
 			}
@@ -91,13 +91,13 @@ var locales = function() {
 		 * @param {String} dirName Absolute path to json files.
 		 * @param {Object} parent Locales properties.
 		 */
-		parse: function(dirName, parent) {
-			var files = fs.readdirSync(dirName);
-			for (var f in files) {
-				var file = files[f],
+		parse(dirName, parent) {
+			const files = fs.readdirSync(dirName);
+			for (let f in files) {
+				let file = files[f],
 					arr = file.split('.');
 				if (arr.length > 1 && arr[1] === 'json') {
-					file = dirName + '/' + file;
+					file = `${dirName}/${file}`;
 					try {
 						parent[arr[0]] = cjson.load(file);
 						this.lastModified[file] = fs.lstatSync(file).mtime;
@@ -105,9 +105,9 @@ var locales = function() {
 						this.errorFiles[file] = e;
 						indigo.logger.error('FILE: %s, ERROR: %s', file, e.toString());
 					}
-				} else if (fs.lstatSync(dirName + '/' + file).isDirectory()) {
+				} else if (fs.lstatSync(`${dirName}/${file}`).isDirectory()) {
 					parent[file] = {};
-					this.parse(dirName + '/' + file, parent[file]);
+					this.parse(`${dirName}/${file}`, parent[file]);
 				}
 			}
 		},
@@ -118,7 +118,7 @@ var locales = function() {
 		 * @param {String} [locale] User language code.
 		 * @return {Object} locale Collection of localization messages.
 		 */
-		init: function(req, locale) {
+		init(req, locale) {
 			setLocale(req, locale, this);
 			return this.localeMap[req.session.locale];
 		},
@@ -127,19 +127,18 @@ var locales = function() {
 		 * Monitor changes in locale file.
 		 * @param {Object} appconf JSON object represents application configuration.
 		 */
-		monitor: function(appconf) {
-			var seconds = appconf.get('locales:monitor');
+		monitor(appconf) {
+			const seconds = appconf.get('locales:monitor');
 			if (!seconds) {
 				return;
 			}
 
-			var self = this;
-			clearInterval(self.lastModifiedInterval);
-			self.lastModifiedInterval = setInterval(function() {
-				for (var file in self.lastModified) {
-					if (self.lastModified[file].getTime() !== fs.lstatSync(file).mtime.getTime()) {
+			clearInterval(this.lastModifiedInterval);
+			this.lastModifiedInterval = setInterval(() => {
+				for (let file in this.lastModified) {
+					if (this.lastModified[file].getTime() !== fs.lstatSync(file).mtime.getTime()) {
 						indigo.logger.info('File updated: ' + file);
-						self.config(appconf);
+						this.config(appconf);
 						return;
 					}
 				}
@@ -161,12 +160,12 @@ function setLocale(req, locale, locales) {
 	if (!locales.localeMap[req.session.locale]) {
 		debug('sessionID=%', req.sessionID);
 		if (req.headers && req.headers['accept-language']) {
-			var split = req.headers['accept-language'].split(';'); // en-us,en-au;q=0.8,en;q=0.5,ru;q=0.3
-			for (var value in split) {
-				var languages = split[value].split(',');
-				for (var name in languages) {
+			const split = req.headers['accept-language'].split(';'); // en-us,en-au;q=0.8,en;q=0.5,ru;q=0.3
+			for (let value in split) {
+				const languages = split[value].split(',');
+				for (let name in languages) {
 					locale = languages[name].toLowerCase();
-					if (locale.indexOf('q=') === -1 && locales.localeMap[locale]) {
+					if (!locale.includes('q=') && locales.localeMap[locale]) {
 						return saveToSession(req, locales, locale);
 					}
 				}
@@ -201,50 +200,50 @@ function saveToSession(req, locales, locale) {
  * @access protected
  */
 function localelookup(localeDir, locales) {
-	var file = localeDir + '/accept-rules.json';
+	const file = `${localeDir}/accept-rules.json`;
 	if (fs.existsSync(file)) {
-		var customRules = cjson.load(file);
-		for (var code in customRules) {
+		const customRules = cjson.load(file);
+		for (let code in customRules) {
 			rules[code] = customRules[code];
 		}
 	}
 
-	var traverse = function(code) {
-		var target = locales.localeMap[code] = locales.localeMap[code] || { __lookup__: [], __localName__:code };
+	const traverse = code => {
+		const target = locales.localeMap[code] = locales.localeMap[code] || { __lookup__: [], __localName__:code };
 
-		var lookup = rules[code];
-		for (var index in lookup) {
-			var locale = lookup[index];
+		let locale, lookup = rules[code];
+		for (let index in lookup) {
+			locale = lookup[index];
 			if (target.__lookup__.indexOf(locale) === -1) {
 				target.__lookup__.push(locale);
 			}
 		}
 
-		for (index in lookup) {
+		for (let index in lookup) {
 			locale = lookup[index];
 			
-			var source = locales.localeMap[locale],
+			let source = locales.localeMap[locale],
 				sourceLocale = true;
 
 			if (!source) {
 				source = traverse(locale);
 			}
 
-			for (var i in source.__lookup__) {
+			for (let i in source.__lookup__) {
 				locale = source.__lookup__[i];
 				if (locale && target.__lookup__.indexOf(locale) === -1) {
 					target.__lookup__.push(locale);
 				}
 			}
 
-			for (var name in source) {
+			for (let name in source) {
 				if (name !== '__localName__' && name !== '__lookup__') {
 					if (!target[name]) {
 						target[name] = source[name];
 					} else { //copy only missing key/values
 						sourceLocale = false;
 
-						for (var key in source[name]) {
+						for (let key in source[name]) {
 							if (!target[name][key]) {
 								 target[name][key] = source[name][key];
 							}
@@ -261,7 +260,7 @@ function localelookup(localeDir, locales) {
 		return target;
 	};
 
-	for (code in rules) {
+	for (let code in rules) {
 		traverse(code);
 	}
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-var indigo = global.__indigo,
+const indigo = global.__indigo,
 	orchestrator = require('proxy-orchestrator');
 
 /**
@@ -52,7 +52,7 @@ function rest() {
 		 *		port: 80
 		 *	});
 		 */
-		init: function(opts, req, res) {
+		init(opts, req, res) {
 			opts = opts || indigo.appconf.get('service') || {};
 			this.opts = opts;
 			this.server = orchestrator({
@@ -76,7 +76,7 @@ function rest() {
 		 * 	...
 		 * }, '/contextPath/getPath', null, {'framework': 'indigojs'});
 		 */
-		get: function(callback, path, data, query) {
+		get(callback, path, data, query) {
 			this.request(callback, 'GET', path, data, query);
 		},
 		/**
@@ -91,7 +91,7 @@ function rest() {
 		 * 	...
 		 * }, '/contextPath/postPath', {'key':'value'});
 		 */
-		post: function(callback, path, data, query) {
+		post(callback, path, data, query) {
 			this.request(callback, 'POST', path, data, query);
 		},
 		/**
@@ -106,7 +106,7 @@ function rest() {
 		 * 	...
 		 * }, '/contextPath/putPath', {'id':123, 'key':'value'});
 		 */
-		put: function(callback, path, data, query) {
+		put(callback, path, data, query) {
 			this.request(callback, 'PUT', path, data, query);
 		},
 		/**
@@ -121,7 +121,7 @@ function rest() {
 		 * 	...
 		 * }, '/contextPath/deletePath', {'id':123});
 		 */
-		delete: function(callback, path, data, query) {
+		delete(callback, path, data, query) {
 			this.request(callback, 'DELETE', path, data, query);
 		},
 		/**
@@ -136,7 +136,7 @@ function rest() {
 		 * 	...
 		 * }, '/contextPath/patchPath', {'id':123, 'key':'value'});
 		 */
-		patch: function(callback, path, data, query) {
+		patch(callback, path, data, query) {
 			this.request(callback, 'PATCH', path, data, query);
 		},
 		/**
@@ -147,14 +147,13 @@ function rest() {
 		 * @param {Object} [data] An object that is sent to the server with the request.
 		 * @param {Object} [query] URL query parameters.
 		 */
-		request: function(callback, method, path, data, query) {
-			var self = this,
-				proxy = this.server.request(callback, method, path, data, query);
+		request(callback, method, path, data, query) {
+			const proxy = this.server.request(callback, method, path, data, query);
 
-			proxy.on('socket', function (socket) {
-				if (self.timeout !== undefined) {
-					socket.setTimeout(self.timeout);
-					socket.on('timeout', function() {
+			proxy.on('socket', socket => {
+				if (this.timeout !== undefined) {
+					socket.setTimeout(this.timeout);
+					socket.on('timeout', () => {
 						proxy.abort();
 					});
 				}

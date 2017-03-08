@@ -59,7 +59,7 @@
 
 function reqmodel(appconf) {
 
-	var minify, env = appconf.get('environment'),
+	let minify, env = appconf.get('environment'),
 		staticDir =  global.__indigo.getStaticDir();
 
 	if ((process.env.NODE_ENV || '').trim() === 'production') {
@@ -69,13 +69,13 @@ function reqmodel(appconf) {
 	env = env || 'dev';
 	minify = env === 'dev' ? '' : '.min';
 
-	return function(contextPath, req, res, next) {
+	return (contextPath, req, res, next) => {
 		req.model = req.model || {
 			req: req,
 			environment: env,
 			minify: minify,
-			extCSS: minify + '.css',
-			extJS: minify + '.js',
+			extCSS: `${minify}.css`,
+			extJS: `${minify}.js`,
 			extLESS: env === 'dev' ? '.less' : '.css',
 			locality: {},
 			locales: {},

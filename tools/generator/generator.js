@@ -126,4 +126,4 @@ function copySync(src, dest) {
 			fs.createReadStream(src).pipe(fs.createWriteStream(dest));
 		}
 	}
-};
+}

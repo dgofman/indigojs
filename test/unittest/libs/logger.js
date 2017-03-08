@@ -1,28 +1,28 @@
 'use strict';
 
-var logger = require('../../../libs/logger'),
+const logger = require('../../../libs/logger'),
 	assert = require('assert');
 
-describe('libs/logger', function () {
+describe('libs/logger', () => {
 
-	it('should get default logger level', function (done) {
-		var log = logger({get: function() {
+	it('should get default logger level', done => {
+		const log = logger({get() {
 			return null;
 		}});
 		assert.equal(log.getLevel(), 'debug');
 		done();
 	});
 
-	it('should get info logger lever', function (done) {
-		var log = logger({get: function() {
+	it('should get info logger lever', done => {
+		const log = logger({get() {
 			return 'info';
 		}});
 		assert.equal(log.getLevel(), 'info');
 		done();
 	});
 
-	it('should change logger lever', function (done) {
-		var log = logger({get: function() {
+	it('should change logger lever', done => {
+		const log = logger({get() {
 			return 'info';
 		}});
 		log.setLevel('error');

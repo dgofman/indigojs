@@ -1,29 +1,29 @@
 'use strict';
 
-var assert = require('assert'),
+const assert = require('assert'),
 	indigo = require('../../indigo'),
 	rest = require('../../libs/rest'),
 	params = {'param1':1, 'param2': 2};
 
-describe('Testing REST API\'s', function () {
+describe('Testing REST API\'s', () => {
 
-	before(function (done) {
-		indigo.start(__appDir + '/examples/firststep/config/app.json');
+	before(done => {
+		indigo.start(`${__appDir}/examples/firststep/config/app.json`);
 		done();
 	});
 
-	after(function(done) {
+	after(done => {
 		indigo.close(done);
 	});
 
-	it('should verify rest properties', function(done) {
+	it('should verify rest properties', done => {
 		assert.equal(indigo.service.opts.host, 'localhost');
 		assert.equal(indigo.service.opts.port, 8787);
 		done();
 	});
 
-	it('should test GET', function(done) {
-		indigo.service.get(function(err, result, req, res) {
+	it('should test GET', done => {
+		indigo.service.get((err, result, req, res) => {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'GET');
@@ -32,8 +32,8 @@ describe('Testing REST API\'s', function () {
 		}, '/firststep/REST', null, {'user': 'dgofman'});
 	});
 
-	it('should test GET with query param', function(done) {
-		indigo.service.get(function(err, result, req, res) {
+	it('should test GET with query param', done => {
+		indigo.service.get((err, result, req, res) => {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'GET');
@@ -42,8 +42,8 @@ describe('Testing REST API\'s', function () {
 		}, '/firststep/REST?v1', null, {'user': 'dgofman'});
 	});
 
-	it('should test GET with query param and body', function(done) {
-		indigo.service.get(function(err, result, req, res) {
+	it('should test GET with query param and body', done => {
+		indigo.service.get((err, result, req, res) => {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'GET');
@@ -52,8 +52,8 @@ describe('Testing REST API\'s', function () {
 		}, '/firststep/REST', {'dob': '01/25/1975'}, {'user': 'dgofman'});
 	});
 
-	it('should test POST', function(done) {
-		indigo.service.post(function(err, result, req, res) {
+	it('should test POST', done => {
+		indigo.service.post((err, result, req, res) => {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'POST');
@@ -61,8 +61,8 @@ describe('Testing REST API\'s', function () {
 		}, '/firststep/REST', params);
 	});
 
-	it('should test PUT', function(done) {
-		indigo.service.put(function(err, result, req, res) {
+	it('should test PUT', done => {
+		indigo.service.put((err, result, req, res) => {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'PUT');
@@ -70,8 +70,8 @@ describe('Testing REST API\'s', function () {
 		}, '/firststep/REST', params);
 	});
 
-	it('should test DELETE', function(done) {
-		indigo.service.delete(function(err, result, req, res) {
+	it('should test DELETE', done => {
+		indigo.service.delete((err, result, req, res) => {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'DELETE');
@@ -79,8 +79,8 @@ describe('Testing REST API\'s', function () {
 		}, '/firststep/REST', params);
 	});
 
-	it('should test PATCH', function(done) {
-		indigo.service.patch(function(err, result, req, res) {
+	it('should test PATCH', done => {
+		indigo.service.patch((err, result, req, res) => {
 			assert.equal(res.statusCode, 200);
 			assert.equal(err, null, 'no errors');
 			assert.equal(result.method, 'PATCH');
@@ -89,16 +89,15 @@ describe('Testing REST API\'s', function () {
 	});
 
 
-	it('should test request timeout/abort', function(done) {
+	it('should test request timeout/abort', done => {
 		rest().init({
 				host:'www.yahoo.com',
 				port:80,
 				timeout: 1
-			}).request(function(err, result, req, res) {
+			}).request((err, result, req, res) => {
 				assert.equal(res.statusCode, 500);
 				assert.equal(err.error.code, 'ECONNRESET');
 				done();
 		}, 'POST', '/index.html', 'YAHOO!!!');
 	});
 });
- 

@@ -1,6 +1,6 @@
 'use strict';
 
-var indigo = global.__indigo,
+const indigo = global.__indigo,
 	debug = require('debug')('indigo:routers'),
 	express = require('express'),
 	fs = require('fs');
@@ -13,7 +13,7 @@ var indigo = global.__indigo,
  * @module
  * @mixin libs/routers
  */
-var routers = 
+const routers = 
 	/** @lends libs/routers.prototype */
 	{
 	/**
@@ -33,8 +33,8 @@ var routers =
 	 * @param {Object} [locales] Reference to <code>/lib/locales</code>.
 	 * @param {Object} [reqModel] Reference to {@link libs/reqmodel} object what will be assign to <code>req.model</code> for each router request.
 	 */
-	init: function(appconf, locales, reqModel) {
-		var indigo = global.__indigo,
+	init(appconf, locales, reqModel) {
+		const indigo = global.__indigo,
 			app = indigo.app;
 		locales = locales || indigo.locales;
 		reqModel = reqModel || indigo.reqModel;
@@ -43,16 +43,14 @@ var routers =
 		this.moduleWebDir = this.moduleDir + appconf.get('server:webdir');
 
 		// dynamically include routers
-		var routersDir = appconf.get('routers'),
-			requestHook = function(method, router, conf) {
-				return function(path, callback) {
-					router.route(path)
-						.all(function(req, res, next) {
-							debug(req.method, req.url, req.originalUrl);
-							req.moduleWebDir = router.moduleWebDir;
-							reqModel(conf.base, req, res, next);
-						})[method](callback);
-				};
+		let routersDir = appconf.get('routers'),
+			requestHook = (method, router, conf) => (path, callback) => {
+				router.route(path)
+					.all((req, res, next) => {
+						debug(req.method, req.url, req.originalUrl);
+						req.moduleWebDir = router.moduleWebDir;
+						reqModel(conf.base, req, res, next);
+					})[method](callback);
 			};
 
 
@@ -62,16 +60,14 @@ var routers =
 
 		debug('router::routersDir', routersDir);
 
-		routers.loadModule(routersDir, function(route) {
-			var router = express.Router(),
+		routers.loadModule(routersDir, route => {
+			let router = express.Router(),
 				conf = {};
 
-			router.moduleWebDir = function() {
-				return routers.moduleWebDir;
-			};
+			router.moduleWebDir = () =>  routers.moduleWebDir;
 
 			Object.defineProperty(router, 'conf', {
-				get: function() { return conf; },
+				get() { return conf; },
 				enumerable: true
 			});
 
@@ -88,7 +84,7 @@ var routers =
 			debug('router::base - %s, controllers: %s', conf.base, conf.controllers);
 
 			// dynamically include controllers
-			routers.loadModule(conf.controllers, function(controller) {
+			routers.loadModule(conf.controllers, controller => {
 				controller(router, app, locales);
 			});
 
@@ -193,8 +189,8 @@ var routers =
  * can override by returning base name as string or an object <code>{base:'/myroute'}</code>
  * @return {Object} conf New router configuration object.
  */
-routers.routerConf = function(opt) {
-	var conf = opt || {};
+routers.routerConf = opt => {
+	let conf = opt || {};
 	if (typeof opt === 'string') {
 		conf = {base: opt};
 	} else {
@@ -211,14 +207,14 @@ routers.routerConf = function(opt) {
  * @param {Function} callback Returns loaded module to the function handler.
  */
 routers.loadModule = function(list, callback) {
-	for (var index in list) {
-		var path = this.moduleDir + list[index];
+	for (let index in list) {
+		const path = this.moduleDir + list[index];
 		if (fs.existsSync(path)) {
 			debug('router::dir - %s', path);
 			if (fs.lstatSync(path).isDirectory()) {
-				fs.readdirSync(path).forEach(function (file) {
+				fs.readdirSync(path).forEach((file) => {
 					if(file.substr(-3) === '.js') {
-						loadModule(path + '/', file.split('.')[0], callback);
+						loadModule(`${path}/`, file.split('.')[0], callback);
 					}
 				});
 			} else {

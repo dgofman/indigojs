@@ -1,6 +1,6 @@
 'use strict';
 
-var winston = require('winston');
+const winston = require('winston');
 
 /**
  * This module including default a logger class is used to log messages for a specific system.
@@ -31,7 +31,7 @@ var winston = require('winston');
  */
 
 function logger(appconf) {
-	var log = new (winston.Logger)({
+	const log = new (winston.Logger)({
 		levels: winston.config.npm.levels,
 		colors: winston.config.npm.colors,
 
@@ -44,11 +44,11 @@ function logger(appconf) {
 	});
 
 
-	log.setLevel = function(level) {
+	log.setLevel = level => {
 		log.transports.console.level = level;
 	};
 
-	log.getLevel = function() {
+	log.getLevel = () => {
 		return log.transports.console.level;
 	};
 

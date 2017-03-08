@@ -9,9 +9,10 @@
 	"private": true,
 	"dependencies": {
 		"indigojs": "~{{version}}",
+		"less": "~2.7.2",
 		"body-parser": "~1.17.1",
 		"express-session": "~1.15.1",
-		"less": "~2.7.2"
+		"proxy-orchestrator": "latest"
 	},
 	"devDependencies": {
 		"jshint": "~2.9.2",

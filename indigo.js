@@ -3,7 +3,8 @@
 const debug = require('debug')('indigo:main'),
 	express = require('express'),
 	ejs = require('ejs'),
-	fs = require('fs');
+	fs = require('fs'),
+	less = require('less');
 
 var reqModel, http,
 	routers, errorHandler,
@@ -176,22 +177,184 @@ const indigo =
 
 		this.addRoute(appconf, locales, reqModel);
 
+		const addTitle = function(req, title) {
+			title = title || this.title;
+			return ` tabindex="${req.model.componentIndex}"` + (title ? ' title="' + title + '"' : '');
+		}, getProps = function(name, val) {
+			if (this[name] !== undefined) {
+				if (val === undefined) {
+					return ` ${this[name]}`;
+				} else {
+					return ` ${val}`;
+				}
+			}
+			return '';
+		}, getAttr = function(name, tagName) {
+			if (this[name] !== undefined) {
+				if (tagName === undefined) {
+					return ` ${name}="${this[name]}"`;
+				} else {
+					return ` ${tagName}="${this[name]}"`;
+				}
+			}
+			return '';
+		}, getCss = function(name, tagName) {
+			if (this[name] !== undefined) {
+				if (tagName === undefined) {
+					return ` ${name}: ${this[name]};`;
+				} else {
+					return ` ${tagName}: ${this[name]};`;
+				}
+			}
+			return '';
+		}, jsRender = function(data, wrapTag, className) {
+			return `var handler = function() {(${data})(window.jQuery, window.jQuery('${wrapTag}.${className}'), '${wrapTag}', '${className}');};
+if (window.addEventListener) {
+	window.addEventListener('JQueryReady', handler, false); 
+} else if (window.attachEvent)  {
+	window.attachEvent('onJQueryReady', handler);
+}`;};
+
+		app.get(`${this.getComponentURL()}/:file`, (req, res) => {
+			const arr = req.params.file.split('.'),
+				className = arr[0],
+				cache = parseInt(indigo.appconf.get('server:cache')),
+				fileURL = indigo.getNewURL(req, null, `/${req.session.locale}/components/${className}/${req.params.file}`, true);
+			if (fileURL === true) {
+				return res.status(404).end();
+			}
+
+			fs.readFile(getModuleWebDir(req) + fileURL, (error, data) => {
+				if (error) {
+					indigo.error(error);
+					return res.status(404).end();
+				} else {
+					res.setHeader('Cache-Control', 'public, max-age=' + (!isNaN(cache) ? cache : 3600)); //or one hour
+
+					if (arr[1]=== 'js') {
+						res.set('Content-Type', 'application/javascript');
+						res.write(jsRender(data, indigo.getComponentTag(), className));
+						res.end();
+					} else {
+						less.render(`${indigo.getComponentTag()}.${className} {\n${data.toString()}\n}`, {
+							filename: fileURL,
+							compress: indigo.appconf.get('environment') !== 'dev',
+							paths: ['web/default']
+						}, (e, result) => {
+							res.set('Content-Type', 'text/css');
+							if (e) {
+								indigo.logger.error(`LESS Parse Error: ${fileURL}\n`, JSON.stringify(e, null, 2));
+								res.send(data);
+							} else {
+								res.write(result.css);
+								res.end();
+							}
+						});
+					}
+				}
+			});
+		});
+
 		/**
 		 * @memberOf sourceloader
 		 * @alias indigo.js#localsInject
 		 */
 		app.locals.inject = (req, url) => {
 			debug(req.method, url);
-			const newUrl = indigo.getNewURL(req, null, '/' + req.session.locale + '/' + url, '/' + url);
+			const newUrl = indigo.getNewURL(req, null, `/${req.session.locale}/${url}`, '/${url}');
 			debug('inject: %s -> %s', url, newUrl);
 			try {
 				req.model.filename = getModuleWebDir(req) + newUrl;
 				req.model.locale = app.locals.locale;
 				req.model.inject = app.locals.inject;
+				req.model.component = req.model.$ = app.locals.component;
 				return ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
 			} catch(err) {
+				indigo.logger.error(err);
 				return errorHandler.injectErrorHandler(err, req, url).message;
 			}
+		};
+
+		/**
+		 * @memberOf sourceloader
+		 * @alias indigo.js#localsComponent
+		 */	
+		app.locals.component = app.locals.$ = (req, className, opts={}, wrapTag) => {
+			const cTag = wrapTag || indigo.getComponentTag();
+			debug(req.method, className);
+			const newUrl = indigo.getNewURL(req, null, `/${req.session.locale}/components/${className}/${className}.html`, true);
+			debug('inject: %s -> %s, opts: %s', className, newUrl, JSON.stringify(opts));
+			if (newUrl === true) {
+				indigo.logger.error(`Component is not defined: ${className}`);
+				return '';
+			}
+			try {
+				opts.$get = getProps;
+				opts.$attr = getAttr;
+				opts.$css = getCss;
+				opts.$title = addTitle;
+				req.model.opts = opts;
+				req.model.componentIndex = req.model.componentIndex || 1;
+				req.model.filename = getModuleWebDir(req) + newUrl;
+				req.model.locale = app.locals.locale;
+				req.model.component = req.model.$ = app.locals.component;
+				req.model.assets = req.model.assets || {};
+				let html = ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model),
+					assetKey = wrapTag ? `${cTag}_${className}` : className,
+					title = '';
+
+				if (!req.model.assets[assetKey]) {
+					req.model.assets[assetKey] = {className, wrapTag};					
+				}
+				req.model.componentIndex++;
+
+				return `<${cTag} tabindex="-1" class="${className}${opts.$get('class')}"${opts.$attr('id')}>${html}</${cTag}>`;
+			} catch(err) {
+				indigo.logger.error(err);
+				return '';
+			}
+		};
+
+		/**
+		 * @memberOf sourceloader
+		 * @alias indigo.js#localsAssets
+		 */
+		app.locals.assets = function(req) {
+			debug('Include assets: %s', JSON.stringify(req.model.assets));
+			let lines = [],
+				assets = [],
+				uri = indigo.getComponentURL();
+			for (let assetKey in req.model.assets) {
+				const asset = req.model.assets[assetKey],
+					lessFile = indigo.getNewURL(req, null, `/${req.session.locale}/components/${asset.className}/${asset.className}.less`, true),
+					jsFile = indigo.getNewURL(req, null, `/${req.session.locale}/components/${asset.className}/${asset.className}.js`, true);
+				if (lessFile !== true) {
+					if (asset.wrapTag) {
+						less.render(`${asset.wrapTag}.${asset.className} {\n${fs.readFileSync(getModuleWebDir(req) + lessFile, 'utf-8')}\n}`, 
+						{
+							syncImport : true, relativeUrls: false, compress: indigo.appconf.get('environment') !== 'dev', paths: ['web/default']
+						}, (e, result) => {
+							if(e) {
+								indigo.logger.error(`LESS Parse Error: ${lessFile}\n`, JSON.stringify(e, null, 2));
+							} else {
+								lines.push(`<style>\n${result.css}\n</style>`);
+							}
+						});
+					} else {
+						assets.push(`<link rel="stylesheet" type="text/css" href="${uri}/${asset.className}.less">`);
+					}
+				}
+
+				if (jsFile !== true) {
+					if (asset.wrapTag) {
+						const data = fs.readFileSync(getModuleWebDir(req) + jsFile, 'utf-8');
+						lines.push(`<scripts>\n${jsRender(data, asset.wrapTag, asset.className)}\n</scripts>`);
+					} else {
+						assets.push(`<script src="${uri}/${asset.className}.js"></script>`);
+					}
+				}
+			}
+			return lines.concat(assets).join('\n');
 		};
 
 		/**
@@ -358,6 +521,22 @@ const indigo =
 	},
 
 	/**
+	 * Return base path to component assets.
+	 * @return {String} Web path to component less and js files.
+	 */
+	getComponentURL() {
+		return this.appconf.get('server:componentUri') || '/components';
+	},
+
+	/**
+	 * Return HTML component tag.
+	 * @return {String} HTML component tag.
+	 */
+	getComponentTag() {
+		return this.appconf.get('server:componentTag') || 'c';
+	},
+
+	/**
 	 * Return value from system environment or package.json
 	 * @param {String} key Pair key.
 	 * @return {String} Pair value.
@@ -446,9 +625,13 @@ const indigo =
 	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
 	 */
 	error(err, req, res) {
-		errorHandler.render(err, req, res, () => {
-			res.status(400).json(null); //no errors
-		});
+		try {
+			errorHandler.render(err, req, res, () => {
+				res.status(400).json(null); //no errors
+			});
+		} catch (e) {
+			indigo.logger.error(e);
+		};
 	}
 };
 

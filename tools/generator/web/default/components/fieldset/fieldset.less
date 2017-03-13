@@ -1,0 +1,20 @@
+clear: both;
+
+.left {
+	float: left;
+	margin-right: 5px;
+}
+
+.right {
+	float: right;
+	margin-left: 5px;
+}
+
+span { 
+	overflow: hidden;
+	display: block;
+
+	&> * {
+		width: 100%;
+	}
+}

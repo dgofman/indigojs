@@ -1,0 +1,51 @@
+{
+	"text": "'Need IPv4 space for your next expansion. You can leverage a block of our legacy IPv4 space with a simple annual contract term. Options to renew will help guarantee IPv4 availability during the world wide transition to IPv6. We have small cloud blocks /29, /28, /27, /26 available for your Equinix Cloud IPv4 space needs. This is one of the few places you can obtain the small space you need for such connectivity. A special online rental form tailored to the Equinix Cloud IPv4 space need which can be found on RentIPv4.com . Sales@RentIPv4.com.",
+	"dropdown": [
+		{"val": "menu1", "label": "Menu1", "promt": "Select Menu 1"},
+		{"val": "menu2", "label": "Menu2", "promt": "Select Menu 2", "selected": true},
+		{"val": "menu3", "label": "Menu3", "promt": "Select Menu 3"}
+	],
+	"menu": [
+		{
+			"label": "Menu 1",
+			"class": "menu1",
+			"sub": [
+				{
+					"label": "Sub-Menu 1-1",
+					"nav": "index#menu1-1"
+				},
+				{
+					"label": "Sub-Menu 1-2",
+					"nav": "index#menu1-2"
+				}
+			]
+		},
+		{
+			"label": "Menu 2",
+			"nav": "index#menu2",
+			"style": "background: green",
+			"sub": [
+				{
+					"label": "Sub-Menu 2-1"
+				},
+				{
+					"label": "Sub-Menu 2-2"
+				},
+				{
+					"label": "Sub-Menu 2-3"
+				}
+			]
+		},
+		{
+			"label": "Menu 3",
+			"class": "custom",
+			"sub": [
+				{
+					"label": "Sub-Menu 3-1",
+					"nav": "http://www.google.com",
+					"disabled": true
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,7 @@
+<span role="button"<%- opts.$title(req) %><%- opts.$attr('style') %>>
+	<%- typeof opts.content === 'function' ? opts.content(req, opts) : opts.content %>
+</span><%
+	if (opts.ellipsis) {
+%><div class="ellipsis"><%- opts.ellipsis %></div><%
+	}
+%>

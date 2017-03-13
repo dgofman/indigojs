@@ -19,6 +19,7 @@ var stdio = require('stdio'),
 		'name': {key: 'n', args: 1, mandatory: true, description: 'application name'},
 		'dir': {key: 'd', args: 1, description: 'path to the webroot directory (defaults /web)'},
 		'static': {key: 's', args: 1, description: 'name of static directory under webroot (defaults /static)'},
+		'component': {key: 'x', args: 1, description: 'base path which loads component resource files (defaults /component)'},
 		'port': {key: 'p', args: 1, description: 'server port number  (defaults ' + defaultPort + ')'},
 		'uri': {key: 'u', args: 1, description: 'default routing path/uri (defaults /%APPNAME%)'},
 		'routers': {key: 'r', args: 1, description: 'path to the routers files (defaults /routers)'},
@@ -30,6 +31,7 @@ var stdio = require('stdio'),
 	var dir = '.',
 		webdir = getDir(ops.dir || 'web'),
 		staticDir = getDir(ops.static || 'static'),
+		compDir = getDir(ops.component || 'component'),
 		localesDir = getDir(ops.locales || 'locales'),
 		routersDir = getDir(ops.routers || 'routers'),
 		controllersDir = getDir(ops.controllers || 'controllers'),
@@ -64,6 +66,7 @@ var stdio = require('stdio'),
 						replace(/{{port}}/g, ops.port || defaultPort).
 						replace(/{{webdir}}/g, webdir).
 						replace(/{{static}}/g, staticDir).
+						replace(/{{component}}/g, compDir).
 						replace(/{{locales}}/g, localesDir).
 						replace(/{{routers}}/g, routersDir);
 	createFile('/config', '/app.json', lines);

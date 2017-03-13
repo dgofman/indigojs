@@ -1,0 +1,12 @@
+{
+	"properties": {
+		"className": "text",
+		"id": "text",
+		"label": "text",
+		"title": "text",
+		"style": "text",
+		"disabled": "bool",
+		"icon": "text",
+		"icon_align": ["left", "right"]
+	}
+}

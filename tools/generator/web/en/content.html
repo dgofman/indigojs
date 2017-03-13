@@ -1,3 +1,213 @@
 <div class="content">
-	<h1><span><%= locales.common.pageTitle %></span> is running</h1>
+	<style>
+		h3 {
+			color: blue;
+		}
+
+		br {
+			line-height: 25px;
+		}
+
+		.center {
+			margin: 0 30%;
+		}
+
+		.custom * {
+			color: red !important;
+			text-decoration: underline;
+		}
+
+		.myswitch input:checked + .slider {
+			background-color: red !important;
+		}
+
+		.textstyle {
+			position: relative;
+			width: 400px; height: 47px; border: 1px solid green;
+		}
+
+		.menu_style {
+			width: 100%;
+			height: 30px;
+		}
+
+		.menu_style>li a {
+			margin: 0 10px;
+		}
+
+		.menu_style>li:after {
+			content: '\25BC';
+			position: absolute;
+			top: 7px;
+			right: 0;
+			color: #fff;
+		}
+	</style>
+	<%
+		var icon = baseStaticPath + '/images/indigo.png';
+		var text = data.text;
+	%>
+	<h1>Components</h1>
+
+	<h3>Button:</h3>
+	<div>
+		<%- $(req, 'button', {label: `${locales.common.helloworld} - 1`}, 'customTag') %>
+
+		<%- $(req, 'button', {label: `${locales.common.helloworld} - 2`, id: 'mybutton'}) %>
+
+		<%- $(req, 'button', {label: `${locales.common.helloworld} - 3`, icon: icon}) %>
+
+		<%- $(req, 'button', {label: `${locales.common.helloworld} - 4`, icon: icon, icon_align: 'right'}) %>
+
+		<%- $(req, 'button', {label: `${locales.common.helloworld} - 5`, style: 'color: green; font-weight: bold'}) %>
+
+		<%- $(req, 'button', {label: `${locales.common.helloworld} - 6`, class: 'custom'}) %>
+
+		<%- $(req, 'button', {label: `${locales.common.helloworld} - 7`, disabled: true}) %>
+	</div>
+
+	<h3>Checkbox:</h3>
+	<div>
+		<%- $(req, 'checkbox', {label: `${locales.common.helloworld} - 1`, id: 'mycheckbox'}) %> <br/>
+
+		<%- $(req, 'checkbox', {label: `${locales.common.helloworld} - 2`, checked: true}) %> <br/>
+
+		<%- $(req, 'checkbox', {label: `${locales.common.helloworld} - 3`, checked: true, partial: true}) %> <br/>
+
+		<%- $(req, 'checkbox', {label: `${locales.common.helloworld} - 4`, style: 'color: green; font-weight: bold'}) %> <br/>
+
+		<%- $(req, 'checkbox', {label: `${locales.common.helloworld} - 5`, class: 'custom'}) %> <br/>
+
+		<%- $(req, 'checkbox', {label: `${locales.common.helloworld} - 6`, disabled: true}) %>
+	</div>
+
+	<h3>Dropdown:</h3>
+	<div>
+		<%- $(req, 'dropdown', {id: 'mydropdown'}) %>
+
+		<%- $(req, 'dropdown', {label: `${locales.common.helloworld} - 1`, style: 'color: green; font-weight: bold'}) %>
+
+		<%- $(req, 'dropdown', {label: `${locales.common.helloworld} - 2`, class: 'custom'}) %>
+
+		<%- $(req, 'dropdown', {label: `${locales.common.helloworld} - 3`, disabled: true}) %> <br/>
+
+		<%- $(req, 'dropdown', {label: `${locales.common.helloworld} - 4`, menus: ['Menu1', 'Menu2', 'Menu3']}) %>
+
+		<%- $(req, 'dropdown', {label: `${locales.common.helloworld} - 5`, menus: data.dropdown}) %>
+
+		<%
+			function customDropdownMenu(req, opts, lis) {
+				opts.menus.forEach(function(menu) {
+					lis.push('<li>' + $(req, "checkbox", {label: menu}) + '</li>');
+				});
+				return 'Menu3';
+			}
+		%>
+
+		<%- $(req, 'dropdown', {label: `${locales.common.helloworld} - 6`, open: true, menus: ['Menu1', 'Menu2', 'Menu3'], itemRenderer: customDropdownMenu}) %>
+	</div>
+
+	<h3>Switch:</h3>
+	<div>
+		<%- $(req, 'switch') %>
+
+		<%- $(req, 'switch', {title: 'Network Control', checked: true}) %>
+
+		<%- $(req, 'switch', {title: 'Settings', checked: true, id: 'myswitch', class: 'myswitch'}) %>
+
+		<%- $(req, 'switch', {title: 'Power Control', checked: true, disabled: true}) %>
+	</div>
+
+	<h3>Text:</h3>
+	<div>
+		<div class="textstyle">
+			<%- $(req, 'text', {content: text}) %>
+		</div><br/>
+
+		<div class="textstyle" style="border-color: blue">
+			<%- $(req, 'text', {content: text, ellipsis: '<a href="#">Read More...</a>'}) %>
+		</div><br/>
+
+		<div class="textstyle" style="height: 17px; border-color: red">
+			<%- $(req, 'text', {content: text, ellipsis: '...'}) %>
+		</div><br/>
+
+		<div class="textstyle" style="height: 17px; border-color: red">
+			<%- $(req, 'text', {content: function(req, opts) { return text.substring(0, 45) + '...' }}) %>
+		</div>
+	</div>
+
+	<h3>Tooltip:</h3>
+	<div class="center">
+		<b>Tooltip Top</b>
+		<div class="textstyle">
+			<%- $(req, 'text', {content: text, ellipsis: '...'}) %>
+			<%- $(req, 'tooltip', {content: 'That is custom text', position: 'top', style: 'color: green; font-weight: bold'}) %>
+		</div>
+	</div><br/>
+
+	<div class="center">
+		<b>Tooltip Bottom</b>
+		<div class="textstyle">
+			<%- $(req, 'text', {content: text, ellipsis: '...'}) %>
+			<%- $(req, 'tooltip', {position: 'bottom', width: '400px', class: 'custom'}) %>
+		</div>
+	</div><br/>
+
+	<div class="center">
+		<b>Tooltip Left</b>
+		<div class="textstyle">
+			<%- $(req, 'text', {content: text, ellipsis: '...'}) %>
+			<%- $(req, 'tooltip', {position: 'left', height: '200px'}) %>
+		</div>
+	</div><br/>
+
+	<div class="center">
+		<b>Tooltip Right - Scroll</b>
+		<div class="textstyle">
+			<%- $(req, 'text', {content: text, ellipsis: '...'}) %>
+			<%- $(req, 'tooltip', {position: 'right', height: '200px', scroll: 100, scrollTimeout: 700}) %>
+		</div>
+	</div>
+
+	<h3>Menu:</h3>
+	<div>
+		<%- $(req, 'menu', {class: 'menu_style', menus: data.menu}) %>
+	</div>
+
+	<h3>Fieldset:</h3>
+	<div>
+		<div style="width: 300px; padding: 10px; border: 1px solid red">
+			<%- $(req, 'fieldset', {
+				right: function(req, opts) {
+					return '<button>OK</button>';
+				},
+				content: function(req, opts) {
+					return `<input value="${opts.value}"/>`;
+				},
+				value: `${locales.common.helloworld} - 1`
+			}) %>
+		</div>
+
+		<div style="width: 400px; padding: 10px; margin: 10px 0; border: 1px solid green">
+			<%- $(req, 'fieldset', {
+				left: function(req, opts) {
+					return '<button>OK</button>';
+				},
+				content: function(req, opts) {
+					return `<input value="${opts.value}" style="width: 100%"/>`;
+				},
+				value: `${locales.common.helloworld} - 2`
+			}) %>
+		</div>
+
+		<div style="width: 400px; padding: 10px; margin: 10px 0; border: 1px solid green">
+			<%- $(req, 'fieldset', {
+				content: function(req, opts) {
+					return `<input value="${opts.value}" style="width: 100%"/>`;
+				},
+				value: `${locales.common.helloworld} - 3`
+			}) %>
+		</div>
+	</div>
 </div>

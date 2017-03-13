@@ -1,0 +1,107 @@
+@arrow_size: 15px;
+@height: 40px;
+@border_color: #333;
+@bg_color: #f0f0f0;
+
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+
+-webkit-transition: opacity 0.3s ease-in-out;
+-moz-transition: opacity 0.3s ease-in-out;
+transition: opacity 0.3s ease-in-out;
+
+&:hover {
+	opacity: 1;
+}
+
+div:hover {
+	border: 1px solid red;
+	opacity: 1;
+}
+
+&>div {
+	position: relative;
+	border-radius: 5px;
+	margin-bottom: @arrow_size;
+	background-color: @bg_color;
+	min-height: 40px;
+	width: 200px;
+	border: 1px solid @border_color;
+	pointer-events: none;
+
+	&>p {
+		padding: 5px;
+		overflow: hidden;
+		height: 100%;
+	}
+
+	&:before, &:after {
+		position: absolute;
+		content: '';
+		width: @arrow_size;
+		height: @arrow_size;
+		border: (@arrow_size / 2) solid;
+	}
+
+	&.top:before, &.top:after {
+		margin-left: -(@arrow_size / 2);
+		bottom: -@arrow_size;
+		left: 50%;
+	}
+
+	&.top:before {
+		border-color: @border_color transparent transparent;
+	}
+
+	&.top:after {
+		border-color: @bg_color transparent transparent;
+		padding: 1pt 0 1pt 0;
+	}
+
+	&.bottom:before, &.bottom:after {
+		margin-left: -(@arrow_size / 2);
+		top: -@arrow_size;
+		left: 50%;
+	}
+
+	&.bottom:before {
+		border-color: transparent transparent @border_color;
+	}
+
+	&.bottom:after {
+		border-color: transparent transparent @bg_color;
+		padding: 1pt 0 1pt 0;
+	}
+
+	&.right:before, &.right:after {
+		margin-top: -(@arrow_size / 2);
+		left: -@arrow_size;
+		top: 50%;
+	}
+
+	&.right:before {
+		border-color: transparent @border_color transparent transparent;
+	}
+
+	&.right:after {
+		border-color: transparent @bg_color transparent transparent;
+		padding: 0 1pt 0 1pt;
+	}
+
+	&.left:before, &.left:after {
+		margin-top: -(@arrow_size / 2);
+		right: -@arrow_size;
+		top: 50%;
+	}
+
+	&.left:before {
+		border-color: transparent transparent transparent @border_color;
+	}
+
+	&.left:after {
+		border-color: transparent transparent transparent @bg_color;
+		padding: 0 1pt 0 1pt;
+	}
+}

@@ -1,0 +1,4 @@
+<button<%- opts.$title(req) %><%- opts.$attr('style') %><%- opts.$get('disabled', 'disabled') %>><% 
+	if (opts.icon) {
+%><i class="<%- opts.icon_align || 'left' %>"<%- opts.$get('icon', `style="background-image: url('${opts.icon}')"`) %>></i><%
+}%><%- opts.label %></button>

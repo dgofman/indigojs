@@ -1,0 +1,26 @@
+position: relative;
+display: inline-block;
+height: 100%;
+width: 100%;
+overflow: hidden;
+
+&>span {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+&>.ellipsis {
+	position: absolute;
+	right: 2px;
+	bottom: 0;
+	padding-left: 15px;
+	background: -webkit-gradient(linear, left top, right top,
+		from(rgba(255, 255, 255, 0)), to(white), color-stop(15%, white));
+	background: -moz-linear-gradient(to right, rgba(255, 255, 255, 0), white 15%, white);
+	background: -o-linear-gradient(to right, rgba(255, 255, 255, 0), white 15%, white);
+	background: -ms-linear-gradient(to right, rgba(255, 255, 255, 0), white 15%, white);
+	background: linear-gradient(to right, rgba(255, 255, 255, 0), white 15%, white);
+}

@@ -1,0 +1,12 @@
+{
+	"properties": {
+		"className": "text",
+		"id": "text",
+		"label": "text",
+		"title": "text",
+		"style": "text",
+		"disabled": "bool",
+		"partial": "bool",
+		"checked": "bool"
+	}
+}

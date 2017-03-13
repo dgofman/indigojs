@@ -18,7 +18,14 @@ require.config({
 		require([
 			'views/view.min',
 			'bootstrap'
-		], function(view){
+		], function(view) {
+			if (document.createEvent) {
+				var event = document.createEvent('HTMLEvents');
+				event.initEvent('JQueryReady', true, true);
+				window.dispatchEvent(event);
+			} else {
+				window.fireEvent('onJQueryReady', document.createEventObject());
+			}
 			view.initialize();
 		});
 	}

@@ -1,0 +1,15 @@
+<div>
+<%
+	var align = opts.right || opts.left;
+	if (align) {
+%>
+	<div class="<%- opts.right ? 'right' : 'left'%>">
+		<%- align(req, opts) %>
+	</div>
+<% 
+	}
+%>
+	<span <%- opts.$attr('style') %>>
+		<%- opts.content ? opts.content(req, opts) : '' %>
+	</span>
+</div>

@@ -1,4 +1,5 @@
 {
 	"pageTitle": "{{name}}",
-	"copyright": "Copyright {{year}}"
+	"copyright": "Copyright {{year}}",
+	"helloworld": "Hello World"
 }

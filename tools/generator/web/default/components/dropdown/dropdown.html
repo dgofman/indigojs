@@ -1,0 +1,29 @@
+<%
+	var label = opts.label || '',
+		value = '',
+		open = opts.open || false,
+		lis = [];
+
+	if (opts.itemRenderer) {
+		label = opts.itemRenderer(req, opts, lis);
+	} else {
+		for (var index in opts.menus) {
+			var menu = opts.menus[index];
+			if (typeof menu === 'string') {
+				menu = {label: menu};
+			}
+			if (menu.selected) {
+				label = menu.label || '';
+				value = menu.val || label;
+			}
+			lis.push(`<li${menu.val ? ' value="' + menu.val + '"' : ''}${menu.promt ? ' title="' + menu.promt + '"' : ''}>${menu.label}</li>`);
+		}
+	}
+%>
+<div tabindex="-1" class="dropdown<%- open ? ' open' : '' %>"%><%- opts.$get('disabled', 'disabled') %>>
+	<div tabindex="-1" class="dropdown-toggle" type="button" data-toggle="dropdown"<%- value ? ` value="${value}"` : '' %>>
+		<span tabindex="-1">&#9662;</span>
+		<div<%- opts.$title(req, label + 'dropdown') %><%- opts.$attr('style') %>><%- label || '<br/>'  %></div>
+	</div>
+	<ul class="dropdown-menu" tabindex="-1"><%- lis.join(''); %></ul>
+</div>

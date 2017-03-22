@@ -1,0 +1,54 @@
+@import './constant.less';
+
+body {
+	display: flex;
+	flex-direction: column;
+
+	&>.header {
+		height: 40px;
+		border: 1px solid #1c50d8;
+		background-color: #31708f;
+		color: #fff;
+
+		span {
+			margin: 10px;
+			vertical-align: top;
+			line-height: 38px;
+			font-weight: bold;
+		}
+
+		[cid=menu] {
+			height: 100%;
+			border: 1px #fff;
+			border-left-style: solid;
+			margin-left: 10px;
+		}
+	}
+
+	&>.content {
+		flex: 1;
+		height: 100%;
+		width: 100%;
+		overflow: auto;
+
+		h1>span{
+			text-transform: uppercase;
+		}
+	}
+
+	&>.footer {
+		height: 40px;
+		padding-top: 10px;
+		background-color: #337ab7;
+		color: #fff;
+
+		.powered {
+			position: absolute;
+			background: url("@{images}/indigo.png") no-repeat right center; 
+			right: 10px;
+			color: #fff;
+			padding: 7px 30px;
+			margin-top: -7px;
+		}
+	}
+}

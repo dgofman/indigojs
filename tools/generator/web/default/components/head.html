@@ -1,0 +1,129 @@
+<script src="<%- baseStaticPath %>/js/vendor/require-2.3.2<%- extJS %>"></script>
+<script type="text/javascript">
+	require.config({
+		baseUrl: '<%- baseStaticPath %>/js',
+
+		paths: {
+			jquery: 'vendor/jquery-3.1.1<%- minify %>'
+		},
+
+		callback: function() {
+			require([
+				'jquery'
+			], function($) {
+				window.indigo = indigoJS.extend;
+				var iframe = $('iframe.content'),
+					loadPage = function() {
+						var page = window.location.hash.split('#')[1] || 'default',
+							url = '<%- contextPath %>/content/' + page;
+						indigoJS.extend.debug('Load: ' + url);
+						iframe.attr('src', url);
+					};
+
+				iframe.on('load', function() {
+					indigoJS.extend.debug('Page Ready');
+					if (document.createEvent) {
+						var event = document.createEvent('HTMLEvents');
+						event.initEvent('Ready', true, true);
+						window.dispatchEvent(event);
+					} else {
+						window.fireEvent('onReady', document.createEventObject());
+					}
+				});
+
+				window.onhashchange = function() {
+					loadPage();
+				};
+				loadPage();
+			});
+		}
+	});
+
+	var indigoJS = {
+		components: {},
+		DEBUG: <%- environment === 'dev' %>,
+		extend: {
+			window: window,
+
+			debug() {
+				if (indigoJS.DEBUG) {
+					console.log.apply(this, arguments);
+				}
+			},
+			getContextPath() {
+				return '<%- contextPath %>';
+			},
+			getStaticPath() {
+				return '<%- baseStaticPath %>';
+			},
+			extend(cid, proto) {
+				var clazz = indigoJS.components[cid];
+				for (var name in proto) {
+					clazz.prototype[name] = proto[name];
+				}
+			},
+			get(cid, parent) {
+				return this.find(`[cid=${cid}]`, parent);
+			},
+			find(selector, parent) {
+				var els = this.window.$(selector, parent),
+					cid = `[cid=${els.attr('cid')}]`,
+					clazz = indigoJS.components[cid];
+				if (!clazz) {
+					throw new Error(`Cannot find constructor by using '${selector}' selector.`);
+				}
+				return new clazz(els);
+			}
+		}
+	};
+
+	//Component registration
+	window.init = function(win, selector, factory) {
+		win.require = window.require;
+		if (!win.jQuery) {
+			window._jQueryFactory(win);
+			win.$.fn.extend({
+				event: function(type, callback) {
+					win.$.fn.off.call(this, type);
+					win.$.fn.on.call(this, type, callback);
+					return this;
+				}
+			});
+		}
+
+		var components = window.top.indigoJS.components,
+			apis = components[selector], clazz;
+		if (!apis) {
+			apis = factory(win.$, indigoJS.extend, selector);
+			clazz = function(els) {
+				Object.defineProperty(this, 'els', { get: function() { return els; } });
+				this.el = els.eq(this.index = 0);
+				this.eq = function(index) {
+					this.index = index;
+					this.el = this.els.eq(index);
+					return this;
+				};
+			};
+			clazz.prototype = apis;
+			clazz.prototype.constructor = clazz;
+			components[selector] = clazz;
+		}
+
+		if (apis && apis.register) {
+			$.each(win.$(selector), function(i, el) {
+				apis.register(win.$(el));
+			});
+		}
+	}
+
+	//View registration
+	window.ready = function(win, callback) {
+		win.indigoJS = window.top.indigoJS;
+		win.indigo = {};
+		for (var name in win.indigoJS.extend) {
+			win.indigo[name] = win.indigoJS.extend[name];
+		}
+		win.indigo.window = win;
+		callback(win.$, win.indigo);
+	}
+</script>

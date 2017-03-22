@@ -1,4 +1,7 @@
-<div class="content">
+<!DOCTYPE html>
+<html>
+<body>
+<div>
 	<style>
 		h3 {
 			color: blue;
@@ -12,6 +15,10 @@
 			margin: 0 30%;
 		}
 
+		.dropdown {
+			margin-bottom: 10px;
+		}
+
 		.custom * {
 			color: red !important;
 			text-decoration: underline;
@@ -23,7 +30,7 @@
 
 		.textstyle {
 			position: relative;
-			width: 400px; height: 47px; border: 1px solid green;
+			width: 400px; height: 100px; border: 1px solid green;
 		}
 
 		.menu_style {
@@ -47,7 +54,7 @@
 		var icon = baseStaticPath + '/images/indigo.png';
 		var text = data.text;
 	%>
-	<h1>Components</h1>
+	<h1><%- pageTitle %></h1>
 
 	<h3>Button:</h3>
 	<div>
@@ -85,26 +92,26 @@
 	<div>
 		<%- $(req, 'dropdown', {id: 'mydropdown'}) %>
 
-		<%- $(req, 'dropdown', {label: `${locales.common.helloworld} - 1`, style: 'color: green; font-weight: bold'}) %>
+		<%- $(req, 'dropdown', {prompt: `${locales.common.helloworld} - 1`, menus: ['Menu1', 'Menu2', 'Menu3'], style: 'color: green; font-weight: bold'}) %>
 
-		<%- $(req, 'dropdown', {label: `${locales.common.helloworld} - 2`, class: 'custom'}) %>
+		<%- $(req, 'dropdown', {prompt: `${locales.common.helloworld} - 2`, class: 'custom'}) %>
 
-		<%- $(req, 'dropdown', {label: `${locales.common.helloworld} - 3`, disabled: true}) %> <br/>
+		<%- $(req, 'dropdown', {prompt: `${locales.common.helloworld} - 3`, disabled: true}) %> <br/>
 
-		<%- $(req, 'dropdown', {label: `${locales.common.helloworld} - 4`, menus: ['Menu1', 'Menu2', 'Menu3']}) %>
+		<%- $(req, 'dropdown', {prompt: `${locales.common.helloworld} - 4`, menus: ['Menu1', 'Menu2', 'Menu3']}) %>
 
-		<%- $(req, 'dropdown', {label: `${locales.common.helloworld} - 5`, menus: data.dropdown}) %>
+		<%- $(req, 'dropdown', {prompt: `${locales.common.helloworld} - 5`, menus: data.dropdown}) %>
 
 		<%
 			function customDropdownMenu(req, opts, lis) {
 				opts.menus.forEach(function(menu) {
 					lis.push('<li>' + $(req, "checkbox", {label: menu}) + '</li>');
 				});
-				return 'Menu3';
+				return 2;
 			}
 		%>
 
-		<%- $(req, 'dropdown', {label: `${locales.common.helloworld} - 6`, open: true, menus: ['Menu1', 'Menu2', 'Menu3'], itemRenderer: customDropdownMenu}) %>
+		<%- $(req, 'dropdown', {prompt: `Menu3`, open: true, menus: ['Menu1', 'Menu2', 'Menu3'], itemRenderer: customDropdownMenu}) %>
 	</div>
 
 	<h3>Switch:</h3>
@@ -125,14 +132,14 @@
 		</div><br/>
 
 		<div class="textstyle" style="border-color: blue">
-			<%- $(req, 'text', {content: text, ellipsis: '<a href="#">Read More...</a>'}) %>
+			<%- $(req, 'text', {content: text, ellipsis: '<a href="#" tabIndex="-1">Read More...</a>'}) %>
 		</div><br/>
 
-		<div class="textstyle" style="height: 17px; border-color: red">
+		<div class="textstyle" style="height: 22px; border-color: red">
 			<%- $(req, 'text', {content: text, ellipsis: '...'}) %>
 		</div><br/>
 
-		<div class="textstyle" style="height: 17px; border-color: red">
+		<div class="textstyle" style="height: 22px; border-color: red">
 			<%- $(req, 'text', {content: function(req, opts) { return text.substring(0, 45) + '...' }}) %>
 		</div>
 	</div>
@@ -150,7 +157,7 @@
 		<b>Tooltip Bottom</b>
 		<div class="textstyle">
 			<%- $(req, 'text', {content: text, ellipsis: '...'}) %>
-			<%- $(req, 'tooltip', {position: 'bottom', width: '400px', class: 'custom'}) %>
+			<%- $(req, 'tooltip', {position: 'bottom', width: '400px', class: 'custom', selector: '[cid=text]>span'}) %>
 		</div>
 	</div><br/>
 
@@ -204,10 +211,13 @@
 		<div style="width: 400px; padding: 10px; margin: 10px 0; border: 1px solid green">
 			<%- $(req, 'fieldset', {
 				content: function(req, opts) {
-					return `<input value="${opts.value}" style="width: 100%"/>`;
+					return `<input type="text" value="${opts.value}" style="width: 100%"/>`;
 				},
 				value: `${locales.common.helloworld} - 3`
 			}) %>
 		</div>
 	</div>
 </div>
+</body>
+<%- finalize(req, `${baseStaticPath}/js/views/main${extJS}`) %>
+</html>

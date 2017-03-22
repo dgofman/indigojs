@@ -1,78 +1,47 @@
-@import './constant.less';
-
 html, body {
 	height: 100%;
-	font: @font_normal;
-	color: #333;
+	margin: 0;
 	overflow: hidden;
 }
 
 body {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 1.4;
+	overflow: auto;
+}
+
+*, *:before, *:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+ul, ol, p, a {
 	margin: 0;
 }
 
-input[type=checkbox] {
-	margin: -2px 2px 0 0;
-	vertical-align: middle;
+a {
+	text-decoration: none;
+	outline: none;
 }
 
-div, li {
-	cursor: default;
+a:hover {
+	text-decoration: underline;
 }
 
-.container {
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
+h1, h2, h3, h4, h5, h6 {
+	margin-top: 20px;
+	margin-bottom: 10px;
+	font-weight: 500;
+	line-height: 1.1;
+}
 
-	&>.header {
-		height: 40px;
-		border: 1px solid #1c50d8;
-		background-color: #31708f;
-		font: @font_bold;
-		color: @white;
+label {
+	display: inline-block;
+	margin: 0;
+}
 
-		span {
-			margin: 10px;
-			vertical-align: top;
-			line-height: 38px;
-		}
-
-		.menu {
-			height: 100%;
-			border: 1px #fff;
-			border-left-style: solid;
-			margin-left: 10px;
-		}
-	}
-
-	&>.content {
-		flex: 1;
-		height: 100%;
-		width: 100%;
-		overflow: auto;
-		padding: 0 20px;
-
-		h1>span{
-			text-transform: uppercase;
-		}
-	}
-
-	&>.footer {
-		height: 40px;
-		padding-top: 10px;
-		background-color: #337ab7;
-		color: @white;
-
-		.powered {
-			position: absolute;
-			background: url("@{images}/indigo.png") no-repeat right center; 
-			right: 10px;
-			color: @white;
-			padding: 7px 30px;
-			margin-top: -7px;
-		}
-	}
+button, input, select, textarea {
+	font: inherit;
 }

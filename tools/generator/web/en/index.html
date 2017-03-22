@@ -1,16 +1,26 @@
 <!DOCTYPE html>
-<html lang="<%= locality.langugage %>">
+<html lang="<%- locality.langugage %>">
 <head>
-<%- inject(req, 'templates/head.html') %>
+<title><%- locales.common.pageTitle %></title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge;" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="stylesheet" type="text/css" href="<%- baseStaticPath %>/css/index<%- extLESS %>">
+
+<%- inject(req, 'components/head.html') %>
+
 </head>
 <body>
-	<div class="container">
-		<%- inject(req, 'templates/header.html') %>
+	<%- inject(req, 'templates/header.html') %>
 
-		<% include content.html %>
+	<iframe class="content" frameborder="0" height="100%" width="100%"></iframe>
 
-		<%- inject(req, 'templates/footer.html') %>
-	</div>
+	<%- inject(req, 'templates/footer.html') %>
 </body>
-<%- assets(req) %>
+<%- finalize(req) %>
 </html>

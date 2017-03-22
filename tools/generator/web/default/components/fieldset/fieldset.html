@@ -1,15 +1,15 @@
-<div>
+<div tabindex="-1">
 <%
 	var align = opts.right || opts.left;
 	if (align) {
 %>
-	<div class="<%- opts.right ? 'right' : 'left'%>">
+	<div class="<%- opts.right ? 'right' : 'left'%>" tabindex="-1">
 		<%- align(req, opts) %>
 	</div>
 <% 
 	}
 %>
-	<span <%- opts.$attr('style') %>>
+	<span <%- opts.$attr('style') %> tabindex="-1">
 		<%- opts.content ? opts.content(req, opts) : '' %>
 	</span>
 </div>

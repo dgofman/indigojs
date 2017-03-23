@@ -3,11 +3,14 @@ function($, indigo) {
 
 	return {
 		register: function(el) {
-			var elps = $('>.ellipsis', el);
-			if (elps.length) {
-				var lh = parseInt(elps.parent().css('line-height'));
-					mt = Math.max(Math.round(elps.parent().parent().outerHeight() / lh - 1) * lh, 0);
-				elps.css({'bottom': 'auto', 'margin-top': mt, 'padding-left': elps.width()});
+			var span = $('>span', el);
+			if (span.attr('auto') === 'true') {
+				var height = el.parent().outerHeight(),
+					fs = parseFloat(span.css('font-size')),
+					lh = parseFloat(span.css('line-height')),
+					em = lh / fs;
+					rows = Math.floor(height / (fs * em));
+				span.css({'height': (rows * fs * em) + 'px', '-webkit-line-clamp': rows.toString()});
 			}
 		},
 

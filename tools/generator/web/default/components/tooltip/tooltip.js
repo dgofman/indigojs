@@ -13,11 +13,7 @@ function($, indigo) {
 				scrollInterval = parseInt(div.attr('scroll')),
 				scrollTop, interval;
 			if (p.html() === '') {
-				if (div.attr('selector')) {
-					p.html(el.parent().find(div.attr('selector')).text());
-				} else {
-					p.html(el.parent().text());
-				}
+				p.html(el.parent().text());
 			}
 
 			if (!isNaN(scrollInterval)) {

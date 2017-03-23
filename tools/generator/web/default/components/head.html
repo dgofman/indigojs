@@ -1,3 +1,11 @@
+<link rel="stylesheet" type="text/css" media="all" href="<%- baseStaticPath %>/css/common.less">
+
+<style>
+	body {
+		opacity: 0;
+	}
+</style>
+
 <script src="<%- baseStaticPath %>/js/vendor/require-2.3.2<%- extJS %>"></script>
 <script type="text/javascript">
 	require.config({
@@ -12,15 +20,18 @@
 				'jquery'
 			], function($) {
 				window.indigo = indigoJS.extend;
+				$('body').fadeTo('fast', 1);
 				var iframe = $('iframe.content'),
 					loadPage = function() {
 						var page = window.location.hash.split('#')[1] || 'default',
 							url = '<%- contextPath %>/content/' + page;
-						indigoJS.extend.debug('Load: ' + url);
+						window.indigo.debug('Load: ' + url);
+						iframe.css('opacity', 0);
 						iframe.attr('src', url);
 					};
 
 				iframe.on('load', function() {
+					iframe.fadeTo('slow', 1);
 					indigoJS.extend.debug('Page Ready');
 					if (document.createEvent) {
 						var event = document.createEvent('HTMLEvents');
@@ -39,15 +50,15 @@
 		}
 	});
 
-	var indigoJS = {
+	var console = window.console,
+		indigoJS = {
 		components: {},
-		DEBUG: <%- environment === 'dev' %>,
+		DEBUG: <%- environment === 'dev' %> && !!console.log,
 		extend: {
 			window: window,
-
 			debug() {
 				if (indigoJS.DEBUG) {
-					console.log.apply(this, arguments);
+					console.log.apply(console, arguments);
 				}
 			},
 			getContextPath() {
@@ -92,9 +103,9 @@
 		}
 
 		var components = window.top.indigoJS.components,
-			apis = components[selector], clazz;
-		if (!apis) {
-			apis = factory(win.$, indigoJS.extend, selector);
+			apis = factory(win.$, indigoJS.extend, selector),
+			clazz = components[selector];
+		if (!clazz) {
 			clazz = function(els) {
 				Object.defineProperty(this, 'els', { get: function() { return els; } });
 				this.el = els.eq(this.index = 0);

@@ -1,5 +1,1 @@
-<span role="button"<%- opts.$title(req) %><%- opts.$attr('style') %>><%- typeof opts.content === 'function' ? opts.content(req, opts) : opts.content %></span><%
-	if (opts.ellipsis) {
-%><div class="ellipsis"><%- opts.ellipsis %></div><%
-	}
-%>
+<span role="button" style="height: <%- Math.round((opts.rows || 1) * (opts.fontSize || 14) * (opts.lineHeight || 1.4)) %>px; -webkit-line-clamp: <%- opts.rows || 1 %>;<%- opts.fontSize ? ` font-size: ${opts.fontSize}px;` : '' %><%- opts.$css('lineHeight', 'line-height') %><%- opts.$get('style') %>"<%- opts.$attr('editable', 'contenteditable') %><%- opts.$attr('auto') %><%- opts.$title(req) %>><%- typeof opts.content === 'function' ? opts.content(req, opts) : opts.content %></span>

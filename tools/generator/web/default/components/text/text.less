@@ -1,29 +1,32 @@
-@shadow_width: 55;
-
 position: relative;
 display: inline-block;
 height: 100%;
 width: 100%;
-overflow: hidden;
-line-height: 1.4;
 
 &>span {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
+	overflow: hidden;
+	display: inline-block;
 }
 
-&>.ellipsis {
+&>span:after {
+	content: '';
 	position: absolute;
-	right: 2px;
 	bottom: 0;
-	padding-left: 50px;
-	background: -webkit-gradient(linear, left top, right top,
-		from(rgba(255, 255, 255, 0)), to(white), color-stop(~'@{shadow_width}%', white));
-	background: -moz-linear-gradient(to right, rgba(255, 255, 255, 0), white ~'@{shadow_width}%', white);
-	background: -o-linear-gradient(to right, rgba(255, 255, 255, 0), white ~'@{shadow_width}%', white);
-	background: -ms-linear-gradient(to right, rgba(255, 255, 255, 0), white ~'@{shadow_width}%', white);
-	background: linear-gradient(to right, rgba(255, 255, 255, 0), white ~'@{shadow_width}%', white);
+	right: 0;
+	width: 60px;
+	height: 1.2em;
+	background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 80%);
+}
+
+@supports (-webkit-line-clamp: 3) {
+	&>span {
+		padding: 2px;
+		display: -webkit-box;
+		margin: 0 auto;
+		-webkit-box-orient: vertical;
+		text-overflow: ellipsis;
+	}
+	&>span:after {
+		display: none;
+	}
 }

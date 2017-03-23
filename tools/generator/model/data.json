@@ -11,12 +11,16 @@
 			"class": "menu1",
 			"sub": [
 				{
-					"label": "Sub-Menu 1-1",
-					"nav": "index#menu1-1"
+					"label": "Home",
+					"nav": "home"
 				},
 				{
-					"label": "Sub-Menu 1-2",
-					"nav": "index#menu1-2"
+					"label": "Product",
+					"nav": "product"
+				},
+				{
+					"label": "Contact",
+					"nav": "contact"
 				}
 			]
 		},

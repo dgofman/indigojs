@@ -5,6 +5,10 @@
 		"title": "text",
 		"style": "text",
 		"content": "text",
-		"ellipsis": "text"
+		"rows": "number",
+		"fontSize": "number",
+		"lineHeight": "number",
+		"editable": "bool",
+		"auto": "bool"
 	}
 }

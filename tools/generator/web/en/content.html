@@ -3,6 +3,10 @@
 <body>
 <div>
 	<style>
+		body {
+			padding: 10px;
+		}
+
 		h3 {
 			color: blue;
 		}
@@ -118,29 +122,29 @@
 	<div ig-ns="switch">
 		<%- $(req, 'switch') %>
 
-		<%- $(req, 'switch', {title: 'Network Control', checked: true}) %>
+		<%- $(req, 'switch', {label: 'Network Control', checked: true}) %>
 
-		<%- $(req, 'switch', {title: 'Settings', checked: true, id: 'myswitch', class: 'myswitch'}) %>
+		<%- $(req, 'switch', {label: 'Settings', checked: true, id: 'myswitch', class: 'myswitch'}) %>
 
-		<%- $(req, 'switch', {title: 'Power Control', checked: true, disabled: true}) %>
+		<%- $(req, 'switch', {label: 'Power Control', checked: true, disabled: true}) %>
 	</div>
 
 	<h3>Text:</h3>
 	<div ig-ns="text">
 		<div class="textstyle">
-			<%- $(req, 'text', {content: text}) %>
+			<%- $(req, 'text', {value: text}) %>
 		</div><br/>
 
 		<div class="textstyle" style="border-color: blue">
-			<%- $(req, 'text', {content: text, auto: true, editable: true}) %>
+			<%- $(req, 'text', {value: text, auto: true, editable: true}) %>
 		</div><br/>
 
 		<div class="textstyle" style="border-color: red">
-			<%- $(req, 'text', {content: text, fontSize: 20, lineHeight: 2, rows: 2, style: 'color: green;'}) %>
+			<%- $(req, 'text', {value: text, fontSize: 20, lineHeight: 2, rows: 2, style: 'color: green;'}) %>
 		</div><br/>
 
 		<div class="textstyle" style="height: 22px; border-color: orange">
-			<%- $(req, 'text', {content: function(req, opts) { return text.substring(0, 45) + '...' }}) %>
+			<%- $(req, 'text', {value: function(req, opts) { return text.substring(0, 45) + '...' }}) %>
 		</div><br/>
 	</div>
 
@@ -149,15 +153,15 @@
 		<div class="center">
 			<b>Tooltip Top</b>
 			<div class="textstyle">
-				<%- $(req, 'text', {content: text, auto: true}) %>
-				<%- $(req, 'tooltip', {content: 'That is custom text', position: 'top', style: 'color: green; font-weight: bold'}) %>
+				<%- $(req, 'text', {value: text, auto: true}) %>
+				<%- $(req, 'tooltip', {value: 'That is custom text', position: 'top', style: 'color: green; font-weight: bold'}) %>
 			</div>
 		</div><br/>
 
 		<div class="center">
 			<b>Tooltip Bottom</b>
 			<div class="textstyle">
-				<%- $(req, 'text', {content: text, auto: true}) %>
+				<%- $(req, 'text', {value: text, auto: true}) %>
 				<%- $(req, 'tooltip', {position: 'bottom', width: '400px', class: 'custom'}) %>
 			</div>
 		</div><br/>
@@ -165,7 +169,7 @@
 		<div class="center">
 			<b>Tooltip Left</b>
 			<div class="textstyle">
-				<%- $(req, 'text', {content: text, auto: true}) %>
+				<%- $(req, 'text', {value: text, auto: true}) %>
 				<%- $(req, 'tooltip', {position: 'left', height: '200px'}) %>
 			</div>
 		</div><br/>
@@ -173,10 +177,17 @@
 		<div class="center">
 			<b>Tooltip Right - Scroll</b>
 			<div class="textstyle">
-				<%- $(req, 'text', {content: text, auto: true}) %>
+				<%- $(req, 'text', {value: text, auto: true}) %>
 				<%- $(req, 'tooltip', {position: 'right', height: '200px', scroll: 100, scrollTimeout: 700}) %>
 			</div>
 		</div>
+	</div>
+
+	<h3>Input:</h3>
+	<div ig-ns="input">
+		<%- $(req, 'input', {value: 'Hello World'}) %><br/>
+		<%- $(req, 'input', {value: 'Hello', type: 'password', maxlen: 5, required: true, style: 'width: 400px; color: green'}) %><br/>
+		<%- $(req, 'input', {value: 'Hello World', class: 'custom', disabled: true}) %>
 	</div>
 
 	<h3>Menu:</h3>
@@ -192,9 +203,9 @@
 					return '<button>OK</button>';
 				},
 				content: function(req, opts) {
-					return `<input value="${opts.value}"/>`;
+					return `<input value="${opts.default}"/>`;
 				},
-				value: `${locales.common.helloworld} - 1`
+				default: `${locales.common.helloworld} - 1`
 			}) %>
 		</div>
 
@@ -204,31 +215,42 @@
 					return '<button>OK</button>';
 				},
 				content: function(req, opts) {
-					return `<input value="${opts.value}" style="width: 100%"/>`;
+					return $(req, 'input', {value: opts.default});
 				},
-				value: `${locales.common.helloworld} - 2`
+				default: `${locales.common.helloworld} - 2`
 			}) %>
 		</div>
 
 		<div style="width: 400px; padding: 10px; margin: 10px 0; border: 1px solid green">
 			<%- $(req, 'fieldset', {
 				content: function(req, opts) {
-					return `<input type="text" value="${opts.value}" style="width: 100%"/>`;
+					return `<input type="text" value="${opts.default}" style="width: 100%"/>`;
 				},
-				value: `${locales.common.helloworld} - 3`
+				default: `${locales.common.helloworld} - 3`
 			}) %>
 		</div>
 	</div>
 
 	<h3>Data Binding:</h3>
 	<div ig-ns="binding">
-		<div ig-ns="check_switch">
-			<%- $(req, 'checkbox', {label: `${locales.common.helloworld} - 2`, checked: true}) %> <br/>
-			<%- $(req, 'switch', {title: 'Network Control', checked: true}) %>
+		<div ig-ns="menu_text">
+			<%- $(req, 'dropdown', {menus: data.dropdown}) %><br/>
+			<%- $(req, 'input', {value: `${locales.common.helloworld}`}) %><br/>
+			<b>Tooltip Text:</b>
+			<div class="tooltip-wrap" style="border: 1px solid blue">
+				<%- $(req, 'text', {value: `${locales.common.helloworld}`}) %>
+				<%- $(req, 'tooltip') %>
+			</div><br/>
+			<b>Dropdown Index:</b> <%- $(req, 'input', {id: 'selDropIndex', type: 'number', disabled: true}) %>
 		</div>
 
-		<div ig-ns="text_input">
-			<%- $(req, 'text', {content: 'HELLO WORLD'}) %> <br/>
+		<hr/>
+
+		<div ig-ns="check_switch">
+			<%- $(req, 'checkbox', {label: `${locales.common.helloworld}`, checked: true}) %> <br/>
+			<%- $(req, 'switch', {label: 'Network Control', checked: true}) %>
+			<%- $(req, 'button', {label: 'Button 1', id: 'mybutton'}) %>
+			<%- $(req, 'button', {label: 'Button 2'}) %>
 		</div>
 	</div>
 </div>

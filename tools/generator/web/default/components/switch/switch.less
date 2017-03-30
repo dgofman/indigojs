@@ -1,6 +1,5 @@
 outline: none;
 margin: 0;
-display: inline-block;
 
 @width: 50px;
 @height: 28px;
@@ -13,7 +12,7 @@ label {
 	height: @height;
 }
 
-label[disabled] {
+&[disabled] > label {
 	opacity: .5;
 	pointer-events: none;
 }

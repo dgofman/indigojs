@@ -1,1 +1,1 @@
-<div<%- opts.$attr('scroll') %><%- opts.$attr('scrollTimeout') %> style="<%- opts.$css('width') %><%- opts.$css('height') %><%- opts.$get('style') %>" class="<%- opts.position || 'top' %>"><p><%- typeof opts.content === 'function' ? opts.content(req, opts) : opts.content %></p></div>
+<div<%- opts.$attr('scroll') %><%- opts.$attr('scrollTimeout') %> style="<%- opts.$css('width') %><%- opts.$css('height') %><%- opts.$get('style') %>" class="<%- opts.position || 'top' %>"><p><%- typeof opts.value === 'function' ? opts.value(req, opts) : opts.value %></p></div>

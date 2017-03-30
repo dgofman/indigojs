@@ -2,7 +2,7 @@
 	"properties": {
 		"className": "text",
 		"id": "text",
-		"content": "text",
+		"value": "text",
 		"style": "text",
 		"scroll": "number",
 		"scrollTimeout": "number",

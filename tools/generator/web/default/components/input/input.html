@@ -1,0 +1,1 @@
+<input type="<%- opts.type || 'text' %>" value="<%- typeof opts.value === 'function' ? opts.value(req, opts) : opts.value %>"<%- opts.$title(req) %><%- opts.$attr('style') %><%- opts.$attr('maxlen', 'maxlength')%><%- opts.$get('disabled', 'disabled')%><%- opts.$get('required', 'required')%>/>

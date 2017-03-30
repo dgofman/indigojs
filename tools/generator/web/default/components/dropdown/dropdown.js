@@ -1,14 +1,14 @@
 function($, indigo, selector) {
 	indigo.debug('Init Dropdown');
 
-	$(window).on('click.dropdown', function(e) {
-		$(selector + '>.dropdown-menu').removeClass('open');
+	$(window).on('click.dropdown', function() {
+		$(selector + '>ul').removeClass('open');
 	});
 
 	return {
-		register: function(el, model) {
-			var menu = $('.dropdown-menu', el),
-				dropdown = $('.dropdown-toggle', el),
+		register: function(el) {
+			var menu = $('>ul', el),
+				dropdown = $('>div', el),
 				initMenu = function(isOpen) {
 					if (isOpen) {
 						menu.event('click', function(e) {
@@ -21,30 +21,78 @@ function($, indigo, selector) {
 				};
 			initMenu(menu.hasClass('open'));
 
-			$('.dropdown-toggle>span', el).event('click', function(e) {
+			$('>div>span', el).event('click', function(e) {
 				e.stopPropagation();
 				var isOpen = menu.hasClass('open');
-				$(selector + '>.dropdown-menu').removeClass('open');
+				$(selector + '>ul').removeClass('open');
 				menu.toggleClass('open', !isOpen);
 				initMenu(!isOpen);
 			});
 		},
 
-		selectedIndex: function(index) {
-			if (index === undefined) {
-				return Number($('.dropdown-toggle', this.el).attr('selectedIndex'));
-			} else {
-				var li = $('.dropdown-menu>li', this.el).eq(index);
-				$('.dropdown-toggle', this.el).attr('selectedIndex', index).find('>div').text(li.text());
-				return this;
+		init: function(self, el) {
+			$('>ul>li', el).event('click', function(e) {
+				self.option = $(e.currentTarget);
+			});
+		},
+
+		index: {
+			get: function() {
+				return Number($('>div', this.el).attr('selectedIndex')) || -1;
+			},
+			set: function(value) {
+				$('>div', this.el).attr('selectedIndex', value);
+				this.option = $('>ul>li', this.el).eq(value);
 			}
 		},
 
-		val: function(index) {
-			if (index === undefined) {
-				index = this.selectedIndex();
+		option: {
+			get: function() {
+				return $('>ul>li', this.el).eq(this.index);
+			},
+			set: function(value) {
+				this.index = value.index();
+				this.label = value.text();
 			}
-			return $('.dropdown-menu>li', this.el).eq(index);
+		},
+
+		label: {
+			get: function() {
+				return $('>div', this.el).find('>div').text();
+			},
+			set: function(value) {
+				$('>div', this.el).find('>div').text(value);
+			}
+		},
+
+		disabled: {
+			get: function() {
+				return !!$('>div', this.el).attr('disabled');
+			},
+			set: function(value) {
+				$('>ul', this.el).removeClass('open');
+				indigo.attr($('>div', this.el), 'disabled', value);
+			}
+		},
+
+		open: {
+			get: function() {
+				return $('>ul', this.el).hasClass('open');
+			},
+			set: function(value) {
+				indigo.class($('>ul', this.el), 'open', value);
+			}
+		},
+
+		indexByLabel: function(label) {
+			var index = -1;
+			$('>ul>li', this.el).each(function(i, li) {
+				if ($(li).text() === label) {
+					index = i;
+					return false;
+				}
+			});
+			return this.index = index;
 		}
 	}
 }

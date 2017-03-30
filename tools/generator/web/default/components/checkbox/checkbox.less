@@ -13,7 +13,7 @@ label {
 	.noselect();
 }
 
-label[disabled] {
+&[disabled]>label {
 	color: #ccc;
 	pointer-events: none;
 
@@ -26,6 +26,9 @@ input {
 	position: absolute;
 	opacity: 0;
 	overflow: hidden;
+	width: 100%;
+	left: 0;
+	top: 0;
 }
 
 i:before {
@@ -53,4 +56,8 @@ input:checked + i:before {
 .partial input:checked + i:before {
 	content: '\2580';
 	padding: 4px 0 0 3px;
+}
+
+u {
+	text-decoration: none;
 }

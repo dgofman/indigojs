@@ -14,18 +14,31 @@ function($, indigo) {
 			}
 		},
 
-		html: function(val) {
-			var el = $('>span', this.el);
-			return val === undefined ? el.html() : el.html(val);
+		value: {
+			get: function() {
+				return $('>span', this.el).html();
+			},
+			set: function(value) {
+				$('>span', this.el).html(value);
+			}
 		},
 
-		text: function(val) {
-			var el = $('>span', this.el);
-			return val === undefined ? el.text() : el.text(val);
+		text: {
+			get: function() {
+				return $('>span', this.el).text();
+			},
+			set: function(value) {
+				$('>span', this.el).text(value);
+			}
 		},
 
-		val: function(val) {
-			return this.html(val);
+		editable: {
+			get: function() {
+				return $('>span', this.el).prop('contenteditable') === 'true';
+			},
+			set: function(value) {
+				$('>span', this.el).prop('contenteditable', value);
+			}
 		}
 	};
 }

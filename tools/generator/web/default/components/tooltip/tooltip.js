@@ -8,6 +8,10 @@ function($, indigo) {
 			el.off('mouseover');
 			el.off('mouseout');
 
+			if (el.parent().css('position') === 'static') {
+				el.parent().css('position', 'relative');
+			}
+
 			var div = el.find('>div'),
 				p = div.find('>p'),
 				scrollInterval = parseInt(div.attr('scroll')),
@@ -58,6 +62,15 @@ function($, indigo) {
 						return div.css('margin-top', -((div.outerHeight() - el.outerHeight()) / 2));
 				}
 			});
+		},
+
+		value: {
+			get: function() {
+				return $('>div>p', this.el).html();
+			},
+			set: function(value) {
+				$('>div>p', this.el).html(value);
+			}
 		}
 	};
 }

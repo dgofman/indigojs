@@ -20,8 +20,8 @@
 		}
 	}
 %>
-<div tabindex="-1" class="dropdown-toggle" type="button" <%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %><%- opts.$get('disabled', 'disabled') %>>
+<div tabindex="-1" type="button" <%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %><%- opts.$get('disabled', 'disabled') %>>
 	<span unselectable="on" tabindex="-1">&#9662;</span>
-	<div<%- opts.$title(req, prompt + ', dropdown') %><%- opts.$attr('style') %>><%- prompt %></div>
+	<div role="menuitem"<%- opts.$title(req) %><%- opts.$attr('style') %>><%- prompt %></div>
 </div>
-<ul class="dropdown-menu<%- open ? ' open' : '' %>" tabindex="-1"><%- lis.join(''); %></ul>
+<ul<%- open ? ' class="open"' : '' %> tabindex="-1"><%- lis.join(''); %></ul>

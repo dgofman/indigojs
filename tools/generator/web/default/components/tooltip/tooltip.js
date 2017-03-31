@@ -64,12 +64,16 @@ function($, indigo) {
 			});
 		},
 
+		init: function(el) {
+			this.$label = $('>div>p', el);
+		},
+
 		value: {
 			get: function() {
-				return $('>div>p', this.el).html();
+				return this.$label.html();
 			},
 			set: function(value) {
-				$('>div>p', this.el).html(value);
+				this.$label.html(value);
 			}
 		}
 	};

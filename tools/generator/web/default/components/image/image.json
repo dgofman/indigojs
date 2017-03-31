@@ -1,0 +1,10 @@
+{
+	"properties": {
+		"className": "text",
+		"id": "text",
+		"title": "text",
+		"style": "text",
+		"img": "bool",
+		"url": "text"
+	}
+}

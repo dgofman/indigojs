@@ -2,18 +2,18 @@ function($, indigo) {
 	indigo.debug('Init Switch');
 
 	return {
-		init: function(self, el) {
-			var input = $('>label>input', el).event('change', function() {
-				self.checked = input.is(':checked');
+		init: function(el, self) {
+			self.$input = $('>label>input', el).event('change', function() {
+				self.checked = self.$input.is(':checked');
 			});
 		},
 
 		checked: {
 			get: function() {
-				return $('>label>input', this.el).prop('checked');
+				return this.$input.prop('checked');
 			},
 			set: function(value) {
-				$('>label>input', this.el).prop('checked', value);
+				this.$input.prop('checked', value);
 			}
 		}
 	};

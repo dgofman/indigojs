@@ -14,30 +14,34 @@ function($, indigo) {
 			}
 		},
 
+		init: function(el) {
+			this.$label = $('>span', el);
+		},
+
 		value: {
 			get: function() {
-				return $('>span', this.el).html();
+				return this.$label.html();
 			},
 			set: function(value) {
-				$('>span', this.el).html(value);
+				this.$label.html(value);
 			}
 		},
 
 		text: {
 			get: function() {
-				return $('>span', this.el).text();
+				return this.$label.text();
 			},
 			set: function(value) {
-				$('>span', this.el).text(value);
+				this.$label.text(value);
 			}
 		},
 
 		editable: {
 			get: function() {
-				return $('>span', this.el).prop('contenteditable') === 'true';
+				return this.$label.prop('contenteditable') === 'true';
 			},
 			set: function(value) {
-				$('>span', this.el).prop('contenteditable', value);
+				this.$label.prop('contenteditable', value);
 			}
 		}
 	};

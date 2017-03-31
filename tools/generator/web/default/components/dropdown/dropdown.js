@@ -21,78 +21,91 @@ function($, indigo, selector) {
 				};
 			initMenu(menu.hasClass('open'));
 
-			$('>div>span', el).event('click', function(e) {
+			var span = $('>div>span', el).event('click', function(e) {
 				e.stopPropagation();
 				var isOpen = menu.hasClass('open');
 				$(selector + '>ul').removeClass('open');
 				menu.toggleClass('open', !isOpen);
 				initMenu(!isOpen);
 			});
+
+			$('>div', el).keypress(function (e) {
+				if (e.which === 13) {
+					span.trigger('click');
+				}
+			});
 		},
 
-		init: function(self, el) {
-			$('>ul>li', el).event('click', function(e) {
+		init: function(el) {
+			this.initItems(el, this);
+			this.$box = $('>div', el);
+			this.$prompt = this.$box.find('>div');
+			this.$popup = $('>ul', el);
+		},
+
+		initItems: function(el, self) {
+			self.$items = $('>ul>li', el).event('click', function(e) {
 				self.option = $(e.currentTarget);
 			});
 		},
 
-		index: {
-			get: function() {
-				return Number($('>div', this.el).attr('selectedIndex')) || -1;
-			},
-			set: function(value) {
-				$('>div', this.el).attr('selectedIndex', value);
-				this.option = $('>ul>li', this.el).eq(value);
-			}
-		},
-
-		option: {
-			get: function() {
-				return $('>ul>li', this.el).eq(this.index);
-			},
-			set: function(value) {
-				this.index = value.index();
-				this.label = value.text();
-			}
-		},
-
-		label: {
-			get: function() {
-				return $('>div', this.el).find('>div').text();
-			},
-			set: function(value) {
-				$('>div', this.el).find('>div').text(value);
-			}
-		},
-
-		disabled: {
-			get: function() {
-				return !!$('>div', this.el).attr('disabled');
-			},
-			set: function(value) {
-				$('>ul', this.el).removeClass('open');
-				indigo.attr($('>div', this.el), 'disabled', value);
-			}
-		},
-
-		open: {
-			get: function() {
-				return $('>ul', this.el).hasClass('open');
-			},
-			set: function(value) {
-				indigo.class($('>ul', this.el), 'open', value);
-			}
-		},
-
-		indexByLabel: function(label) {
+		indexByText: function(label) {
 			var index = -1;
-			$('>ul>li', this.el).each(function(i, li) {
+			this.$items.each(function(i, li) {
 				if ($(li).text() === label) {
 					index = i;
 					return false;
 				}
 			});
 			return this.index = index;
+		},
+
+		index: {
+			get: function() {
+				return Number(this.$box.attr('selectedIndex')) || -1;
+			},
+			set: function(value) {
+				this.$box.attr('selectedIndex', value);
+				this.option = this.$items.eq(value);
+			}
+		},
+
+		option: {
+			get: function() {
+				return this.$items.eq(this.index);
+			},
+			set: function(value) {
+				this.index = value.index();
+				this.prompt = value.text();
+			}
+		},
+
+		prompt: {
+			get: function() {
+				return this.$prompt.text();
+			},
+			set: function(value) {
+				this.$prompt.text(value);
+			}
+		},
+
+		disabled: {
+			get: function() {
+				return !!this.$box.attr('disabled');
+			},
+			set: function(value) {
+				this.$popup.removeClass('open');
+				indigo.attr(this.$box, 'disabled', value);
+			}
+		},
+
+		open: {
+			get: function() {
+				return this.$popup.hasClass('open');
+			},
+			set: function(value) {
+				indigo.class(this.$popup, 'open', value);
+			}
 		}
 	}
 }

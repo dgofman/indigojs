@@ -61,10 +61,10 @@
 		getStaticPath() {
 			return '<%- baseStaticPath %>';
 		},
-		instAndProp: function(bindMap, callback) {
+		bindProperties: function(bindMap, callback) {
 			for (var prop in bindMap) {
 				if (prop !== 'handle') {
-					return callback({prop: prop, inst: bindMap[prop], handle: bindMap.handle});
+					return callback({prop: prop, self: bindMap[prop], handle: bindMap.handle});
 				}
 			}
 		},
@@ -106,9 +106,13 @@
 				}
 			},
 			namespace(selector, callbak) {
-				var parent = this.window.$(selector),
+				var self = this,
+					parent = this.window.$(selector),
 					ns = {
 						create: function(clazz, idxOrSelector) {
+							if (typeof clazz === 'string') {
+								clazz = self.import(clazz);
+							}
 							var el, els = parent.find(clazz.selector),
 								type = typeof(idxOrSelector);
 							if (type === 'number') {
@@ -127,12 +131,12 @@
 			bind(type, bindMap, model) {
 				model = model || {};
 				for (var i = 0; i < bindMap.length; i++) {
-					indigoJS.instAndProp(bindMap[i], function(o) {
-						o.inst.el.on(o.prop, function(e, value) {
+					indigoJS.bindProperties(bindMap[i], function(o) {
+						o.self.el.on(o.prop, function(e, value) {
 							model[type] = value;
 							if (o.handle) {
-								if (o.inst[o.prop] !== value) {
-									o.handle.call(o.inst, value, o.prop, model);
+								if (o.self[o.prop] !== value) {
+									o.handle.call(o.self, value, o.prop, model);
 								}
 							}
 						});
@@ -149,11 +153,11 @@
 						if (!model.__proto__['__propogate__' + type]) {
 							model.__proto__['__propogate__' + type] = true;
 							for (i = 0; i < bindMap.length; i++) {
-								indigoJS.instAndProp(bindMap[i], function(o) {
+								indigoJS.bindProperties(bindMap[i], function(o) {
 									if (o.handle) {
-										o.handle.call(o.inst, value, o.prop, model);
+										o.handle.call(o.self, value, o.prop, model);
 									} else {
-										o.inst[o.prop] = value;
+										o.self[o.prop] = value;
 									}
 								});
 							}
@@ -188,7 +192,7 @@
 		if (apis && !clazz) {
 			clazz = function(el) {
 				this.el = el;
-				this.init(this, this.el);
+				this.init(el, this);
 			};
 			clazz.selector = selector;
 			clazz.prototype.constructor = clazz;

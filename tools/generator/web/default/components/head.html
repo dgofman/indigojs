@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" media="all" href="<%- baseStaticPath %>/css/common.less">
+<link rel="stylesheet" type="text/css" media="all" href="<%- baseStaticPath %>/css/indigo.less">
 
 <style>
 	body {
@@ -130,6 +130,9 @@
 			},
 			bind(type, bindMap, model) {
 				model = model || {};
+				if (!Array.isArray(bindMap)) { //single bind
+					bindMap = [bindMap];
+				}
 				for (var i = 0; i < bindMap.length; i++) {
 					indigoJS.bindProperties(bindMap[i], function(o) {
 						o.self.el.on(o.prop, function(e, value) {
@@ -143,7 +146,8 @@
 					});
 				}
 
-				var val = model[type];
+				var self = this, 
+					val = model[type];
 				Object.defineProperty(model, type, {
 					get: function() {
 						return val;
@@ -167,7 +171,9 @@
 				});
 				model[type] = val;
 
-				return model;
+				return function(type, bindMap, newModel) {
+					return self.bind(type, bindMap, newModel || model);
+				};
 			}
 		}
 	};

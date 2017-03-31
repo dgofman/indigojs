@@ -120,7 +120,7 @@ module.exports = function(app) {
 			}
 			req.model.componentIndex++;
 
-			return `<${cTag} cid="${className}"${opts.$attr('class')}${opts.$attr('id')} tabindex="-1">${html}</${cTag}>`;
+			return `<${cTag} cid="${className}"${opts.$attr('class')}${opts.$attr('parentStyle', 'style')}${opts.$attr('id')} tabindex="-1">${html}</${cTag}>`;
 		} catch(err) {
 			indigo.logger.error(err);
 			return '';
@@ -134,7 +134,7 @@ module.exports = function(app) {
 	app.locals.finalize = function(req) {
 		debug('Include scripts: %s', JSON.stringify(req.model.assets));
 		let lines = [],
-			assets = [`<link rel="stylesheet" type="text/css" href="${req.model.baseStaticPath}/css/common${req.model.extLESS}">`],
+			assets = [`<link rel="stylesheet" type="text/css" href="${req.model.baseStaticPath}/css/indigo${req.model.extLESS}">`],
 			uri = indigo.getComponentURL();
 		for (let className in req.model.assets) {
 			const asset = req.model.assets[className],

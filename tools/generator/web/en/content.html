@@ -122,11 +122,11 @@
 	<div ig-ns="switch">
 		<%- $(req, 'switch') %>
 
-		<%- $(req, 'switch', {label: 'Network Control', checked: true}) %>
+		<%- $(req, 'switch', {title: 'Network Control', checked: true}) %>
 
-		<%- $(req, 'switch', {label: 'Settings', checked: true, id: 'myswitch', class: 'myswitch'}) %>
+		<%- $(req, 'switch', {title: 'Settings', checked: true, id: 'myswitch', class: 'myswitch'}) %>
 
-		<%- $(req, 'switch', {label: 'Power Control', checked: true, disabled: true}) %>
+		<%- $(req, 'switch', {title: 'Power Control', checked: true, disabled: true}) %>
 	</div>
 
 	<h3>Text:</h3>
@@ -195,6 +195,12 @@
 		<%- $(req, 'menu', {class: 'menu_style', menus: data.menu}) %>
 	</div>
 
+	<h3>Image:</h3>
+	<div ig-ns="image">
+		<%- $(req, 'image', {url: '/static/images/indigo.png', parentStyle: 'width: 30px; height: 30px', title: 'indigo JS'}) %>
+		<%- $(req, 'image', {url: '/static/images/indigo.png', parentStyle: 'width: 30px; height: 30px', title: 'indigo JS', img: true}) %>
+	</div>
+
 	<h3>Fieldset:</h3>
 	<div ig-ns="fieldset">
 		<div style="width: 300px; padding: 10px; border: 1px solid red">
@@ -231,26 +237,52 @@
 		</div>
 	</div>
 
-	<h3>Data Binding:</h3>
-	<div ig-ns="binding">
+	<h3>One-way Data Binding:</h3>
+	<div ig-ns="one-binding" class="clearfix" style="width: 400px; padding: 10px; border: 1px solid green">
+		<%- $(req, 'fieldset', {
+			left: function() {
+				return '<b>Username:</b>';
+			},
+			content: function(req) {
+				return $(req, 'input');
+			}
+		}) %><br/>
+		<%- $(req, 'fieldset', {
+			left: function() {
+				return '<b>Password:</b>';
+			},
+			content: function(req) {
+				return $(req, 'input', {type: 'password'});
+			}
+		}) %><br/>
+		<%- $(req, 'button', {label: 'Submit', class: 'pull-right'}) %>
+	</div>
+
+	<h3>Two-way Data Binding:</h3>
+	<div ig-ns="two-binding">
 		<div ig-ns="menu_text">
 			<%- $(req, 'dropdown', {menus: data.dropdown}) %><br/>
 			<%- $(req, 'input', {value: `${locales.common.helloworld}`}) %><br/>
+			<%- $(req, 'checkbox', {label: `${locales.common.helloworld}`}) %><br/>
+			<%- $(req, 'switch') %><br/>
 			<b>Tooltip Text:</b>
 			<div class="tooltip-wrap" style="border: 1px solid blue">
 				<%- $(req, 'text', {value: `${locales.common.helloworld}`}) %>
 				<%- $(req, 'tooltip') %>
 			</div><br/>
-			<b>Dropdown Index:</b> <%- $(req, 'input', {id: 'selDropIndex', type: 'number', disabled: true}) %>
+			<b>Dropdown Index:</b> <%- $(req, 'input', {id: 'selDropIndex', type: 'number', disabled: true}) %><br/>
+			<%- $(req, 'button', {label: 'Button'}) %>
 		</div>
 
 		<hr/>
 
 		<div ig-ns="check_switch">
 			<%- $(req, 'checkbox', {label: `${locales.common.helloworld}`, checked: true}) %> <br/>
-			<%- $(req, 'switch', {label: 'Network Control', checked: true}) %>
+			<%- $(req, 'switch', {checked: true}) %>
 			<%- $(req, 'button', {label: 'Button 1', id: 'mybutton'}) %>
 			<%- $(req, 'button', {label: 'Button 2'}) %>
+			<%- $(req, 'image', {url: '/static/images/indigo.png', parentStyle: 'width: 30px; height: 30px'}) %><br/>
+			<%- $(req, 'text') %>
 		</div>
 	</div>
 </div>

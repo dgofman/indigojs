@@ -1,6 +1,6 @@
 //After modifying this file you should execute 'grunt flags'
 {
-	"cssName": "i", //node name,
+	"cssName": ".flag",
 	"outputName": "flags.less",
 
 	"languages": [

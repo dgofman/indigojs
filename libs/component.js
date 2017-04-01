@@ -133,7 +133,7 @@ module.exports = function(app) {
 	app.locals.finalize = function(req) {
 		debug('Include scripts: %s', JSON.stringify(req.model.assets));
 		let lines = [],
-			assets = [`<link rel="stylesheet" type="text/css" href="${req.model.baseStaticPath}/css/indigo${req.model.extLESS}">`],
+			assets = [`<link rel="stylesheet" type="text/css" href="${req.model.baseStaticPath}/css/common${req.model.extLESS}">`],
 			uri = indigo.getComponentURL();
 		for (let className in req.model.assets) {
 			const asset = req.model.assets[className],

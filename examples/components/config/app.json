@@ -1,0 +1,30 @@
+{
+	"environment": "dev",
+
+	"server": {
+		"port": 8888,
+		"webdir": "/examples/components/web",
+		"componentTag": false, /* attach into less/css files the component tag */ 
+		"staticDir": "/static", /* path to the web/static directory */
+		"componentUri": "/component", /* path to component files */
+		"cache": 3600 /* seconds, 0 - no-cache */
+	},
+
+	"locales": {
+		"default": "en",
+		"path": "/examples/components/locales",
+		"monitor": 0 /* check file changes in seconds, 0 - no monitoring */
+	},
+
+	"errors": {
+		"path": null,
+		"template": "/examples/templates/errors.html",
+		"404": "",
+		"500": "",
+		"503": ""
+	},
+
+	"routers": [
+		"/examples/components/routers"
+	]
+}

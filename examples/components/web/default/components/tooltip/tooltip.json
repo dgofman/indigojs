@@ -1,0 +1,13 @@
+{
+	"properties": {
+		"className": "text",
+		"id": "text",
+		"value": "text",
+		"style": "text",
+		"scroll": "number",
+		"scrollTimeout": "number",
+		"width": "number",
+		"height": "number",
+		"position": ["top", "right", "bottom", "left"]
+	}
+}

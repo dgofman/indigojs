@@ -1,0 +1,14 @@
+{
+	"properties": {
+		"className": "text",
+		"id": "text",
+		"title": "text",
+		"style": "text",
+		"value": "text",
+		"rows": "number",
+		"fontSize": "number",
+		"lineHeight": "number",
+		"editable": "bool",
+		"auto": "bool"
+	}
+}

@@ -1,0 +1,17 @@
+<div class="header">
+	<span>Indigo JS Header</span>
+	<%- $(req, 'menu', {menus: [
+		{
+			"label": "HOME",
+			"nav": "index#home"
+		},
+		{
+			"label": "PRODUCT",
+			"nav": "index#product"
+		},
+		{
+			"label": "CONTACT US",
+			"nav": "index#contact"
+		}
+	]}) %>
+</div>

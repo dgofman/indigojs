@@ -72,7 +72,7 @@ module.exports = function(app) {
 					less.render(`${componentTag ? indigo.getComponentTag() : ''}[cid=${className}] {\n${data.toString()}\n}`, {
 						filename: fileURL,
 						compress: indigo.appconf.get('environment') !== 'dev',
-						paths: ['web/default']
+						paths: [getModuleWebDir(req) + '/default']
 					}, (e, result) => {
 						res.set('Content-Type', 'text/css');
 						if (e) {
@@ -92,7 +92,7 @@ module.exports = function(app) {
 	 * @memberOf sourceloader
 	 * @alias component.js#component
 	 */	
-	app.locals.component = app.locals.$ = (req, className, opts={}, wrapTag) => {
+	app.locals.component = app.locals.$ = (req, className, opts={}, wrapTag=null) => {
 		const cTag = wrapTag || indigo.getComponentTag();
 		debug(req.method, className);
 		const newUrl = indigo.getNewURL(req, null, `/${req.session.locale}/components/${className}/${className}.html`, true);
@@ -112,8 +112,7 @@ module.exports = function(app) {
 			req.model.locale = app.locals.locale;
 			req.model.component = req.model.$ = app.locals.component;
 			req.model.assets = req.model.assets || {};
-			let html = ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model),
-				title = '';
+			let html = ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
 
 			if (!req.model.assets[className]) {
 				req.model.assets[className] = {className, wrapTag};
@@ -153,4 +152,4 @@ module.exports = function(app) {
 		}
 		return lines.concat(assets).join('\n');
 	};
-}
+};

@@ -1,0 +1,28 @@
+<ul<%- opts.$get('disabled', ' disabled') %><%- opts.$attr('style') %><%- opts.$title(req) %> <%- opts.$title(req, opts.title || 'Menu Control') %>><%
+	for (var index in opts.menus) {
+		var menu = opts.menus[index],
+			itemRenderer = menu.itemRenderer || opts.itemRenderer;
+		menu.get = opts.$get;
+		menu.attr = opts.$attr;
+
+		if (itemRenderer) {
+%>
+	<%- itemRenderer(req, opts, menu, index) %>
+<%
+		} else {
+%>
+	<li<%- opts.$title(req, menu.label) %><%- menu.attr('class') %><%- menu.attr('style') %><%- menu.get('disabled', ' disabled') %>><p><a tabindex="-1" href="<%- menu.get('nav') || '#' %>"><%- menu.label %></a>
+	</p>
+		<ol><%
+		for (var i in menu.sub) {
+			var sub = menu.sub[i];
+			sub.get = opts.$get;
+			sub.attr = opts.$attr;
+%><li<%- sub.attr('class') %><%- sub.attr('style') %><%- sub.get('disabled', ' disabled') %>><p><a tabindex="-1" href="<%- sub.get('nav') || '#' %>"><%- sub.label %></a></p></li><%
+		}
+%></ol>
+	</li><%
+		}
+	}
+%>
+</ul>

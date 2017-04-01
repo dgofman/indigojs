@@ -1,7 +1,6 @@
 'use strict';
 
-var indigo = require('indigojs'),
-	data = require(`${__appDir}/model/data.json`);
+var indigo = global.__indigo;
 
 module.exports = function(router) {
 
@@ -10,7 +9,6 @@ module.exports = function(router) {
 	});
 
 	router.get('/content/:page', function(req, res) {
-		req.model.data = data;
 		req.model.pageTitle = req.params.page.toUpperCase();
 		indigo.render(req, res, '/content');
 	});

@@ -1,0 +1,63 @@
+@import 'less/constant.less';
+
+margin: 0;
+display: inline-block;
+text-indent: 0;
+
+label {
+	padding: 0;
+	text-indent: 20px;
+	line-height: 17px;
+	position: relative;
+	cursor: pointer;
+	.noselect();
+}
+
+&[disabled]>label {
+	color: #ccc;
+	pointer-events: none;
+
+	input + i:before {
+		border-color: #ccc;
+	}
+}
+
+input {
+	position: absolute;
+	opacity: 0;
+	overflow: hidden;
+	width: 100%;
+	left: 0;
+	top: 0;
+}
+
+i:before {
+	border: 1px solid #9a9a9a;
+	border-radius: 4px;
+	content: '\00a0';
+	display: inline-block;
+	font-size: 14px;
+	height: 17px;
+	width: 18px;
+	line-height: 14px;
+	text-indent: 0;
+	margin: -1px 5px 0 -20px;
+	vertical-align: top;
+}
+
+input:checked + i:before {
+	background: #fff;
+	color: #0d76d0;
+	font-weight: bold;
+	content: '\2713';
+	padding: 1px 0;
+}
+
+.partial input:checked + i:before {
+	content: '\2580';
+	padding: 4px 0 0 3px;
+}
+
+u {
+	text-decoration: none;
+}

@@ -40,6 +40,10 @@ firststep: killnode
 	node examples/firststep/index.js </dev/null &
 	open "http://localhost:8787/firststep/index"
 
+components: killnode
+	node examples/components/index.js </dev/null &
+	open "http://localhost:8888/components/index"
+
 debug:
 	clear & DEBUG=indigo:* & nodemon --debug .
 

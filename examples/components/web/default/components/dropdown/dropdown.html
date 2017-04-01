@@ -1,0 +1,27 @@
+<%
+	var prompt = opts.prompt || '',
+		selectedIndex = -1,
+		open = opts.open || false,
+		lis = [];
+
+	if (opts.itemRenderer) {
+		selectedIndex = opts.itemRenderer(req, opts, lis);
+	} else {
+		for (var index in opts.menus) {
+			var menu = opts.menus[index];
+			if (typeof menu === 'string') {
+				menu = {label: menu};
+			}
+			if (menu.selected) {
+				prompt = menu.label || '';
+				selectedIndex = index;
+			}
+			lis.push(`<li${menu.val ? ' value="' + menu.val + '"' : ''}${menu.promt ? ' title="' + menu.promt + '"' : ''}>${menu.label}</li>`);
+		}
+	}
+%>
+<div tabindex="-1" type="button" <%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %><%- opts.$get('disabled', 'disabled') %>>
+	<span unselectable="on" tabindex="-1">&#9662;</span>
+	<div role="menuitem"<%- opts.$title(req) %><%- opts.$attr('style') %>><%- prompt %></div>
+</div>
+<ul<%- open ? ' class="open"' : '' %> tabindex="-1"><%- lis.join(''); %></ul>

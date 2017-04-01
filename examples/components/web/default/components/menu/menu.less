@@ -1,0 +1,76 @@
+@import 'less/constant.less';
+
+display: inline-block;
+background: #31708f;
+
+p {
+	margin: 0;
+	height: 100%;
+	display: table;
+}
+
+a {
+	color: #fff;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+a[href='#'] {
+	text-decoration: none;
+}
+
+ul, ol {
+	height: 100%;
+	list-style: none;
+	padding: 0;
+	display: table;
+}
+
+li {
+	display: table-cell;
+	vertical-align: middle;
+	padding: 0 10px;
+	position: relative;
+	.noselect();
+
+	&:hover ol {
+		left: 0;
+		display: table;
+		color: #000;
+
+		&>li:hover {
+			background: #85c1de;
+		}
+	}
+}
+
+li[disabled] {
+	background: #f0f0f0;
+	pointer-events: none;
+}
+
+ol {
+	height: auto;
+	display: none;
+	z-index: 999;
+	position: absolute;
+	border: 1px solid #333;;
+	border-top: none;
+	background: #ccc;
+
+	& li {
+		float: left;
+		width: 100%;
+		padding: 10px;
+		position: relative;
+		white-space: nowrap;
+	}
+
+	& a {
+		color: #000;
+	}
+
+	& a:hover {
+		color: #fff;
+	}
+}

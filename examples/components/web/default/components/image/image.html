@@ -1,0 +1,11 @@
+<%
+	if (opts.img) {
+%>
+<img src="<%- opts.url %>" role="img"<%- opts.$title(req) %><%- opts.$attr('style') %>/>
+<%
+	} else {
+%>
+<div style="background-image: url('<%- opts.url %>')<%- opts.$get('style') %>" role="img"<%- opts.$title(req) %>></div>
+<%
+	}
+%>

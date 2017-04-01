@@ -3,8 +3,7 @@
 const debug = require('debug')('indigo:main'),
 	express = require('express'),
 	ejs = require('ejs'),
-	fs = require('fs'),
-	less = require('less');
+	fs = require('fs');
 
 var reqModel, http,
 	routers, errorHandler,
@@ -476,7 +475,7 @@ const indigo =
 			});
 		} catch (e) {
 			indigo.logger.error(e);
-		};
+		}
 	}
 };
 

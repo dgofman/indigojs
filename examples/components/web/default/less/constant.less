@@ -1,0 +1,32 @@
+@base: '/static';
+@images: '@{base}/images';
+
+.gradient(@startColor: #eeeeee; @endColor: #cccccc) {
+	background-color: @endColor;
+	background: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor));
+	background: -webkit-linear-gradient(top, @startColor, @endColor);
+	background: -moz-linear-gradient(top, @startColor, @endColor);
+	background: -ms-linear-gradient(top, @startColor, @endColor);
+	background: -o-linear-gradient(top, @startColor, @endColor);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='@startcolor', endColorstr='@endColor', GradientType=1);
+	-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='@startColor',endColorstr='@endColor',GradientType=1);
+}
+
+.cursor() {
+	cursor: pointer;
+}
+
+.noselect() {
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+	user-select: none; 
+	/* IE 6-9 unselectable="on" */
+}
+
+.line-ellipsis() {
+	overflow: hidden;
+	white-space: nowrap;
+	ms-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+}

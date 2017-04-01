@@ -56,6 +56,12 @@ goto :eof
 	start "" "http://localhost:8787/firststep/index"
 goto :eof
 
+:components
+	call :killnode
+	start /WAIT /B node examples/components/index.js
+	start "" "http://localhost:8888/components/index"
+goto :eof
+
 :debug
 	cls
 	SET DEBUG=indigo:* & nodemon --debug .

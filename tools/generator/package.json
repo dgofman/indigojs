@@ -9,17 +9,17 @@
 	"private": true,
 	"dependencies": {
 		"indigojs": "~{{version}}",
-		"less": "~2.7.2",
-		"cjson": "~0.5.0",
-		"body-parser": "~1.17.1",
-		"express-session": "~1.15.1",
+		"less": "latest",
+		"cjson": "latest",
+		"body-parser": "latest",
+		"express-session": "latest",
 		"proxy-orchestrator": "latest"
 	},
 	"devDependencies": {
-		"nodemon": "~1.11.0",
-		"jshint": "~2.9.2",
-		"grunt": "~1.0.1",
-		"grunt-contrib-uglify": "~2.0.0",
-		"grunt-contrib-less": "~1.3.0"
+		"nodemon": "latest",
+		"jshint": "latest",
+		"grunt": "latest",
+		"grunt-contrib-uglify": "latest",
+		"grunt-contrib-less": "latest"
 	}
 }

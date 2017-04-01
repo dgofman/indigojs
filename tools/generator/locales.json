@@ -1,5 +1,17 @@
+//After modifying this file you should execute 'grunt flags'
 {
-	"pageTitle": "{{name}}",
-	"copyright": "Copyright {{year}}",
-	"helloworld": "Hello World"
+	"cssName": "i", //node name,
+	"outputName": "flags.less",
+
+	"languages": [
+		{"code": "en", "name": "English"},
+		{"code": "de", "name": "Deutsch"},
+		{"code": "es", "name": "Español"},
+		{"code": "fr", "name": "Français"},
+		{"code": "it", "name": "Italiano"},
+		{"code": "pl", "name": "Polski"},
+		{"code": "ru", "name": "Русский"},
+		{"code": "zh", "name": "中文 (简体)"},
+		{"code": "ja", "name": "日本語"}
+	]
 }

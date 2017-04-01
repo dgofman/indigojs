@@ -71,7 +71,10 @@ var stdio = require('stdio'),
 						replace(/{{routers}}/g, routersDir);
 	createFile('/config', '/app.json', lines);
 
-	lines = fs.readFileSync(__dirname + '/locales.json', 'utf-8').
+	lines = fs.readFileSync(__dirname + '/locales.json', 'utf-8');
+	createFile('/config', '/locales.json', lines);
+
+	lines = fs.readFileSync(__dirname + '/en_locales.json', 'utf-8').
 						replace(/{{name}}/g, ops.name).
 						replace(/{{year}}/g, new Date().getFullYear());
 	createFile(localesDir + '/en', '/common.json', lines);
@@ -89,13 +92,6 @@ var stdio = require('stdio'),
 	createFile(controllersDir, '/controller.js', lines);
 	copySync(__dirname + '/web', '.' + webdir);
 
-	dir = '/resources/nginx/conf';
-	lines = fs.readFileSync(__dirname + '/resources/nginx/conf/nginx.conf', 'utf-8').
-							replace(/{{webdir}}/g, (process.cwd() + webdir).replace(/\\/g, '/')).
-							replace(/{{static}}/g, staticDir).
-							replace(/{{port}}/g, ops.port || defaultPort);
-	createFile(dir, '/nginx.conf', lines);
-
 	console.log('\nThank you for using IndigoJS!');
 
 	console.log('\nPlease run commands:');
@@ -105,7 +101,7 @@ var stdio = require('stdio'),
 })();
 
 function createFile(dir, file, lines) {
-	if (dir.substr(0, 1) === '/') {
+	if (dir.charAt(0) === '/') {
 		dir = '.' + dir;
 	}
 	console.log('creating %s%s', dir, file);

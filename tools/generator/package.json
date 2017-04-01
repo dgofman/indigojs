@@ -4,12 +4,14 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "nodemon .",
-		"jshint": "./node_modules/.bin/jshint . --config .jshintrc"
+		"jshint": "./node_modules/.bin/jshint . --config .jshintrc",
+		"postinstall": "grunt flags"
 	},
 	"private": true,
 	"dependencies": {
 		"indigojs": "~{{version}}",
 		"less": "~2.7.2",
+		"cjson": "~0.5.0",
 		"body-parser": "~1.17.1",
 		"express-session": "~1.15.1",
 		"proxy-orchestrator": "latest"

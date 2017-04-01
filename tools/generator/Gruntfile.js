@@ -12,10 +12,10 @@ module.exports = function(grunt) {
 				files: [
 					{
 						expand: true,
-			cwd: ".{{webdir}}/default/less",
-			src: [ "**/*.less" ],
-			dest: ".{{webdir}}/static/css",
-			ext: ".css"
+						cwd: ".{{webdir}}/default/less",
+						src: [ "**/*.less" ],
+						dest: ".{{webdir}}/static/css",
+						ext: ".css"
 					}
 				]
 			}
@@ -35,9 +35,20 @@ module.exports = function(grunt) {
 			}
 		}
 	});
-	
+
 	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
-	
-	grunt.registerTask('default', ['less', 'uglify']);
+
+	grunt.registerTask('flags', function (key, value) {
+		var json = require('cjson').load('./config/locales.json'),
+			content = `@import './constant_flags.less';\n\n${json.cssName} {\n\t.flag();\n}`;
+
+		json.languages.forEach(function(node) {
+			content += `\n.${node.code} {\n\t.${node.code}();\n}\n`;
+		});
+
+		grunt.file.write('.{{webdir}}/default/less/' + json.outputName, content);
+	});
+
+	grunt.registerTask('default', ['less', 'uglify', 'flags']);
 };

@@ -1,5 +1,8 @@
 'use strict';
 
+var fs = require('fs'),
+	cjson = require('cjson');
+
 module.exports = function(grunt) {
 
 	grunt.initConfig({
@@ -22,6 +25,10 @@ module.exports = function(grunt) {
 		},
 
 		uglify: {
+				options: {
+					sourceMap: true,
+					quoteStyle: 3
+				},
 				static: {
 					files: [
 					{
@@ -29,7 +36,14 @@ module.exports = function(grunt) {
 						cwd: '.{{webdir}}/static/js',
 						src: ['**/*.js', '!vendor/**'],
 						dest: '.{{webdir}}/static/js',
-						ext: '.min.js'
+						ext: '.min.js',
+						rename: function (dst, src) {
+							var file = dst + '/' + src;
+							if (fs.existsSync(file)) {
+								fs.unlinkSync(file);
+							}
+							return file;
+						}
 					}
 				]
 			}
@@ -40,15 +54,15 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 
 	grunt.registerTask('flags', function (key, value) {
-		var json = require('cjson').load('./config/locales.json'),
+		var json = cjson.load('./config/locales.json'),
 			content = `@import './constant_flags.less';\n\n${json.cssName} {\n\t.flag();\n}`;
 
 		json.languages.forEach(function(node) {
-			content += `\n.${node.code} {\n\t.${node.code}();\n}\n`;
+			content += `\n.${node.code} {\n\t.${node.flag}();\n}\n`;
 		});
 
 		grunt.file.write('.{{webdir}}/default/less/' + json.outputName, content);
 	});
 
-	grunt.registerTask('default', ['less', 'uglify', 'flags']);
+	grunt.registerTask('default', ['flags', 'less', 'uglify']);
 };

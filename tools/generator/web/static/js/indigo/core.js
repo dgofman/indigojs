@@ -57,32 +57,32 @@ var console = window.console,
 	},
 	extend: {
 		window: window,
-		debug() {
+		debug: function() {
 			if (indigoJS.static.DEBUG) {
 				console.log.apply(console, arguments);
 			}
 		},
-		info() {
+		info: function() {
 			if (indigoJS.static.INFO) {
 				console.info.apply(console, arguments);
 			}
 		},
-		attr(el, type, val) {
+		attr: function(el, type, val) {
 			return val ? el.attr(type, type) : el.removeAttr(type);
 		},
-		class(el, name, val) {
+		class: function(el, name, val) {
 			return val ? el.addClass(name) : el.removeClass(name);
 		},
-		import() {
+		import: function() {
 			var clazz, callback, components = [],
 				length = arguments.length;
 			if (typeof arguments[length - 1] === 'function') {
 				callback = arguments[--length];
 			}
 			for (var i = 0; i < length; i++) {
-				clazz = indigoJS.components[`[cid=${arguments[i]}]`];
+				clazz = indigoJS.components['[cid=' + arguments[i] + ']'];
 				if (!clazz) {
-					throw new Error(`ClassNotFoundException: ${arguments[i]}`);
+					throw new Error('ClassNotFoundException: ' + arguments[i]);
 				}
 				components.push(clazz);
 			}
@@ -92,7 +92,7 @@ var console = window.console,
 				return components.length === 1 ? components[0] : components;
 			}
 		},
-		namespace(selector, callbak) {
+		namespace: function(selector, callbak) {
 			var self = this,
 				parent = this.window.$(selector),
 				ns = {
@@ -115,7 +115,7 @@ var console = window.console,
 			if (callbak) { callbak(ns); }
 			return ns;
 		},
-		bind(type, bindMap, model) {
+		bind: function(type, bindMap, model) {
 			model = model || {};
 			if (!Array.isArray(bindMap)) { //single bind
 				bindMap = [bindMap];

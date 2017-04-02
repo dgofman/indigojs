@@ -2,6 +2,7 @@
 {
 	"cssName": ".flag",
 	"outputName": "flags.less",
+	"nested": false,
 
 	"languages": [
 		{"code": "en-us", "name": "United States", "flag": "us"},

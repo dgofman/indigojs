@@ -55,11 +55,23 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('flags', function (key, value) {
 		var json = cjson.load('./config/locales.json'),
-			content = `@import './constant_flags.less';\n\n${json.cssName} {\n\t.flag();\n}`;
+			content = `@import './constant_flags.less';\n\n${json.cssName} {\n\t.flag();\n`,
+			tab = '', tab_append = '';
+
+		if (json.nested) {
+			tab = '\t';
+			tab_append = '\t&';
+		} else {
+			content += '}\n';
+		}
 
 		json.languages.forEach(function(node) {
-			content += `\n.${node.code} {\n\t.${node.flag}();\n}\n`;
+			content += `\n${tab_append}.${node.code} {\n\t${tab}.${node.flag}();\n${tab}}\n`;
 		});
+
+		if (json.nested) {
+			content += '}';
+		}
 
 		grunt.file.write('.{{webdir}}/default/less/' + json.outputName, content);
 	});

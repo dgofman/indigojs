@@ -125,7 +125,7 @@ var console = window.console,
 			}
 			for (var i = 0; i < bindMap.length; i++) {
 				indigoJS.bindProperties(bindMap[i], function(o) {
-					o.self.el.on(o.prop, function(e, value) {
+					o.self.$el.on(o.prop, function(e, value) {
 						model[name] = value;
 						if (o.handle) {
 							if (o.self[o.prop] !== value) {
@@ -156,15 +156,19 @@ var console = window.console,
 								}
 							});
 						}
-						watch(name, value);
+						if (model[name] !== undefined) {
+							watch(name, value);
+						}
 						delete proto['__propogate__' + name];
 					}
 				}, enumerable: true
 			});
 			model[name] = val;
 
-			return function(name, bindMap, newModel) {
-				return self.bind(name, bindMap, newModel || model, watch);
+			return {
+				bind: function(name, bindMap, newModel) {
+					return self.bind(name, bindMap, newModel || model, watch);
+				}
 			};
 		}
 	}
@@ -204,13 +208,13 @@ window.init = function(win, selector, factory) {
 					clazz = components[selector];
 				if (apis && !clazz) {
 					clazz = function(el) {
-						this.el = el;
+						this.$el = el;
 						this.init(el, this);
 					};
 					clazz.selector = selector;
 					clazz.prototype.constructor = clazz;
 					clazz.prototype.toString = function() {
-						return selector + '::' + this.el.html();
+						return selector + '::' + this.$el.html();
 					};
 					clazz.prototype.init = function() {};
 					components[selector] = clazz;
@@ -218,22 +222,11 @@ window.init = function(win, selector, factory) {
 					if (!apis.disabled) {
 						apis.disabled = {
 							get: function() {
-								return !!this.el.attr('disabled');
+								return !!this.$el.attr('disabled');
 							},
 							set: function(value) {
-								indigo.attr(this.el, 'disabled', value);
+								indigo.attr(this.$el, 'disabled', value);
 								return this;
-							}
-						};
-					}
-
-					if (!apis.disabled) {
-						apis.disabled = {
-							get: function() {
-								return !!this.el.attr('disabled');
-							},
-							set: function(value) {
-								indigo.attr(this.el, 'disabled', value);
 							}
 						};
 					}
@@ -241,10 +234,10 @@ window.init = function(win, selector, factory) {
 					if (!apis.show) {
 						apis.show = {
 							get: function() {
-								return this.el.is(':visible');
+								return this.$el.is(':visible');
 							},
 							set: function(value) {
-								value ? this.el.show() : this.el.hide();
+								value ? this.$el.show() : this.$el.hide();
 							}
 						};
 					}
@@ -259,7 +252,7 @@ window.init = function(win, selector, factory) {
 										proto['__propogate__' + type] = true;
 										indigo.info(type, value, this.toString());
 										set.call(this, value);
-										this.el.trigger(type, [value]);
+										this.$el.trigger(type, [value]);
 									}
 									delete proto['__propogate__' + type];
 								};

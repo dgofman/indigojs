@@ -46,7 +46,7 @@ function Dropdown($, indigo, selector) {
 
 			Object.defineProperty(this, 'change', {
 				set: function(hanlder) {
-					self.el.event('change', hanlder);
+					self.$el.event('change', hanlder);
 				}
 			});
 		},
@@ -99,11 +99,11 @@ function Dropdown($, indigo, selector) {
 
 		disabled: {
 			get: function() {
-				return !!this.el.attr('disabled');
+				return !!this.$el.attr('disabled');
 			},
 			set: function(value) {
 				this.$popup.removeClass('open');
-				indigo.attr(this.el, 'disabled', value);
+				indigo.attr(this.$el, 'disabled', value);
 			}
 		},
 

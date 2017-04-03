@@ -8,10 +8,10 @@ window.top.ready(window, function($, indigo) {
 		indigo.namespace('[ig-ns=one-binding', function(ns) {
 			var login_model = {username: 'User', password: '12345'};
 			//Bind value(s) to the model
-			indigo.bind('username', {value: ns.create('input', 0)}, login_model, function(name, value) { //watch function
+			  indigo.bind('username', {value: ns.create('input', 0)}, login_model, function(name, value) { //watch function
 							indigo.debug(name + '=' + value);
 						})
-						('password', {value: ns.create('input', 1)});
+					.bind('password', {value: ns.create('input', 1)});
 
 			ns.create('button').click = function() {
 				alert(JSON.stringify(login_model));
@@ -34,11 +34,11 @@ window.top.ready(window, function($, indigo) {
 				tlt = ns.create(imports[2]); //tooltip
 
 			//Bind Dropdown selected index and input text
-			indigo.bind('selectedIndex', [{index: dpd}, {value: rng}]) //create and bind a new model
+			  indigo.bind('selectedIndex', [{index: dpd}, {value: rng}]) //create and bind a new model
 					//Bind Checkbox and Dropdown access
-					('disableDropdown', [{checked: chk}, {disabled: dpd}])
+					.bind('disableDropdown', [{checked: chk}, {disabled: dpd}])
 					//Bind Switch and Dropdown open/close popup menu
-					('popupDropdown', [{checked: sch}, {open: dpd}]);
+					.bind('popupDropdown', [{checked: sch}, {open: dpd}]);
 
 			//Bind text values between Text, Input, Tooltip, Checkbox, Button, DropDown components
 			indigo.bind('bindLabel', [{value: txt}, {value: int}, {value: tlt}, {label: chk}, {label: btn}, {prompt: dpd, handle: function(value, prop, model) {

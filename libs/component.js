@@ -119,6 +119,10 @@ module.exports = function(app) {
 			}
 			req.model.componentIndex++;
 
+			if (opts.show === false) {
+				opts.parentStyle = ('display: none; ' + (opts.parentStyle || '')).trim();
+			}
+
 			return `<${cTag} cid="${className}"${opts.$get('disabled', 'disabled')}${opts.$attr('class')}${opts.$attr('parentStyle', 'style')}${opts.$attr('id')} tabindex="-1">${html}</${cTag}>`;
 		} catch(err) {
 			indigo.logger.error(err);

@@ -5,9 +5,9 @@
 
 padding-right: 20px;
 margin-right: 8px;
+width: 200px;
 
 &>div, &>ul {
-	width: 200px;
 	height: @height;
 	border: 1px solid #333;
 	padding: 0;
@@ -16,6 +16,7 @@ margin-right: 8px;
 	line-height: 23px;
 	text-indent: 7px;
 	font-weight: normal;
+	.cursor();
 }
 
 &>div {
@@ -39,6 +40,10 @@ margin-right: 8px;
 			.gradient(#cccccc, #ffffff);
 			color: #525bd6;
 		}
+	}
+
+	&>div {
+		outline: none;
 	}
 
 	&>div:after {
@@ -65,9 +70,11 @@ margin-right: 8px;
 	display: none;
 	-webkit-box-shadow: 2px 2px 10px #ccc;
 	box-shadow: 2px 2px 10px #ccc;
+	width: 100%;
 
 	li {
 		.cursor();
+		white-space: nowrap;
 		display: block !important;
 		background-color: #fff !important;
 	}

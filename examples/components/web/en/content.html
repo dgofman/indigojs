@@ -34,7 +34,7 @@
 		.textstyle {
 			position: relative;
 			display: block !important;
-			height: 100px !important;
+			min-height: 100px;
 			width: 400px; border: 1px solid green;
 		}
 
@@ -111,15 +111,19 @@
 		<%- $(req, 'dropdown', {prompt: `${locales.common.helloworld} - 5`, menus: data.dropdown}) %>
 
 		<%
+			function customPromt(req, menu) {
+				return $(req, "checkbox", {label: menu});
+			};
+
 			function customDropdownMenu(req, opts, lis) {
 				opts.menus.forEach(function(menu) {
-					lis.push('<li>' + $(req, "checkbox", {label: menu}) + '</li>');
+					lis.push(`<li>${customPromt(req, menu)}</li>`);
 				});
 				return 2;
 			}
 		%>
 
-		<%- $(req, 'dropdown', {prompt: `Menu3`, open: true, menus: ['Menu1', 'Menu2', 'Menu3'], itemRenderer: customDropdownMenu}) %>
+		<%- $(req, 'dropdown', {open: true, menus: ['Menu1', 'Menu2', 'Menu3'], promtRenderer: customPromt, itemRenderer: customDropdownMenu}) %>
 	</div>
 
 	<h3>Switch:</h3>
@@ -137,12 +141,16 @@
 	<div ig-ns="text">
 		<%- $(req, 'text', {value: text, class: 'textstyle'}) %><br/>
 
-		<%- $(req, 'text', {value: text, auto: true, editable: true, class: 'textstyle', parentStyle: 'border-color: blue'}) %><br/>
+		<%- $(req, 'text', {value: text, height: 'auto', editable: true, class: 'textstyle', parentStyle: 'border-color: blue'}) %><br/>
+
+		<%- $(req, 'text', {value: text, height: 'full', editable: true, class: 'textstyle', parentStyle: 'border-color: yellow'}) %><br/>
+
+		<%- $(req, 'text', {value: text, height: 55, editable: true, class: 'textstyle', parentStyle: 'border-color: magenta'}) %><br/>
 
 		<div class="">
 		<%- $(req, 'text', {value: text, fontSize: 20, lineHeight: 2, rows: 2, class: 'textstyle', parentStyle: 'border-color: red', style: 'color: green'}) %><br/>
 
-		<%- $(req, 'text', {value: function(req, opts) { return text.substring(0, 45) + '...' }, class: 'textstyle', parentStyle: 'height: 22px; border-color: orange'}) %>
+		<%- $(req, 'text', {value: function(req, opts) { return text.substring(0, 45) + '...' }, class: 'textstyle', parentStyle: 'min-height: 22px; border-color: orange'}) %>
 	</div>
 
 	<h3>Tooltip:</h3>
@@ -278,6 +286,6 @@
 	</div>
 </section>
 
-<%- finalize(req, `${baseStaticPath}/js/views/main${extJS}`) %>
+<%- finalize(req, `${baseStaticPath}/js/views/main${extJS}`, true) %>
 </body>
 </html>

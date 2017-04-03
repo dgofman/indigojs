@@ -1,26 +1,39 @@
 <%
 	var prompt = opts.prompt || '',
+		lblname = opts.labelName || 'label',
 		selectedIndex = -1,
 		open = opts.open || false,
+		promtRenderer = opts.promtRenderer,
+		menus = opts.menus ? JSON.parse(JSON.stringify(opts.menus)) : [],
 		lis = [];
 
 	if (opts.itemRenderer) {
 		selectedIndex = opts.itemRenderer(req, opts, lis);
 	} else {
-		for (var index in opts.menus) {
-			var menu = opts.menus[index];
+		for (var index in menus) {
+			var menu = menus[index];
 			if (typeof menu === 'string') {
-				menu = {label: menu};
+				menu = {lblname: menu};
 			}
 			if (menu.selected) {
-				prompt = menu.label || '';
+				prompt = menu[lblname] || '';
 				selectedIndex = index;
 			}
-			lis.push(`<li${menu.val ? ' value="' + menu.val + '"' : ''}${menu.promt ? ' title="' + menu.promt + '"' : ''}>${menu.label}</li>`);
+			lis.push(`<li${menu.val ? ' value="' + menu.val + '"' : ''}${menu.promt ? ' title="' + menu.promt + '"' : ''}>${menu[lblname]}</li>`);
+		}
+	}
+
+	if (prompt == '' && menus.length && selectedIndex !== -1) {
+		var menu = menus[selectedIndex] || {};
+
+		if (promtRenderer) {
+			prompt = promtRenderer(req, menu, selectedIndex);
+		} else {
+			prompt = menu[lblname] || '';
 		}
 	}
 %>
-<div tabindex="-1" type="button" <%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %>>
+<div tabindex="-1" type="button"<%- lblname == 'label' ? '' : ` lblname="${lblname}"` %><%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %>>
 	<span unselectable="on" tabindex="-1">&#9662;</span>
 	<div role="menuitem"<%- opts.$title(req) %><%- opts.$attr('style') %>><%- prompt %></div>
 </div>

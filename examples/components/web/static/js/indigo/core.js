@@ -49,7 +49,6 @@ var console = window.console,
 	indigoJS = {
 	components: {},
 	initPending: {},
-	static: window.top.indigoStatic,
 	bindProperties: function(bindMap, callback) {
 		for (var prop in bindMap) {
 			if (prop !== 'handle') {
@@ -59,13 +58,14 @@ var console = window.console,
 	},
 	extend: {
 		window: window,
+		static: window.top.indigoStatic,
 		debug: function() {
-			if (indigoJS.static.DEBUG) {
+			if (this.static.DEBUG) {
 				console.log.apply(console, arguments);
 			}
 		},
 		info: function() {
-			if (indigoJS.static.INFO) {
+			if (this.static.INFO) {
 				console.info.apply(console, arguments);
 			}
 		},
@@ -287,11 +287,18 @@ window.init = function(win, selector, factory) {
 
 //View registration
 window.ready = function(win, callback) {
-	win.indigoJS = window.top.indigoJS;
-	win.indigo = {};
-	for (var name in win.indigoJS.extend) {
-		win.indigo[name] = win.indigoJS.extend[name];
+	indigoJS.initPending['main'] = {
+		win: win, init: function(win) {
+			win.indigoJS = window.top.indigoJS;
+			win.indigo = {};
+			for (var name in win.indigoJS.extend) {
+				win.indigo[name] = win.indigoJS.extend[name];
+			}
+			win.indigo.window = win;
+			callback(win.$, win.indigo);
+		}
+	};
+	if (window.jQuery) {
+		window.initComponents();
 	}
-	win.indigo.window = win;
-	callback(win.$, win.indigo);
 };

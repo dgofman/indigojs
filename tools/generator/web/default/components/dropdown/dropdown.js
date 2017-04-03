@@ -16,14 +16,14 @@ function Dropdown($, indigo, selector) {
 						menu.event('click', function(e) {
 							var li = $(e.target).closest('li');
 							dropdown.attr('selectedIndex', li.index());
-							dropdown.find('>div').text(li.text());
+							dropdown.find('>div').html(li.html());
 							el.trigger('change', [li.index(), li, dropdown]);
 						});
 					}
 				};
 			initMenu(menu.hasClass('open'));
 
-			var span = $('>div>span', el).event('click', function(e) {
+			var div = $('>div', el).event('click', function(e) {
 				e.stopPropagation();
 				var isOpen = menu.hasClass('open');
 				$(selector + '>ul').removeClass('open');
@@ -31,28 +31,34 @@ function Dropdown($, indigo, selector) {
 				initMenu(!isOpen);
 			});
 
-			$('>div', el).keypress(function (e) {
-				if (!$(e.currentTarget).parent().attr('disabled') && e.which === 13) {
-					span.trigger('click');
+			$(el).event('keypress', function (e) {
+				if (!el.attr('disabled') && e.which === 13) {
+					div.trigger('click');
 				}
 			});
 		},
 
-		init: function(el) {
+		init: function(el, self) {
 			this.initItems(el, this);
 			this.$box = $('>div', el);
 			this.$prompt = this.$box.find('>div');
 			this.$popup = $('>ul', el);
+
+			Object.defineProperty(this, 'change', {
+				set: function(hanlder) {
+					self.el.event('change', hanlder);
+				}
+			});
 		},
 
 		initItems: function(el, self) {
 			self.$items = $('>ul>li', el).event('click', function(e) {
-				self.option = $(e.currentTarget);
+				self.index = $(e.currentTarget).index();
 			});
 		},
 
 		indexByText: function(label) {
-			var index = -1;
+			var index = 0;
 			this.$items.each(function(i, li) {
 				if ($(li).text() === label) {
 					index = i;
@@ -64,7 +70,7 @@ function Dropdown($, indigo, selector) {
 
 		index: {
 			get: function() {
-				return Number(this.$box.attr('selectedIndex')) || -1;
+				return Number(this.$box.attr('selectedIndex')) || 0;
 			},
 			set: function(value) {
 				this.$box.attr('selectedIndex', value);
@@ -78,16 +84,16 @@ function Dropdown($, indigo, selector) {
 			},
 			set: function(value) {
 				this.index = value.index();
-				this.prompt = value.text();
+				this.prompt = value.html();
 			}
 		},
 
 		prompt: {
 			get: function() {
-				return this.$prompt.text();
+				return this.$prompt.html();
 			},
 			set: function(value) {
-				this.$prompt.text(value);
+				this.$prompt.html(value);
 			}
 		},
 

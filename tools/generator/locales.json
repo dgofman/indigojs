@@ -1,12 +1,12 @@
 //After modifying this file you should execute 'grunt flags'
 {
-	"cssName": ".flag",
+	"cssName": ".flag i",
 	"outputName": "flags.less",
-	"nested": false,
+	"nested": true,
 
 	"languages": [
 		{"code": "en-us", "name": "United States", "flag": "us"},
-		{"code": "en", "name": "English", "flag": "br"},
+		{"code": "en", "name": "English", "flag": "gb"},
 		{"code": "de", "name": "Deutsch", "flag": "de"},
 		{"code": "es", "name": "Español", "flag": "es"},
 		{"code": "fr", "name": "Français", "flag": "fr"},

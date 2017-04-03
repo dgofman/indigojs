@@ -135,7 +135,7 @@ module.exports = function(app) {
 		let lines = [],
 			assets = [],
 			uri = indigo.getComponentURL();
-		if (arguments[arguments.length - 1] !== false) {
+		if (arguments[arguments.length - 1] === true) {
 			assets.push(`<link rel="stylesheet" type="text/css" href="${req.model.baseStaticPath}/css/common${req.model.extLESS}">`);
 		}
 		for (let className in req.model.assets) {

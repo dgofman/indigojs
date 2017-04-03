@@ -6,7 +6,7 @@ function Text($, indigo) {
 	return {
 		register: function(el) {
 			var span = $('>span', el);
-			if (span.attr('auto') === 'true') {
+			if (span.attr('height') === 'auto') {
 				var height = el.outerHeight(),
 					fs = parseFloat(span.css('font-size')),
 					lh = parseFloat(span.css('line-height')) || parseFloat(span.css('height')) + 2,

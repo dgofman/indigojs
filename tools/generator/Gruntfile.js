@@ -65,8 +65,10 @@ module.exports = function(grunt) {
 			content += '}\n';
 		}
 
+		content += `\n${tab_append}.unknown {\n\t${tab}.unknown();\n${tab}}\n`;
+
 		json.languages.forEach(function(node) {
-			content += `\n${tab_append}.${node.code} {\n\t${tab}.${node.flag}();\n${tab}}\n`;
+			content += `\n${tab_append}.${node.flag} {\n\t${tab}.${node.flag}();\n${tab}}\n`;
 		});
 
 		if (json.nested) {

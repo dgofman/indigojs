@@ -33,7 +33,9 @@
 
 		.textstyle {
 			position: relative;
-			width: 400px; height: 100px; border: 1px solid green;
+			display: block !important;
+			height: 100px !important;
+			width: 400px; border: 1px solid green;
 		}
 
 		.menu_style {
@@ -133,21 +135,14 @@
 
 	<h3>Text:</h3>
 	<div ig-ns="text">
-		<div class="textstyle">
-			<%- $(req, 'text', {value: text}) %>
-		</div><br/>
+		<%- $(req, 'text', {value: text, class: 'textstyle'}) %><br/>
 
-		<div class="textstyle" style="border-color: blue">
-			<%- $(req, 'text', {value: text, auto: true, editable: true}) %>
-		</div><br/>
+		<%- $(req, 'text', {value: text, auto: true, editable: true, class: 'textstyle', parentStyle: 'border-color: blue'}) %><br/>
 
-		<div class="textstyle" style="border-color: red">
-			<%- $(req, 'text', {value: text, fontSize: 20, lineHeight: 2, rows: 2, style: 'color: green;'}) %>
-		</div><br/>
+		<div class="">
+		<%- $(req, 'text', {value: text, fontSize: 20, lineHeight: 2, rows: 2, class: 'textstyle', parentStyle: 'border-color: red', style: 'color: green'}) %><br/>
 
-		<div class="textstyle" style="height: 22px; border-color: orange">
-			<%- $(req, 'text', {value: function(req, opts) { return text.substring(0, 45) + '...' }}) %>
-		</div><br/>
+		<%- $(req, 'text', {value: function(req, opts) { return text.substring(0, 45) + '...' }, class: 'textstyle', parentStyle: 'height: 22px; border-color: orange'}) %>
 	</div>
 
 	<h3>Tooltip:</h3>
@@ -187,8 +182,8 @@
 
 	<h3>Input:</h3>
 	<div ig-ns="input">
-		<%- $(req, 'input', {value: 'Hello World'}) %><br/>
-		<%- $(req, 'input', {value: 'Hello', type: 'password', maxlen: 5, required: true, style: 'width: 400px; color: green'}) %><br/>
+		<%- $(req, 'input', {value: 'Hello World'}) %><br/><br/>
+		<%- $(req, 'input', {value: 'Hello', type: 'password', maxlen: 5, required: true, style: 'width: 400px; color: green'}) %><br/><br/>
 		<%- $(req, 'input', {value: 'Hello World', class: 'custom', disabled: true}) %>
 	</div>
 
@@ -205,38 +200,32 @@
 
 	<h3>Fieldset:</h3>
 	<div ig-ns="fieldset">
-		<div style="width: 300px; padding: 10px; border: 1px solid red">
-			<%- $(req, 'fieldset', {
-				right: function(req, opts) {
-					return '<button>OK</button>';
-				},
-				content: function(req, opts) {
-					return `<input value="${opts.default}"/>`;
-				},
-				default: `${locales.common.helloworld} - 1`
-			}) %>
-		</div>
+		<%- $(req, 'fieldset', {
+			right: function(req, opts) {
+				return '<button>OK</button>';
+			},
+			content: function(req, opts) {
+				return `<input value="${opts.default}"/>`;
+			}, parentStyle: 'display: block; width: 300px; padding: 10px; border: 1px solid red',
+			default: `${locales.common.helloworld} - 1`
+		}) %>
 
-		<div style="width: 400px; padding: 10px; margin: 10px 0; border: 1px solid green">
-			<%- $(req, 'fieldset', {
-				left: function(req, opts) {
-					return '<button>OK</button>';
-				},
-				content: function(req, opts) {
-					return $(req, 'input', {value: opts.default});
-				},
-				default: `${locales.common.helloworld} - 2`
-			}) %>
-		</div>
+		<%- $(req, 'fieldset', {
+			left: function(req, opts) {
+				return '<button>OK</button>';
+			},
+			content: function(req, opts) {
+				return $(req, 'input', {value: opts.default});
+			}, parentStyle: 'display: block; width: 400px; padding: 10px; margin: 10px 0; border: 1px solid green',
+			default: `${locales.common.helloworld} - 2`
+		}) %>
 
-		<div style="width: 400px; padding: 10px; margin: 10px 0; border: 1px solid green">
-			<%- $(req, 'fieldset', {
-				content: function(req, opts) {
-					return `<input type="text" value="${opts.default}" style="width: 100%"/>`;
-				},
-				default: `${locales.common.helloworld} - 3`
-			}) %>
-		</div>
+		<%- $(req, 'fieldset', {
+			content: function(req, opts) {
+				return `<input type="text" value="${opts.default}" style="width: 100%"/>`;
+			}, parentStyle: 'display: block; width: 400px; padding: 10px; margin: 10px 0; border: 1px solid green',
+			default: `${locales.common.helloworld} - 3`
+		}) %>
 	</div>
 
 	<h3>One-way Data Binding:</h3>

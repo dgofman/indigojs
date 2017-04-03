@@ -4,8 +4,16 @@ function Input($, indigo) {
 	indigo.debug('Init Input');
 
 	return {
+		register: function(el) {
+			$('>div', el).event('focus', function(e) {
+				setTimeout(function() {
+					$('>input', e.currentTarget).focus();
+				}, 500);
+			});
+		},
+
 		init: function(el, self) {
-			self.$input = $('>input', el).event('change', function() {
+			self.$input = $('>div>input', el).event('change', function() {
 				self.value = self.$input.val();
 			});
 		},

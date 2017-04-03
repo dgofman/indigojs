@@ -4,7 +4,7 @@ margin: 0;
 display: inline-block;
 text-indent: 0;
 
-label {
+&>label {
 	padding: 0;
 	text-indent: 20px;
 	line-height: 17px;
@@ -15,7 +15,6 @@ label {
 
 &[disabled]>label {
 	color: #ccc;
-	pointer-events: none;
 
 	input + i:before {
 		border-color: #ccc;
@@ -36,26 +35,27 @@ i:before {
 	border-radius: 4px;
 	content: '\00a0';
 	display: inline-block;
-	font-size: 14px;
+	font-size: 14px !important;
+	line-height: 17px;
 	height: 17px;
 	width: 18px;
-	line-height: 14px;
 	text-indent: 0;
 	margin: -1px 5px 0 -20px;
 	vertical-align: top;
-}
-
-input:checked + i:before {
+	text-align: center;
+	padding-right: 3px;
 	background: #fff;
 	color: #0d76d0;
 	font-weight: bold;
+}
+
+input:checked + i:before {
 	content: '\2713';
-	padding: 1px 0;
 }
 
 .partial input:checked + i:before {
 	content: '\2580';
-	padding: 4px 0 0 3px;
+	padding: 3px;
 }
 
 u {

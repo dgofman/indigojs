@@ -119,7 +119,7 @@ module.exports = function(app) {
 			}
 			req.model.componentIndex++;
 
-			return `<${cTag} cid="${className}"${opts.$attr('class')}${opts.$attr('parentStyle', 'style')}${opts.$attr('id')} tabindex="-1">${html}</${cTag}>`;
+			return `<${cTag} cid="${className}"${opts.$get('disabled', 'disabled')}${opts.$attr('class')}${opts.$attr('parentStyle', 'style')}${opts.$attr('id')} tabindex="-1">${html}</${cTag}>`;
 		} catch(err) {
 			indigo.logger.error(err);
 			return '';
@@ -133,8 +133,11 @@ module.exports = function(app) {
 	app.locals.finalize = function(req) {
 		debug('Include scripts: %s', JSON.stringify(req.model.assets));
 		let lines = [],
-			assets = [`<link rel="stylesheet" type="text/css" href="${req.model.baseStaticPath}/css/common${req.model.extLESS}">`],
+			assets = [],
 			uri = indigo.getComponentURL();
+		if (arguments[arguments.length - 1] !== false) {
+			assets.push(`<link rel="stylesheet" type="text/css" href="${req.model.baseStaticPath}/css/common${req.model.extLESS}">`);
+		}
 		for (let className in req.model.assets) {
 			const asset = req.model.assets[className],
 				lessFile = indigo.getNewURL(req, null, `/${req.session.locale}/components/${asset.className}/${asset.className}.less`, true),
@@ -148,7 +151,9 @@ module.exports = function(app) {
 			}
 		}
 		for (let i = 1; i < arguments.length; i++) {
-			assets.push(`<script src="${arguments[i]}"></script>`);
+			if (typeof arguments[i] === 'string') {
+				assets.push(`<script src="${arguments[i]}"></script>`);
+			}
 		}
 		return lines.concat(assets).join('\n');
 	};

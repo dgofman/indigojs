@@ -1,4 +1,4 @@
-<ul<%- opts.$get('disabled', ' disabled') %><%- opts.$attr('style') %><%- opts.$title(req) %> <%- opts.$title(req, opts.title || 'Menu Control') %>><%
+<ul<%- opts.$attr('style') %><%- opts.$title(req) %> <%- opts.$title(req, opts.title || 'Menu Control') %>><%
 	for (var index in opts.menus) {
 		var menu = opts.menus[index],
 			itemRenderer = menu.itemRenderer || opts.itemRenderer;

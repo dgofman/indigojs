@@ -4,42 +4,46 @@
 
 line-height: @icon_size;
 
-button {
-	.cursor();
+& {
 	.gradient();
-	min-height: 28px;
-	padding: 4px 10px 4px 10px;
 	border-radius: 5px;
-	display: inline-block;
 	color: #333333;
 	text-shadow: 0 1px 0 white;
 }
 
-button:hover:not([disabled]) {
+&:hover {
 	.gradient(#cccccc, #ffffff);
 }
 
-button[disabled] {
+&[disabled]>button {
 	color: #999;
 	cursor: default;
 }
 
-button {
-	i {
-		background-repeat: no-repeat;
-		background-size: contain;
-		text-decoration: none;
-		width: @icon_size;
-		height: @icon_size;
+& > button {
+	.cursor();
+	width: 100%;
+	height: 100%;
+	min-height: 28px;
+	background: none;
+	border: none;
+	color: inherit;
+}
 
-		&.left {
-			margin-right: 5px;
-			float: left;
-		}
+& > button > i {
+	background-repeat: no-repeat;
+	background-size: contain;
+	text-decoration: none;
+	width: @icon_size;
+	height: @icon_size;
 
-		&.right {
-			margin-left: 5px;
-			float: right;
-		}
+	&.left {
+		margin-right: 5px;
+		float: left;
+	}
+
+	&.right {
+		margin-left: 5px;
+		float: right;
 	}
 }

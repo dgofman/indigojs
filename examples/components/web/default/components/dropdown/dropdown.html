@@ -20,7 +20,7 @@
 		}
 	}
 %>
-<div tabindex="-1" type="button" <%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %><%- opts.$get('disabled', 'disabled') %>>
+<div tabindex="-1" type="button" <%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %>>
 	<span unselectable="on" tabindex="-1">&#9662;</span>
 	<div role="menuitem"<%- opts.$title(req) %><%- opts.$attr('style') %>><%- prompt %></div>
 </div>

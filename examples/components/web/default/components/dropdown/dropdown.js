@@ -32,7 +32,7 @@ function Dropdown($, indigo, selector) {
 			});
 
 			$('>div', el).keypress(function (e) {
-				if (e.which === 13) {
+				if (!$(e.currentTarget).parent().attr('disabled') && e.which === 13) {
 					span.trigger('click');
 				}
 			});
@@ -93,11 +93,11 @@ function Dropdown($, indigo, selector) {
 
 		disabled: {
 			get: function() {
-				return !!this.$box.attr('disabled');
+				return !!this.el.attr('disabled');
 			},
 			set: function(value) {
 				this.$popup.removeClass('open');
-				indigo.attr(this.$box, 'disabled', value);
+				indigo.attr(this.el, 'disabled', value);
 			}
 		},
 

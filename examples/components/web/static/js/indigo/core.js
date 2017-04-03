@@ -14,6 +14,7 @@ require.config({
 			'jquery'
 		], function($) {
 			window.indigo = indigoJS.extend;
+			window.initComponents();
 			$('body').fadeTo('fast', 1);
 			var iframe = $('iframe.content'),
 				loadPage = function() {
@@ -47,6 +48,7 @@ require.config({
 var console = window.console,
 	indigoJS = {
 	components: {},
+	initPending: {},
 	static: window.top.indigoStatic,
 	bindProperties: function(bindMap, callback) {
 		for (var prop in bindMap) {
@@ -57,32 +59,32 @@ var console = window.console,
 	},
 	extend: {
 		window: window,
-		debug() {
+		debug: function() {
 			if (indigoJS.static.DEBUG) {
 				console.log.apply(console, arguments);
 			}
 		},
-		info() {
+		info: function() {
 			if (indigoJS.static.INFO) {
 				console.info.apply(console, arguments);
 			}
 		},
-		attr(el, type, val) {
+		attr: function(el, type, val) {
 			return val ? el.attr(type, type) : el.removeAttr(type);
 		},
-		class(el, name, val) {
+		class: function(el, name, val) {
 			return val ? el.addClass(name) : el.removeClass(name);
 		},
-		import() {
+		import: function() {
 			var clazz, callback, components = [],
 				length = arguments.length;
 			if (typeof arguments[length - 1] === 'function') {
 				callback = arguments[--length];
 			}
 			for (var i = 0; i < length; i++) {
-				clazz = indigoJS.components[`[cid=${arguments[i]}]`];
+				clazz = indigoJS.components['[cid=' + arguments[i] + ']'];
 				if (!clazz) {
-					throw new Error(`ClassNotFoundException: ${arguments[i]}`);
+					throw new Error('ClassNotFoundException: ' + arguments[i]);
 				}
 				components.push(clazz);
 			}
@@ -92,7 +94,7 @@ var console = window.console,
 				return components.length === 1 ? components[0] : components;
 			}
 		},
-		namespace(selector, callbak) {
+		namespace: function(selector, callbak) {
 			var self = this,
 				parent = this.window.$(selector),
 				ns = {
@@ -115,15 +117,16 @@ var console = window.console,
 			if (callbak) { callbak(ns); }
 			return ns;
 		},
-		bind(type, bindMap, model) {
+		bind: function(name, bindMap, model, watch) {
 			model = model || {};
+			watch = watch || function() {};
 			if (!Array.isArray(bindMap)) { //single bind
 				bindMap = [bindMap];
 			}
 			for (var i = 0; i < bindMap.length; i++) {
 				indigoJS.bindProperties(bindMap[i], function(o) {
 					o.self.el.on(o.prop, function(e, value) {
-						model[type] = value;
+						model[name] = value;
 						if (o.handle) {
 							if (o.self[o.prop] !== value) {
 								o.handle.call(o.self, value, o.prop, model);
@@ -134,16 +137,16 @@ var console = window.console,
 			}
 
 			var self = this, 
-				val = model[type];
-			Object.defineProperty(model, type, {
+				val = model[name];
+			Object.defineProperty(model, name, {
 				get: function() {
 					return val;
 				},
 				set: function(value) {
 					val = value;
 					var proto = Object.getPrototypeOf(model);
-					if (!proto['__propogate__' + type]) {
-						proto['__propogate__' + type] = true;
+					if (!proto['__propogate__' + name]) {
+						proto['__propogate__' + name] = true;
 						for (i = 0; i < bindMap.length; i++) {
 							indigoJS.bindProperties(bindMap[i], function(o) {
 								if (o.handle) {
@@ -153,100 +156,132 @@ var console = window.console,
 								}
 							});
 						}
-						delete proto['__propogate__' + type];
+						watch(name, value);
+						delete proto['__propogate__' + name];
 					}
 				}, enumerable: true
 			});
-			model[type] = val;
+			model[name] = val;
 
-			return function(type, bindMap, newModel) {
-				return self.bind(type, bindMap, newModel || model);
+			return function(name, bindMap, newModel) {
+				return self.bind(name, bindMap, newModel || model, watch);
 			};
 		}
 	}
 };
 
+//jQuery loaded
+window.initComponents = function() {
+	for (var selector in indigoJS.initPending) {
+		var item = indigoJS.initPending[selector];
+		delete indigoJS.initPending[selector];
+		item.init.call(indigoJS.extend, item.win);
+	}
+};
+
 //Component registration
 window.init = function(win, selector, factory) {
+	var initPending = indigoJS.initPending;
 	win.require = window.require;
-	if (!win.jQuery) {
-		window._jQueryFactory(win);
-		win.$.fn.extend({
-			event: function(type, callback) {
-				win.$.fn.off.call(this, type);
-				win.$.fn.on.call(this, type, callback);
-				return this;
-			}
-		});
-	}
-
-	var components = window.top.indigoJS.components,
-		indigo = indigoJS.extend,
-		apis = factory(win.$, indigo, selector),
-		clazz = components[selector];
-	if (apis && !clazz) {
-		clazz = function(el) {
-			this.el = el;
-			this.init(el, this);
-		};
-		clazz.selector = selector;
-		clazz.prototype.constructor = clazz;
-		clazz.prototype.toString = function() {
-			return selector + '::' + this.el.html();
-		};
-		clazz.prototype.init = function() {};
-		components[selector] = clazz;
-
-		if (!apis.disabled) {
-			apis.disabled = {
-				get: function() {
-					return !!this.el.attr('disabled');
-				},
-				set: function(value) {
-					indigo.attr(this.el, 'disabled', value);
-					return this;
+	if (!initPending[selector]) {
+		initPending[selector] = {
+			win: win, init: function(win) {
+				if (!win.jQuery) {
+					window._jQueryFactory(win);
 				}
-			};
-		}
 
-		if (!apis.show) {
-			apis.show = {
-				get: function() {
-					return this.el.is(':visible');
-				},
-				set: function(value) {
-					value ? this.el.show() : this.el.hide();
-					return this;
-				}
-			};
-		}
+				win.$.fn.extend({
+					event: function(type, callback) {
+						win.$.fn.off.call(this, type);
+						win.$.fn.on.call(this, type, callback);
+						return this;
+					}
+				});
 
-		for (var name in apis) {
-			var descriptor = apis[name];
-			if (descriptor && descriptor.set && descriptor.get) {
-				descriptor.set = (function(set, type) {
-					return function(value) {
-						var proto = Object.getPrototypeOf(this);
-						if (!proto['__propogate__' + type]) {
-							proto['__propogate__' + type] = true;
-							indigo.info(type, value, this.toString());
-							set.call(this, value);
-							this.el.trigger(type, [value]);
-						}
-						delete proto['__propogate__' + type];
+				var components = window.top.indigoJS.components,
+					indigo = indigoJS.extend,
+					apis = factory(win.$, indigo, selector),
+					clazz = components[selector];
+				if (apis && !clazz) {
+					clazz = function(el) {
+						this.el = el;
+						this.init(el, this);
 					};
-				})(descriptor.set, name);
-				Object.defineProperty(clazz.prototype, name, descriptor);
-			} else if (name !== 'register') {
-				clazz.prototype[name] = descriptor;
+					clazz.selector = selector;
+					clazz.prototype.constructor = clazz;
+					clazz.prototype.toString = function() {
+						return selector + '::' + this.el.html();
+					};
+					clazz.prototype.init = function() {};
+					components[selector] = clazz;
+
+					if (!apis.disabled) {
+						apis.disabled = {
+							get: function() {
+								return !!this.el.attr('disabled');
+							},
+							set: function(value) {
+								indigo.attr(this.el, 'disabled', value);
+								return this;
+							}
+						};
+					}
+
+					if (!apis.disabled) {
+						apis.disabled = {
+							get: function() {
+								return !!this.el.attr('disabled');
+							},
+							set: function(value) {
+								indigo.attr(this.el, 'disabled', value);
+							}
+						};
+					}
+
+					if (!apis.show) {
+						apis.show = {
+							get: function() {
+								return this.el.is(':visible');
+							},
+							set: function(value) {
+								value ? this.el.show() : this.el.hide();
+							}
+						};
+					}
+
+					for (var name in apis) {
+						var descriptor = apis[name];
+						if (descriptor && descriptor.set && descriptor.get) {
+							descriptor.set = (function(set, type) {
+								return function(value) {
+									var proto = Object.getPrototypeOf(this);
+									if (!proto['__propogate__' + type]) {
+										proto['__propogate__' + type] = true;
+										indigo.info(type, value, this.toString());
+										set.call(this, value);
+										this.el.trigger(type, [value]);
+									}
+									delete proto['__propogate__' + type];
+								};
+							})(descriptor.set, name);
+							Object.defineProperty(clazz.prototype, name, descriptor);
+						} else if (name !== 'register') {
+							clazz.prototype[name] = descriptor;
+						}
+					}
+				}
+
+				if (apis && apis.register) {
+					win.$.each(win.$(selector), function(i, el) {
+						apis.register(win.$(el));
+					});
+				}
 			}
-		}
+		};
 	}
 
-	if (apis && apis.register) {
-		win.$.each(win.$(selector), function(i, el) {
-			apis.register(win.$(el));
-		});
+	if (window.jQuery) {
+		window.initComponents();
 	}
 };
 

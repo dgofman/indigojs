@@ -2,17 +2,22 @@ height: 100%;
 
 &>span {
 	overflow: hidden;
-	display: inline-block;
-}
+	outline: none;
 
-&>span:after {
-	content: '';
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	width: 60px;
-	height: 1.2em;
-	background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 80%);
+
+	&:after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 60px;
+		height: 1.2em;
+		background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 80%);
+	}
+
+	&>div {
+		outline: none;
+	}
 }
 
 @supports (-webkit-line-clamp: 3) {

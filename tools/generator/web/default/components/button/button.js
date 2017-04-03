@@ -20,15 +20,6 @@ function Button($, indigo) {
 			set: function(value) {
 				this.$button.html(value);
 			}
-		},
-
-		disabled: {
-			get: function() {
-				return !!this.$button.attr('disabled');
-			},
-			set: function(value) {
-				indigo.attr(this.$button, 'disabled', value);
-			}
 		}
 	};
 }

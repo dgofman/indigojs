@@ -53,7 +53,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 
-	grunt.registerTask('flags', function (key, value) {
+	grunt.registerTask('flags', function () {
 		var json = cjson.load('./config/locales.json'),
 			content = `@import './constant_flags.less';\n\n${json.cssName} {\n\t.flag();\n`,
 			tab = '', tab_append = '';

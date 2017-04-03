@@ -8,7 +8,9 @@ window.top.ready(window, function($, indigo) {
 		indigo.namespace('[ig-ns=one-binding', function(ns) {
 			var login_model = {username: 'User', password: '12345'};
 			//Bind value(s) to the model
-			indigo.bind('username', {value: ns.create('input', 0)}, login_model)
+			indigo.bind('username', {value: ns.create('input', 0)}, login_model, function(name, value) { //watch function
+							indigo.debug(name + '=' + value);
+						})
 						('password', {value: ns.create('input', 1)});
 
 			ns.create('button').click = function() {

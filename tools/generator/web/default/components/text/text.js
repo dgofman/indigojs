@@ -7,9 +7,9 @@ function Text($, indigo) {
 		register: function(el) {
 			var span = $('>span', el);
 			if (span.attr('auto') === 'true') {
-				var height = el.parent().outerHeight(),
+				var height = el.outerHeight(),
 					fs = parseFloat(span.css('font-size')),
-					lh = parseFloat(span.css('line-height')),
+					lh = parseFloat(span.css('line-height')) || parseFloat(span.css('height')) + 2,
 					em = lh / fs,
 					rows = Math.floor(height / (fs * em));
 				span.css({'height': (rows * fs * em) + 'px', '-webkit-line-clamp': rows.toString()});

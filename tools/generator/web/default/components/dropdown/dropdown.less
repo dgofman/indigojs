@@ -44,15 +44,14 @@ margin-right: 8px;
 	&>div:after {
 		content: '\00a0';
 	}
+}
 
-	&[disabled] {
-		pointer-events: none;
-		border-color: #ccc;
-		color: #ccc;
+&[disabled] {
+	border-color: #ccc;
+	color: #ccc;
 
-		&>span, &>div {
-			opacity: .5;
-		}
+	&>span, &>div {
+		opacity: .5;
 	}
 }
 

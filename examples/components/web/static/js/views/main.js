@@ -8,9 +8,10 @@ window.top.ready(window, function($, indigo) {
 		indigo.namespace('[ig-ns=one-binding', function(ns) {
 			var login_model = {username: 'User', password: '12345'};
 			//Bind value(s) to the model
-			  indigo.bind('username', {value: ns.create('input', 0)}, login_model, function(name, value) { //watch function
+			indigo.watch(login_model, function(name, value) { //watch function
 							indigo.debug(name + '=' + value);
-						})
+					})
+					.bind('username', {value: ns.create('input', 0)})
 					.bind('password', {value: ns.create('input', 1)});
 
 			ns.create('button').click = function() {
@@ -41,10 +42,10 @@ window.top.ready(window, function($, indigo) {
 					.bind('popupDropdown', [{checked: sch}, {open: dpd}]);
 
 			//Bind text values between Text, Input, Tooltip, Checkbox, Button, DropDown components
-			indigo.bind('bindLabel', [{value: txt}, {value: int}, {value: tlt}, {label: chk}, {label: btn}, {prompt: dpd, handle: function(value, prop, model) {
-				indigo.info('checked: ' + model.checked + ', label: ' + model.label);
+			indigo.bind('bindLabel', [{value: txt}, {value: int}, {value: tlt}, {label: chk}, {label: btn}, {prompt: dpd, watch: function(name, value, model) {
+				indigo.info('Dropdown name: ', name, ', value: ', value, ' model: ', JSON.stringify(model));
 				this.indexByText(value);
-				this[prop] = value;
+				this[name] = value;
 			}}], model);
 		});
 
@@ -60,15 +61,15 @@ window.top.ready(window, function($, indigo) {
 		};
 
 		//Bind url value of Image component and Text
-		indigo.bind('imageUrl', [{url: img}, {text: txt, handle: function(value) {
+		indigo.bind('imageUrl', [{url: img}, {text: txt, watch: function(name, value) {
 			this.value = '<a href=#>' + value + '</a>';
 		}}], model);
 
 		img.url = 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png';
 
 		//Bind Switch and Checkbox state with Button access and editable Text
-		indigo.bind('bindState', [{checked: chk}, {checked: sch}, {editable: txt}, {disabled: btn, handle: function(value, prop) {
-			this[prop] = !value;
+		indigo.bind('bindState', [{checked: chk}, {checked: sch}, {editable: txt}, {disabled: btn, watch: function(name, value) {
+			this[name] = !value;
 		}}], model);
 	});
 });

@@ -50,9 +50,9 @@ var console = window.console,
 	components: {},
 	initPending: {},
 	bindProperties: function(bindMap, callback) {
-		for (var prop in bindMap) {
-			if (prop !== 'handle') {
-				return callback({prop: prop, self: bindMap[prop], handle: bindMap.handle});
+		for (var name in bindMap) {//find a bind property name
+			if (name !== 'watch') {
+				return callback({name: name, self: bindMap[name], watch: bindMap.watch});
 			}
 		}
 	},
@@ -123,19 +123,26 @@ var console = window.console,
 			if (callbak) { callbak(ns); }
 			return ns;
 		},
-		bind: function(name, bindMap, model, watch) {
+		watch: function(model, handle) {
+			var self = this;
+			return {
+				bind: function(name, bindMap) {
+					return self.bind(name, bindMap, model, handle);
+				}
+			};
+		},
+		bind: function(name, bindMap, model) {
 			model = model || {};
-			watch = watch || function() {};
 			if (!Array.isArray(bindMap)) { //single bind
 				bindMap = [bindMap];
 			}
 			for (var i = 0; i < bindMap.length; i++) {
 				indigoJS.bindProperties(bindMap[i], function(o) {
-					o.self.$el.on(o.prop, function(e, value) {
+					o.self.$el.on(o.name, function(e, value) {
 						model[name] = value;
 						if (o.handle) {
-							if (o.self[o.prop] !== value) {
-								o.handle.call(o.self, value, o.prop, model);
+							if (o.self[o.name] !== value) {
+								o.watch.call(o.self, o.name, value, model);
 							}
 						}
 					});
@@ -143,6 +150,7 @@ var console = window.console,
 			}
 
 			var self = this, 
+				watch = arguments[3],
 				val = model[name];
 			Object.defineProperty(model, name, {
 				get: function() {
@@ -155,14 +163,14 @@ var console = window.console,
 						proto['__propogate__' + name] = true;
 						for (i = 0; i < bindMap.length; i++) {
 							indigoJS.bindProperties(bindMap[i], function(o) {
-								if (o.handle) {
-									o.handle.call(o.self, value, o.prop, model);
+								if (o.watch) {
+									o.watch.call(o.self, o.name, value, model);
 								} else {
-									o.self[o.prop] = value;
+									o.self[o.name] = value;
 								}
 							});
 						}
-						if (model[name] !== undefined) {
+						if (watch && model[name] !== undefined) {
 							watch(name, value);
 						}
 						delete proto['__propogate__' + name];
@@ -255,7 +263,7 @@ window.init = function(win, selector, factory) {
 					if (!apis.show) {
 						apis.show = {
 							get: function() {
-								return this.$el.length && this.$el[0].getClientRects().length > 0;
+								return (this.$el.length && this.$el[0].getClientRects().length > 0);
 							},
 							set: function(value) {
 								value ? this.$el.show() : this.$el.hide();

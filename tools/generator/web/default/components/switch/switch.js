@@ -5,9 +5,10 @@ function Switch($, indigo) {
 
 	return {
 		init: function(el, self) {
-			self.$input = $('>label>input', el).event('change', function() {
+			self.$input = $('>label>input', el).event('change.check', function() {
 				self.checked = self.$input.is(':checked');
 			});
+			this.onEvent('change', self.$input);
 		},
 
 		checked: {

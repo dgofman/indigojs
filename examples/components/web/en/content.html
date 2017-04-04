@@ -106,7 +106,7 @@
 
 		<%- $(req, 'dropdown', {prompt: `${locales.common.helloworld} - 3`, disabled: true}) %> <br/>
 
-		<%- $(req, 'dropdown', {prompt: `${locales.common.helloworld} - 4`, menus: ['Menu1', 'Menu2', 'Menu3']}) %>
+		<%- $(req, 'dropdown', {prompt: `${locales.common.helloworld} - 4`, labelName: 'name', menus: [{name:'Menu1'}, {name:'Menu2'}, {name:'Menu3'}]}) %>
 
 		<%- $(req, 'dropdown', {prompt: `${locales.common.helloworld} - 5`, menus: data.dropdown}) %>
 
@@ -158,7 +158,7 @@
 		<div class="center">
 			<b>Tooltip Top</b>
 			<div class="textstyle">
-				<%- $(req, 'text', {value: text, auto: true}) %>
+				<%- $(req, 'text', {value: text, height: 'autp', class: 'textstyle'}) %>
 				<%- $(req, 'tooltip', {value: 'That is custom text', position: 'top', style: 'color: green; font-weight: bold'}) %>
 			</div>
 		</div><br/>
@@ -166,7 +166,7 @@
 		<div class="center">
 			<b>Tooltip Bottom</b>
 			<div class="textstyle">
-				<%- $(req, 'text', {value: text, auto: true}) %>
+				<%- $(req, 'text', {value: text, height: 'auto', class: 'textstyle'}) %>
 				<%- $(req, 'tooltip', {position: 'bottom', width: '400px', class: 'custom'}) %>
 			</div>
 		</div><br/>
@@ -174,7 +174,7 @@
 		<div class="center">
 			<b>Tooltip Left</b>
 			<div class="textstyle">
-				<%- $(req, 'text', {value: text, auto: true}) %>
+				<%- $(req, 'text', {value: text, height: 'auto', class: 'textstyle'}) %>
 				<%- $(req, 'tooltip', {position: 'left', height: '200px'}) %>
 			</div>
 		</div><br/>
@@ -182,7 +182,7 @@
 		<div class="center">
 			<b>Tooltip Right - Scroll</b>
 			<div class="textstyle">
-				<%- $(req, 'text', {value: text, auto: true}) %>
+				<%- $(req, 'text', {value: text, height: 'auto', class: 'textstyle'}) %>
 				<%- $(req, 'tooltip', {position: 'right', height: '200px', scroll: 100, scrollTimeout: 700}) %>
 			</div>
 		</div>

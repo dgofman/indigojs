@@ -9,51 +9,33 @@ function Dropdown($, indigo, selector) {
 
 	return {
 		register: function(el) {
-			var menu = $('>ul', el),
-				dropdown = $('>div', el),
-				initMenu = function(isOpen) {
-					if (isOpen) {
-						menu.event('click', function(e) {
-							var li = $(e.target).closest('li');
-							dropdown.attr('selectedIndex', li.index());
-							dropdown.find('>div').html(li.html());
-							el.trigger('change', [li.index(), li, dropdown]);
-						});
-					}
-				};
-			initMenu(menu.hasClass('open'));
-
-			var div = $('>div', el).event('click', function(e) {
+			var menu = $('>ul', el);
+			var div = $('>div', el).event('click.open', function(e) {
 				e.stopPropagation();
 				var isOpen = menu.hasClass('open');
 				$(selector + '>ul').removeClass('open');
 				menu.toggleClass('open', !isOpen);
-				initMenu(!isOpen);
 			});
 
-			$(el).event('keypress', function (e) {
+			$(el).event('keypress.enter', function (e) {
 				if (!el.attr('disabled') && e.which === 13) {
 					div.trigger('click');
 				}
 			});
 		},
 
-		init: function(el, self) {
+		init: function(el) {
 			this.initItems(el, this);
+			this.onEvent('change', this.$el);
 			this.$box = $('>div', el);
 			this.$prompt = this.$box.find('>div');
 			this.$popup = $('>ul', el);
-
-			Object.defineProperty(this, 'change', {
-				set: function(hanlder) {
-					self.$el.event('change', hanlder);
-				}
-			});
 		},
 
 		initItems: function(el, self) {
-			self.$items = $('>ul>li', el).event('click', function(e) {
+			self.$items = $('>ul>li', el).event('click.li', function(e) {
 				self.index = $(e.currentTarget).index();
+				el.trigger('change', self);
 			});
 		},
 

@@ -11,8 +11,8 @@ function Text($, indigo) {
 					fs = parseFloat(span.css('font-size')),
 					lh = parseFloat(span.css('line-height')) || parseFloat(span.css('height')) + 2,
 					em = lh / fs,
-					rows = Math.floor(height / (fs * em));
-				span.css({'height': (rows * fs * em) + 'px', '-webkit-line-clamp': rows.toString()});
+					rows = height / (fs * em);
+				span.css({'height': Math.floor(rows) * fs * em + 'px', '-webkit-line-clamp': Math.ceil(rows).toString()});
 			}
 		},
 

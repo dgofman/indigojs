@@ -4,13 +4,9 @@ function Button($, indigo) {
 	indigo.debug('Init Button');
 
 	return {
-		init: function(el, self) {
-			self.$button = $('>button', el);
-			Object.defineProperty(self, 'click', {
-				set: function(hanlder) {
-					self.$button.event('click', hanlder);
-				}
-			});
+		init: function(el) {
+			this.$button = $('>button', el);
+			this.onEvent('click', this.$button);
 		},
 
 		label: {

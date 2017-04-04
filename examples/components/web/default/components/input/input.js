@@ -5,7 +5,7 @@ function Input($, indigo) {
 
 	return {
 		register: function(el) {
-			$('>div', el).event('focus', function(e) {
+			$('>div', el).event('focus.input', function(e) {
 				setTimeout(function() {
 					$('>input', e.currentTarget).focus();
 				}, 500);
@@ -13,8 +13,16 @@ function Input($, indigo) {
 		},
 
 		init: function(el, self) {
-			self.$input = $('>div>input', el).event('change', function() {
+			self.$input = $('>div>input', el).event('change.val', function() {
 				self.value = self.$input.val();
+			});
+			this.onEvent('change', self.$input);
+			this.onEvent('enter', self.$input, function(handler, uid) {
+				self.$input.event('keyup.' + uid, function (e) {
+					if (e.which === 13) {
+						handler.call(self, e);
+					}
+				});
 			});
 		},
 

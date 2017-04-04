@@ -5,10 +5,11 @@ function Checkbox($, indigo) {
 
 	return {
 		init: function(el, self) {
-			self.$input = $('>label>input', el).event('change', function() {
+			self.$input = $('>label>input', el).event('change.check', function() {
 				self.checked = self.$input.is(':checked');
 			});
 			self.$label = $('>label>u', el);
+			this.onEvent('change', this.$input);
 		},
 
 		checked: {

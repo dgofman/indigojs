@@ -3,7 +3,7 @@
 var indigoStatic = window.top.indigoStatic;
 
 require.config({
-	baseUrl: indigoStatic.getStaticPath() + '/js',
+	baseUrl: indigoStatic['staticPath'] + '/js',
 
 	paths: {
 		jquery: 'vendor/jquery-3.1.1' + (indigoStatic.DEBUG ? '' : '.min')
@@ -19,7 +19,7 @@ require.config({
 			var iframe = $('iframe.content'),
 				loadPage = function() {
 					var page = window.location.hash.split('#')[1] || 'default',
-						url = indigoStatic.getContextPath() + '/content/' + page;
+						url = indigoStatic['contextPath'] + '/content/' + page;
 					window.indigo.debug('Load: ' + url);
 					iframe.css('opacity', 0);
 					iframe.attr('src', url);
@@ -68,6 +68,12 @@ var console = window.console,
 			if (this.static.INFO) {
 				console.info.apply(console, arguments);
 			}
+		},
+		uid: function () {
+			'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+				var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+				return v.toString(16);
+			});
 		},
 		attr: function(el, type, val) {
 			return val ? el.attr(type, type) : el.removeAttr(type);
@@ -216,6 +222,21 @@ window.init = function(win, selector, factory) {
 					clazz.prototype.toString = function() {
 						return selector + '::' + this.$el.html();
 					};
+					clazz.prototype.onEvent = function(type, comp, intercept) {
+						var _hanlder,
+							uid = indigo.uid();
+						Object.defineProperty(this, type, {
+							get: function() {
+								return _hanlder;
+							},
+							set: function(hanlder) {
+								comp.event(type + '.' + uid, _hanlder = hanlder);
+								if (intercept) {
+									intercept(hanlder, uid);
+								}
+							}
+						});
+					};
 					clazz.prototype.init = function() {};
 					components[selector] = clazz;
 
@@ -234,7 +255,7 @@ window.init = function(win, selector, factory) {
 					if (!apis.show) {
 						apis.show = {
 							get: function() {
-								return this.$el.is(':visible');
+								return this.$el.length && this.$el[0].getClientRects().length > 0;
 							},
 							set: function(value) {
 								value ? this.$el.show() : this.$el.hide();

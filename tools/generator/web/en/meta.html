@@ -9,11 +9,7 @@
 	var indigoStatic = {
 		DEBUG: <%- environment === 'dev' %> && !!console.log,
 		INFO: false,
-		getContextPath() {
-			return '<%- contextPath %>';
-		},
-		getStaticPath() {
-			return '<%- baseStaticPath %>';
-		}
+		contextPath: '<%- contextPath %>',
+		staticPath: '<%- baseStaticPath %>'
 	};
 </script>

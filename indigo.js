@@ -166,7 +166,9 @@ const indigo =
 	 */
 	start(appconf, before, after) {
 
-		appconf = this.init(appconf);
+		if (typeof appconf === 'string') { 
+			appconf = this.init(appconf);
+		}
 
 		const app = this.app;
 

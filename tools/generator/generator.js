@@ -3,7 +3,6 @@
 var stdio = require('stdio'),
 	fs = require('fs'),
 	path = require('path'),
-	shell = require('shelljs'),
 	pkg = require('../../package.json');
 
 (function() {
@@ -105,7 +104,7 @@ function createFile(dir, file, lines) {
 		dir = '.' + dir;
 	}
 	console.log('creating %s%s', dir, file);
-	shell.mkdir('-p', dir);
+	mkdir(dir);
 	fs.writeFileSync(dir + file, lines);
 }
 
@@ -117,7 +116,7 @@ function getDir(dir) {
 function copySync(src, dest) {
 	if (fs.existsSync(src)) {
 		if (fs.statSync(src).isDirectory()) {
-			shell.mkdir('-p', dest);
+			mkdir(dest);
 			fs.readdirSync(src).forEach(function(file) {
 				copySync(path.join(src, file), path.join(dest, file));
 			});
@@ -125,4 +124,14 @@ function copySync(src, dest) {
 			fs.createReadStream(src).pipe(fs.createWriteStream(dest));
 		}
 	}
+}
+
+function mkdir(dir) {
+	dir.split('/').forEach((dir, index, splits) => {
+		const parent = splits.slice(0, index).join('/'),
+			dirPath = path.resolve(parent, dir);
+		if (!fs.existsSync(dirPath)) {
+			fs.mkdirSync(dirPath);
+		}
+	});
 }

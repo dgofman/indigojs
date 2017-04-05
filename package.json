@@ -30,22 +30,21 @@
 		"url": "https://github.com/dgofman/indigojs.git"
 	},
 	"dependencies": {
+		"debug": "latest",
 		"cjson": "~0.5.0",
-		"debug": "~2.6.1",
 		"ejs": "~2.5.6",
 		"express": "~4.15.2",
 		"winston": "~2.3.1",
-		"shelljs": "~0.7.6",
 		"stdio": "~0.2.7"
 	},
 	"devDependencies": {
-		"mocha": "~3.2.0",
-		"superagent": "~3.5.0",
-		"istanbul": "~0.4.5",
-		"jshint": "~2.9.4",
-		"body-parser": "~1.17.1",
-		"express-session": "~1.15.1",
-		"less": "~2.7.2",
+		"mocha": "latest",
+		"superagent": "latest",
+		"istanbul": "latest",
+		"jshint": "latest",
+		"body-parser": "latest",
+		"express-session": "latest",
+		"less": "latest",
 		"proxy-orchestrator": "latest"
 	},
 	"license": "MIT",

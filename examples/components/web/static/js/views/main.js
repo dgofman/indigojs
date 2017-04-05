@@ -42,7 +42,7 @@ window.top.ready(window, function($, indigo) {
 					.bind('popupDropdown', [{checked: sch}, {open: dpd}]);
 
 			//Bind text values between Text, Input, Tooltip, Checkbox, Button, DropDown components
-			indigo.bind('bindLabel', [{value: txt}, {value: int}, {value: tlt}, {label: chk}, {label: btn}, {prompt: dpd, watch: function(name, value, model) {
+			indigo.bind('bindLabel', [{value: txt}, {value: int}, {value: tlt}, {label: chk}, {label: btn}, {prompt: dpd, $watch: function(name, value, model) {
 				indigo.info('Dropdown name: ', name, ', value: ', value, ' model: ', JSON.stringify(model));
 				this.indexByText(value);
 				this[name] = value;
@@ -61,14 +61,14 @@ window.top.ready(window, function($, indigo) {
 		};
 
 		//Bind url value of Image component and Text
-		indigo.bind('imageUrl', [{url: img}, {text: txt, watch: function(name, value) {
+		indigo.bind('imageUrl', [{url: img}, {text: txt, $watch: function(name, value) {
 			this.value = '<a href=#>' + value + '</a>';
 		}}], model);
 
 		img.url = 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png';
 
 		//Bind Switch and Checkbox state with Button access and editable Text
-		indigo.bind('bindState', [{checked: chk}, {checked: sch}, {editable: txt}, {disabled: btn, watch: function(name, value) {
+		indigo.bind('bindState', [{checked: chk}, {checked: sch}, {editable: txt}, {disabled: btn, $watch: function(name, value) {
 			this[name] = !value;
 		}}], model);
 	});

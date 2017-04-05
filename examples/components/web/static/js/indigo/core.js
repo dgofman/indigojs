@@ -51,8 +51,8 @@ var console = window.console,
 	initPending: {},
 	bindProperties: function(bindMap, callback) {
 		for (var name in bindMap) {//find a bind property name
-			if (name !== 'watch') {
-				return callback({name: name, self: bindMap[name], watch: bindMap.watch});
+			if (name !== '$watch') {
+				return callback({name: name, self: bindMap[name], $watch: bindMap.$watch});
 			}
 		}
 	},
@@ -140,9 +140,9 @@ var console = window.console,
 				indigoJS.bindProperties(bindMap[i], function(o) {
 					o.self.$el.on(o.name, function(e, value) {
 						model[name] = value;
-						if (o.handle) {
+						if (o.$watch) {
 							if (o.self[o.name] !== value) {
-								o.watch.call(o.self, o.name, value, model);
+								o.$watch.call(o.self, o.name, value, model);
 							}
 						}
 					});
@@ -163,8 +163,8 @@ var console = window.console,
 						proto['__propogate__' + name] = true;
 						for (i = 0; i < bindMap.length; i++) {
 							indigoJS.bindProperties(bindMap[i], function(o) {
-								if (o.watch) {
-									o.watch.call(o.self, o.name, value, model);
+								if (o.$watch) {
+									o.$watch.call(o.self, o.name, value, model);
 								} else {
 									o.self[o.name] = value;
 								}

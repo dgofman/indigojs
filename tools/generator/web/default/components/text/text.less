@@ -1,38 +1,51 @@
-height: 100%;
+/* By setting ellipse text in <u> change width and margin-left */
+@ellipse_width: 2em;
 
-&>span {
+&>div {
 	overflow: hidden;
-	outline: none;
-
-
-	&:after {
-		content: '';
-		position: absolute;
-		bottom: 0;
-		right: 0;
-		width: 60px;
-		height: 1.2em;
-		background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 80%);
-	}
-
-	&>div {
-		outline: none;
-	}
+	height: 100%;
+	padding-right: 6px;
 }
 
-@supports (-webkit-line-clamp: 3) {
-	&>span {
-		padding: 2px;
-		display: -webkit-box;
-		margin: 0 auto;
-		-webkit-box-orient: vertical;
-		text-overflow: ellipsis;
-	}
-	&>span:after {
-		display: none;
-	}
+&>div>p {
+	float: right;
+	width: 100%;
+	margin-left: -5px;
 }
 
-&[disabled] {
-	opacity: .5;
+&>div:before  {
+	content: '';
+	float: left;
+	width: 5px;
+	height: 100%;
+}
+
+&>div>u {
+	text-decoration: none;
+	box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	position: relative;
+	float: right;
+	left: 100%;
+	top: -14px;
+	font-size: 14px;
+	line-height: 14px;
+	font-weight: bold;
+	padding-right: 5px;
+	text-align: right;
+	
+	width: @ellipse_width;
+	margin-left: -@ellipse_width;
+
+	background: -webkit-gradient(linear, left top, right top,
+		from(rgba(255, 255, 255, 0)), to(white), color-stop(30%, white));
+	background: -moz-linear-gradient(to right, rgba(255, 255, 255, 0), white 30%, white);
+	background: -o-linear-gradient(to right, rgba(255, 255, 255, 0), white 30%, white);
+	background: -ms-linear-gradient(to right, rgba(255, 255, 255, 0), white 30%, white);
+	background: linear-gradient(to right, rgba(255, 255, 255, 0), white 30%, white);
+}
+
+&>div>u:before {
+	content: '\02026';
 }

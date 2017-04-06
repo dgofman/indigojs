@@ -14,38 +14,22 @@ require.config({
 			'jquery'
 		], function($) {
 			window.indigo = indigoJS.extend;
-			window.initComponents();
-			$('body').fadeTo('fast', 1);
-			var iframe = $('iframe.content'),
-				loadPage = function() {
-					var page = window.location.hash.split('#')[1] || 'default',
-						url = indigoStatic['contextPath'] + '/content/' + page;
-					window.indigo.debug('Load: ' + url);
-					iframe.css('opacity', 0);
-					iframe.attr('src', url);
-				};
-
-			iframe.on('load', function() {
-				iframe.fadeTo('slow', 1);
-				indigoJS.extend.debug('Page Ready');
-				if (document.createEvent) {
-					var event = document.createEvent('HTMLEvents');
-					event.initEvent('Ready', true, true);
-					window.dispatchEvent(event);
-				} else {
-					window.fireEvent('onReady', document.createEventObject());
-				}
-			});
-
-			window.onhashchange = function() {
-				loadPage();
-			};
-			loadPage();
+			initComponents();
+			if (indigoStatic.jqueryReady) {
+				indigoStatic.jqueryReady($, window.indigo);
+			}
 		});
 	}
 });
 
 var console = window.console,
+	initComponents = function() {
+		for (var selector in indigoJS.initPending) {
+			var item = indigoJS.initPending[selector];
+			delete indigoJS.initPending[selector];
+			item.init.call(indigoJS.extend, item.win);
+		}
+	},
 	indigoJS = {
 	components: {},
 	initPending: {},
@@ -60,17 +44,17 @@ var console = window.console,
 		window: window,
 		static: window.top.indigoStatic,
 		debug: function() {
-			if (this.static.DEBUG) {
+			if (this.static.DEBUG && console) {
 				console.log.apply(console, arguments);
 			}
 		},
 		info: function() {
-			if (this.static.INFO) {
+			if (this.static.INFO && console) {
 				console.info.apply(console, arguments);
 			}
 		},
 		uid: function () {
-			'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
 				var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
 				return v.toString(16);
 			});
@@ -188,15 +172,6 @@ var console = window.console,
 	}
 };
 
-//jQuery loaded
-window.initComponents = function() {
-	for (var selector in indigoJS.initPending) {
-		var item = indigoJS.initPending[selector];
-		delete indigoJS.initPending[selector];
-		item.init.call(indigoJS.extend, item.win);
-	}
-};
-
 //Component registration
 window.init = function(win, selector, factory) {
 	var initPending = indigoJS.initPending;
@@ -303,7 +278,7 @@ window.init = function(win, selector, factory) {
 	}
 
 	if (window.jQuery) {
-		window.initComponents();
+		initComponents();
 	}
 };
 
@@ -321,6 +296,6 @@ window.ready = function(win, callback) {
 		}
 	};
 	if (window.jQuery) {
-		window.initComponents();
+		initComponents();
 	}
 };

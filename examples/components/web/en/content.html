@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<link rel="stylesheet" type="text/css" href="<%- baseStaticPath %>/css/indigo<%- extLESS %>">
+
 	<style>
 		body {
 			padding: 10px;
@@ -141,14 +143,14 @@
 	<div ig-ns="text">
 		<%- $(req, 'text', {value: text, class: 'textstyle'}) %><br/>
 
-		<%- $(req, 'text', {value: text, height: 'auto', editable: true, class: 'textstyle', parentStyle: 'border-color: blue'}) %><br/>
+		<%- $(req, 'text', {value: text, class: 'textstyle', height: 16, parentStyle: 'border-color: blue'}) %><br/>
 
-		<%- $(req, 'text', {value: text, height: 'full', editable: true, class: 'textstyle', parentStyle: 'border-color: yellow'}) %><br/>
+		<%- $(req, 'text', {value: text, class: 'textstyle', height: 16, parentStyle: 'border-color: yellow', ellipses: true}) %><br/>
 
-		<%- $(req, 'text', {value: text, height: 55, editable: true, class: 'textstyle', parentStyle: 'border-color: magenta'}) %><br/>
+		<%- $(req, 'text', {value: text, class: 'textstyle', height: 55, parentStyle: 'border-color: magenta', ellipses: true, editable: true}) %><br/>
 
 		<div class="">
-		<%- $(req, 'text', {value: text, fontSize: 20, lineHeight: 2, rows: 2, class: 'textstyle', parentStyle: 'border-color: red', style: 'color: green'}) %><br/>
+		<%- $(req, 'text', {value: text, class: 'textstyle', height: 93, parentStyle: 'border-color: red', ellipses: true, style: 'color: green', fontSize: 17, lineHeight: 2}) %><br/>
 
 		<%- $(req, 'text', {value: function(req, opts) { return text.substring(0, 45) + '...' }, class: 'textstyle', parentStyle: 'min-height: 22px; border-color: orange'}) %>
 	</div>
@@ -158,7 +160,7 @@
 		<div class="center">
 			<b>Tooltip Top</b>
 			<div class="textstyle">
-				<%- $(req, 'text', {value: text, height: 'autp', class: 'textstyle'}) %>
+				<%- $(req, 'text', {value: text, class: 'textstyle', height: 93, ellipses: true}) %>
 				<%- $(req, 'tooltip', {value: 'That is custom text', position: 'top', style: 'color: green; font-weight: bold'}) %>
 			</div>
 		</div><br/>
@@ -166,7 +168,7 @@
 		<div class="center">
 			<b>Tooltip Bottom</b>
 			<div class="textstyle">
-				<%- $(req, 'text', {value: text, height: 'auto', class: 'textstyle'}) %>
+				<%- $(req, 'text', {value: text, class: 'textstyle', height: 93, ellipses: true}) %>
 				<%- $(req, 'tooltip', {position: 'bottom', width: '400px', class: 'custom'}) %>
 			</div>
 		</div><br/>
@@ -174,7 +176,7 @@
 		<div class="center">
 			<b>Tooltip Left</b>
 			<div class="textstyle">
-				<%- $(req, 'text', {value: text, height: 'auto', class: 'textstyle'}) %>
+				<%- $(req, 'text', {value: text, class: 'textstyle', height: 93, ellipses: true}) %>
 				<%- $(req, 'tooltip', {position: 'left', height: '200px'}) %>
 			</div>
 		</div><br/>
@@ -182,7 +184,7 @@
 		<div class="center">
 			<b>Tooltip Right - Scroll</b>
 			<div class="textstyle">
-				<%- $(req, 'text', {value: text, height: 'auto', class: 'textstyle'}) %>
+				<%- $(req, 'text', {value: text, class: 'textstyle', height: 93, ellipses: true}) %>
 				<%- $(req, 'tooltip', {position: 'right', height: '200px', scroll: 100, scrollTimeout: 700}) %>
 			</div>
 		</div>
@@ -260,15 +262,15 @@
 	<h3>Two-way Data Binding:</h3>
 	<div ig-ns="two-binding">
 		<div ig-ns="menu_text">
-			<%- $(req, 'dropdown', {menus: data.dropdown}) %><br/>
-			<%- $(req, 'input', {value: `${locales.common.helloworld}`}) %><br/>
-			<%- $(req, 'checkbox', {label: `${locales.common.helloworld}`}) %><br/>
-			<%- $(req, 'switch') %><br/>
+			<%- $(req, 'dropdown', {menus: data.dropdown}) %><br class="br-2"/>
+			<%- $(req, 'input', {value: `${locales.common.helloworld}`}) %><br class="br-2"/>
+			<%- $(req, 'checkbox', {label: `${locales.common.helloworld}`}) %><br class="br-2"/>
+			<%- $(req, 'switch') %><br class="br-2"/>
 			<b>Tooltip Text:</b>
 			<div class="tooltip-wrap" style="border: 1px solid blue">
 				<%- $(req, 'text', {value: `${locales.common.helloworld}`}) %>
 				<%- $(req, 'tooltip') %>
-			</div><br/>
+			</div><br class="br-2"/>
 			<b>Dropdown Index:</b> <%- $(req, 'input', {id: 'selDropIndex', type: 'number', disabled: true}) %><br/>
 			<%- $(req, 'button', {label: 'Button'}) %>
 		</div>

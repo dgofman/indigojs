@@ -57,7 +57,7 @@
  * };
  */
 
-function reqmodel(appconf) {
+function reqmodel(appconf, app) {
 
 	let minify, env = appconf.get('environment'),
 		staticDir =  global.__indigo.getStaticDir();

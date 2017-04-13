@@ -118,7 +118,7 @@ const indigo =
 		 */
 		this.logger = logger = require(this.appconfPath('logger:path') || './libs/logger')(appconf);
 		
-		this.reqModel = reqModel = require(this.appconfPath('server:reqmodel:path') || './libs/reqmodel')(appconf);
+		this.reqModel = reqModel = require(this.appconfPath('server:reqmodel:path') || './libs/reqmodel')(appconf, this.app);
 
 		this.errorHandler = errorHandler = require(this.appconfPath('errors:path') || './libs/errorHandler')();
 
@@ -166,7 +166,7 @@ const indigo =
 	 */
 	start(appconf, before, after) {
 
-		if (typeof appconf === 'string') { 
+		if (typeof appconf === 'string' || !this.app) { 
 			appconf = this.init(appconf);
 		}
 
@@ -192,9 +192,8 @@ const indigo =
 			debug('inject: %s -> %s', url, newUrl);
 			try {
 				req.model.filename = getModuleWebDir(req) + newUrl;
-				req.model.locale = app.locals.locale;
-				req.model.inject = app.locals.inject;
-				req.model.component = req.model.$ = app.locals.component;
+				req.model.locale = app.locals.locale; //deprecated v2.x
+				req.model.inject = app.locals.inject; //deprecated v2.x
 				return ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
 			} catch(err) {
 				indigo.logger.error(`Invalid file name: ${newUrl}`);

@@ -16,6 +16,7 @@ var stdio = require('stdio'),
 		ops = stdio.getopt({
 		'version': {key: 'v', description: 'display indigojs version'},
 		'name': {key: 'n', args: 1, mandatory: true, description: 'application name'},
+		'template': {key: 't', args: 1, mandatory: true, description: 'application template "spa" (Single-Page Application) or "fpa" (IFrame-Page Application) (default is "fpa")'},
 		'dir': {key: 'd', args: 1, description: 'path to the webroot directory (defaults /web)'},
 		'static': {key: 's', args: 1, description: 'name of static directory under webroot (defaults /static)'},
 		'component': {key: 'x', args: 1, description: 'base path which loads component resource files (defaults /component)'},
@@ -64,6 +65,7 @@ var stdio = require('stdio'),
 						replace(/{{env}}/g, ops.env || 'dev').
 						replace(/{{port}}/g, ops.port || defaultPort).
 						replace(/{{webdir}}/g, webdir).
+						replace(/{{app_template}}/g, ops.template === 'spa' ? ops.template : 'fpa').
 						replace(/{{static}}/g, staticDir).
 						replace(/{{component}}/g, compDir).
 						replace(/{{locales}}/g, localesDir).

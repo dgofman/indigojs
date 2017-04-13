@@ -81,7 +81,25 @@ function reqmodel(appconf) {
 			locales: {},
 			contextPath: contextPath || req.baseUrl,
 			baseStaticPath: staticDir,
-			
+
+			app_template: `${appconf.app_template}`,
+			$include: (url) => {
+				return app.locals.inject(req, url);
+			},
+			$locale: (localeKey) => {
+				var args = [req, localeKey];
+				for (let i = 1; i < arguments.length; i++) {
+					args.push(arguments[i]);
+				}
+				return app.locals.locale.apply(null, args);
+			},
+			$finalize: () => {
+				return app.locals.finalize(req);
+			},
+			$: (className, opts, wrapTag) => {
+				return app.locals.component(req, className, opts, wrapTag);
+			},
+
 			__initialized__: Date.now()
 		};
 

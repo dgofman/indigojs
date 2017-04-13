@@ -109,8 +109,6 @@ module.exports = function(app) {
 			req.model.opts = opts;
 			req.model.componentIndex = req.model.componentIndex || 1;
 			req.model.filename = getModuleWebDir(req) + newUrl;
-			req.model.locale = app.locals.locale;
-			req.model.component = req.model.$ = app.locals.component;
 			req.model.assets = req.model.assets || {};
 			let html = ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
 

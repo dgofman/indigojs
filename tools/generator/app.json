@@ -4,6 +4,7 @@
 	"server": {
 		"port": {{port}},
 		"webdir": "{{webdir}}",
+		"app_template": "{{app_template}}",
 		"staticDir": "{{static}}", /* path to the web/static directory */
 		"componentUri": "{{component}}", /* base path which loads component resource file */
 		"cache": 3600 /* seconds, 0 - no-cache */

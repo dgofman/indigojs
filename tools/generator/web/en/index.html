@@ -2,9 +2,7 @@
 <html lang="<%- locality.langugage %>">
 <head>
 <title><%- locales.common.pageTitle %></title>
-
-<% include meta.html %>
-
+<%- $include(`templates/meta.html`) %>
 <link rel="shortcut icon" href="/favicon.ico">
 <link rel="stylesheet" type="text/css" href="<%- baseStaticPath %>/css/index<%- extLESS %>">
 
@@ -12,9 +10,19 @@
 <script src="<%- baseStaticPath %>/js/indigo/core<%- extJS %>"></script>
 </head>
 <body>
-	<%- inject(req, 'templates/header.html') %>
-	<iframe class="content" frameborder="0" height="100%" width="100%"></iframe>
-	<%- inject(req, 'templates/footer.html') %>
+	<header class="igo-header">
+		<%- $include(`templates/${app_template}/header.html`) %>
+	</header>
+	<section class="igo-content">
+		<%- $include(`templates/${app_template}/content.html`) %>
+
+		<!-- DEMO CONTENT -->
+<%- $include(`${app_template}-content.html`) %>
+
+	</section>
+	<footer class="igo-footer">
+		<%- $include(`templates/${app_template}/footer.html`) %>
+	</footer>
 </body>
-<%- finalize(req) %>
+<%- $finalize() %>
 </html>

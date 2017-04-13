@@ -1,4 +1,5 @@
 @import './constant.less';
+@import './common.less';
 
 body {
 	font-size: 14px;
@@ -7,7 +8,7 @@ body {
 	flex-direction: column;
 }
 
-.header {
+.igo-header {
 	height: 40px;
 	border: 1px solid #1c50d8;
 	background-color: #31708f;
@@ -28,18 +29,18 @@ body {
 	}
 }
 
-.content {
+.igo-content {
 	flex: 1;
 	height: 100%;
 	width: 100%;
-	overflow: auto;
+	overflow: hidden;
 
 	h1>span{
 		text-transform: uppercase;
 	}
 }
 
-.footer {
+.igo-footer {
 	padding: 0 10px;
 	height: 40px;
 	padding-top: 10px;

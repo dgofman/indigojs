@@ -1,0 +1,33 @@
+<script>
+indigoStatic.jqueryReady = function($, indigo) {
+	$('body').fadeTo('fast', 1);
+	var iframe = $('iframe.fpa-content'),
+		loadPage = function() {
+			if (location.hash) {
+				var page = location.hash.split('#').pop();
+				if (page !== (iframe.attr('src') || '').split('/').pop()) {
+					iframe.css('opacity', 0);
+					iframe.attr('src', 'content/' + page);
+				}
+			}
+		};
+
+	iframe.on('load', function() {
+		iframe.fadeTo('slow', 1);
+		indigo.debug('Page Ready');
+		if (document.createEvent) {
+			var event = document.createEvent('HTMLEvents');
+			event.initEvent('Ready', true, true);
+			window.dispatchEvent(event);
+		} else {
+			window.fireEvent('onReady', document.createEventObject());
+		}
+	});
+
+	window.onhashchange = function() {
+		loadPage();
+	};
+	loadPage();
+}
+</script>
+<iframe class="fpa-content" frameborder="0" height="100%" width="100%"></iframe>

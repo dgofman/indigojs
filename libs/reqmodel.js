@@ -86,7 +86,7 @@ function reqmodel(appconf, app) {
 			$include: (url) => {
 				return app.locals.inject(req, url);
 			},
-			$locale: (...args) => {
+			$locales: (...args) => {
 				args.unshift(req);
 				return app.locals.locale.apply(null, args);
 			},

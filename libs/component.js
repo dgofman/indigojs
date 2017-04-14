@@ -9,6 +9,10 @@ const indigo = global.__indigo,
 	addTitle = function(req, title) {
 		title = title || this.title;
 		return ` tabindex="${req.model.componentIndex}"` + (title ? ' title="' + title + '"' : '');
+	},
+	addLabel = function(req, title) {
+		title = title || this.title;
+		return ` tabindex="${req.model.componentIndex}"` + (title ? ' aria-label="' + title + '"' : '');
 	}, getProps = function(name, val) {
 		if (this[name] !== undefined) {
 			if (val === undefined) {
@@ -106,6 +110,7 @@ module.exports = function(app) {
 			opts.$attr = getAttr;
 			opts.$css = getCss;
 			opts.$title = addTitle;
+			opts.$label = addLabel;
 			req.model.opts = opts;
 			req.model.componentIndex = req.model.componentIndex || 1;
 			req.model.filename = getModuleWebDir(req) + newUrl;

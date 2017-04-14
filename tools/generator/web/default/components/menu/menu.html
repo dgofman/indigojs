@@ -1,6 +1,7 @@
-<ul<%- opts.$attr('style') %><%- opts.$title(req) %> <%- opts.$title(req, opts.title || 'Menu Control') %>><%
+<ul<%- opts.$attr('style') %><%- opts.$label(req, opts.title || 'Menu Control') %>><%
+	var labelRenderer = opts.labelRenderer || function(label) { return label; };
 	for (var index in opts.menus) {
-		var menu = opts.menus[index],
+		var menu = JSON.parse(JSON.stringify(opts.menus[index])),
 			itemRenderer = menu.itemRenderer || opts.itemRenderer;
 		menu.get = opts.$get;
 		menu.attr = opts.$attr;
@@ -10,17 +11,27 @@
 	<%- itemRenderer(req, opts, menu, index) %>
 <%
 		} else {
+			var label = labelRenderer(menu.label);
+			if (menu.nav === opts.selected_nav) {
+				menu.class = 'selected ' + (menu.class || '');
+			}
 %>
-	<li<%- opts.$title(req, menu.label) %><%- menu.attr('class') %><%- menu.attr('style') %><%- menu.get('disabled', ' disabled') %>><p><a tabindex="-1" href="<%- menu.get('nav') || '#' %>"><%- menu.label %></a>
-	</p>
+	<li<%- opts.$label(req, label) %><%- menu.attr('class') %><%- menu.attr('style') %><%- menu.get('disabled', ' disabled') %>><a tabindex="-1" href="<%- menu.get('nav') || '#' %>"><%- label %></a>
+<%
+	if (menu.sub) {
+%>
 		<ol><%
 		for (var i in menu.sub) {
-			var sub = menu.sub[i];
+			var sub = menu.sub[i],
+				label = labelRenderer(sub.label);
 			sub.get = opts.$get;
 			sub.attr = opts.$attr;
-%><li<%- sub.attr('class') %><%- sub.attr('style') %><%- sub.get('disabled', ' disabled') %>><p><a tabindex="-1" href="<%- sub.get('nav') || '#' %>"><%- sub.label %></a></p></li><%
+%><li<%- opts.$label(req, label) %><%- sub.attr('class') %><%- sub.attr('style') %><%- sub.get('disabled', ' disabled') %>><p><a tabindex="-1" href="<%- sub.get('nav') || '#' %>"><%- label %></a></p></li><%
 		}
 %></ol>
+<%
+}
+%>
 	</li><%
 		}
 	}

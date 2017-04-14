@@ -206,16 +206,13 @@ const indigo =
 		 * @memberOf sourceloader
 		 * @alias indigo.js#localsLocale
 		 */
-		app.locals.locale = function(req, localeKey) {
+		app.locals.locale = function(req, localeKey, ...args) {
 			let locales = indigo.getLocale(req),
 				rest = [];
 			localeKey.split('.').forEach((name) => {
 				locales = locales[name];
 			});
-			for (let i = 2; i < arguments.length; i++) {
-				rest.push(arguments[i]);
-			}
-			return indigo.substitute(locales, rest);
+			return indigo.substitute(locales, args);
 		};
 
 		errorHandler.notFound(app);

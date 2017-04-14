@@ -86,11 +86,8 @@ function reqmodel(appconf, app) {
 			$include: (url) => {
 				return app.locals.inject(req, url);
 			},
-			$locale: (localeKey) => {
-				var args = [req, localeKey];
-				for (let i = 1; i < arguments.length; i++) {
-					args.push(arguments[i]);
-				}
+			$locale: (...args) => {
+				args.unshift(req);
 				return app.locals.locale.apply(null, args);
 			},
 			$finalize: () => {

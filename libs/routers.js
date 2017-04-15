@@ -71,13 +71,13 @@ const routers =
 				enumerable: true
 			});
 
+			conf = routers.routerConf(route(router, app, locales));
+
 			router.get = requestHook('get', router, conf);
 			router.post = requestHook('post', router, conf);
 			router.put = requestHook('put', router, conf);
 			router.delete = requestHook('delete', router, conf);
 			router.patch = requestHook('patch', router, conf);
-
-			conf = routers.routerConf(route(router, app, locales));
 
 			app.use(conf.base, router);
 
@@ -194,7 +194,7 @@ routers.routerConf = opt => {
 	if (typeof opt === 'string') {
 		conf = {base: opt};
 	} else {
-		conf.base = conf.base || '/route';
+		conf.base = conf.base || '';
 	}
 	return conf;
 };

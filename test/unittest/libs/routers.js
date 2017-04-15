@@ -33,7 +33,7 @@ describe('libs/routers', () => {
 
 	it('should test default setting in routerConf', done => {
 		const opt = routers.routerConf();
-		assert.equal(opt.base, '/route');
+		assert.equal(opt.base, '');
 		done();
 	});
 

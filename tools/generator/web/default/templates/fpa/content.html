@@ -9,6 +9,8 @@ indigoStatic.jqueryReady = function($, indigo) {
 					iframe.css('opacity', 0);
 					iframe.attr('src', 'content/' + page);
 				}
+			} else {
+				window.location.href = '/';
 			}
 		};
 

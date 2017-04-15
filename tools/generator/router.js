@@ -1,6 +1,6 @@
 'use strict';
 
-var indigo = global.__indigo,
+const indigo = global.__indigo,
 	bodyParser = require('body-parser'),
 	expressSession = require('express-session');
 

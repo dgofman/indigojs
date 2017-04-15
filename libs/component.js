@@ -31,6 +31,12 @@ const indigo = global.__indigo,
 			}
 		}
 		return '';
+	}, getAttrs = function(obj) {
+		let attrs = [];
+		for (var key in obj) {
+			attrs.push(`${key}="${obj[key]}"`);
+		}
+		return attrs.join(' ');
 	}, getCss = function(name, tagName) {
 		if (this[name] !== undefined) {
 			if (tagName === undefined) {
@@ -108,6 +114,7 @@ module.exports = function(app) {
 		try {
 			opts.$get = getProps;
 			opts.$attr = getAttr;
+			opts.$attrs = getAttrs;
 			opts.$css = getCss;
 			opts.$title = addTitle;
 			opts.$label = addLabel;

@@ -1,13 +1,13 @@
 'use strict';
 
-var indigo = global.__indigo,
+const indigo = global.__indigo,
 	debug = indigo.debug('indigo:static'),
 	fs = require('fs'),
 	less = require('less');
 
 module.exports = (router, app) => {
 
-	var base = indigo.getStaticDir(),
+	const base = indigo.getStaticDir(),
 		path = '^' + base;
 
 	app.use(path + '/css/*(.css)$', (req, res) => {
@@ -16,7 +16,7 @@ module.exports = (router, app) => {
 
 	app.use(path + '/css/*(.less)$', (req, res, next) => {
 
-		var filename = req.params[0] + req.params[1],
+		const filename = req.params[0] + req.params[1],
 			lessFile = router.moduleWebDir() + '/default/less/' + filename,
 			cache = parseInt(indigo.appconf.get('server:cache')),
 			isDev = indigo.appconf.get('environment') === 'dev';

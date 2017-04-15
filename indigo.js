@@ -49,6 +49,26 @@ const indigo =
 	{
 
 	/**
+	 * Determine minimum supported version.
+	 * @param {String} version Minimum supported version.
+	 * @return {Class} this Return class instance.
+	 */
+	min_version(version) {
+		let current_version = require('./package.json').version,
+			cv = 0, uv = 0;
+			current_version.split('.').map((n, i) => {
+				cv += Number(n) * Math.pow(10, 9 - (i * 3));
+			});
+			version.split('.').map((n, i) => {
+				uv += Number(n) * Math.pow(10, 9 - (i * 3));
+			});
+		if (cv < uv) {
+			throw new Error(`IndigoJS unsupported minor version ${current_version}. Please run "npm install" command.`);
+		}
+		return this;
+	},
+
+	/**
 	 * Creating <code>appconf</code> object.
 	 * @param {JSON|String} appconf Path to the <code>app.json</code> file or application configuration object.
 	 * @return {Object} appconf Return reference to the configuration object.
@@ -207,8 +227,7 @@ const indigo =
 		 * @alias indigo.js#localsLocale
 		 */
 		app.locals.locale = function(req, localeKey, ...args) {
-			let locales = indigo.getLocale(req),
-				rest = [];
+			let locales = indigo.getLocale(req);
 			localeKey.split('.').forEach((name) => {
 				locales = locales[name];
 			});

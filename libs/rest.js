@@ -160,7 +160,7 @@ const rest = () => {
 			});
 		}
 	};
-}
+};
 
 /**
  * @module rest

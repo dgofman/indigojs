@@ -53,7 +53,7 @@ const logger = (appconf) => {
 	};
 
 	return log;
-}
+};
 
 /**
  * @module logger

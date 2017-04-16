@@ -102,7 +102,7 @@ const reqmodel = (appconf, app) => {
 
 		next();
 	};
-}
+};
 
 /**
  * @module reqmodel

@@ -6,14 +6,15 @@ const indigo = global.__indigo,
 	fs = require('fs'),
 	less = require('less'),
 	componentTag = indigo.appconf.get('server:componentTag') || false,
-	addTitle = (req, title) => {
+	/** Do not change function to ES6 arrow (using scope this) */
+	addTitle = function(req, title) {
 		title = title || this.title;
 		return ` tabindex="${req.model.componentIndex}"` + (title ? ' title="' + title + '"' : '');
 	},
-	addLabel = (req, title) => {
+	addLabel = function(req, title) {
 		title = title || this.title;
 		return ` tabindex="${req.model.componentIndex}"` + (title ? ' aria-label="' + title + '"' : '');
-	}, getProps = (name, val) => {
+	}, getProps = function(name, val) {
 		if (this[name] !== undefined) {
 			if (val === undefined) {
 				return ` ${this[name]}`;
@@ -22,7 +23,7 @@ const indigo = global.__indigo,
 			}
 		}
 		return '';
-	}, getAttr = (name, tagName) => {
+	}, getAttr = function(name, tagName) {
 		if (this[name] !== undefined) {
 			if (tagName === undefined) {
 				return ` ${name}="${this[name]}"`;
@@ -31,13 +32,13 @@ const indigo = global.__indigo,
 			}
 		}
 		return '';
-	}, getAttrs = (obj) => {
+	}, getAttrs = function(obj) {
 		let attrs = [];
 		for (var key in obj) {
 			attrs.push(`${key}="${obj[key]}"`);
 		}
 		return attrs.join(' ');
-	}, getCss = (name, tagName) => {
+	}, getCss = function(name, tagName) {
 		if (this[name] !== undefined) {
 			if (tagName === undefined) {
 				return ` ${name}: ${this[name]};`;

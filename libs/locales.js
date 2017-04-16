@@ -175,7 +175,7 @@ const setLocale = (req, locale, locales) => {
 	} else {
 		saveToSession(req, locales, req.session.locale);
 	}
-}
+};
 
 /**
  * Save current language code into <code>express.Request</code> session.
@@ -191,7 +191,7 @@ const saveToSession = (req, locales, locale) => {
 		req.model.locality.locale = locale;
 		req.model.locality.langugage = locales.localeMap[locale].__localName__;
 	}
-}
+};
 
 /**
  * Traverse all locales files under locale directory.
@@ -263,7 +263,7 @@ const localelookup = (localeDir, locales) => {
 	for (let code in rules) {
 		traverse(code);
 	}
-}
+};
 
 /**
  * @module locales

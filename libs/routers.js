@@ -237,7 +237,7 @@ const loadModule = (dir, file, callback) => {
 	} catch (e) {
 		indigo.logger.error('Cannot loading \'%s\' :', dir + file, e);
 	}
-}
+};
 
 /**
  * @module routers

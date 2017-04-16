@@ -84,24 +84,28 @@ var console = window.console,
 				return components.length === 1 ? components[0] : components;
 			}
 		},
+		create: function(clazz, idxOrSelector, parent) {
+			parent = parent || window.$('body');
+			if (typeof clazz === 'string') {
+				clazz = this.import(clazz);
+			}
+			var el, els = parent.find(clazz.selector),
+				type = typeof(idxOrSelector);
+			if (type === 'number') {
+				el = els.eq(idxOrSelector);
+			} else if (type === 'string') {
+				el = els.filter(idxOrSelector);
+			} else {
+				el = els.eq(0);
+			}
+			return new clazz(el);
+		},
 		namespace: function(selector, callbak) {
 			var self = this,
 				parent = this.window.$(selector),
 				ns = {
 					create: function(clazz, idxOrSelector) {
-						if (typeof clazz === 'string') {
-							clazz = self.import(clazz);
-						}
-						var el, els = parent.find(clazz.selector),
-							type = typeof(idxOrSelector);
-						if (type === 'number') {
-							el = els.eq(idxOrSelector);
-						} else if (type === 'string') {
-							el = els.filter(idxOrSelector);
-						} else {
-							el = els.eq(0);
-						}
-						return new clazz(el);
+						self.create.apply(self, clazz, idxOrSelector, parent);
 					}
 				};
 			if (callbak) { callbak(ns); }

@@ -6,26 +6,26 @@ const superagent = require('superagent'),
 	indigo = require('../../indigo');
 
 describe('Testing Account Controllers', () => {
-    let port;
+	let port;
 
-    before(done => {
+	before(done => {
 		indigo.start(`${__appDir}/examples/account/config/app.json`);
 		indigo.logger.error = () => {};
 		port = indigo.appconf.get('server:port');
 		done();
 	});
 
-    after(done => {
+	after(done => {
 		indigo.close(done);
 	});
 
-    const userEmail = 'user@indigo.js',
+	const userEmail = 'user@indigo.js',
 		userDetails = users[userEmail].details,
 		adminEmail = 'admin@indigo.js',
 		adminDetails = users[adminEmail].details,
 		password = '12345';
 
-    it('should redirect to /en/login', done => {
+	it('should redirect to /en/login', done => {
 		superagent.get(`http://localhost:${port}/account/login`)
 			.end((err, res) => {
 				assert.equal(res.statusCode, 200);
@@ -34,7 +34,7 @@ describe('Testing Account Controllers', () => {
 		});
 	});
 
-    it('should get user details', done => {
+	it('should get user details', done => {
 		superagent.post(`http://localhost:${port}/account/login`)
 			.send({
 				email: userEmail,
@@ -49,7 +49,7 @@ describe('Testing Account Controllers', () => {
 		});
 	});
 
-    it('should get admin details', done => {
+	it('should get admin details', done => {
 		superagent.post(`http://localhost:${port}/account/login`)
 			.send({
 				email: adminEmail,
@@ -64,7 +64,7 @@ describe('Testing Account Controllers', () => {
 		});
 	});
 
-    it('should get error on login', done => {
+	it('should get error on login', done => {
 		superagent.post(`http://localhost:${port}/account/login`)
 			.send({
 				email: 'wrong@user.com',
@@ -77,7 +77,7 @@ describe('Testing Account Controllers', () => {
 		});
 	});
 
-    it('should test reset password', done => {
+	it('should test reset password', done => {
 		superagent.post(`http://localhost:${port}/account/reset`)
 			.send({
 				email: userEmail,
@@ -92,7 +92,7 @@ describe('Testing Account Controllers', () => {
 		});
 	});
 
-    it('should get error on reset', done => {
+	it('should get error on reset', done => {
 		superagent.post(`http://localhost:${port}/account/reset`)
 			.send({
 				email: 'wrong@user.com',
@@ -105,7 +105,7 @@ describe('Testing Account Controllers', () => {
 		});
 	});
 
-    it('should test middleware handler call', done => {
+	it('should test middleware handler call', done => {
 		superagent.post(`http://localhost:${port}/account/todo`)
 			.end((err, res) => {
 				assert.equal(res.statusCode, 404);
@@ -113,7 +113,7 @@ describe('Testing Account Controllers', () => {
 		});
 	});
 
-    it('should test invalid path to static CSS', done => {
+	it('should test invalid path to static CSS', done => {
 		superagent.get(`http://localhost:${port}/static/css/invalid.css`)
 			.end((err, res) => {
 				assert.equal(res.statusCode, 404);
@@ -121,7 +121,7 @@ describe('Testing Account Controllers', () => {
 		});
 	});
 
-    it('should test redirect CSS to LESS', done => {
+	it('should test redirect CSS to LESS', done => {
 		superagent.get(`http://localhost:${port}/static/css/custom.css`)
 			.end((err, res) => {
 				assert.equal(res.type, 'text/css');
@@ -131,7 +131,7 @@ describe('Testing Account Controllers', () => {
 		});
 	});
 
-    it('should test default cache header value', done => {
+	it('should test default cache header value', done => {
 		indigo.appconf.server.cache = null;
 		superagent.get(`http://localhost:${port}/static/css/common.less`)
 			.end((err, res) => {

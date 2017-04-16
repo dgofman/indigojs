@@ -6,14 +6,14 @@ const indigo = global.__indigo,
 	fs = require('fs'),
 	less = require('less'),
 	componentTag = indigo.appconf.get('server:componentTag') || false,
-	addTitle = function(req, title) {
+	addTitle = (req, title) => {
 		title = title || this.title;
 		return ` tabindex="${req.model.componentIndex}"` + (title ? ' title="' + title + '"' : '');
 	},
-	addLabel = function(req, title) {
+	addLabel = (req, title) => {
 		title = title || this.title;
 		return ` tabindex="${req.model.componentIndex}"` + (title ? ' aria-label="' + title + '"' : '');
-	}, getProps = function(name, val) {
+	}, getProps = (name, val) => {
 		if (this[name] !== undefined) {
 			if (val === undefined) {
 				return ` ${this[name]}`;
@@ -22,7 +22,7 @@ const indigo = global.__indigo,
 			}
 		}
 		return '';
-	}, getAttr = function(name, tagName) {
+	}, getAttr = (name, tagName) => {
 		if (this[name] !== undefined) {
 			if (tagName === undefined) {
 				return ` ${name}="${this[name]}"`;
@@ -31,13 +31,13 @@ const indigo = global.__indigo,
 			}
 		}
 		return '';
-	}, getAttrs = function(obj) {
+	}, getAttrs = (obj) => {
 		let attrs = [];
 		for (var key in obj) {
 			attrs.push(`${key}="${obj[key]}"`);
 		}
 		return attrs.join(' ');
-	}, getCss = function(name, tagName) {
+	}, getCss = (name, tagName) => {
 		if (this[name] !== undefined) {
 			if (tagName === undefined) {
 				return ` ${name}: ${this[name]};`;
@@ -46,7 +46,7 @@ const indigo = global.__indigo,
 			}
 		}
 		return '';
-	}, jsRender = function(data, wrapTag, className) {
+	}, jsRender = (data, wrapTag, className) => {
 		return `window.top.init(window, '${componentTag ? wrapTag : ''}[cid=${className}]', ${data});`;
 	};
 
@@ -54,7 +54,7 @@ const indigo = global.__indigo,
  * @module component
  * @see {@link libs/component}
  */
-module.exports = function(app) {
+module.exports = (app) => {
 
 	var getModuleWebDir = indigo.getModuleWebDir;
 
@@ -144,7 +144,7 @@ module.exports = function(app) {
 	 * @memberOf sourceloader
 	 * @alias component.js#finalize
 	 */
-	app.locals.finalize = function(req) {
+	app.locals.finalize = (req) => {
 		debug('Include scripts: %s', JSON.stringify(req.model.assets));
 		let lines = [],
 			assets = [],

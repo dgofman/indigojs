@@ -102,7 +102,7 @@ describe('UnitTests Indigo APIs', () => {
 				}
 		};
 
-		require(`${__appDir}/libs/reqmodel`)(indigo.appconf)(null, req, res, () => {
+		require(`${__appDir}/libs/reqmodel`)(indigo.appconf)(req, res, () => {
 			locales = indigo.getLocale(req, 'countryCode'); //req.params.countryCode
 			indigo.render(req, res, '/login', locales);
 		});
@@ -117,6 +117,35 @@ describe('UnitTests Indigo APIs', () => {
 	it('should test substitute str is null', done => {
 		const result = indigo.substitute(null, ['David']);
 		assert.equal(result, '');
+		done();
+	});
+
+	it('should test min version', done => {
+		const version = require('../../package.json').version;
+		indigo.min_version(version);
+		done();
+	});
+
+	it('should test min version exception', done => {
+		try {
+			indigo.min_version('999.999.999');
+		} catch (e) {
+			assert.ok(e.toString().indexOf('Error: IndigoJS unsupported minor version') !== -1);
+			done();
+		}
+	});
+
+	it('should test getComponentTag', done => {
+		assert.equal(indigo.getComponentTag(), 'c');
+		done();
+	});
+
+	it('should test getModuleWebDir', done => {
+		assert.equal(indigo.getModuleWebDir({
+			moduleWebDir: () => {
+				return 'dir';
+			}
+		}), 'dir');
 		done();
 	});
 

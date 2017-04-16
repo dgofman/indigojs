@@ -44,12 +44,12 @@ const routers =
 
 		// dynamically include routers
 		let routersDir = appconf.get('routers'),
-			requestHook = (method, router, conf) => (path, callback) => {
+			requestHook = (method, router) => (path, callback) => {
 				router.route(path)
 					.all((req, res, next) => {
 						debug(req.method, req.url, req.originalUrl);
 						req.moduleWebDir = router.moduleWebDir;
-						reqModel(conf.base, req, res, next);
+						reqModel(req, res, next);
 					})[method](callback);
 			};
 
@@ -61,8 +61,7 @@ const routers =
 		debug('router::routersDir', routersDir);
 
 		routers.loadModule(routersDir, route => {
-			let router = express.Router(),
-				conf = {};
+			const router = express.Router();
 
 			router.moduleWebDir = () =>  routers.moduleWebDir;
 
@@ -71,13 +70,13 @@ const routers =
 				enumerable: true
 			});
 
-			conf = routers.routerConf(route(router, app, locales));
+			router.get = requestHook('get', router);
+			router.post = requestHook('post', router);
+			router.put = requestHook('put', router);
+			router.delete = requestHook('delete', router);
+			router.patch = requestHook('patch', router);
 
-			router.get = requestHook('get', router, conf);
-			router.post = requestHook('post', router, conf);
-			router.put = requestHook('put', router, conf);
-			router.delete = requestHook('delete', router, conf);
-			router.patch = requestHook('patch', router, conf);
+			const conf = routers.routerConf(route(router, app, locales));
 
 			app.use(conf.base, router);
 
@@ -232,7 +231,7 @@ routers.loadModule = function(list, callback) {
  * @param {Function} callback Returns loaded module to the function handler.
  * @private
  */
-function loadModule(dir, file, callback) {
+const loadModule = (dir, file, callback) => {
 	try {
 		callback(require(dir + file));
 	} catch (e) {

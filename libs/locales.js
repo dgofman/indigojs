@@ -154,7 +154,7 @@ const locales = () => {
  * @param {String} [locale] User language code.
  * @access protected
  */
-function setLocale(req, locale, locales) {
+const setLocale = (req, locale, locales) => {
 	req.session.locale = locale || req.session.locale;
 
 	if (!locales.localeMap[req.session.locale]) {
@@ -184,7 +184,7 @@ function setLocale(req, locale, locales) {
  * @param {String} locale User language code.
  * @access protected
  */
-function saveToSession(req, locales, locale) {
+const saveToSession = (req, locales, locale) => {
 	req.session.locale = locale;
 	req.session.localeLookup = locales.localeMap[locale].__lookup__.concat('default');
 	if (req.model) {
@@ -199,7 +199,7 @@ function saveToSession(req, locales, locale) {
  * @param {String} localeDir Absolute path to <code>locale</code> directory.
  * @access protected
  */
-function localelookup(localeDir, locales) {
+const localelookup = (localeDir, locales) => {
 	const file = `${localeDir}/accept-rules.json`;
 	if (fs.existsSync(file)) {
 		const customRules = cjson.load(file);

@@ -10,6 +10,10 @@ describe('libs/errorHandler', () => {
 
 	before(done => {
 		appconf = indigo.init(`${__appDir}/examples/account/config/app.json`);
+		done();
+	});
+
+	beforeEach(done => {
 		indigo.logger.error = () => {};
 		done();
 	});
@@ -24,6 +28,17 @@ describe('libs/errorHandler', () => {
 		indigo.errorHandler.render({ data: indigo }, null, null, () => {
 			done();
 		});
+	});
+
+	it('should test (try/catch)', done => {
+		const errorHandler = indigo.errorHandler;
+		indigo.errorHandler = null;
+		indigo.logger.error = (err) => {
+			assert.equal(err.toString(), 'TypeError: Cannot read property \'status\' of undefined');
+			indigo.errorHandler = errorHandler;
+			done();
+		};
+		indigo.error();
 	});
 
 	it('should validate err is null', done => {

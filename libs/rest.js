@@ -30,7 +30,7 @@ const indigo = global.__indigo,
  *...
  *}
  */
-function rest() {
+const rest = () => {
 
 	return /** @lends libs/rest.prototype */ {
 		/**

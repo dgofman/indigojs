@@ -51,7 +51,7 @@ const errorHandler = () => {
 
 				if (req) {
 
-					indigo.reqModel(null, req, res, () => {});
+					indigo.reqModel(req, res, () => {});
 
 					if (!req.model.errorModel) {
 						let self = this || instance;
@@ -188,7 +188,7 @@ const errorHandler = () => {
 		notFound(app) {
 			app.use((req, res, next) => {
 				if (!req.headers.referer) {
-					indigo.reqModel(null, req, res, () => {
+					indigo.reqModel(req, res, () => {
 						this.render({statusCode: 404}, req, res, next);
 					});
 				} else {

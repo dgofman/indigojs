@@ -338,7 +338,7 @@ const indigo =
 		};
 
 		if (!req.model || !req.model.__initialized__) {
-			req.model = reqModel(null, req, res, next);
+			req.model = reqModel(req, res, next);
 		} else {
 			next();
 		}

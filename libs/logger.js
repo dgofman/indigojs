@@ -30,7 +30,7 @@ const winston = require('winston');
  *
  */
 
-function logger(appconf) {
+const logger = (appconf) => {
 	const log = new (winston.Logger)({
 		levels: winston.config.npm.levels,
 		colors: winston.config.npm.colors,

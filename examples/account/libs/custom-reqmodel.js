@@ -6,13 +6,13 @@ var indigo = require(__appDir + '/indigo');
  * @module reqmodel
  * @see {@link libs/reqmodel}
  */
-module.exports = function(appconf) {
-	var reqmodel = indigo.libs('reqmodel')(appconf);
+module.exports = function(appconf, app) {
+	var reqmodel = indigo.libs('reqmodel')(appconf, app);
 
-	return function(contextPath, req, res, next) {
-		reqmodel(contextPath, req, res, function() {
+	return function(req, res, next) {
+		reqmodel(req, res, function() {
 			req.model.baseStaticUrl =  '/static';
-			req.model.imageBaseUrl = contextPath + req.model.baseStaticUrl + '/images';
+			req.model.imageBaseUrl = req.model.contextPath + req.model.baseStaticUrl + '/images';
 			next();
 		});
 	};

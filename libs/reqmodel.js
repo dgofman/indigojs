@@ -48,8 +48,8 @@
  * module.exports = function(appconf) {
  *	var reqmodel = indigo.libs('reqmodel')(appconf);
  *
- *	return function(contextPath, req, res, next) {
- *		reqmodel(contextPath, req, res, function() {
+ *	return function(req, res, next) {
+ *		reqmodel(req, res, function() {
  *			req.model.newModelKey = 'newModelValue';
  *			next();
  *		});
@@ -57,7 +57,7 @@
  * };
  */
 
-function reqmodel(appconf, app) {
+const reqmodel = (appconf, app) => {
 
 	let minify, env = appconf.get('environment'),
 		staticDir =  global.__indigo.getStaticDir();
@@ -69,7 +69,7 @@ function reqmodel(appconf, app) {
 	env = env || 'dev';
 	minify = env === 'dev' ? '' : '.min';
 
-	return (contextPath, req, res, next) => {
+	return (req, res, next) => {
 		req.model = req.model || {
 			req: req,
 			environment: env,
@@ -79,7 +79,7 @@ function reqmodel(appconf, app) {
 			extLESS: env === 'dev' ? '.less' : '.css',
 			locality: {},
 			locales: {},
-			contextPath: contextPath || req.baseUrl,
+			contextPath: req.baseUrl,
 			baseStaticPath: staticDir,
 
 			app_template: `${appconf.app_template}`,

@@ -1,5 +1,5 @@
 <ul<%- opts.$attr('style') %><%- opts.$label(req, opts.title || 'Menu Control') %>><%
-	var labelRenderer = opts.labelRenderer || function(item) { return item; };
+	var labelRenderer = opts.labelRenderer || function(item) { return item.label; };
 	for (var index in opts.menus) {
 		var menu = JSON.parse(JSON.stringify(opts.menus[index])),
 			itemRenderer = menu.itemRenderer || opts.itemRenderer;

@@ -16,9 +16,14 @@
 	<section class="igo-content">
 		<%- $include(`templates/${app_template}/content.html`) %>
 
-		<!-- DEMO CONTENT -->
+		<%
+			if (app_template === 'spa') {
+		%>
+<!-- DEMO SPA CONTENT -->
 <%- $include(`${app_template}-content.html`) %>
-
+		<%
+			}
+		%>
 	</section>
 	<footer class="igo-footer">
 		<%- $include(`templates/${app_template}/footer.html`) %>

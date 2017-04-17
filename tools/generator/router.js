@@ -1,6 +1,7 @@
 'use strict';
 
 const indigo = global.__indigo,
+	defaultPage = 'home',
 	bodyParser = require('body-parser'),
 	expressSession = require('express-session');
 
@@ -26,17 +27,11 @@ module.exports = (router, app) => {
 
 	router.get('/index', function(req, res) {
 		indigo.getLocale(req);
-		res.redirect(router.conf.base + '/' + req.session.locale + '/index');
+		res.redirect(`${router.conf.base}/${req.session.locale}/index#${defaultPage}`);
 	});
 
 	router.get('/:locale/index', (req, res) => {
-		if (req.query.page !== undefined || !req.session.defaultPage) {
-			req.session.defaultPage = req.query.page || 'home';
-			res.redirect(`${router.conf.base}/index#${req.session.defaultPage}`);
-		} else {
-			req.model.page = req.session.defaultPage;
-			indigo.render(req, res, '/index');
-		}
+		indigo.render(req, res, '/index');
 	});
 
 	return {

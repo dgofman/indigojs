@@ -60,6 +60,7 @@
 const reqmodel = (appconf, app) => {
 
 	let minify, env = appconf.get('environment'),
+		appTemplate = appconf.get('server:app_template') || 'fpa',
 		staticDir =  global.__indigo.getStaticDir();
 
 	if ((process.env.NODE_ENV || '').trim() === 'production') {
@@ -82,7 +83,7 @@ const reqmodel = (appconf, app) => {
 			contextPath: req.baseUrl,
 			baseStaticPath: staticDir,
 
-			app_template: `${appconf.app_template}`,
+			app_template: appTemplate,
 			$include: (url) => {
 				return app.locals.inject(req, url);
 			},
@@ -90,8 +91,9 @@ const reqmodel = (appconf, app) => {
 				args.unshift(req);
 				return app.locals.locale.apply(null, args);
 			},
-			$finalize: () => {
-				return app.locals.finalize(req);
+			$finalize: (...args) => {
+				args.unshift(req);
+				return app.locals.finalize.apply(null, args);
 			},
 			$: (className, opts, wrapTag) => {
 				return app.locals.component(req, className, opts, wrapTag);

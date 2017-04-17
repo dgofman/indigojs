@@ -145,12 +145,12 @@ module.exports = (app) => {
 	 * @memberOf sourceloader
 	 * @alias component.js#finalize
 	 */
-	app.locals.finalize = (req) => {
+	app.locals.finalize = (req, ...args) => {
 		debug('Include scripts: %s', JSON.stringify(req.model.assets));
 		let lines = [],
 			assets = [],
 			uri = indigo.getComponentURL();
-		if (arguments[arguments.length - 1] === true) {
+		if (args.length && args[0] === true) { //include common.less
 			assets.push(`<link rel="stylesheet" type="text/css" href="${req.model.baseStaticPath}/css/common${req.model.extLESS}">`);
 		}
 		for (let className in req.model.assets) {
@@ -165,9 +165,9 @@ module.exports = (app) => {
 				assets.push(`<script src="${uri}/${asset.className}.js" type="text/javascript"></script>`);
 			}
 		}
-		for (let i = 1; i < arguments.length; i++) {
-			if (typeof arguments[i] === 'string') {
-				assets.push(`<script src="${arguments[i]}"></script>`);
+		for (let i = 0; i < args.length; i++) {
+			if (typeof args[i] === 'string') {
+				assets.push(`<script src="${args[i]}"></script>`);
 			}
 		}
 		return lines.concat(assets).join('\n');

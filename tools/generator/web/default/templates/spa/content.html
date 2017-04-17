@@ -12,7 +12,7 @@ indigoStatic.jqueryReady = function($, indigo) {
 					div.attr('tid', page).html('');
 					if (template.attr('lazy') === 'true') {
 						template.attr('lazy', false);
-						templates[page] = $('<div></div>').load('content/' + page);
+						templates[page] = $('<div></div>').load('spa/' + page);
 					} else if (!templates[page]) {
 						templates[page] = template.html();
 					}

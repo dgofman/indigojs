@@ -7,7 +7,7 @@ indigoStatic.jqueryReady = function($, indigo) {
 				var page = location.hash.split('#').pop();
 				if (page !== (iframe.attr('src') || '').split('/').pop()) {
 					iframe.css('opacity', 0);
-					iframe.attr('src', 'content/' + page);
+					iframe.attr('src', 'fpa/' + page);
 				}
 			} else {
 				window.location.href = '/';

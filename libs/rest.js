@@ -1,7 +1,6 @@
 'use strict';
 
-const indigo = global.__indigo,
-	orchestrator = require('proxy-orchestrator');
+const indigo = global.__indigo;
 
 /**
  * indigoJS <code>rest</code> module is a simple yet powerful representation of your RESTful API.
@@ -55,7 +54,7 @@ const rest = () => {
 		init(opts, req, res) {
 			opts = opts || indigo.appconf.get('service') || {};
 			this.opts = opts;
-			this.server = orchestrator({
+			this.server = require('proxy-orchestrator')({
 				host: opts.host,
 				port: opts.port,
 				secure: opts.secure

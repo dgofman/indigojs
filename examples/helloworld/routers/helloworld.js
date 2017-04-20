@@ -22,7 +22,7 @@ module.exports = function(router, app) {
 
 	router.get('/', function(req, res) {
 		indigo.getLocale(req);
-		res.redirect(router.conf.base + '/' + req.session.locale + '/index');
+		res.redirect(`${router.conf.base}/${req.model.locality.locale}/index`);
 	});
 
 	router.get('/:locale/index', function(req, res) {

@@ -1,10 +1,11 @@
 'use strict';
 
 const indigo = global.__indigo,
-	debug = require('debug')('indigo:locales'),
 	fs = require('fs'),
 	rules = require('./locales/accept-rules.json'),
 	cjson = require('cjson'),
+	cookieName = 'localeCode',
+	reCookie = RegExp(`(?:^|;\\s*)${cookieName}=([^;]*)`),
 	defaultLocale = 'en-us';
 
 /**
@@ -113,14 +114,45 @@ const locales = () => {
 		},
 
 		/**
+		 * Initializing user locale by using request header.
+		 * @param {express.Request} req Defines an object to provide client request information.
+		 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
+		 * return {String} locale Return the router locale name.
+		 */
+		headerLocale(req) {
+			if (req.headers) {
+				if (req.headers.cookie) {
+					const match = req.headers.cookie.match(reCookie);
+					if (match) {
+						return setLocality(req, match[1], this); //set from cookies
+					}
+				}
+
+				if (req.headers['accept-language']) {
+					const split = req.headers['accept-language'].split(';'); // en-us,en-au;q=0.8,en;q=0.5,ru;q=0.3
+					for (let value in split) {
+						const languages = split[value].split(',');
+						for (let name in languages) {
+							let locale = languages[name].toLowerCase();
+							if (!locale.includes('q=') && this.localeMap[locale]) {
+								return setLocality(req, locale, this);
+							}
+						}
+					}
+				}
+			}
+			return setLocality(req, this.defaultLocale, this);
+		},
+
+		/**
 		 * Initializing current user locale and returning locallization map of localized messages.
 		 * @param {express.Request} req Defines an object to provide client request information.
 		 * @param {String} [locale] User language code.
 		 * @return {Object} locale Collection of localization messages.
 		 */
-		init(req, locale) {
-			setLocale(req, locale, this);
-			return this.localeMap[req.session.locale];
+		routeLocale(req, locale) {
+			req.model.locality = req.model.locality || {};
+			return setLocality(req, locale || req.model.locality.locale, this);
 		},
 
 		/**
@@ -148,49 +180,27 @@ const locales = () => {
 };
 
 /**
- * Determine user language code base on URL parameter or browser language settings.
- * @memberof libs/locales.prototype
- * @param {express.Request} req Defines an object to provide client request information.
- * @param {String} [locale] User language code.
- * @access protected
- */
-const setLocale = (req, locale, locales) => {
-	req.session.locale = locale || req.session.locale;
-
-	if (!locales.localeMap[req.session.locale]) {
-		debug('sessionID=%', req.sessionID);
-		if (req.headers && req.headers['accept-language']) {
-			const split = req.headers['accept-language'].split(';'); // en-us,en-au;q=0.8,en;q=0.5,ru;q=0.3
-			for (let value in split) {
-				const languages = split[value].split(',');
-				for (let name in languages) {
-					locale = languages[name].toLowerCase();
-					if (!locale.includes('q=') && locales.localeMap[locale]) {
-						return saveToSession(req, locales, locale);
-					}
-				}
-			}
-		}
-		saveToSession(req, locales, locales.defaultLocale);
-	} else {
-		saveToSession(req, locales, req.session.locale);
-	}
-};
-
-/**
- * Save current language code into <code>express.Request</code> session.
+ * Save current language information to <code>req.model.locality</code>.
  * @memberof libs/locales.prototype
  * @param {express.Request} req Defines an object to provide client request information.
  * @param {String} locale User language code.
+ * @param {libs/locales} locales instance class.
  * @access protected
  */
-const saveToSession = (req, locales, locale) => {
-	req.session.locale = locale;
-	req.session.localeLookup = locales.localeMap[locale].__lookup__.concat('default');
-	if (req.model) {
-		req.model.locality.locale = locale;
-		req.model.locality.langugage = locales.localeMap[locale].__localName__;
+const setLocality = (req, locale, locales) => {
+	locale = locales.localeMap[locale] ? locale : locales.defaultLocale;
+	if (req.res && req.res.cookie) {
+		req.res.cookie(cookieName, locale);
 	}
+
+	const userLocale = locales.localeMap[locale];
+	req.model.locality = {
+		localeLookup: userLocale.__lookup__,
+		langugage: userLocale.__localName__,
+		locale: locale
+	};
+	req.model.locales = userLocale;
+	return userLocale;
 };
 
 /**
@@ -221,7 +231,7 @@ const localelookup = (localeDir, locales) => {
 
 		for (let index in lookup) {
 			locale = lookup[index];
-			
+
 			let source = locales.localeMap[locale],
 				sourceLocale = true;
 
@@ -255,6 +265,10 @@ const localelookup = (localeDir, locales) => {
 			if (sourceLocale) {
 				target.__localName__ = source.__localName__;
 			}
+		}
+
+		if (target.__lookup__.indexOf('default') === -1) {
+			target.__lookup__.push('default');
 		}
 
 		return target;

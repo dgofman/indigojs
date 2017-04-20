@@ -142,6 +142,8 @@ const indigo =
 
 		this.errorHandler = errorHandler = require(this.appconfPath('errors:path') || './libs/errorHandler')();
 
+		this.getModuleWebDir = getModuleWebDir;
+
 		routers = require('./libs/routers');
 
 		const service = require(this.appconfPath('service:path') || './libs/rest')();
@@ -198,8 +200,6 @@ const indigo =
 
 		this.addRoute(appconf, locales, reqModel);
 
-		this.getModuleWebDir = getModuleWebDir;
-
 		require('./libs/component')(app);
 
 		/**
@@ -208,9 +208,10 @@ const indigo =
 		 */
 		app.locals.inject = (req, url) => {
 			debug(req.method, url);
-			const newUrl = indigo.getNewURL(req, null, `/${req.session.locale}/${url}`, `/${url}`);
+			const newUrl = indigo.getNewURL(req, null, url);
 			debug('inject: %s -> %s', url, newUrl);
 			try {
+				req.model.req = req;
 				req.model.filename = getModuleWebDir(req) + newUrl;
 				req.model.locale = app.locals.locale; //deprecated v2.x
 				req.model.inject = app.locals.inject; //deprecated v2.x
@@ -226,12 +227,12 @@ const indigo =
 		 * @memberOf sourceloader
 		 * @alias indigo.js#localsLocale
 		 */
-		app.locals.locale = function(req, localeKey, ...args) {
+		app.locals.locale = (req, localeKey, ...rest) => {
 			let locales = indigo.getLocale(req);
 			localeKey.split('.').forEach((name) => {
 				locales = locales[name];
 			});
-			return indigo.substitute(locales, args);
+			return indigo.substitute(locales, rest);
 		};
 
 		errorHandler.notFound(app);
@@ -283,7 +284,7 @@ const indigo =
 	/**
 	 * Substitutes "{n}" tokens within the specified string with the respective arguments passed in.
 	 * @param {String} str The string to make substitutions in. This string can contain special tokens of the form {n}, where n is a zero based index, that will be replaced with the additional parameters found at that index if specified.
-	 * @param {String} rest — Additional parameters that can be substituted in the str parameter at each {n} location, where n is an integer (zero based) index value into the array of values specified.
+	 * @param {Array} rest — Additional parameters that can be substituted in the str parameter at each {n} location, where n is an integer (zero based) index value into the array of values specified.
 	 */
 	substitute(str, rest) {
 		if (str) {
@@ -309,39 +310,28 @@ const indigo =
 	 * @param {String} fileName Name of HTML file under application web directory.
 	 * @param {Object} [locales] Reference to the object with localization values.
 	 */
-	render(req, res, fileName, locales) {
-		const next = () => {
-			req.model.locales = locales || indigo.getLocale(req);
-			req.model.req = req;
-
-			if (fileName.indexOf('.') === -1) {
-				fileName += '.html'; //attach default HTML extension
-			}
-
-			const newUrl = indigo.getNewURL(req, res, '/' + req.session.locale + fileName,  fileName);
-			debug('render: %s -> %s', req.url, newUrl);
-
-			fileName = getModuleWebDir(req) + newUrl;
-			res.setHeader && res.setHeader('lang', req.model.locality.langugage);
-			if (!fs.existsSync(fileName)) {
-				res.status(404);
-				res.setHeader && res.setHeader('path', fileName);
-			}
-
-			res.render(fileName, req.model, (err, result) => {
-				if (err) {
-					indigo.error(err, req, res);
-				} else {
-					res.send(result);
-				}
-			});
-		};
-
-		if (!req.model || !req.model.__initialized__) {
-			req.model = reqModel(req, res, next);
-		} else {
-			next();
+	render(req, res, fileName) {
+		if (fileName.indexOf('.') === -1) {
+			fileName += '.html'; //attach default HTML extension
 		}
+
+		const newUrl = indigo.getNewURL(req, res, fileName);
+		debug('render: %s -> %s', fileName, newUrl);
+
+		fileName = getModuleWebDir(req) + newUrl;
+		res.setHeader && res.setHeader('lang', req.model.locality.langugage);
+		if (!fs.existsSync(fileName)) {
+			res.status(404);
+			res.setHeader && res.setHeader('path', fileName);
+		}
+
+		res.render(fileName, req.model, (err, result) => {
+			if (err) {
+				indigo.error(err, req, res);
+			} else {
+				res.send(result);
+			}
+		});
 	},
 
 	/**
@@ -362,7 +352,7 @@ const indigo =
 	 */
 	getLocale(req, keyName) {
 		req.params = req.params || {};
-		return locales.init(req, req.params[keyName || 'locale']);
+		return locales.routeLocale(req, req.params[keyName || 'locale']);
 	},
 
 	/**
@@ -426,29 +416,34 @@ const indigo =
 	 * @param {express.Request} req Defines an object to provide client request information.
 	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
 	 * @param {String} url Client request to the locale file. 
-	 * @param {String} [redirectURL] Redirect URL in case <code>url</code> could not verify.
 	 * @return {String} url New URL base on web appllication directory defined in locale dependencies.
 	 */
-	getNewURL(req, res, url, redirectURL) {
-		const dir = getModuleWebDir(req);
-
-		if (!req.session.locale) {
-			indigo.getLocale(req);
+	getNewURL(req, res, url) {
+		if (url.charAt(0) !== '/') {
+			url = `/${url}`;
 		}
 
-		if (!fs.existsSync(dir + url) && 
-			url.indexOf('/' + req.session.locale +'/') !== -1) { //try to get file from another locale directory
-			debug('getNewURL=%s locale=%s lookup=%s', url, req.session.locale, req.session.localeLookup);
-			for (let index in req.session.localeLookup) {
-				const newUrl = url.replace('/' + req.session.locale + '/', '/' + req.session.localeLookup[index] + '/');
-				if (fs.existsSync(dir + newUrl)) {
-					res && res.setHeader && res.setHeader('Referer', newUrl);
-					return newUrl;
-				}
+		indigo.getLocale(req);
+
+		let dir = getModuleWebDir(req),
+			newURL = `/${req.model.locality.locale}${url}`;
+
+		debug('getNewURL=%s locale=%s lookup=%s', url, req.model.locality.locale, req.model.locality.localeLookup);
+
+		if (fs.existsSync(dir + newURL)) {
+			return newURL;
+		}
+
+		for (let index in req.model.locality.localeLookup) {
+			newURL = `/${req.model.locality.localeLookup[index]}${url}`;
+			if (fs.existsSync(dir + newURL)) {
+				res && res.setHeader && res.setHeader('Referer', newURL);
+				return newURL;
 			}
 		}
-		if (!fs.existsSync(dir + url)) {
-			url = redirectURL || req.url || url;
+
+		if (!fs.existsSync(dir + url) && req.url) {
+			return req.url;
 		}
 		return url;
 	},
@@ -501,9 +496,9 @@ const indigo =
  * @param {express.Request} req Defines an object to provide client request information.
  * @return {String} webdir Absolute path to module webroot directory.
  */
-function getModuleWebDir(req) {
+const getModuleWebDir = (req) => {
 	return req && req.moduleWebDir ? req.moduleWebDir() : indigo.getWebDir();
-}
+};
 
 /**
  * Global variable defined absolute path to application directory.

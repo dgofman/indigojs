@@ -1,6 +1,7 @@
 'use strict';
 
-var indigoStatic = window.top.indigoStatic;
+var indigoStatic = window.top.indigoStatic,
+	rootScope = window.top.rootScope || {};
 
 require.config({
 	baseUrl: indigoStatic['staticPath'] + '/js',
@@ -42,7 +43,8 @@ var console = window.console,
 	},
 	extend: {
 		window: window,
-		static: window.top.indigoStatic,
+		static: indigoStatic,
+		rootScope: rootScope,
 		debug: function() {
 			if (this.static.DEBUG && console) {
 				console.log.apply(console, arguments);
@@ -290,6 +292,9 @@ window.init = function(win, selector, factory) {
 window.ready = function(win, callback) {
 	indigoJS.initPending['main'] = {
 		win: win, init: function(win) {
+			if (!win.jQuery) {
+				window._jQueryFactory(win);
+			}
 			win.indigoJS = window.top.indigoJS;
 			win.indigo = {};
 			for (var name in win.indigoJS.extend) {

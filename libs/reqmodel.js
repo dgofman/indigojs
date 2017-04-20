@@ -1,5 +1,7 @@
 'use strict';
 
+const indigo = global.__indigo;
+
 /**
  * This module creates properties initializing on each router <code>express.Request</code> and assigning to <code>req.model</code>.
  * 
@@ -61,7 +63,7 @@ const reqmodel = (appconf, app) => {
 
 	let minify, env = appconf.get('environment'),
 		appTemplate = appconf.get('server:app_template') || 'fpa',
-		staticDir =  global.__indigo.getStaticDir();
+		staticDir = indigo.getStaticDir();
 
 	if ((process.env.NODE_ENV || '').trim() === 'production') {
 		env = 'prod';
@@ -78,8 +80,6 @@ const reqmodel = (appconf, app) => {
 			extCSS: `${minify}.css`,
 			extJS: `${minify}.js`,
 			extLESS: env === 'dev' ? '.less' : '.css',
-			locality: {},
-			locales: {},
 			contextPath: req.baseUrl,
 			baseStaticPath: staticDir,
 
@@ -101,6 +101,8 @@ const reqmodel = (appconf, app) => {
 
 			__initialized__: Date.now()
 		};
+
+		indigo.locales.headerLocale(req);
 
 		next();
 	};

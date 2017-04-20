@@ -39,9 +39,28 @@ describe('UnitTests Indigo APIs', () => {
 		done();
 	});
 
-	it('should get EN location', done => {
+	it('should get EN-US locale (default)', done => {
 		const req = {
-				session: {},
+				model: {},
+				headers: {
+					'accept-language': acceptLanguage
+				}
+			}, res = {
+				render(url, model) {
+					assert.equal(fixPath(url), `${fixPath(__appDir)}/examples/account/web/en/login.html`);
+					assert.equal(model.locality.locale, 'en-us');
+					assert.equal(model.locality.langugage, 'en-us');
+					assert.equal(model.locales.account.greeting, 'Hi');
+					done();
+				}
+			};
+
+		indigo.render(req, res, '/login.html');
+	});
+
+	it('should get EN-GB locale (browser language)', done => {
+		const req = {
+				model: {},
 				headers: {
 					'accept-language': acceptLanguage
 				}
@@ -54,58 +73,54 @@ describe('UnitTests Indigo APIs', () => {
 					done();
 				}
 			};
+		indigo.locales.headerLocale(req);
 
 		indigo.render(req, res, '/login.html');
 	});
 
-	it('should test US locale', done => {
+	it('should get EN-CA locale (browser cookie)', done => {
 		const req = {
-				params: {
-					locale: 'en-us'
-				},
-				session: {},
+				model: {},
 				headers: {
+					'cookie': 'localeCode=en-ca',
 					'accept-language': acceptLanguage
 				}
 			}, res = {
 				render(url, model) {
-					assert.equal(model.locality.locale, 'en-us');
-					assert.equal(model.locality.langugage, 'en-us');
-					assert.equal(model.locales.account.greeting, 'Hi');
+					assert.equal(fixPath(url), `${fixPath(__appDir)}/examples/account/web/en/login.html`);
+					assert.equal(model.locality.locale, 'en-ca');
+					assert.equal(model.locality.langugage, 'en');
+					assert.equal(model.locales.account.greeting, 'Hello');
+					done();
+				}
+			};
+		indigo.locales.headerLocale(req);
+
+		indigo.render(req, res, '/login.html');
+	});
+
+	it('should test ru locale (router parameter)', done => {
+		const req = {
+				params: {
+					locale: 'ru'
+				},
+				model: {},
+				headers: {
+					'cookie': 'localeCode=en-ca',
+					'accept-language': acceptLanguage
+				}
+			}, res = {
+				render(url, model) {
+					assert.equal(model.locality.locale, 'ru');
+					assert.equal(model.locality.langugage, 'ru');
+					assert.equal(model.locales.account.greeting, 'Здравствуйте');
 					done();
 				}
 			};
 
+		indigo.locales.headerLocale(req);
+
 		indigo.render(req, res, '/login');
-	});
-
-	it('should test RU locale', done => {
-		let locales = null;
-
-		const req = {
-				baseUrl: '/indigojs',
-				params: {
-					countryCode: 'ru'
-				},
-				session: {},
-				headers: {
-					'accept-language': acceptLanguage
-				}
-			},
-			res = {
-				render(url, model) {
-					 assert.equal(model.contextPath, '/indigojs');
-					 assert.equal(model.locality.locale, 'ru');
-					 assert.equal(model.locality.langugage, 'ru');
-					 assert.equal(locales.account.greeting, 'Здравствуйте');
-					 done();
-				}
-		};
-
-		require(`${__appDir}/libs/reqmodel`)(indigo.appconf)(req, res, () => {
-			locales = indigo.getLocale(req, 'countryCode'); //req.params.countryCode
-			indigo.render(req, res, '/login', locales);
-		});
 	});
 
 	it('should test substitute', done => {
@@ -160,7 +175,7 @@ describe('UnitTests Indigo APIs', () => {
 
 	it('should get 404 status code', done => {
 		const req = {
-				session: {},
+				model: {},
 			},res = {
 				status(code) {
 					assert.equal(code, 404);
@@ -175,7 +190,7 @@ describe('UnitTests Indigo APIs', () => {
 
 	it('should get 404 file path', done => {
 		const req = {
-				session: {},
+				model: {},
 			},res = {
 				status(code) {
 					assert.equal(code, 404);
@@ -195,7 +210,7 @@ describe('UnitTests Indigo APIs', () => {
 
 	it('should test getNewURL', done => {
 		const req = {
-				session: {
+				model: {
 					locale: 'en'
 				}
 			};

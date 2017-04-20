@@ -16,6 +16,23 @@ describe('Testing Indigo API\'s', () => {
 		});
 	});
 
+	it('should test render exception', done => {
+		indigo.start(`${__appDir}/examples/firststep/config/app.json`, null, () => {
+			const port = indigo.appconf.get('server:port'),
+				consoleError = console.error;
+				console.error = function() {};
+				indigo.logger.error = function() {};
+			const req = superagent.get(`http://localhost:${port}/firststep/invalidContext`)
+				.end((err) => {
+					console.error = consoleError;
+					assert.ok(err !== null);
+					indigo.close(done);
+			});
+		});
+	});
+
+	'/invalid_page.html'
+
 	it('should test app.locals.inject', done => {
 		indigo.start(`${__appDir}/examples/firststep/config/app.json`, null, () => {
 			const port = indigo.appconf.get('server:port');
@@ -28,7 +45,9 @@ describe('Testing Indigo API\'s', () => {
 						message: 'PAGE NOT FOUND'
 					});
 
-					req.session = {locale:'en'};
+					indigo.logger.error = function() {};
+
+					req.model = {locality: {locale: 'en'}};
 					assert.equal(indigo.app.locals.inject(req, '/foo'), 'PAGE NOT FOUND');
 					indigo.errorHandler.injectErrorHandler = injectErrorHandler;
 					indigo.close(done);

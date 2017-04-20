@@ -49,5 +49,9 @@ module.exports = function(router, app) {
 		indigo.render(req, res, '/invalidTemplate');
 	});
 
+	router.get('/invalidContext', function(req, res) {
+		indigo.render(req, res, '/invalid_page');
+	});
+
 	return '/firststep';
 };

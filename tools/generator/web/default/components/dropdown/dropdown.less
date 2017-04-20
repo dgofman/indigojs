@@ -1,7 +1,9 @@
 @import 'less/constant.less';
 
 @z-index: 998;
-@height: 24px;
+@height: 23px;
+@border: 1px solid #999;
+@border_radius: 5px;
 
 padding-right: 20px;
 margin-right: 8px;
@@ -9,11 +11,11 @@ width: 200px;
 
 &>div, &>ul {
 	height: @height;
-	border: 1px solid #333;
+	border: @border;
+	border-radius: @border_radius 0 0 @border_radius;
 	padding: 0;
 	background: #fff;
-	border-radius: 0;
-	line-height: 23px;
+	line-height: @height;
 	text-indent: 7px;
 	font-weight: normal;
 	.cursor();
@@ -27,8 +29,8 @@ width: 200px;
 		color: #000;
 		height: @height;
 		.gradient();
-		border: 1px solid #666;
-		border-radius: 0 7px 7px 0;
+		border: @border;
+		border-radius: 0 @border_radius @border_radius 0;
 		float: right;
 		margin: -1px -28px;
 		text-decoration: none;

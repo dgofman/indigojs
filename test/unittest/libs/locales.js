@@ -29,13 +29,16 @@ describe('libs/locales', () => {
 
 	it('should test invalid Accept-Language code', done => {
 		const req = {
-				session: {},
+				model: {},
 				headers: {
 					'accept-language': 'ZZ'
 				}
 			};
-		locales.init(req);
-		assert.equal(req.session.locale, 'en-us');
+		locales.headerLocale(req);
+
+		assert.equal(req.model.locality.localeLookup.join(), ['en-us', 'en', 'default' ].join());
+		assert.equal(req.model.locality.langugage, 'en-us');
+		assert.equal(req.model.locality.locale, 'en-us');
 		done();
 	});
 

@@ -60,15 +60,19 @@ module.exports = (app) => {
 	var getModuleWebDir = indigo.getModuleWebDir;
 
 	app.get(`${indigo.getComponentURL()}/:file`, (req, res) => {
+		req.model = req.model || {};
+		indigo.locales.headerLocale(req);
+
 		const arr = req.params.file.split('.'),
+			dir = getModuleWebDir(req),
 			className = arr[0],
 			cache = parseInt(indigo.appconf.get('server:cache')),
-			fileURL = indigo.getNewURL(req, null, `/${req.session.locale}/components/${className}/${req.params.file}`, true);
-		if (fileURL === true) {
+			fileURL = indigo.getNewURL(req, null, `/components/${className}/${req.params.file}`);
+		if (!fs.existsSync(dir + fileURL)) {
 			return res.status(404).end();
 		}
 
-		fs.readFile(getModuleWebDir(req) + fileURL, (error, data) => {
+		fs.readFile(dir + fileURL, (error, data) => {
 			if (error) {
 				indigo.error(error);
 				return res.status(404).end();
@@ -106,9 +110,10 @@ module.exports = (app) => {
 	app.locals.component = app.locals.$ = (req, className, opts={}, wrapTag=null) => {
 		const cTag = wrapTag || indigo.getComponentTag();
 		debug(req.method, className);
-		const newUrl = indigo.getNewURL(req, null, `/${req.session.locale}/components/${className}/${className}.html`, true);
+		const dir = getModuleWebDir(req),
+			newUrl = indigo.getNewURL(req, null, `/components/${className}/${className}.html`);
 		debug('inject: %s -> %s, opts: %s', className, newUrl, JSON.stringify(opts));
-		if (newUrl === true) {
+		if (!fs.existsSync(dir + newUrl)) {
 			indigo.logger.error(`Component is not defined: ${className}`);
 			return '';
 		}
@@ -155,13 +160,14 @@ module.exports = (app) => {
 		}
 		for (let className in req.model.assets) {
 			const asset = req.model.assets[className],
-				lessFile = indigo.getNewURL(req, null, `/${req.session.locale}/components/${asset.className}/${asset.className}.less`, true),
-				jsFile = indigo.getNewURL(req, null, `/${req.session.locale}/components/${asset.className}/${asset.className}.js`, true);
-			if (lessFile !== true) {
+				dir = getModuleWebDir(req),
+				lessFile = indigo.getNewURL(req, null, `/components/${asset.className}/${asset.className}.less`),
+				jsFile = indigo.getNewURL(req, null, `/components/${asset.className}/${asset.className}.js`);
+			if (fs.existsSync(dir + lessFile)) {
 				assets.push(`<link href="${uri}/${asset.className}.less" rel="stylesheet" type="text/css">`);
 			}
 
-			if (jsFile !== true) {
+			if (fs.existsSync(dir + jsFile)) {
 				assets.push(`<script src="${uri}/${asset.className}.js" type="text/javascript"></script>`);
 			}
 		}

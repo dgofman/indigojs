@@ -240,8 +240,10 @@ describe('libs/errorHandler', () => {
 			locale = 'en-us',
 			errors = indigo.locales.localeMap[locale].errors,
 			req = {
-				session: {
-					locale
+				model: {
+					locality: {
+						locale
+					}
 				}
 			}, res = {
 				status(statusCode) {
@@ -264,8 +266,10 @@ describe('libs/errorHandler', () => {
 			locale = 'en-us',
 			errors = indigo.locales.localeMap[locale].errors,
 			req = {
-				session: {
-					locale
+				model: {
+					locality: {
+						locale
+					}
 				}
 			}, res = {
 				status(statusCode) {
@@ -289,8 +293,10 @@ describe('libs/errorHandler', () => {
 			locale = 'ru',
 			errors = indigo.locales.localeMap[locale].errors,
 			req = {
-				session: {
-					locale
+				model: {
+					locality: {
+						locale
+					}
 				}
 			}, res = {
 				status(statusCode) {

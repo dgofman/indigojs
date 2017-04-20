@@ -9,11 +9,8 @@
 	"private": true,
 	"dependencies": {
 		"indigojs": "~{{version}}",
-		"less": "latest",
-		"cjson": "latest",
 		"body-parser": "latest",
-		"express-session": "latest",
-		"proxy-orchestrator": "latest"
+		"less": "latest"
 	},
 	"devDependencies": {
 		"nodemon": "latest",

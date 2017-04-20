@@ -1,0 +1,12 @@
+{
+	"properties": {
+		"className": "text",
+		"id": "text",
+		"title": "text",
+		"style": "text",
+		"value": "text",
+		"type": "text",
+		"maxlen": "number",
+		"required": "bool"
+	}
+}

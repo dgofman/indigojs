@@ -107,7 +107,7 @@ var console = window.console,
 				parent = this.window.$(selector),
 				ns = {
 					create: function(clazz, idxOrSelector) {
-						self.create.apply(self, clazz, idxOrSelector, parent);
+						return self.create.call(self, clazz, idxOrSelector, parent);
 					}
 				};
 			if (callbak) { callbak(ns); }
@@ -139,7 +139,7 @@ var console = window.console,
 				});
 			}
 
-			var self = this, 
+			var self = this,
 				watch = arguments[3],
 				val = model[name];
 			Object.defineProperty(model, name, {
@@ -296,6 +296,7 @@ window.ready = function(win, callback) {
 				window._jQueryFactory(win);
 			}
 			win.indigoJS = window.top.indigoJS;
+			win.define = window.top.define;
 			win.indigo = {};
 			for (var name in win.indigoJS.extend) {
 				win.indigo[name] = win.indigoJS.extend[name];

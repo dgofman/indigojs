@@ -1,6 +1,7 @@
 <%
 	var prompt = opts.prompt || '',
-		lblfield = opts.labelField || 'label',
+		labelField = opts.labelField || 'label',
+		dataField = opts.dataField || '',
 		menus = opts.menus || [],
 		open = opts.open || false,
 		selectedIndex = opts.selectedIndex || -1,
@@ -11,7 +12,7 @@
 		var menu = menus[index];
 		if (typeof menu === 'string') {
 			var item = {};
-			item[lblfield] = menu;
+			item[labelField] = menu;
 			menu = item;
 		}
 		if (opts.itemRenderer) {
@@ -20,10 +21,10 @@
 			itemRenderer = defaultItemRenderer;
 		}
 		if (selectedIndex !== -1 || menu.selected) {
-			prompt = menu[lblfield] || '';
+			prompt = menu[labelField] || '';
 			selectedIndex = index;
 		}
-		lis.push(itemRenderer.replace('%LABEL%', menu[lblfield]));
+		lis.push(itemRenderer.replace('%LABEL%', menu[labelField]).replace('%DATA%', menu[dataField]));
 	}
 
 	if (prompt == '' && menus.length && selectedIndex !== -1) {
@@ -32,12 +33,12 @@
 		if (opts.promtRenderer) {
 			prompt = opts.promtRenderer(req, menu, selectedIndex);
 		} else {
-			prompt = menu[lblfield] || '';
+			prompt = menu[labelField] || '';
 		}
 	}
 %>
-<div tabindex="-1" type="button"<%- lblfield == 'label' ? '' : ` lblfield="${lblfield}"` %><%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %>>
-	<span unselectable="on" tabindex="-1">&#9662;</span>
+<div tabindex="-1" type="button"<%- opts.$attr('dataField', 'df') %><%- labelField == 'label' ? '' : ` lf="${labelField}"` %><%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %>>
+	<span unselectable="on" tabindex="-1"></span>
 	<div role="menuitem"<%- opts.$title(req) %><%- opts.$attr('style') %>><%- prompt %></div>
 <%
 	if (opts.itemRenderer) {

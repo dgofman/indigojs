@@ -31,8 +31,19 @@ function Dropdown($, indigo, selector) {
 			this.$box = $('>div', el);
 			this.$prompt = this.$box.find('>div');
 			this.$popup = $('>ul', el);
-			this.labelField = this.$box.attr('lblfield') || 'label';
+			this.dataField = this.$box.attr('df');
+			this.labelField = this.$box.attr('lf') || 'label';
 			this.itemRenderer = $('script', el).html() || '<li>%LABEL%</li>';
+
+			this.define('selectedItem', function() {
+				return this.data[this.index] || {};
+			});
+			this.define('selectedLabel', function() {
+				return this.selectedItem[this.labelField];
+			});
+			this.define('selectedData', function() {
+				return this.selectedItem[this.dataField];
+			});
 		},
 
 		initItems: function(el, self) {
@@ -62,7 +73,7 @@ function Dropdown($, indigo, selector) {
 				this._data = value || [];
 				this.$popup.empty();
 				this._data.forEach(function(row) {
-					self.$popup.append(self.itemRenderer.replace('%LABEL%', row[self.labelField] || row));
+					self.$popup.append(self.itemRenderer.replace('%LABEL%', row[self.labelField] || row).replace('%DATA%', row[self.dataField]));
 				});
 				this.option = this.$popup.find('li:nth-child(1)');
 				this.initItems(this.$el, this);

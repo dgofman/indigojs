@@ -3,15 +3,50 @@
 	<%- $('menu', {menus: [
 		{
 			"label": "HOME",
-			"nav": "#home"
+			"nav": "#home/",
+			"sub": [
+				{
+					"label": "Home Services",
+					"nav": "#home/services",
+					"sub": [
+						{
+							"label": "Home Service Menu1"
+						},
+						{
+							"label": "Home Service Menu2"
+						},
+						{
+							"label": "Home Service Menu3"
+						}
+					]
+				},
+				{
+					"label": "Home Protection",
+					"nav": "#home/protection",
+					"sub": [
+						{
+							"label": "Home Protection Menu1"
+						},
+						{
+							"label": "Home Protection Menu2"
+						}
+					]
+				}
+			]
 		},
 		{
 			"label": "PRODUCT",
-			"nav": "#product"
+			"nav": "#product/"
 		},
 		{
 			"label": "CONTACT US",
-			"nav": "#contact"
+			"nav": "#contact",
+			"sub": [
+				{
+					"label": "About",
+					"nav": "#about"
+				}
+			]
 		}
 	]}) %>
 </div>

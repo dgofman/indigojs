@@ -1,18 +1,14 @@
 @import 'less/constant.less';
 
-display: inline-block;
-background: #31708f;
+@background: #31708f;
+@submenu_gap: 1px;
+@hover_bg: #85c1de;
 
-p {
-	margin: 0;
-	height: 100%;
-	display: table;
-}
+display: inline-block;
+background: @background;
 
 a {
 	color: #fff;
-	display: table-cell;
-	vertical-align: middle;
 }
 
 a[href='#'] {
@@ -33,13 +29,14 @@ li {
 	position: relative;
 	.noselect();
 
-	&:hover ol {
-		left: 0;
+	&:hover > ol {
+		top: @submenu_gap;
+		left: 100%;
 		display: table;
 		color: #000;
 
 		&>li:hover {
-			background: #85c1de;
+			background: @hover_bg;
 		}
 	}
 }
@@ -54,8 +51,7 @@ ol {
 	display: none;
 	z-index: 999;
 	position: absolute;
-	border: 1px solid #333;;
-	border-top: none;
+	border: 1px solid #333;
 	background: #ccc;
 
 	& li {
@@ -73,4 +69,26 @@ ol {
 	& a:hover {
 		color: #fff;
 	}
+}
+
+ul>li {
+	&:before {
+		content: '';
+		display: inline-block;
+		height: 100%;
+		vertical-align: middle;
+	}
+
+	&:hover > ol {
+		left: 0;
+		top: auto;
+	}
+
+	&>ol {
+		border-top: 1px solid @background;
+	}
+}
+
+ol>li {
+	min-width: 100px;
 }

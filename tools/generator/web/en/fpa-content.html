@@ -2,6 +2,7 @@
 <html>
 <body>
 <h1><%- page %></h1>
+<%- req.model.context ? context : '' %>
 <%- $finalize(`${baseStaticPath}/js/views/main${extJS}`) %>
 </body>
 </html>

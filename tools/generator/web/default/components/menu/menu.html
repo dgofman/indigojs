@@ -18,22 +18,30 @@
 %>
 	<li<%- opts.$label(req, label) %><%- opts.$attrs(menu.attrs) %><%- menu.attr('class') %><%- menu.attr('style') %><%- menu.get('disabled', ' disabled') %>><a tabindex="-1" href="<%- menu.nav || '#' %>"><%- label %></a>
 <%
-	if (menu.sub) {
-%>
-		<ol><%
-		for (var i in menu.sub) {
-			var sub = menu.sub[i],
-				label = labelRenderer(sub);
-			sub.get = opts.$get;
-			sub.attr = opts.$attr;
-%><li<%- opts.$label(req, label) %><%- opts.$attrs(sub.attrs) %><%- sub.attr('class') %><%- sub.attr('style') %><%- sub.get('disabled', ' disabled') %>><p><a tabindex="-1" href="<%- sub.nav || '#' %>"><%- label %></a></p></li><%
-		}
-%></ol>
-<%
-}
+	addSubmenu(menu);
 %>
 	</li><%
 		}
 	}
 %>
 </ul>
+
+<%
+	function addSubmenu(menu) {
+		if (menu.sub) {
+%>
+		<ol><%
+			for (var i in menu.sub) {
+				var sub = menu.sub[i],
+					label = labelRenderer(sub);
+				sub.get = opts.$get;
+				sub.attr = opts.$attr;
+		%><li<%- opts.$label(req, label) %><%- opts.$attrs(sub.attrs) %><%- sub.attr('class') %><%- sub.attr('style') %><%- sub.get('disabled', ' disabled') %>><a tabindex="-1" href="<%- sub.nav || '#' %>"><%- label %></a><%
+
+				addSubmenu(sub);
+			}
+		%></li></ol>
+<%
+		}
+	}
+%>

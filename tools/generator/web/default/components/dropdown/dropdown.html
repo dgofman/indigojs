@@ -1,42 +1,50 @@
 <%
 	var prompt = opts.prompt || '',
-		lblname = opts.labelName || 'label',
-		selectedIndex = -1,
+		lblfield = opts.labelField || 'label',
+		menus = opts.menus || [],
 		open = opts.open || false,
-		promtRenderer = opts.promtRenderer,
-		menus = opts.menus ? JSON.parse(JSON.stringify(opts.menus)) : [],
-		lis = [];
+		selectedIndex = opts.selectedIndex || -1,
+		defaultItemRenderer = '<li>%LABEL%</li>',
+		itemRenderer, lis = [];
 
-	if (opts.itemRenderer) {
-		selectedIndex = opts.itemRenderer(req, opts, lis);
-	} else {
-		for (var index in menus) {
-			var menu = menus[index];
-			if (typeof menu === 'string') {
-				var item = {};
-				item[lblname] = menu;
-				menu = item;
-			}
-			if (menu.selected) {
-				prompt = menu[lblname] || '';
-				selectedIndex = index;
-			}
-			lis.push(`<li${menu.val ? ' value="' + menu.val + '"' : ''}${menu.promt ? ' title="' + menu.promt + '"' : ''}>${menu[lblname]}</li>`);
+	for (var index in menus) {
+		var menu = menus[index];
+		if (typeof menu === 'string') {
+			var item = {};
+			item[lblfield] = menu;
+			menu = item;
 		}
+		if (opts.itemRenderer) {
+			itemRenderer = opts.itemRenderer(menu, opts, defaultItemRenderer);
+		} else {
+			itemRenderer = defaultItemRenderer;
+		}
+		if (selectedIndex !== -1 || menu.selected) {
+			prompt = menu[lblfield] || '';
+			selectedIndex = index;
+		}
+		lis.push(itemRenderer.replace('%LABEL%', menu[lblfield]));
 	}
 
 	if (prompt == '' && menus.length && selectedIndex !== -1) {
 		var menu = menus[selectedIndex] || {};
 
-		if (promtRenderer) {
-			prompt = promtRenderer(req, menu, selectedIndex);
+		if (opts.promtRenderer) {
+			prompt = opts.promtRenderer(req, menu, selectedIndex);
 		} else {
-			prompt = menu[lblname] || '';
+			prompt = menu[lblfield] || '';
 		}
 	}
 %>
-<div tabindex="-1" type="button"<%- lblname == 'label' ? '' : ` lblname="${lblname}"` %><%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %>>
+<div tabindex="-1" type="button"<%- lblfield == 'label' ? '' : ` lblfield="${lblfield}"` %><%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %>>
 	<span unselectable="on" tabindex="-1">&#9662;</span>
 	<div role="menuitem"<%- opts.$title(req) %><%- opts.$attr('style') %>><%- prompt %></div>
+<%
+	if (opts.itemRenderer) {
+%>
+	<script type="x-template"><%- itemRenderer %></script>
+<%
+	}
+%>
 </div>
 <ul<%- open ? ' class="open"' : '' %> tabindex="-1"><%- lis.join(''); %></ul>

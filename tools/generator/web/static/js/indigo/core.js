@@ -87,7 +87,7 @@ var console = window.console,
 			}
 		},
 		create: function(clazz, idxOrSelector, parent) {
-			parent = parent || window.$('body');
+			parent = parent || this.window.$('body');
 			if (typeof clazz === 'string') {
 				clazz = this.import(clazz);
 			}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="<%- locality.langugage %>">
+<head>
+<title><%- locales.common.pageTitle %></title>
+
+<%
+if (app_template === 'spa') {
+%>
+	<%
+		if (app_template_layout === 'sticky') {
+	%>
+		<%- $include('templates/spa/sticky/content.html') %>
+	<%
+		} else {
+	%>
+		<%- $include('templates/spa/flex/content.html') %>
+	<%
+		}
+	%>
+<%
+} else {
+%>
+	<%
+		if (app_template_layout === 'sticky') {
+	%>
+		<%- $include('templates/fpa/sticky/content.html') %>
+	<%
+		} else {
+	%>
+		<%- $include('templates/fpa/flex/content.html') %>
+	<%
+		}
+	%>
+<%
+}
+%>
+
+</html>

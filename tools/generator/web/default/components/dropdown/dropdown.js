@@ -34,6 +34,8 @@ function Dropdown($, indigo, selector) {
 			this.dataField = this.$box.attr('df');
 			this.labelField = this.$box.attr('lf') || 'label';
 			this.itemRenderer = $('script', el).html() || '<li>%LABEL%</li>';
+			this.promptValue = this.$prompt.text();
+			this.selectedValue = null;
 
 			this.define('selectedItem', function() {
 				return this.data[this.index] || {};
@@ -64,6 +66,14 @@ function Dropdown($, indigo, selector) {
 			return this.index = index;
 		},
 
+		createItem: function(row) {
+			return this.itemRenderer.replace('%LABEL%', row[this.labelField] || row).replace('%DATA%', row[this.dataField]);
+		},
+
+		findOption: function(value) {
+			this.option = this.$popup.find('li:contains("' + value + '")');
+		},
+
 		data: {
 			get: function() {
 				return this._data;
@@ -73,16 +83,24 @@ function Dropdown($, indigo, selector) {
 				this._data = value || [];
 				this.$popup.empty();
 				this._data.forEach(function(row) {
-					self.$popup.append(self.itemRenderer.replace('%LABEL%', row[self.labelField] || row).replace('%DATA%', row[self.dataField]));
+					self.$popup.append(self.createItem(row));
 				});
-				this.option = this.$popup.find('li:nth-child(1)');
+				if (this._data.length) {
+					this.value = this.selectedValue;
+				} else {
+					this.index = -1;
+				}
+				if (this.index === -1) {
+					this.value = null;
+				}
 				this.initItems(this.$el, this);
 			}
 		},
 
 		index: {
 			get: function() {
-				return Number(this.$box.attr('selectedIndex')) || 0;
+				var val = Number(this.$box.attr('selectedIndex'));
+				return isNaN(val) ? -1 : val;
 			},
 			set: function(value) {
 				this.$box.attr('selectedIndex', value);
@@ -96,7 +114,18 @@ function Dropdown($, indigo, selector) {
 			},
 			set: function(value) {
 				this.index = value.index();
+				this.value = value.text();
 				this.prompt = value.html();
+			}
+		},
+
+		value: {
+			get: function() {
+				return this.selectedValue;
+			},
+			set: function(value) {
+				this.selectedValue = value;
+				this.findOption(value);
 			}
 		},
 
@@ -105,7 +134,7 @@ function Dropdown($, indigo, selector) {
 				return this.$prompt.html();
 			},
 			set: function(value) {
-				this.$prompt.html(value);
+				this.$prompt.html(value || this.promptValue);
 			}
 		},
 

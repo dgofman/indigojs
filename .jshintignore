@@ -1,5 +1,6 @@
 examples/**/*/vendor
 tools/generator/web/static/js/vendor
+tools/generator/web/default/templates/**/*min.js
 tools/docs/dist
 tools/docs/templates
 tools/builder

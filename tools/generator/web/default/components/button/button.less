@@ -15,8 +15,11 @@ line-height: @icon_size;
 	opacity: .8;
 }
 
-&[disabled]>button {
+&[disabled] {
 	color: #999;
+}
+
+&[disabled]>button {
 	cursor: default;
 }
 
@@ -28,6 +31,7 @@ line-height: @icon_size;
 	background: none;
 	border: none;
 	color: inherit;
+	outline: none;
 }
 
 & > button > i {

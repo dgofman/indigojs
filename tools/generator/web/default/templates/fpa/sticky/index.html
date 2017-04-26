@@ -1,0 +1,28 @@
+<script>
+<%- include(`../scripts${minify}.js`) %>
+</script>
+
+<link rel="shortcut icon" href="/favicon.ico">
+<%- $sharedStyle(`${baseStaticPath}/css/common${extLESS}`,
+				 `${baseStaticPath}/css/index${extLESS}`) %>
+
+<script src="<%- baseStaticPath %>/js/vendor/require-2.3.2<%- extJS %>"></script>
+<script src="<%- baseStaticPath %>/js/indigo/core<%- extJS %>"></script>
+
+<style>
+	body {
+		opacity: 0;
+	}
+</style>
+</head>
+<body>
+	<header class="igo-header">
+		<%- $include(`templates/header.html`) %>
+	</header>
+
+	<iframe class="igo-content" frameborder="0" height="100%" width="100%"></iframe>
+
+	<footer class="igo-footer">
+		<%- $include(`templates/footer.html`) %>
+	</footer>
+</body>

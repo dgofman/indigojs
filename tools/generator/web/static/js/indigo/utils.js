@@ -6,15 +6,54 @@ define(['./validate'], function(Validate) {
 		wait_overlay: null,
 		validate: function(model, verifyByName) {
 			return new Validate(model, verifyByName);
-		}, 
-		addClass: function(cls, el, isTrue) {
-			el.removeClass(cls);
-			if (isTrue) {
-				el.addClass(cls);
-			}
 		},
-		redirect: function(path, top) {
-			var win = top ? window.top : window;
+		isEmpty: function(val) {
+			return val !== 0 && val !== false && !val;
+		},
+		convert: function(type, value) {
+			try {
+				switch(type) {
+					case 'number':
+						return Number(value);
+					case 'date':
+						return new Date(value);
+					case 'bool':
+						return value === 'true';
+					case 'isNull':
+						if (value === '' || value === undefined) {
+							return null;
+						}
+				}
+			} catch (e) {}
+			return value;
+		},
+		transform: function(source, rules) {
+			var json = {};
+			for (var id in source) {
+				var model = json,
+					value = source[id],
+					rule = rules[id];
+				if (rule && !rule.skip) {
+					if (rule.name) {
+						var arr = rule.name.split('.');
+						for (var i = 0; i < arr.length - 1; i++) {
+							if (model[arr[i]] === undefined) {
+								model[arr[i]] = {};
+							}
+							model = model[arr[i]];
+							id = arr[i + 1];
+						}
+					}
+					model[id] = _.convert(rule.type, value);
+				}
+			}
+			return json;
+		},
+		addClass: function(name, comp, isAdd) {
+			comp.class(name, isAdd);
+		},
+		redirect: function(path, win) {
+			win = win || window.top;
 			if (Array.isArray(path)) {
 				path = path.join('');
 			}

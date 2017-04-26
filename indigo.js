@@ -375,8 +375,8 @@ const indigo =
 	 * Return base path to component assets.
 	 * @return {String} Web path to component less and js files.
 	 */
-	getComponentURL() {
-		return this.appconf.get('server:componentUri') || '/components';
+	getComponentPath() {
+		return this.appconf.get('server:componentPath') || '/components';
 	},
 
 	/**

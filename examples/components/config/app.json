@@ -6,7 +6,7 @@
 		"webdir": "/examples/components/web",
 		"componentTag": false, /* attach into less/css files the component tag */ 
 		"staticDir": "/static", /* path to the web/static directory */
-		"componentUri": "/component", /* path to component files */
+		"componentPath": "/component", /* path to component files */
 		"cache": 3600 /* seconds, 0 - no-cache */
 	},
 

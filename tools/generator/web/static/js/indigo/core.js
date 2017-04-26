@@ -31,6 +31,18 @@ var console = window.console,
 			item.init.call(indigoJS.extend, item.win);
 		}
 	},
+	eventModel = function(o) {
+		var proto = Object.getPrototypeOf(o),
+			events = proto.__events__;
+		if (!events) {
+			events = Object.defineProperty(proto, '__events__', {
+				value: {},
+				writable: true,
+				enumerable: false
+			}).__events__;
+		}
+		return events;
+	},
 	indigoJS = {
 	components: {},
 	initPending: {},
@@ -46,17 +58,17 @@ var console = window.console,
 		static: indigoStatic,
 		rootScope: rootScope,
 		debug: function() {
-			if (this.static.DEBUG && console) {
+			if (indigoStatic.DEBUG && console) {
 				console.log.apply(console, arguments);
 			}
 		},
 		info: function() {
-			if (this.static.INFO && console) {
+			if (indigoStatic.INFO && console) {
 				console.info.apply(console, arguments);
 			}
 		},
 		uid: function () {
-			'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			return 'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
 				var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
 				return v.toString(16);
 			});
@@ -64,8 +76,8 @@ var console = window.console,
 		attr: function(el, type, val) {
 			return val ? el.attr(type, type) : el.removeAttr(type);
 		},
-		class: function(el, name, val) {
-			return val ? el.addClass(name) : el.removeClass(name);
+		class: function(el, name, isAdd) {
+			return isAdd ? el.addClass(name) : el.removeClass(name);
 		},
 		import: function() {
 			var clazz, callback, components = [],
@@ -113,11 +125,23 @@ var console = window.console,
 			if (callbak) { callbak(ns); }
 			return ns;
 		},
-		watch: function(model, handle) {
-			var self = this;
-			return {
+		watch: function(model, handler) {
+			var self = this, ref;
+			return ref = {
+				handler: handler || function() {},
 				bind: function(name, bindMap) {
-					return self.bind(name, bindMap, model, handle);
+					if (typeof bindMap  === 'string') { //bind property name
+						model[name] = model[name] || null;
+						var map = {};
+						map[bindMap] = arguments[2];
+						if (typeof arguments[3] === 'function') {
+							map['$watch'] = arguments[3];
+						}
+						bindMap = map;
+					}
+					return self.bind(name, bindMap, model, function() {
+						ref.handler.apply(self, arguments);
+					});
 				}
 			};
 		},
@@ -148,9 +172,9 @@ var console = window.console,
 				},
 				set: function(value) {
 					val = value;
-					var proto = Object.getPrototypeOf(model);
-					if (!proto['__propogate__' + name]) {
-						proto['__propogate__' + name] = true;
+					var events = eventModel(model);
+					if (!events[name]) {
+						events[name] = true;
 						for (i = 0; i < bindMap.length; i++) {
 							indigoJS.bindProperties(bindMap[i], function(o) {
 								if (o.$watch) {
@@ -163,7 +187,7 @@ var console = window.console,
 						if (watch && model[name] !== undefined) {
 							watch(name, value);
 						}
-						delete proto['__propogate__' + name];
+						delete events[name];
 					}
 				}, enumerable: true
 			});
@@ -211,6 +235,15 @@ window.init = function(win, selector, factory) {
 					clazz.prototype.toString = function() {
 						return selector + '::' + this.$el.html();
 					};
+					clazz.prototype.define = function(name, get, set) {
+						var descriptor = {};
+						if (get) { descriptor.get = get; }
+						if (set) { descriptor.set = set; }
+						Object.defineProperty(this, name, descriptor);
+					};
+					clazz.prototype.class = function(name, isAdd) {
+						indigo.class(this.$el, name, isAdd);
+					};
 					clazz.prototype.onEvent = function(type, comp, intercept) {
 						var _hanlder,
 							uid = indigo.uid();
@@ -236,7 +269,6 @@ window.init = function(win, selector, factory) {
 							},
 							set: function(value) {
 								indigo.attr(this.$el, 'disabled', value);
-								return this;
 							}
 						};
 					}
@@ -257,14 +289,14 @@ window.init = function(win, selector, factory) {
 						if (descriptor && descriptor.set && descriptor.get) {
 							descriptor.set = (function(set, type) {
 								return function(value) {
-									var proto = Object.getPrototypeOf(this);
-									if (!proto['__propogate__' + type]) {
-										proto['__propogate__' + type] = true;
+									var events = eventModel(this);
+									if (!events[type]) {
+										events[type] = true;
 										indigo.info(type, value, this.toString());
 										set.call(this, value);
 										this.$el.trigger(type, [value]);
 									}
-									delete proto['__propogate__' + type];
+									delete events[type];
 								};
 							})(descriptor.set, name);
 							Object.defineProperty(clazz.prototype, name, descriptor);

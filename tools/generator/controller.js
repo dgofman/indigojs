@@ -4,44 +4,45 @@ const indigo = global.__indigo;
 
 module.exports = function(router) {
 
-	/***************** SPA Routes *****************/
-	router.get('/:locale/spa/:page', function(req, res) {
-		res.send(`<h1>${req.params.page.toUpperCase()}</h1>`);
+	router.get('/:locale/index', (req, res) => {
+		indigo.render(req, res, '/demo_index');
 	});
 
-	/***************** FPA Routes *****************/
-
-	//Home Menu #home/
 	router.get('/home', function(req, res) {
 		req.model.page = 'Home Page (#home/)';
-		req.model.context = `
-			<p><a href="services">Home Services</a></p>
-			<p><a href="protection">Home Protection</a></p>
-		`;
-		indigo.render(req, res, '/fpa-content');
+		if (req.model.app_template === 'fpa') {
+			req.model.context = `
+				<p><a href="services">Home Services</a></p>
+				<p><a href="protection">Home Protection</a></p>
+			`;
+		}
+		indigo.render(req, res, '/demo_content');
 	});
 
 	router.get('/home/services', function(req, res) {
 		req.model.page = 'Home Services Page (#home/services)';
-		req.model.context = '<a href="./">Back</a>';
-		indigo.render(req, res, '/fpa-content');
+		if (req.model.app_template === 'spa') {
+			req.model.context = '<a href="#home/">Back</a>';
+		} else {
+			req.model.context = '<a href="./">Back</a>';
+		}
+		indigo.render(req, res, '/demo_content');
 	});
 
 	router.get('/home/protection', function(req, res) {
 		req.model.page = 'Home Protection Page (#home/protection)';
-		req.model.context = '<a href="/" target="_parent">Back</a>';
-		indigo.render(req, res, '/fpa-content');
+		req.model.context = '<a href="/" target="_parent">Home</a>';
+		indigo.render(req, res, '/demo_content');
 	});
 
-	//Product Menu #product/
 	router.get('/product', function(req, res) {
 		req.model.page = 'Product Page (#product/)';
-		indigo.render(req, res, '/fpa-content');
+		indigo.render(req, res, '/demo_content');
 	});
 
 	//Default route context handler (#contact, #about etc.)
 	router.get('/:locale/fpa/:page', function(req, res) {
 		req.model.page = req.params.page.toUpperCase();
-		indigo.render(req, res, '/fpa-content');
+		indigo.render(req, res, '/demo_content');
 	});
 };

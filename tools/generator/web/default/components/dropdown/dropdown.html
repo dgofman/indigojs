@@ -4,7 +4,7 @@
 		dataField = opts.dataField || '',
 		menus = opts.menus || [],
 		open = opts.open || false,
-		selectedIndex = opts.selectedIndex || -1,
+		selectedIndex = isNaN(opts.selectedIndex) ? -1 : opts.selectedIndex,
 		defaultItemRenderer = '<li>%LABEL%</li>',
 		itemRenderer, lis = [];
 
@@ -20,7 +20,7 @@
 		} else {
 			itemRenderer = defaultItemRenderer;
 		}
-		if (selectedIndex !== -1 || menu.selected) {
+		if (selectedIndex !== -1 && menu.selected) {
 			prompt = menu[labelField] || '';
 			selectedIndex = index;
 		}
@@ -33,7 +33,7 @@
 		if (opts.promtRenderer) {
 			prompt = opts.promtRenderer(req, menu, selectedIndex);
 		} else {
-			prompt = menu[labelField] || '';
+			prompt = menu[labelField] || menu;
 		}
 	}
 %>

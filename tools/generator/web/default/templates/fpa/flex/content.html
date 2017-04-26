@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<%- $sharedStyle(`${baseStaticPath}/css/common${extLESS}`,
+				 `${baseStaticPath}/css/index${extLESS}`) %>
+</head>
+<body>
+<header class="igo-header">
+	<%- $sharedTemplate('templates/header.html', '.igo-header') %>
+</header>
+
+<section class="igo-content">
+	<h1><%- page %></h1>
+	<%- req.model.context ? context : '' %>
+</section>
+
+<footer class="igo-footer">
+	<%- $sharedTemplate(`templates/footer.html`, '.igo-footer') %>
+</footer>
+
+<%- $sharedTemplate('components') %>
+
+<%- $finalize(`${baseStaticPath}/js/views/main${extJS}`) %>
+</body>
+</html>

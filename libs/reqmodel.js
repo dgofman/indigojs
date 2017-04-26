@@ -63,6 +63,7 @@ const reqmodel = (appconf, app) => {
 
 	let minify, env = appconf.get('environment'),
 		appTemplate = appconf.get('server:app_template') || 'fpa',
+		appLayout = appconf.get('server:app_layout') || 'sticky',
 		staticDir = indigo.getStaticDir();
 
 	if ((process.env.NODE_ENV || '').trim() === 'production') {
@@ -82,8 +83,24 @@ const reqmodel = (appconf, app) => {
 			extLESS: env === 'dev' ? '.less' : '.css',
 			contextPath: req.baseUrl,
 			baseStaticPath: staticDir,
-
+			componentPath: indigo.getComponentPath(),
 			app_template: appTemplate,
+			app_template_layout: appLayout,
+
+			$createTemplate: (...urls) => {
+				const lines = [];
+				urls.forEach(function(url) {
+					lines.push(`<script type="text/igo-template" path="${url}">\n${app.locals.inject(req, url)}\n</script>`);
+				});
+				lines.push(`<script type="text/igo-template" path="components">${app.locals.finalize.apply(null, [req])}\n</script>`);
+				return lines.join('\n');
+			},
+			$sharedTemplate: (url, selector) => {
+				return `<script>window.top.sharedTemplate(${JSON.stringify(url)}, '${selector || "body"}', window)</script>`;
+			},
+			$sharedStyle: (...urls) => {
+				return `<script>window.top.sharedStyle(${JSON.stringify(urls)}, window)</script>`;
+			},
 			$include: (url) => {
 				return app.locals.inject(req, url);
 			},

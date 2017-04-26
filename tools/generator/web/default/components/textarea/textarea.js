@@ -1,19 +1,19 @@
 /*jshint unused:false*/
 function Input($, indigo) {
 	'use strict';
-	indigo.debug('Init Input');
+	indigo.debug('Init TextArea');
 
 	return {
 		register: function(el) {
 			$('>div', el).event('focus.input', function(e) {
 				setTimeout(function() {
-					$('>input', e.currentTarget).focus();
+					$('>textarea', e.currentTarget).focus();
 				}, 500);
 			});
 		},
 
 		init: function(el, self) {
-			self.$input = $('>div>input', el).event('change.val', function() {
+			self.$input = $('>div>textarea', el).event('change.val', function() {
 				self.value = self.$input.val();
 			});
 			this.onEvent('change', self.$input);

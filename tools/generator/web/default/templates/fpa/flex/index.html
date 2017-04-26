@@ -1,0 +1,23 @@
+<link rel="shortcut icon" href="/favicon.ico">
+<script src="<%- baseStaticPath %>/js/vendor/require-2.3.2<%- extJS %>"></script>
+<script src="<%- baseStaticPath %>/js/indigo/core<%- extJS %>"></script>
+
+<style>
+	body {
+		opacity: 0;
+	}
+</style>
+
+<script>
+<%- $include(`templates/fpa/scripts${minify}.js`) %>
+</script>
+
+<%- $sharedStyle(`${baseStaticPath}/css/common${extLESS}`,
+				 `${baseStaticPath}/css/index${extLESS}`) %>
+
+<%- $createTemplate(`templates/header.html`, `templates/footer.html`) %>
+
+</head>
+<body>
+	<iframe class="igo-content" frameborder="0" height="100%" width="100%"></iframe>
+</body>

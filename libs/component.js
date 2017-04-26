@@ -59,7 +59,7 @@ module.exports = (app) => {
 
 	var getModuleWebDir = indigo.getModuleWebDir;
 
-	app.get(`${indigo.getComponentURL()}/:file`, (req, res) => {
+	app.get(`${indigo.getComponentPath()}/:file`, (req, res) => {
 		req.model = req.model || {};
 		indigo.locales.headerLocale(req);
 
@@ -112,11 +112,7 @@ module.exports = (app) => {
 		debug(req.method, className);
 		const dir = getModuleWebDir(req),
 			newUrl = indigo.getNewURL(req, null, `/components/${className}/${className}.html`);
-		debug('inject: %s -> %s, opts: %s', className, newUrl, JSON.stringify(opts));
-		if (!fs.existsSync(dir + newUrl)) {
-			indigo.logger.error(`Component is not defined: ${className}`);
-			return '';
-		}
+
 		try {
 			opts.$get = getProps;
 			opts.$attr = getAttr;
@@ -126,9 +122,13 @@ module.exports = (app) => {
 			opts.$label = addLabel;
 			req.model.opts = opts;
 			req.model.componentIndex = req.model.componentIndex || 1;
-			req.model.filename = getModuleWebDir(req) + newUrl;
 			req.model.assets = req.model.assets || {};
-			let html = ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
+			let html = '';
+
+			if (fs.existsSync(dir + newUrl)) {
+				req.model.filename = getModuleWebDir(req) + newUrl;
+				html = ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
+			}
 
 			if (!req.model.assets[className]) {
 				req.model.assets[className] = {className, wrapTag};
@@ -154,7 +154,7 @@ module.exports = (app) => {
 		debug('Include scripts: %s', JSON.stringify(req.model.assets));
 		let lines = [],
 			assets = [],
-			uri = indigo.getComponentURL();
+			uri = indigo.getComponentPath();
 		if (args.length && args[0] === true) { //include common.less
 			assets.push(`<link rel="stylesheet" type="text/css" href="${req.model.baseStaticPath}/css/common${req.model.extLESS}">`);
 		}

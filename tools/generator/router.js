@@ -1,7 +1,6 @@
 'use strict';
 
-const indigo = global.__indigo,
-	defaultPage = 'home',
+const defaultPage = 'home',
 	bodyParser = require('body-parser');
 
 module.exports = (router, app) => {
@@ -20,10 +19,6 @@ module.exports = (router, app) => {
 
 	router.get('/index', (req, res) => {
 		res.redirect(`${router.conf.base}/${req.model.locality.locale}/index#${defaultPage}/`);
-	});
-
-	router.get('/:locale/index', (req, res) => {
-		indigo.render(req, res, '/index');
 	});
 
 	return {

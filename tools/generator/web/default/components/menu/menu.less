@@ -1,18 +1,26 @@
 @import 'less/constant.less';
 
-@background: #31708f;
+@menu_color: #000;
+@submenu_bg: #fff;
+@submenu_hover_bg: #d8e9f1;
+@submenu_color: #000;
+@submenu_hover_color: #000;
 @submenu_gap: 1px;
-@hover_bg: #85c1de;
 
 display: inline-block;
-background: @background;
 
 a {
-	color: #fff;
+	color: @menu_color;
+	padding:10px;
+	display: block;
 }
 
 a[href='#'] {
 	text-decoration: none;
+}
+
+.selected > a {
+	color: #000;
 }
 
 ul, ol {
@@ -24,8 +32,6 @@ ul, ol {
 
 li {
 	display: table-cell;
-	vertical-align: middle;
-	padding: 0 10px;
 	position: relative;
 	.noselect();
 
@@ -34,10 +40,6 @@ li {
 		left: 100%;
 		display: table;
 		color: #000;
-
-		&>li:hover {
-			background: @hover_bg;
-		}
 	}
 }
 
@@ -52,28 +54,31 @@ ol {
 	z-index: 999;
 	position: absolute;
 	border: 1px solid #333;
-	background: #ccc;
+	background: @submenu_bg;
+	-webkit-box-shadow: -1px 1px 7px 1px rgba(100, 100, 100, 0.75);
+	-moz-box-shadow: -1px 1px 7px 1px rgba(100, 100, 100, 0.75);
+	box-shadow: -1px 1px 7px 1px rgba(100, 100, 100, 0.75);
 
 	& li {
 		float: left;
 		width: 100%;
-		padding: 10px;
 		position: relative;
 		white-space: nowrap;
 	}
 
 	& a {
-		color: #000;
+		color: @submenu_color;
 	}
 
 	& a:hover {
-		color: #fff;
+		background: @submenu_hover_bg;
+		color: @submenu_hover_color;
 	}
 }
 
 ul>li {
-	&:before {
-		content: '';
+	&>a:before {
+		content: '\00a0';
 		display: inline-table;
 		height: 100%;
 		vertical-align: middle;
@@ -85,10 +90,14 @@ ul>li {
 	}
 
 	&>ol {
-		border-top: 1px solid @background;
+		border-top: 1px solid transparent;
 	}
 }
 
 ol>li {
 	min-width: 100px;
+}
+
+.icon>a:before {
+	margin-right: 5px;
 }

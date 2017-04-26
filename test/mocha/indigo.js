@@ -22,7 +22,7 @@ describe('Testing Indigo API\'s', () => {
 				consoleError = console.error;
 				console.error = function() {};
 				indigo.logger.error = function() {};
-			const req = superagent.get(`http://localhost:${port}/firststep/invalidContext`)
+			superagent.get(`http://localhost:${port}/firststep/invalidContext`)
 				.end((err) => {
 					console.error = consoleError;
 					assert.ok(err !== null);
@@ -30,8 +30,6 @@ describe('Testing Indigo API\'s', () => {
 			});
 		});
 	});
-
-	'/invalid_page.html'
 
 	it('should test app.locals.inject', done => {
 		indigo.start(`${__appDir}/examples/firststep/config/app.json`, null, () => {

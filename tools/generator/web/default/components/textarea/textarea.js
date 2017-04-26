@@ -33,6 +33,10 @@ function Input($, indigo) {
 			set: function(value) {
 				this.$input.val(value);
 			}
+		},
+
+		focus: function() {
+			this.$input.focus();
 		}
 	};
 }

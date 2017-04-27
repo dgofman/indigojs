@@ -104,6 +104,9 @@ const reqmodel = (appconf, app) => {
 			$include: (url) => {
 				return app.locals.inject(req, url);
 			},
+			$localeMap: function(map) {
+				return `<script>\nvar indigoLocales = ${JSON.stringify(map, null, 2)}\n</script>`;
+			},
 			$locales: (...args) => {
 				args.unshift(req);
 				return app.locals.locale.apply(null, args);

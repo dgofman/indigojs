@@ -15,13 +15,18 @@ function Dropdown($, indigo, selector) {
 				var isOpen = menu.hasClass('open');
 				$(selector + '>ul').removeClass('open');
 				menu.toggleClass('open', !isOpen);
-			});
+			}),
+			prompt = div.find('>div');;
 
 			$(el).event('keypress.enter', function (e) {
 				if (!el.attr('disabled') && e.which === 13) {
 					div.trigger('click');
 				}
 			});
+
+			if (!prompt.html()) {
+				prompt.html(prompt.attr('prompt'));
+			}
 		},
 
 		init: function(el) {
@@ -34,8 +39,11 @@ function Dropdown($, indigo, selector) {
 			this.dataField = this.$box.attr('df');
 			this.labelField = this.$box.attr('lf') || 'label';
 			this.itemRenderer = $('script', el).html() || '<li>%LABEL%</li>';
-			this.promptValue = this.$prompt.text();
 			this.selectedValue = null;
+
+			if (this.index !== -1 && this.$items.length) {
+				this.option = this.$items.eq(0);
+			}
 
 			this.define('selectedItem', function() {
 				return this.data[this.index] || {};
@@ -115,7 +123,7 @@ function Dropdown($, indigo, selector) {
 			set: function(value) {
 				this.index = value.index();
 				this.value = value.text();
-				this.prompt = value.html();
+				this.label = value.html();
 			}
 		},
 
@@ -129,12 +137,21 @@ function Dropdown($, indigo, selector) {
 			}
 		},
 
-		prompt: {
+		label: {
 			get: function() {
 				return this.$prompt.html();
 			},
 			set: function(value) {
-				this.$prompt.html(value || this.promptValue);
+				this.$prompt.html(value || this.prompt || '');
+			}
+		},
+
+		prompt: {
+			get: function() {
+				return this.$prompt.attr('prompt');
+			},
+			set: function(value) {
+				this.$prompt.attr('prompt', value);
 			}
 		},
 

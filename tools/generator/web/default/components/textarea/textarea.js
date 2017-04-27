@@ -1,5 +1,5 @@
 /*jshint unused:false*/
-function Input($, indigo) {
+function TextArea($, indigo) {
 	'use strict';
 	indigo.debug('Init TextArea');
 

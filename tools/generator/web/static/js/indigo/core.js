@@ -244,7 +244,7 @@ window.init = function(win, selector, factory) {
 					clazz.prototype.class = function(name, isAdd) {
 						indigo.class(this.$el, name, isAdd);
 					};
-					clazz.prototype.focus = function(name, isAdd) {
+					clazz.prototype.focus = function() {
 						this.$el.focus();
 					};
 					clazz.prototype.onEvent = function(type, comp, intercept) {

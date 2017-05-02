@@ -8,7 +8,7 @@ function TextArea($, indigo) {
 			$('>div', el).event('focus.input', function(e) {
 				setTimeout(function() {
 					$('>textarea', e.currentTarget).focus();
-				}, 500);
+				}, 10);
 			});
 		},
 

@@ -4,8 +4,20 @@ function Text($, indigo) {
 	indigo.debug('Init Text');
 
 	return {
+		register: function(el) {
+			var span = $('>span', el);
+			if (span.attr('height') === 'auto') {
+				var height = el.outerHeight(),
+					fs = parseFloat(span.css('font-size')),
+					lh = parseFloat(span.css('line-height')) || parseFloat(span.css('height')) + 2,
+					em = lh / fs,
+					rows = height / (fs * em);
+				span.css({'height': Math.floor(rows) * fs * em + 'px', '-webkit-line-clamp': Math.ceil(rows).toString()});
+			}
+		},
+
 		init: function(el) {
-			this.$label = $('>div>p', el);
+			this.$label = $('>span', el);
 		},
 
 		value: {

@@ -16,7 +16,7 @@ function Dropdown($, indigo, selector) {
 				$(selector + '>ul').removeClass('open');
 				menu.toggleClass('open', !isOpen);
 			}),
-			prompt = div.find('>div');;
+			prompt = div.find('>div');
 
 			$(el).event('keypress.enter', function (e) {
 				if (!el.attr('disabled') && e.which === 13) {

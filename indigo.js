@@ -154,12 +154,11 @@ const indigo =
 		 * @alias service
 		 * @type {Object}
 		 */
-		if (!this.service) {
-			Object.defineProperty(this, 'service', {
-				get() { return Object.create(service).init(appconf.get('service')); },
-				enumerable: true
-			});
-		}
+		Object.defineProperty(this, 'service', {
+			get() { return Object.create(service).init(appconf.get('service')); },
+			configurable: true,
+			enumerable: true
+		});
 
 		this.portNumber = Number(process.env.INDIGO_PORT || appconf.get('server:port'));
 

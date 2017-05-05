@@ -32,12 +32,13 @@ const indigo = global.__indigo,
 			}
 		}
 		return '';
-	}, getAttrs = function(obj) {
-		let attrs = [];
+	}, getAttrs = function(name) {
+		let attrs = [],
+			obj = this[name];
 		for (var key in obj) {
 			attrs.push(`${key}="${obj[key]}"`);
 		}
-		return attrs.join(' ');
+		return attrs.length ? ` ${attrs.join(' ')}` : '';
 	}, getCss = function(name, tagName) {
 		if (this[name] !== undefined) {
 			if (tagName === undefined) {

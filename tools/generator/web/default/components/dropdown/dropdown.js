@@ -31,7 +31,7 @@ function Dropdown($, indigo, selector) {
 
 		init: function(el) {
 			this.initItems(el, this);
-			this.onEvent('change', this.$el);
+			this.onEvent('change', el);
 			this._data = [];
 			this.$box = $('>div', el);
 			this.$prompt = this.$box.find('>div');

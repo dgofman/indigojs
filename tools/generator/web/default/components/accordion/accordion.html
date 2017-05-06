@@ -1,0 +1,16 @@
+<%
+	var uid = `accordion_${componentIndex}`;
+	opts.contents = opts.contents || {};
+	opts.templates = opts.templates || {};
+	for (var index in opts.headers) {
+		var content = opts.contents[index],
+			template = opts.templates[index];
+%>
+	<div>
+		<input type="<%- opts.multiple ? 'checkbox': 'radio' %>" name="<%- uid %>"/>
+		<label unselectable="on"<%- opts.$attr('style') %>><i></i><u><%- opts.headers[index] %></u></label>
+		<div<%- template ? ` template="${template}"` : '' %>><%- content %></div>
+	</div>
+<%
+	}
+%>

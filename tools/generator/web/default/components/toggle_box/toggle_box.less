@@ -31,7 +31,7 @@ label {
 	}
 
 	&:checked ~ * .toggle-content {
-		display:block;
+		.easyIn();
 	}
 
 	&:checked ~ label:before {
@@ -40,5 +40,7 @@ label {
 }
 
 .toggle-content {
-	display:none;
+	.easyOut();
 }
+
+.error_border();

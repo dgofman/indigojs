@@ -7,8 +7,25 @@
 @submenu_hover_color: #000;
 @submenu_gap: 1px;
 
-display: inline-block;
+@var1: #FBFBFB;
+@var2: #EDEFF2;
+@var3: #4A4A4A;
+@var4: #4A90E2;
+@var5: #e2e2e2;
+@var6: #76788C;
 
+nav.main-nav {
+	position: relative;
+	background: @var1;
+	padding: 0;
+	border-top: 1px solid @var2;
+	border-bottom: 1px solid @var2;
+	.horizontal-nav {
+		display: inline-block;
+		margin-left: 4rem;
+		white-space: nowrap;
+	}
+}
 a {
 	color: @menu_color;
 	padding:10px;
@@ -20,12 +37,12 @@ a[href='#'] {
 }
 
 .selected > a {
-	color: #000;
+	color: #76788C;
 }
 
 ul, ol {
 	height: 100%;
-	list-style: none;
+	list-style: none; //do not remove <ol style="list-style: none"> from HTML bug in IE11 
 	padding: 0;
 	display: table;
 }
@@ -55,9 +72,9 @@ ol {
 	position: absolute;
 	border: 1px solid #333;
 	background: @submenu_bg;
-	-webkit-box-shadow: -1px 1px 7px 1px rgba(100, 100, 100, 0.75);
-	-moz-box-shadow: -1px 1px 7px 1px rgba(100, 100, 100, 0.75);
-	box-shadow: -1px 1px 7px 1px rgba(100, 100, 100, 0.75);
+	-webkit-box-shadow: -1px 3px 7px 1px rgba(100, 100, 100, 0.75);
+	-moz-box-shadow: -1px 3px 7px 1px rgba(100, 100, 100, 0.75);
+	box-shadow: -1px 3px 7px 1px rgba(100, 100, 100, 0.75);
 
 	& li {
 		float: left;

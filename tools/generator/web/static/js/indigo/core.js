@@ -322,6 +322,7 @@ window.init = function(win, selector, factory) {
 						apis.register(win.$(el));
 					});
 				}
+				win.$(selector).removeClass('init');
 			}
 		};
 	}

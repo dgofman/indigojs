@@ -19,7 +19,7 @@ a {
 }
 
 a:hover {
-	text-decoration: underline;
+	color: #4A90E2!important;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -39,6 +39,19 @@ button, input, select, textarea {
 }
 
 [cid] {
+	* {
+		color: #000;
+		line-height: 1.4;
+		list-style: none;
+		font-style: normal;
+		font-weight: normal;
+		font-size: 100%;
+		text-align: left;
+		vertical-align: text-top;
+		text-indent: 0;
+		margin:0;
+		padding:0;
+	}
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
@@ -46,4 +59,8 @@ button, input, select, textarea {
 
 [cid][disabled] {
 	pointer-events: none;
+}
+
+[cid].init {
+	opacity: 0 !important;
 }

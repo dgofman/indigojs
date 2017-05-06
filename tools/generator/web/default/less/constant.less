@@ -1,15 +1,47 @@
-@base: '/static';
+@base: '{{static}}';
 @images: '@{base}/images';
 
-.gradient(@startColor: #eeeeee; @endColor: #cccccc) {
-	background-color: @endColor;
-	background: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor));
+@outer_padding: 1.2rem;
+@inner_padding: 1.6rem;
+@white-color: #FFF;
+@equinix-color:#CE232A;
+@dust-color:#868686;
+
+.gradient(@startColor, @endColor, @cross) when (@cross = true) {
 	background: -webkit-linear-gradient(top, @startColor, @endColor);
 	background: -moz-linear-gradient(top, @startColor, @endColor);
 	background: -ms-linear-gradient(top, @startColor, @endColor);
 	background: -o-linear-gradient(top, @startColor, @endColor);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='@startcolor', endColorstr='@endColor', GradientType=1);
 	-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='@startColor',endColorstr='@endColor',GradientType=1);
+}
+
+.background(@startColor: #eeeeee, @endColor: #cccccc, @cross: false) {
+	background-color: @endColor;
+	background: linear-gradient(to bottom, @startColor, @endColor);
+	.gradient(@startColor, @endColor, @cross);
+}
+
+.error_color(@selector: '') {
+	@error: ~'.error_field @{selector}';
+	&@{error} {
+		color: #f00;
+	}
+}
+
+.error_border(@selector: '') {
+	@error: ~'.error_field @{selector}';
+	&@{error} {
+		border: 1px solid #f00;
+	}
+}
+
+.error(@selector: '') {
+	@error: ~'.error_field @{selector}';
+	&@{error} {
+		color: #f00;
+		border: 1px solid #f00;
+	}
 }
 
 .cursor() {
@@ -20,7 +52,7 @@
 	-webkit-user-select: none;  /* Chrome all / Safari all */
 	-moz-user-select: none;     /* Firefox all */
 	-ms-user-select: none;      /* IE 10+ */
-	user-select: none; 
+	user-select: none;
 	/* IE 6-9 unselectable="on" */
 }
 
@@ -37,6 +69,26 @@
 	right: 0;
 	bottom: 0;
 	left: 0;
-	background-color: rgba(0,0,0,0.5);
+	background-color: rgba(0,0,0,0.3);
 	display: none;
+}
+
+.transition(@delay, @cross) when (@cross = true) {
+	-webkit-transition: max-height @delay;
+	-moz-transition: max-height @delay;
+	-ms-transition: max-height @delay;
+	-o-transition: max-height @delay;
+}
+
+.easyOut(@delay: 0.4s, @cross: false) {
+	overflow: hidden;
+	max-height: 0;
+	transition: max-height @delay ease-out;
+	.transition(@delay, @cross);
+}
+
+.easyIn(@delay: 0.5s, @cross: false, @max_height: 500px) {
+	max-height: @max_height;
+	transition: max-height @delay ease-in;
+	.transition(@delay, @cross);
 }

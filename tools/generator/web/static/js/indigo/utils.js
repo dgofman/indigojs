@@ -32,7 +32,10 @@ define(['./validate'], function(Validate) {
 		},
 		errorDialog: function(error, name, title) {
 			indigo.debug(JSON.stringify(error));
-			var content = typeof error === 'string' ? error : error[name];
+			var content = null;
+			if (_.isEmpty(error)) {
+				content = typeof error === 'string' ? error : error[name];
+			}
 			errorDlg.title = title || errorDlg.defaultTitle;
 			errorDlg.content = content || errorDlg.defaultContent;
 			errorDlg.show = true;

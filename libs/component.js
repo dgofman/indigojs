@@ -140,7 +140,9 @@ module.exports = (app) => {
 				opts.parentStyle = ('display: none; ' + (opts.parentStyle || '')).trim();
 			}
 
-			return `<${cTag} cid="${className}"${opts.$get('disabled', 'disabled')}${opts.$attr('class')}${opts.$attr('parentStyle', 'style')}${opts.$attr('id')} tabindex="-1">${html}</${cTag}>`;
+			opts.class = opts.class ? `${opts.class} init` : 'init';
+
+			return `<${cTag} cid="${className}" class="${opts.class}"${opts.$get('disabled', 'disabled')}${opts.$attr('parentStyle', 'style')}${opts.$attr('id')} tabindex="-1">${html}</${cTag}>`;
 		} catch(err) {
 			indigo.logger.error(err);
 			return '';
@@ -165,7 +167,7 @@ module.exports = (app) => {
 				lessFile = indigo.getNewURL(req, null, `/components/${asset.className}/${asset.className}.less`),
 				jsFile = indigo.getNewURL(req, null, `/components/${asset.className}/${asset.className}.js`);
 			if (fs.existsSync(dir + lessFile)) {
-				assets.push(`<link href="${uri}/${asset.className}.less" rel="stylesheet" type="text/css">`);
+				assets.push(`<link href="${uri}/${asset.className}.less" rel="stylesheet" type="text/css"/>`);
 			}
 
 			if (fs.existsSync(dir + jsFile)) {

@@ -80,7 +80,7 @@ module.exports = (app) => {
 			} else {
 				res.setHeader('Cache-Control', 'public, max-age=' + (!isNaN(cache) ? cache : 3600)); //or one hour
 
-				if (arr[1]=== 'js') {
+				if (arr[1] === 'js') {
 					res.set('Content-Type', 'application/javascript');
 					res.write(jsRender(data, indigo.getComponentTag(), className));
 					res.end();
@@ -172,6 +172,8 @@ module.exports = (app) => {
 
 			if (fs.existsSync(dir + jsFile)) {
 				assets.push(`<script src="${uri}/${asset.className}.js" type="text/javascript"></script>`);
+			} else {
+				assets.push(`<script>window.top.init(window, '[cid=${className}]', function() {})</script>`);
 			}
 		}
 		for (let i = 0; i < args.length; i++) {

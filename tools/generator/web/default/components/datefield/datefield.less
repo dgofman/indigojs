@@ -6,7 +6,7 @@
 @border_radius: 5px;
 @button_width: 28px;
 
-width: 100%;
+min-width: 250px;
 
 &>div {
 	border: @border;
@@ -63,7 +63,10 @@ width: 100%;
 
 &[disabled] {
 	border-color: #ccc;
-	color: #ccc;
+
+	&>div>div {
+		.disabledColor();
+	}
 
 	&>span, &>div {
 		opacity: .5;

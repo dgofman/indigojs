@@ -1,9 +1,1 @@
-<span role="<%- opts.editable ? 'contentinfo' : 'textbox' %>"<%
-	if (opts.height === 'full') {
-%><%- opts.$attr('style') %><%- opts.$title(req) %>><%
-	} else if (typeof opts.height === 'number') {
-%>style="height: <%- opts.height %>px;<%- opts.$get('style') %>"<%- opts.$title(req) %>><%
-	} else {
-%>style="height: <%- Math.round((opts.rows || 1) * (opts.fontSize || 14) * (opts.lineHeight || 1.4)) %>px; -webkit-line-clamp: <%- opts.rows || 1 %>;<%- opts.fontSize ? ` font-size: ${opts.fontSize}px;` : '' %><%- opts.$css('lineHeight', 'line-height') %><%- opts.$get('style') %>"<%- opts.$attr('height') %><%- opts.$title(req) %>><%
-	}
-%><div trabindex="-1"<%- opts.$attr('editable', 'contenteditable') %>><%- typeof opts.value === 'function' ? opts.value(req, opts) : opts.value %></div></span>
+<div role="<%- opts.editable ? 'contentinfo' : 'textbox' %>"<%- opts.height ? `style="height: ${opts.height}px;"` : ''%><%- $title() %>><p<%- $attr('style') %><%- $attr('editable', 'contenteditable') %>><%- typeof opts.value === 'function' ? opts.value(opts) : opts.value %></p><%- opts.ellipsis ? '<u></u>' : '' %></div>

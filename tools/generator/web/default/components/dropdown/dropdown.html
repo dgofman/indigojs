@@ -6,44 +6,68 @@
 		open = opts.open || false,
 		selectedIndex = isNaN(opts.selectedIndex) ? -1 : opts.selectedIndex,
 		defaultItemRenderer = '<li>%LABEL%</li>',
-		itemRenderer, lis = [];
+		itemRenderer = orgItemRenderer = opts.itemRenderer,
+		labelRenderer = orgLabelRenderer = opts.labelRenderer,
+		item, lis = [];
 
-	for (var index in menus) {
-		var menu = menus[index];
+		if (typeof itemRenderer === 'string') {
+			itemRenderer = function() {
+				return orgItemRenderer;
+			}
+		}
+		if (typeof labelRenderer === 'string') {
+			labelRenderer = function() {
+				return orgLabelRenderer;
+			}
+		}
+
+	menus.forEach(function(menu, index) {
 		if (typeof menu === 'string') {
 			var item = {};
 			item[labelField] = menu;
 			menu = item;
 		}
-		if (opts.itemRenderer) {
-			itemRenderer = opts.itemRenderer(menu, opts, defaultItemRenderer);
+		$assign(req, menu);
+
+		if (itemRenderer) {
+			item = itemRenderer(menu, opts, defaultItemRenderer, index);
 		} else {
-			itemRenderer = defaultItemRenderer;
+			item = defaultItemRenderer;
 		}
-		if (selectedIndex !== -1 && menu.selected) {
-			label = menu[labelField] || '';
+		if (menu.selected) {
+			if (labelRenderer) {
+				label = labelRenderer(menu, opts, defaultItemRenderer, index).replace('%LABEL%', menu[labelField]);
+			} else {
+				label = menu[labelField] || menus[index] || '';
+			}
 			selectedIndex = index;
 		}
-		lis.push(itemRenderer.replace('%LABEL%', menu[labelField]).replace('%DATA%', menu[dataField]));
-	}
+		lis.push(item.replace('%LABEL%', menu[labelField]).replace('%DATA%', menu[dataField]));
+	});
 
-	if (label == '' && menus.length && selectedIndex !== -1) {
+	if (label == '' && menus.length > selectedIndex && selectedIndex !== -1) {
 		var menu = menus[selectedIndex] || {};
-
-		if (opts.labelRenderer) {
-			label = opts.labelRenderer(req, menu, selectedIndex);
+		if (labelRenderer) {
+			label = labelRenderer(menu, opts, defaultItemRenderer).replace('%LABEL%', menu[labelField]);
 		} else {
-			label = menu[labelField] || menu;
+			label = menu[labelField] || menus[selectedIndex] || '';
 		}
 	}
 %>
-<div tabindex="-1" type="button"<%- opts.$attr('dataField', 'df') %><%- labelField == 'label' ? '' : ` lf="${labelField}"` %><%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %>>
+<div tabindex="-1" type="button"<%- $attr('dataField', 'df') %><%- labelField == 'label' ? '' : ` lf="${labelField}"` %><%- selectedIndex !== -1 ? ` selectedIndex="${selectedIndex}"` : '' %>>
 	<span unselectable="on" tabindex="-1"></span>
-	<div role="menuitem"<%- opts.$title(req) %><%- opts.$attr('style') %><%- opts.$attr('prompt') %>><%- label %></div>
+	<div role="menuitem"<%- $title() %><%- $attr('style') %><%- $attr('prompt') %>><%- label %></div>
 <%
-	if (opts.itemRenderer) {
+	if (itemRenderer) {
 %>
-	<script type="x-template"><%- itemRenderer %></script>
+	<script type="text/template" rel="ir"><%- itemRenderer(opts.dataField ? {} : '', opts, defaultItemRenderer) %></script>
+<%
+	}
+%>
+<%
+	if (labelRenderer) {
+%>
+	<script type="text/template" rel="lr"><%- labelRenderer(opts.dataField ? {} : '', opts, defaultItemRenderer) %></script>
 <%
 	}
 %>

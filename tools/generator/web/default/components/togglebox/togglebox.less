@@ -12,7 +12,7 @@ label {
 	.cursor();
 
 	&:before {
-		content: '\25BC';
+		content: '\25BA';
 		width: 20px;
 		display: inline-block;
 	}
@@ -30,16 +30,16 @@ label {
 		cursor:pointer;
 	}
 
-	&:checked ~ * .toggle-content {
+	&:checked ~ * .toggle-content, &:checked ~ div[template] {
 		.easyIn();
 	}
 
 	&:checked ~ label:before {
-		content: '\25BA';
+		content: '\25BC';
 	}
 }
 
-.toggle-content {
+.toggle-content, &>div[template] {
 	.easyOut();
 }
 

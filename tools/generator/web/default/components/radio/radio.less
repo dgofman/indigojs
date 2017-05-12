@@ -14,9 +14,11 @@ outline: none;
 }
 
 &[disabled]>label {
-	color: #ccc;
+	&>u {
+		.disabledColor();
+	}
 
-	input + i:before {
+	input + i:before, input + i:after {
 		border-color: #ccc;
 	}
 }

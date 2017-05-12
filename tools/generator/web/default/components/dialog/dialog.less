@@ -32,14 +32,17 @@ z-index: 1000;
 			display: inline-block;
 		}
 
-		i:before {
-			content: 'x';
+		.close {
 			float: right;
 			font-style: normal;
 			color: #fff;
 			margin: 2px 7px;
 			font-size: 18px;
 			.cursor();
+		}
+
+		i.close:before {
+			content: '\2A2F';
 		}
 	}
 

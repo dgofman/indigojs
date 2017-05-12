@@ -3,67 +3,92 @@ function Tooltip($, indigo) {
 	'use strict';
 	indigo.debug('Init Tooltip');
 
-	var arrow_gap = 10;
+	var arrow_gap = 7;
 
 	return {
 		register: function(el) {
-			el.off('mouseover');
-			el.off('mouseout');
-
-			if (el.parent().css('position') === 'static') {
-				el.parent().css('position', 'relative');
-			}
-
-			var div = el.find('>div'),
-				p = div.find('>p'),
-				scrollInterval = parseInt(div.attr('scroll')),
-				scrollTop, interval;
-			if (p.html() === '') {
-				p.html(el.parent().text());
-			}
-
-			if (!isNaN(scrollInterval)) {
-				el.on('mouseover', function() {
-					clearInterval(interval);
-					p.scrollTop(scrollTop = 0);
-					interval = setTimeout(function() {
-						clearTimeout(interval);
-						interval = setInterval(function() {
-							p.scrollTop(++scrollTop);
-							if (scrollTop !== p.scrollTop()) {
-								clearInterval(interval);
+			var div = $('>div', el);
+			if (div.attr('target')) {
+				var targets = div.attr('target').split(','),
+					origPosition = div.attr('position'),
+					arr = (origPosition || 'top').split('-'),
+					position = arr[0],
+					align = arr[1] || (position === 'top' || position === 'bottom' ? 'center' : 'middle'),
+					scrollInterval = parseInt(div.attr('scroll')),
+					p = $('>div>p', el),
+					value = p.html(), scrollTop, interval;
+				targets.forEach(function(t) {
+					$(t).event('mouseout.target', function(e) {
+						el.hide();
+						clearInterval(interval);
+					}).event('mouseover.target', function(e) {
+						var target = $(e.currentTarget),
+							css = target.offset();
+						el.show();
+						if (!value) {
+							p.text(target.text());
+						}
+						if (!origPosition || origPosition === 'auto') {
+							position = 'top';
+							align = 'left';
+							if (css.top - div.outerHeight() < 0) {
+								position = 'bottom';
 							}
-						}, scrollInterval);
-					}, parseInt(div.attr('scrollTimeout')) || 500);
-				}).on('mouseout', function() {
-					clearInterval(interval);
+							if (css.left + target.outerWidth() + div.outerHeight() > document.body.clientWidth) {
+								align = 'right';
+							}
+							div.attr('position', position + '-' + align);
+						}
+
+						switch(position) {
+							case 'top':
+								css.top -= div.outerHeight() + arrow_gap;
+								break;
+							case 'bottom':
+								css.top += target.outerHeight() + arrow_gap;
+								break;
+							case 'left':
+								css.left -= div.outerWidth() + arrow_gap;
+								break;
+							case 'right':
+								css.left += target.outerWidth() + arrow_gap;
+								break;
+						}
+
+
+						switch (align) {
+							case 'right':
+								css.left += target.outerWidth() - div.outerWidth();
+								break;
+							case 'center':
+								css.left += target.outerWidth() / 2 - div.outerWidth() / 2;
+								break;
+							case 'bottom':
+								css.top += target.outerHeight() - div.outerHeight();
+								break;
+							case 'middle':
+								css.top += target.outerHeight() / 2 - div.outerHeight() / 2;
+								break;
+						}
+
+
+						if (!isNaN(scrollInterval)) {
+							p.scrollTop(scrollTop = 0);
+							interval = setTimeout(function() {
+								clearTimeout(interval);
+								interval = setInterval(function() {
+									p.scrollTop(++scrollTop);
+									if (scrollTop > p.scrollTop() + 1) {
+										clearInterval(interval);
+									}
+								}, scrollInterval);
+							}, parseInt(div.attr('scrollTimeout')) || 500);
+						}
+
+						el.css(css);
+					});
 				});
 			}
-
-			el.on('mouseover', function() {
-				switch(div.attr('class')) {
-					case 'left':
-						div.css('margin-left', -div.outerWidth() - arrow_gap);
-						break;
-					case 'right':
-						div.css('margin-left', el.outerWidth() + arrow_gap);
-						break;
-					case 'bottom':
-						div.css('margin-top', el.outerHeight() + arrow_gap);
-						break;
-					default:
-						div.css('margin-top', -div.outerHeight() - arrow_gap);
-				}
-
-				switch(div.attr('class')) {
-					case 'top':
-					case 'bottom':
-						return div.css('margin-left', -((div.outerWidth() - el.outerWidth()) / 2));
-					case 'left':
-					case 'right':
-						return div.css('margin-top', -((div.outerHeight() - el.outerHeight()) / 2));
-				}
-			});
 		},
 
 		init: function(el) {

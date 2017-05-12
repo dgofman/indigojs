@@ -38,7 +38,8 @@ function Dropdown($, indigo, selector) {
 			this.$popup = $('>ul', el);
 			this.dataField = this.$box.attr('df');
 			this.labelField = this.$box.attr('lf') || 'label';
-			this.itemRenderer = $('script', el).html() || '<li>%LABEL%</li>';
+			this.itemRenderer = $('script[rel=ir]', el).html() || '<li>%LABEL%</li>';
+			this.labelRenderer = $('script[rel=lr]', el).html() || '%LABEL%';
 			this.selectedValue = null;
 
 			if (this.index !== -1 && this.$items.length) {
@@ -76,6 +77,10 @@ function Dropdown($, indigo, selector) {
 
 		createItem: function(row) {
 			return this.itemRenderer.replace('%LABEL%', row[this.labelField] || row).replace('%DATA%', row[this.dataField]);
+		},
+
+		createLabel: function(label) {
+			return this.labelRenderer.replace('%LABEL%', label);
 		},
 
 		findOption: function(value) {
@@ -142,7 +147,7 @@ function Dropdown($, indigo, selector) {
 				return this.$prompt.html();
 			},
 			set: function(value) {
-				this.$prompt.html(value || this.prompt || '');
+				this.$prompt.html(this.createLabel(value || this.prompt || ''));
 			}
 		},
 

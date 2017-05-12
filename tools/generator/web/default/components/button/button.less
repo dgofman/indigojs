@@ -2,24 +2,24 @@
 
 @icon_size: 16px;
 
-line-height: @icon_size;
-
 & {
-	background: #ccc;
+	.background();
 	border-radius: 5px;
 	color: #333333;
 	text-shadow: 0 1px 0 white;
+	border: 2px outset buttonface;
+}
+
+&:active {
+	border-style: inset;
 }
 
 &:hover {
 	opacity: .8;
 }
 
-&[disabled] {
-	color: #999;
-}
-
 &[disabled]>button {
+	.disabledColor();
 	cursor: default;
 }
 
@@ -32,6 +32,7 @@ line-height: @icon_size;
 	border: none;
 	color: inherit;
 	outline: none;
+	padding: 2px 6px 3px;
 }
 
 & > button > i {

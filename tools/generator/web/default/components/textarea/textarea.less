@@ -1,6 +1,11 @@
 @import 'less/constant.less';
 
 border: 1px #999 solid;
+display: block;
+
+&[disabled] {
+	pointer-events: auto;
+}
 
 textarea {
 	height: 100%;

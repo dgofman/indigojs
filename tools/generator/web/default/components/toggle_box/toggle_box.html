@@ -1,6 +1,0 @@
-<%
-	var uid = `chk_${componentIndex}`;
-%>
-<input type="checkbox" id="<%- uid %>"<%- opts.$title(req) %><%- opts.$get('checked', 'checked') %><%- opts.$get('disabled', 'disabled') %>/>
-<label unselectable="on" for="<%- uid %>"><%- opts.label %></label>
-<%- opts.content ? (typeof opts.content === 'function' ? opts.content(req, opts) : opts.content) : '' %>

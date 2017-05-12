@@ -1,79 +1,14 @@
-<style>
-	.icon>a:before {
-		width: 16px;
-		background-image: url('<%- baseStaticPath %>/images/flags.png'); 
-		background-repeat: no-repeat;
-	}
-	.home_icon>a:before {
-		background-position: -112px -223px;
-	}
-	.product_icon>a:before {
-		background-position: -160px -79px;
-	}
-	.contact_icon>a:before {
-		background-position: -64px -47px;
-	}
-</style>
-
-<link rel="stylesheet" type="text/css" href="<%- baseStaticPath %>/css/flags<%- extLESS %>">
-
 <div>
 	<span>IndigoJS</span>
 	<%- $('menu', {menus: [
 		{
-			"label": "HOME",
-			"nav": "#home/",
-			"class": "icon home_icon",
-			"sub": [
-				{
-					"label": "Home Services",
-					"nav": "#home/services",
-					"sub": [
-						{
-							"label": "Menu1",
-							"nav": "#menu1"
-						},
-						{
-							"label": "Menu2",
-							"nav": "#menu2"
-						},
-						{
-							"label": "Menu3",
-							"nav": "#menu3"
-						}
-					]
-				},
-				{
-					"label": "Home Protection",
-					"nav": "#home/protection",
-					"sub": [
-						{
-							"label": "Menu4",
-							"nav": "#menu4"
-						},
-						{
-							"label": "Menu5",
-							"nav": "#menu5"
-						}
-					]
-				}
-			]
+			"label": "Components"
 		},
 		{
-			"label": "PRODUCT",
-			"class": "icon product_icon",
-			"nav": "#product/"
+			"label": "Docs"
 		},
 		{
-			"label": "CONTACT US",
-			"class": "icon contact_icon",
-			"nav": "#contact",
-			"sub": [
-				{
-					"label": "About",
-					"nav": "#about"
-				}
-			]
+			"label": "GitHub"
 		}
 	]}) %>
 </div>

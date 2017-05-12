@@ -45,7 +45,8 @@ width: 200px;
 		}
 
 		&:before {
-			content: '\25be';
+			content: '\23F7';
+			line-height: 1.3;
 		}
 	}
 
@@ -63,7 +64,10 @@ width: 200px;
 
 &[disabled] {
 	border-color: #ccc;
-	color: #ccc;
+
+	&>div>div {
+		.disabledColor();
+	}
 
 	&>span, &>div {
 		opacity: .5;

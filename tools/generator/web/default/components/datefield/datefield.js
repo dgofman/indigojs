@@ -33,49 +33,62 @@ function DateField($, indigo, selector) {
 
 	return {
 		register: function(el) {
-			var self = this,
-				calendar = $('>.calendar', el),
-				prompt = $('>div>div', el);
+			var ref = {
+				formatDate: this.formatDate
+			};
+			this.initComponents(el, ref);
 			$('>div>span', el).event('click.open', function(e) {
 				e.stopPropagation();
-				var isOpen = calendar.hasClass('open');
+				var isOpen = ref.$calendar.hasClass('open');
 				$(selector + '>.calendar').removeClass('open');
-				calendar.toggleClass('open', !isOpen);
+				ref.$calendar.toggleClass('open', !isOpen);
 			});
-			calendar.event('click.prevent', function(e) {
+			ref.$calendar.event('click.prevent', function(e) {
 				e.stopPropagation();
 			});
-			this.timeStamp = Number($('>div, el').attr('ts'));
-			this.initItems(el, calendar, this.timeStamp);
-
 			el.event('change.register', function(e, ts) {
-				prompt.html(self.formatDate(self.timeStamp = ts));
-			});
+				ref.$box.attr('ts', ts);
+				ref.$prompt.html(ref.formatDate(ts) || ref.$box.attr('prompt'));
+			}).trigger('change.register', ref.timeStamp);
 		},
 
 		init: function(el, self) {
 			this.onEvent('change', el);
-			this.$box = $('>div', el);
-			this.$prompt = this.$box.find('>div');
-			this.$calendar = $('>.calendar', el);
+			this.initComponents(el, this);
 			el.event('change.register', function(e, ts) {
 				self.value = ts;
 			});
 		},
 
-		initItems: function(el, calendar, ts) {
+		initComponents: function(el, ref) {
+			ref.$box = $('>div', el);
+			ref.$prompt = ref.$box.find('>div');
+			ref.$calendar = $('>.calendar', el);
+			ref.$prompt.html(ref.$prompt.attr('prompt'));
+			ref.timeStamp = Number(ref.$box.attr('ts'));
+			this.initItems(ref, el, ref.timeStamp);
+			return ref;
+		},
+
+		initItems: function(ref, el, ts) {
 			var self = this,
 				table = $('<table></table>'),
 				now = new Date(),
-				sd = getSelectedDate(this.timeStamp),
-				d = ts ? new Date(ts) : new Date(),
-				y = d.getFullYear(), m = d.getMonth(),
+				sd = getSelectedDate(ref.timeStamp),
+				d = ts ? new Date(ts) : new Date();
+			if (!(d instanceof Date)) {
+				d = new Date();
+			}
+			var y = d.getFullYear(), m = d.getMonth(),
 				daysInMonth = 32 - new Date(y, m, 32).getDate(),
 				firstDate = new Date(y, m, 1).getDay(),
-				tds = [], trs = [], date = '';
+				tds = [], trs = [], date = '',
+				days = window[ref.$box.attr('d')] || datefield.days,
+				months = window[ref.$box.attr('m')] || datefield.months;
+
 			d.setHours(0, 0, 0, 0);
 			for (var c = 0; c < 7; c++) {
-				tds.push('<th>' + datefield.days[c] + '</th>');
+				tds.push('<th>' + days[c] + '</th>');
 			}
 			trs.push('<tr>' + tds.join('') + '</tr>');
 			loop:
@@ -105,21 +118,21 @@ function DateField($, indigo, selector) {
 			trs.push('<tr>' + tds.join('') + '</tr>');
 			table.html(trs.join('\n'));
 
-			calendar.empty()
-				.append('<h1 unselectable="on"><i/>' + datefield.months[m] + ' ' + y + '<u/></h1>')
+			ref.$calendar.empty()
+				.append('<h1 unselectable="on"><i/>' + months[m] + ' ' + y + '<u/></h1>')
 				.append(table);
 
-			calendar.find('i').click(function() {
-				self.initItems(el, calendar, d.setMonth(m - 1));
+			ref.$calendar.find('i').click(function() {
+				self.initItems(ref, el, d.setMonth(m - 1));
 			});
 
-			calendar.find('u').click(function() {
-				self.initItems(el, calendar, d.setMonth(m + 1));
+			ref.$calendar.find('u').click(function() {
+				self.initItems(ref, el, d.setMonth(m + 1));
 			});
 
-			tds = calendar.find('td').click(function(e) {
+			tds = ref.$calendar.find('td').click(function(e) {
 				tds.removeClass('selected');
-				calendar.removeClass('open');
+				ref.$calendar.removeClass('open');
 				el.trigger('change', d.setDate(Number($(e.currentTarget).addClass('selected').text())));
 			});
 
@@ -138,7 +151,7 @@ function DateField($, indigo, selector) {
 			set: function(value) {
 				this.timeStamp = value;
 				this.$prompt.html(this.formatDate(value) || this.prompt || '');
-				this.initItems(this.$el, this.$calendar, value);
+				this.initItems(this, this.$el, value);
 			}
 		},
 

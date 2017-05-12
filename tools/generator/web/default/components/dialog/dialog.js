@@ -26,6 +26,10 @@ function Dialog($, indigo) {
 				var el = $(dom);
 				indigo.register(el.attr('cid'), el);
 			});
+
+			$('*[dialog_id="' + el.attr('id') + '"]').event('click.show', function() {
+				el.show();
+			});
 		},
 
 		initForms: function(el, ref) {

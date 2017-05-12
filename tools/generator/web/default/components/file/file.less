@@ -8,8 +8,23 @@ outline: none;
 	.cursor();
 }
 
+&[disabled] {
+	&>label {
+		.disabledColor();
+	}
+}
+
 &>input {
 	display: none;
+}
+
+&.icon:before {
+	width: 16px;
+	height: 16px;
+	content: '';
+	display: inline-block;
+	margin: 2px 5px 0 0;
+	vertical-align: top;
 }
 
 .error();

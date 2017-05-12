@@ -1,11 +1,26 @@
 <%
+	var attrs = [];
+	if (!isNaN(opts.width)) {
+		attrs.push(`width: ${opts.width}px`);
+	} else if (opts.width) {
+		attrs.push(`width: ${opts.width}`);
+	}
+
+	if (!isNaN(opts.height)) {
+		attrs.push(`height: ${opts.height}px`);
+	} else if (opts.height) {
+		attrs.push(`height: ${opts.height}`);
+	}
+
+	opts.parentStyle = attrs.join('; ');
+
 	if (opts.img) {
 %>
-<img src="<%- opts.url %>" role="img"<%- opts.$title(req) %><%- opts.$attr('style') %>/>
+<img src="<%- opts.url %>" role="img"<%- $title() %><%- $attr('style') %>/>
 <%
 	} else {
 %>
-<div style="background-image: url('<%- opts.url %>')<%- opts.$get('style') %>" role="img"<%- opts.$title(req) %>></div>
+<div style="background-image: url('<%- opts.url %>')<%- $get('style') %>" role="img"<%- $title() %>></div>
 <%
 	}
 %>

@@ -2,13 +2,16 @@
 
 @icon_size: 16px;
 
-line-height: @icon_size;
-
 & {
-	background: #ccc;
+	.background();
 	border-radius: 5px;
 	color: #333333;
 	text-shadow: 0 1px 0 white;
+	border: 2px outset buttonface;
+}
+
+&:active {
+	border-style: inset;
 }
 
 &:hover {
@@ -16,7 +19,7 @@ line-height: @icon_size;
 }
 
 &[disabled]>button {
-	color: #999;
+	.disabledColor();
 	cursor: default;
 }
 
@@ -28,6 +31,8 @@ line-height: @icon_size;
 	background: none;
 	border: none;
 	color: inherit;
+	outline: none;
+	padding: 2px 6px 3px;
 }
 
 & > button > i {
@@ -47,3 +52,5 @@ line-height: @icon_size;
 		float: right;
 	}
 }
+
+.error();

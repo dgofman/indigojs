@@ -1,0 +1,1 @@
+<div <%- $title() %> role="contentinfo"><textarea tabindex="-1"<%- $get('required', 'required')%><%- $get('disabled', 'disabled') %><%- $attr('rows')%><%- $attr('style') %><%- $attr('maxlen', 'maxlength')%>><%- typeof opts.value === 'function' ? opts.value(opts) : opts.value %></textarea></div>

@@ -1,0 +1,18 @@
+<%
+	var uid = `tabs_${componentIndex}`,
+		selectedIndex = opts.selectedIndex || 0;
+	opts.contents = opts.contents || {};
+	opts.templates = opts.templates || {};
+	(opts.labels || []).forEach(function(label, index) {
+		var content = opts.contents[index],
+			template = opts.templates[index];
+		content = content ? (typeof content === 'function' ? content(req, opts) : content) : '';
+%>
+	<div>
+		<input type="<%- opts.multiple ? 'checkbox': 'radio' %>" name="<%- uid %>"<%- index == selectedIndex ? ' checked' : '' %>/>
+		<label unselectable="on"<%- $attr('style') %><%- $title(label) %>><i></i><u><%- label %></u></label>
+		<div<%- template ? ` template="${template}"` : '' %>><%- content %></div>
+	</div>
+<%
+	});
+%>

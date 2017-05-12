@@ -8,7 +8,7 @@ function Input($, indigo) {
 			$('>div', el).event('focus.input', function(e) {
 				setTimeout(function() {
 					$('>input', e.currentTarget).focus();
-				}, 500);
+				}, 10);
 			});
 		},
 
@@ -33,6 +33,10 @@ function Input($, indigo) {
 			set: function(value) {
 				this.$input.val(value);
 			}
+		},
+
+		focus: function() {
+			this.$input.focus();
 		}
 	};
 }

@@ -59,7 +59,7 @@ goto :eof
 :components
 	call :killnode
 	start /WAIT /B node examples/components/index.js
-	start "" "http://localhost:8888/components/index"
+	start "" "http://localhost:8888/uicomponents/index"
 goto :eof
 
 :debug

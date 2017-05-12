@@ -1,20 +1,17 @@
 @import 'less/constant.less';
 
-margin: 0;
-display: inline-block;
-text-indent: 0;
-
 &>label {
 	padding: 0;
 	text-indent: 20px;
-	line-height: 17px;
 	position: relative;
 	cursor: pointer;
 	.noselect();
 }
 
 &[disabled]>label {
-	color: #ccc;
+	&>u {
+		.disabledColor();
+	}
 
 	input + i:before {
 		border-color: #ccc;
@@ -35,12 +32,12 @@ i:before {
 	border-radius: 4px;
 	content: '\00a0';
 	display: inline-block;
-	font-size: 14px !important;
-	line-height: 17px;
-	height: 17px;
-	width: 18px;
+	font-size: 13px !important;
+	line-height: 1.2;
+	height: 16px;
+	width: 16px;
 	text-indent: 0;
-	margin: -1px 5px 0 -20px;
+	margin: 0 5px 0 -20px;
 	vertical-align: top;
 	text-align: center;
 	padding-right: 3px;
@@ -61,3 +58,5 @@ input:checked + i:before {
 u {
 	text-decoration: none;
 }
+
+.error_color();

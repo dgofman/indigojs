@@ -42,7 +42,7 @@ firststep: killnode
 
 components: killnode
 	node examples/components/index.js </dev/null &
-	open "http://localhost:8888/components/index"
+	open "http://localhost:8888/uicomponents/index"
 
 debug:
 	clear & DEBUG=indigo:* & nodemon --debug .

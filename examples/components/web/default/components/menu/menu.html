@@ -1,28 +1,67 @@
-<ul<%- opts.$attr('style') %><%- opts.$title(req) %> <%- opts.$title(req, opts.title || 'Menu Control') %>><%
-	for (var index in opts.menus) {
-		var menu = opts.menus[index],
-			itemRenderer = menu.itemRenderer || opts.itemRenderer;
-		menu.get = opts.$get;
-		menu.attr = opts.$attr;
+<ul<%- $attr('class') %><%- $label(opts.title || 'Menu Control') %>><%
+	var labelRenderer = orgLabelRenderer = opts.labelRenderer,
+		itemRenderer = orgItemRenderer = opts.itemRenderer;
+	opts.labelField = opts.labelField || 'label';
+	opts.menus = opts.menus || [];
+
+	if (typeof itemRenderer === 'string') {
+		itemRenderer = function() {
+			return orgItemRenderer;
+		}
+	}
+	if (typeof labelRenderer === 'string') {
+		labelRenderer = function() {
+			return orgLabelRenderer;
+		}
+	}
+
+	if (!labelRenderer) {
+		labelRenderer = function(item) { 
+			return item[opts.labelField];
+		}
+	}
+
+	if (opts.background) {
+		opts.parentStyle = `background-color: ${opts.background}; ${opts.parentStyle || ''}`.trim();
+	}
+
+	opts.menus.forEach(function(menu, index) {
+		$assign(req, menu);
 
 		if (itemRenderer) {
-%>
-	<%- itemRenderer(req, opts, menu, index) %>
-<%
+%><%- itemRenderer(menu, null, opts, index).replace('%LABEL%', labelRenderer(menu)) %><%
 		} else {
+			var label = labelRenderer(menu),
+				tag = menu.nav ? 'a' : 'p';
+			if (menu.nav && menu.nav === opts.selectedNav || index === opts.selectedIndex) {
+				menu.class = 'selected ' + (menu.class || '');
+			}
 %>
-	<li<%- opts.$title(req, menu.label) %><%- menu.attr('class') %><%- menu.attr('style') %><%- menu.get('disabled', ' disabled') %>><p><a tabindex="-1" href="<%- menu.get('nav') || '#' %>"><%- menu.label %></a>
-	</p>
-		<ol><%
-		for (var i in menu.sub) {
-			var sub = menu.sub[i];
-			sub.get = opts.$get;
-			sub.attr = opts.$attr;
-%><li<%- sub.attr('class') %><%- sub.attr('style') %><%- sub.get('disabled', ' disabled') %>><p><a tabindex="-1" href="<%- sub.get('nav') || '#' %>"><%- sub.label %></a></p></li><%
+<li<%- $label(label) %><%- menu.$attrs('attrs') %><%- menu.$attr('class') %><%- menu.$attr('style') %><%- menu.$get('disabled', ' disabled') %>><<%- tag %> tabindex="-1"<%- menu.$attr('nav', 'href') %><%- menu.$attr('target') %>><%- label %></<%- tag %>><%
+	addSubmenu(menu);
+%></li><%
 		}
-%></ol>
-	</li><%
+	});
+%>
+</ul>
+<%
+	function addSubmenu(menu) {
+		if (menu.sub) {
+%>
+		<ol style="list-style: none"><%
+			menu.sub.forEach(function(sub, index) {
+				$assign(req, sub);
+
+				if (itemRenderer) {
+%><%- itemRenderer(menu, sub, opts, index).replace('%LABEL%', labelRenderer(sub)) %><%
+				} else {
+			var label = labelRenderer(sub),
+				tag = sub.nav ? 'a' : 'p';
+		%><li<%- $label(label) %><%- sub.$attrs('attrs') %><%- sub.$attr('class') %><%- sub.$attr('style') %><%- sub.$get('disabled', ' disabled') %>><<%- tag %> tabindex="-1"<%- sub.$attr('nav', 'href') %><%- sub.$attr('target') %>><%- label %></<%- tag %>><%
+				}
+				addSubmenu(sub);
+			});
+		%></li></ol><%
 		}
 	}
 %>
-</ul>

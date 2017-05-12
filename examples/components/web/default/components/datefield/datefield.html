@@ -1,0 +1,24 @@
+<%
+	if (Array.isArray(opts.days) || Array.isArray(opts.months)) {
+%><script><%
+		if (Array.isArray(opts.days)) {
+%>
+			<%- `var df_days_${componentIndex} = ${JSON.stringify(opts.days)};` %>
+<%
+			opts.days = `df_days_${componentIndex}`;
+		}
+		if (Array.isArray(opts.months)) {
+%>
+			<%- `var df_months_${componentIndex} = ${JSON.stringify(opts.months)};` %>
+<%
+			opts.months = `df_months_${componentIndex}`;
+		}
+%></script><%
+	}
+%>
+
+<div tabindex="-1" type="button"<%- $attr('timestamp', 'ts') %><%- $attr('days', 'd') %><%- $attr('months', 'm') %>>
+	<span unselectable="on" tabindex="-1"></span>
+	<div role="menuitem"<%- $title() %><%- $attr('style') %><%- $attr('prompt') %>></div>
+</div>
+<div class="calendar"></div>

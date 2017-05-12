@@ -1,0 +1,7 @@
+<%
+	var uid = `file_${componentIndex}`;
+%>
+<label for="<%- uid %>"<%- $attr('style') %>>
+	<%- opts.label %>
+</label>
+<input id="<%- uid %>" type="file" <%- $get('disabled', 'disabled') %>>

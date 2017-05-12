@@ -1,0 +1,27 @@
+<%
+	var uid = `tabs_${componentIndex}`,
+		selectedIndex = opts.selectedIndex || 0,
+		labels = (opts.labels || []);
+	opts.contents = opts.contents || {};
+	opts.templates = opts.templates || {};
+	labels.forEach(function(label, index) {
+%>
+	<div>
+		<input type="radio" name="<%- uid %>"<%- index == selectedIndex ? ' checked' : '' %>/>
+		<label unselectable="on"<%- $title(label) %><%- $attr('style') %>><i></i><u><%- label %></u></label>
+	</div>
+<%
+	});
+%>
+<section>
+<%
+	labels.forEach(function(label, index) {
+		var content = opts.contents[index],
+			template = opts.templates[index];
+		content = content ? (typeof content === 'function' ? content(req, opts) : content) : '';
+%>
+	<div<%- template ? ` template="${template}"` : '' %>><%- content %></div>
+<%
+	});
+%>
+</section>

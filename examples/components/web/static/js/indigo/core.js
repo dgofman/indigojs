@@ -1,6 +1,7 @@
 'use strict';
 
-var indigoStatic = window.top.indigoStatic;
+var indigoStatic = window.top.indigoStatic,
+	rootScope = window.top.rootScope || {};
 
 require.config({
 	baseUrl: indigoStatic['staticPath'] + '/js',
@@ -23,6 +24,20 @@ require.config({
 });
 
 var console = window.console,
+	initJQuery = function(win) {
+		win.__indigocomponents__ = win.__indigocomponents__ || [];
+		if (!win.jQuery) {
+			window._jQueryFactory(win);
+		}
+
+		win.$.fn.extend({
+			event: function(type, callback) {
+				win.$.fn.off.call(this, type);
+				win.$.fn.on.call(this, type, callback);
+				return this;
+			}
+		});
+	},
 	initComponents = function() {
 		for (var selector in indigoJS.initPending) {
 			var item = indigoJS.initPending[selector];
@@ -30,8 +45,19 @@ var console = window.console,
 			item.init.call(indigoJS.extend, item.win);
 		}
 	},
+	eventModel = function(o) {
+		var proto = Object.getPrototypeOf(o),
+			events = proto.__events__;
+		if (!events) {
+			events = Object.defineProperty(proto, '__events__', {
+				value: {},
+				writable: true,
+				enumerable: false
+			}).__events__;
+		}
+		return events;
+	},
 	indigoJS = {
-	components: {},
 	initPending: {},
 	bindProperties: function(bindMap, callback) {
 		for (var name in bindMap) {//find a bind property name
@@ -42,19 +68,20 @@ var console = window.console,
 	},
 	extend: {
 		window: window,
-		static: window.top.indigoStatic,
+		static: indigoStatic,
+		rootScope: rootScope,
 		debug: function() {
-			if (this.static.DEBUG && console) {
+			if (indigoStatic.DEBUG && console) {
 				console.log.apply(console, arguments);
 			}
 		},
 		info: function() {
-			if (this.static.INFO && console) {
+			if (indigoStatic.INFO && console) {
 				console.info.apply(console, arguments);
 			}
 		},
 		uid: function () {
-			'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			return 'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
 				var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
 				return v.toString(16);
 			});
@@ -62,8 +89,14 @@ var console = window.console,
 		attr: function(el, type, val) {
 			return val ? el.attr(type, type) : el.removeAttr(type);
 		},
-		class: function(el, name, val) {
-			return val ? el.addClass(name) : el.removeClass(name);
+		class: function(el, name, isAdd) {
+			return isAdd ? el.addClass(name) : el.removeClass(name);
+		},
+		register: function(type, el) {
+			var comp = this.window.__indigocomponents__['[cid=' + type + ']'] || type;
+			if (comp && comp.prototype && comp.prototype.register) {
+				comp.prototype.register(el);
+			}
 		},
 		import: function() {
 			var clazz, callback, components = [],
@@ -72,7 +105,7 @@ var console = window.console,
 				callback = arguments[--length];
 			}
 			for (var i = 0; i < length; i++) {
-				clazz = indigoJS.components['[cid=' + arguments[i] + ']'];
+				clazz = this.window.__indigocomponents__['[cid=' + arguments[i] + ']'];
 				if (!clazz) {
 					throw new Error('ClassNotFoundException: ' + arguments[i]);
 				}
@@ -84,34 +117,50 @@ var console = window.console,
 				return components.length === 1 ? components[0] : components;
 			}
 		},
+		create: function(clazz, idxOrSelector, parent) {
+			parent = parent || this.window.$('body');
+			if (typeof clazz === 'string') {
+				clazz = this.import(clazz);
+			}
+			var el, els = parent.find(clazz.selector),
+				type = typeof(idxOrSelector);
+			if (type === 'number') {
+				el = els.eq(idxOrSelector);
+			} else if (type === 'string') {
+				el = els.filter(idxOrSelector);
+			} else {
+				el = els.eq(0);
+			}
+			return new clazz(el);
+		},
 		namespace: function(selector, callbak) {
 			var self = this,
 				parent = this.window.$(selector),
 				ns = {
 					create: function(clazz, idxOrSelector) {
-						if (typeof clazz === 'string') {
-							clazz = self.import(clazz);
-						}
-						var el, els = parent.find(clazz.selector),
-							type = typeof(idxOrSelector);
-						if (type === 'number') {
-							el = els.eq(idxOrSelector);
-						} else if (type === 'string') {
-							el = els.filter(idxOrSelector);
-						} else {
-							el = els.eq(0);
-						}
-						return new clazz(el);
+						return self.create.call(self, clazz, idxOrSelector, parent);
 					}
 				};
 			if (callbak) { callbak(ns); }
 			return ns;
 		},
-		watch: function(model, handle) {
-			var self = this;
-			return {
+		watch: function(model, handler) {
+			var self = this, ref;
+			return ref = {
+				handler: handler || function() {},
 				bind: function(name, bindMap) {
-					return self.bind(name, bindMap, model, handle);
+					if (typeof bindMap  === 'string') { //bind property name
+						model[name] = model[name] || null;
+						var map = {};
+						map[bindMap] = arguments[2];
+						if (typeof arguments[3] === 'function') {
+							map['$watch'] = arguments[3];
+						}
+						bindMap = map;
+					}
+					return self.bind(name, bindMap, model, function() {
+						ref.handler.apply(self, arguments);
+					});
 				}
 			};
 		},
@@ -133,7 +182,7 @@ var console = window.console,
 				});
 			}
 
-			var self = this, 
+			var self = this,
 				watch = arguments[3],
 				val = model[name];
 			Object.defineProperty(model, name, {
@@ -142,9 +191,9 @@ var console = window.console,
 				},
 				set: function(value) {
 					val = value;
-					var proto = Object.getPrototypeOf(model);
-					if (!proto['__propogate__' + name]) {
-						proto['__propogate__' + name] = true;
+					var events = eventModel(model);
+					if (!events[name]) {
+						events[name] = true;
 						for (i = 0; i < bindMap.length; i++) {
 							indigoJS.bindProperties(bindMap[i], function(o) {
 								if (o.$watch) {
@@ -157,7 +206,7 @@ var console = window.console,
 						if (watch && model[name] !== undefined) {
 							watch(name, value);
 						}
-						delete proto['__propogate__' + name];
+						delete events[name];
 					}
 				}, enumerable: true
 			});
@@ -179,19 +228,8 @@ window.init = function(win, selector, factory) {
 	if (!initPending[selector]) {
 		initPending[selector] = {
 			win: win, init: function(win) {
-				if (!win.jQuery) {
-					window._jQueryFactory(win);
-				}
-
-				win.$.fn.extend({
-					event: function(type, callback) {
-						win.$.fn.off.call(this, type);
-						win.$.fn.on.call(this, type, callback);
-						return this;
-					}
-				});
-
-				var components = window.top.indigoJS.components,
+				initJQuery(win);
+				var components = win.__indigocomponents__,
 					indigo = indigoJS.extend,
 					apis = factory(win.$, indigo, selector),
 					clazz = components[selector];
@@ -204,6 +242,18 @@ window.init = function(win, selector, factory) {
 					clazz.prototype.constructor = clazz;
 					clazz.prototype.toString = function() {
 						return selector + '::' + this.$el.html();
+					};
+					clazz.prototype.define = function(name, get, set) {
+						var descriptor = {};
+						if (get) { descriptor.get = get; }
+						if (set) { descriptor.set = set; }
+						Object.defineProperty(this, name, descriptor);
+					};
+					clazz.prototype.class = function(name, isAdd) {
+						indigo.class(this.$el, name, isAdd);
+					};
+					clazz.prototype.focus = function() {
+						this.$el.focus();
 					};
 					clazz.prototype.onEvent = function(type, comp, intercept) {
 						var _hanlder,
@@ -230,7 +280,6 @@ window.init = function(win, selector, factory) {
 							},
 							set: function(value) {
 								indigo.attr(this.$el, 'disabled', value);
-								return this;
 							}
 						};
 					}
@@ -251,18 +300,18 @@ window.init = function(win, selector, factory) {
 						if (descriptor && descriptor.set && descriptor.get) {
 							descriptor.set = (function(set, type) {
 								return function(value) {
-									var proto = Object.getPrototypeOf(this);
-									if (!proto['__propogate__' + type]) {
-										proto['__propogate__' + type] = true;
+									var events = eventModel(this);
+									if (!events[type]) {
+										events[type] = true;
 										indigo.info(type, value, this.toString());
 										set.call(this, value);
 										this.$el.trigger(type, [value]);
 									}
-									delete proto['__propogate__' + type];
+									delete events[type];
 								};
 							})(descriptor.set, name);
 							Object.defineProperty(clazz.prototype, name, descriptor);
-						} else if (name !== 'register') {
+						} else {
 							clazz.prototype[name] = descriptor;
 						}
 					}
@@ -273,6 +322,7 @@ window.init = function(win, selector, factory) {
 						apis.register(win.$(el));
 					});
 				}
+				win.$(selector).removeClass('init');
 			}
 		};
 	}
@@ -286,13 +336,28 @@ window.init = function(win, selector, factory) {
 window.ready = function(win, callback) {
 	indigoJS.initPending['main'] = {
 		win: win, init: function(win) {
+			initJQuery(win);
 			win.indigoJS = window.top.indigoJS;
+			win.require = function(deps, callback) {
+				//intercept requirejs define
+				var context = window.top.require.s.contexts._,
+					module = context.Module,
+					orgInit = module.prototype.init;
+				module.prototype.init = function() {
+					this.exports = win;
+					return orgInit.apply(this, arguments);
+				};
+				window.top.require(deps, function() {
+					callback.apply(win, arguments);
+				});
+			};
+			win.define = window.top.define;
 			win.indigo = {};
 			for (var name in win.indigoJS.extend) {
 				win.indigo[name] = win.indigoJS.extend[name];
 			}
 			win.indigo.window = win;
-			callback(win.$, win.indigo);
+			callback(win.$, win.indigo, win.indigoLocales);
 		}
 	};
 	if (window.jQuery) {

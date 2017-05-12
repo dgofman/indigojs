@@ -6,50 +6,65 @@ const indigo = global.__indigo,
 	fs = require('fs'),
 	less = require('less'),
 	componentTag = indigo.appconf.get('server:componentTag') || false,
-	/** Do not change function to ES6 arrow (using scope this) */
-	addTitle = function(req, title) {
-		title = title || this.title;
+	assign = (req, opts, self) => {
+		self = self || opts;
+		const register = (handler) => {
+			return function(...rest) {
+				rest.unshift(opts);
+				rest.unshift(req);
+				return handler.apply(self, rest);
+			};
+		};
+		self.$get = register(getProps);
+		self.$attr = register(getAttr);
+		self.$attrs = register(getAttrs);
+		self.$css = register(getCss);
+		self.$title = register(addTitle);
+		self.$label = register(addLabel);
+		self.$assign = assign;
+		return self;
+	}, addTitle = (req, opts, title) => {
+		title = title || opts.title;
 		return ` tabindex="${req.model.componentIndex}"` + (title ? ' title="' + title + '"' : '');
-	},
-	addLabel = function(req, title) {
-		title = title || this.title;
+	}, addLabel = (req, opts, title) => {
+		title = title || opts.title;
 		return ` tabindex="${req.model.componentIndex}"` + (title ? ' aria-label="' + title + '"' : '');
-	}, getProps = function(name, val) {
-		if (this[name] !== undefined) {
+	}, getProps = (req, opts, name, val) => {
+		if (opts[name] !== undefined) {
 			if (val === undefined) {
-				return ` ${this[name]}`;
+				return ` ${opts[name]}`;
 			} else {
 				return ` ${val}`;
 			}
 		}
 		return '';
-	}, getAttr = function(name, tagName) {
-		if (this[name] !== undefined) {
+	}, getAttr = (req, opts, name, tagName) => {
+		if (opts[name] !== undefined) {
 			if (tagName === undefined) {
-				return ` ${name}="${this[name]}"`;
+				return ` ${name}="${opts[name]}"`;
 			} else {
-				return ` ${tagName}="${this[name]}"`;
+				return ` ${tagName}="${opts[name]}"`;
 			}
 		}
 		return '';
-	}, getAttrs = function(name) {
+	}, getAttrs = (req, opts, name) => {
 		let attrs = [],
-			obj = this[name];
+			obj = opts[name];
 		for (var key in obj) {
 			attrs.push(`${key}="${obj[key]}"`);
 		}
 		return attrs.length ? ` ${attrs.join(' ')}` : '';
-	}, getCss = function(name, tagName) {
-		if (this[name] !== undefined) {
+	}, getCss = (req, opts, name, tagName) => {
+		if (opts[name] !== undefined) {
 			if (tagName === undefined) {
-				return ` ${name}: ${this[name]};`;
+				return ` ${name}: ${opts[name]};`;
 			} else {
-				return ` ${tagName}: ${this[name]};`;
+				return ` ${tagName}: ${opts[name]};`;
 			}
 		}
 		return '';
-	}, jsRender = (data, wrapTag, className) => {
-		return `window.top.init(window, '${componentTag ? wrapTag : ''}[cid=${className}]', ${data});`;
+	}, jsRender = (data, cTag, className) => {
+		return `window.top.init(window, '${componentTag ? cTag : ''}[cid=${className}]', ${data});`;
 	};
 
 /**
@@ -108,41 +123,36 @@ module.exports = (app) => {
 	 * @memberOf sourceloader
 	 * @alias component.js#component
 	 */	
-	app.locals.component = app.locals.$ = (req, className, opts={}, wrapTag=null) => {
-		const cTag = wrapTag || indigo.getComponentTag();
+	app.locals.component = app.locals.$ = (req, className, opts={}) => {
+		const cTag = indigo.getComponentTag();
 		debug(req.method, className);
 		const dir = getModuleWebDir(req),
 			newUrl = indigo.getNewURL(req, null, `/components/${className}/${className}.html`);
 
 		try {
-			opts.$get = getProps;
-			opts.$attr = getAttr;
-			opts.$attrs = getAttrs;
-			opts.$css = getCss;
-			opts.$title = addTitle;
-			opts.$label = addLabel;
-			req.model.opts = opts;
-			req.model.componentIndex = req.model.componentIndex || 1;
-			req.model.assets = req.model.assets || {};
-			let html = '';
+			let model = assign(req, opts, req.model);
+			model.opts = opts;
+			model.componentIndex = model.componentIndex || 1;
+			model.assets = model.assets || {};
 
+			if (!model.assets[className]) {
+				model.assets[className] = {className, cTag};
+			}
+			model.componentIndex++;
+
+			let html = '', 
+				begin = `<${cTag} cid="${className}" tabindex="-1" class="init${model.$get('class')}"${model.$get('disabled', 'disabled')}${model.$attr('id')}`;
 			if (fs.existsSync(dir + newUrl)) {
-				req.model.filename = getModuleWebDir(req) + newUrl;
-				html = ejs.render(fs.readFileSync(req.model.filename, 'utf-8'), req.model);
+				model.filename = getModuleWebDir(req) + newUrl;
+				html = ejs.render(fs.readFileSync(model.filename, 'utf-8'), req.model);
 			}
-
-			if (!req.model.assets[className]) {
-				req.model.assets[className] = {className, wrapTag};
-			}
-			req.model.componentIndex++;
 
 			if (opts.show === false) {
-				opts.parentStyle = ('display: none; ' + (opts.parentStyle || '')).trim();
+				opts.parentStyle = `display: none; ${opts.parentStyle || ''}`;
 			}
+			html = `${begin}${model.$attr('parentStyle', 'style')}>${html}</${cTag}>`;
 
-			opts.class = opts.class ? `${opts.class} init` : 'init';
-
-			return `<${cTag} cid="${className}" class="${opts.class}"${opts.$get('disabled', 'disabled')}${opts.$attr('parentStyle', 'style')}${opts.$attr('id')} tabindex="-1">${html}</${cTag}>`;
+			return html;
 		} catch(err) {
 			indigo.logger.error(err);
 			return '';
@@ -171,7 +181,7 @@ module.exports = (app) => {
 			}
 
 			if (fs.existsSync(dir + jsFile)) {
-				assets.push(`<script src="${uri}/${asset.className}.js" type="text/javascript"></script>`);
+				assets.push(`<script src="${uri}/${asset.className}.js" rel="${className}" type="text/javascript"></script>`);
 			} else {
 				assets.push(`<script>window.top.init(window, '[cid=${className}]', function() {})</script>`);
 			}

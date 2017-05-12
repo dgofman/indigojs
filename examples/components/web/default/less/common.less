@@ -1,11 +1,8 @@
+@import './constant.less';
+
 html, body {
 	height: 100%;
 	margin: 0;
-	overflow: hidden;
-}
-
-body {
-	overflow: auto;
 }
 
 *, *:before, *:after {
@@ -23,17 +20,6 @@ a {
 	outline: none;
 }
 
-a:hover {
-	text-decoration: underline;
-}
-
-h1, h2, h3, h4, h5, h6 {
-	margin-top: 20px;
-	margin-bottom: 10px;
-	font-weight: 500;
-	line-height: 1.1;
-}
-
 label {
 	display: inline-block;
 	margin: 0;
@@ -43,12 +29,36 @@ button, input, select, textarea {
 	font: inherit;
 }
 
+.headers();
+
 [cid] {
+	* {
+		color: #000;
+		line-height: normal;
+		list-style: none;
+		font-style: normal;
+		font-weight: normal;
+		font-size: 100%;
+		text-align: left;
+		vertical-align: text-top;
+		text-indent: 0;
+		margin:0;
+		padding:0;
+	}
+	b {
+		font-weight: bold;
+	}
+	line-height: normal;
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
+	.headers();
 }
 
 [cid][disabled] {
 	pointer-events: none;
+}
+
+[cid].init {
+	opacity: 0 !important;
 }

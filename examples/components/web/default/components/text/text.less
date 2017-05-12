@@ -1,5 +1,7 @@
-/* By setting ellipse text in <u> change width and margin-left */
-@ellipse_width: 2em;
+@import 'less/constant.less';
+
+/* By setting "opts.ellipsis" value, update "ellipsis_width" */
+@ellipsis_width: 2em;
 
 &>div {
 	overflow: hidden;
@@ -34,9 +36,9 @@
 	font-weight: bold;
 	padding-right: 5px;
 	text-align: right;
-	
-	width: @ellipse_width;
-	margin-left: -@ellipse_width;
+
+	width: @ellipsis_width;
+	margin-left: -@ellipsis_width;
 
 	background: -webkit-gradient(linear, left top, right top,
 		from(rgba(255, 255, 255, 0)), to(white), color-stop(30%, white));
@@ -49,3 +51,5 @@
 &>div>u:before {
 	content: '\02026';
 }
+
+.error();

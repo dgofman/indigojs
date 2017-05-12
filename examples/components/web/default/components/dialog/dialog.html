@@ -1,0 +1,23 @@
+<div<%- $attr('style') %>>
+		<header<%- $attr('header_template', 'uid') %>>
+			<%- opts.header_template_id ? '' : `<i class="close"></i><span class="title">${opts.title || ''}</span>` %>
+		</header>
+
+		<section<%- $attr('content_template', 'uid') %>>
+			<span class="content"><%- opts.content %></span>
+		</section>
+
+		<footer<%- $attr('footer_template', 'uid') %>>
+			<div class="pull-right">
+			<%
+			if (!opts.footer_template_id && opts.buttons) {
+				opts.buttons.forEach(function(opts) {
+			%>
+				<%- $('button', opts) %>
+			<%
+				});
+			}
+			%>
+			</div>
+		</footer>
+</div>

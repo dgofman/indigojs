@@ -1,2 +1,1 @@
-<div role="<%- opts.editable ? 'contentinfo' : 'textbox' %>" style="<%- opts.height ? `height: ${opts.height}px;` : ''%><%- opts.fontSize ? ` font-size: ${opts.fontSize}px;` : '' %><%- opts.$css('lineHeight', 'line-height') %><%- opts.$get('style') %>"<%- opts.$title(req) %>><p<%- opts.$attr('editable', 'contenteditable') %>><%- typeof opts.value === 'function' ? opts.value(req, opts) : opts.value %></p><%- opts.ellipses ? '<u></u>' : '' %>
-</div>
+<div role="<%- opts.editable ? 'contentinfo' : 'textbox' %>"<%- opts.height ? `style="height: ${opts.height}px;"` : ''%><%- $title() %>><p<%- $attr('style') %><%- $attr('editable', 'contenteditable') %>><%- typeof opts.value === 'function' ? opts.value(opts) : opts.value %></p><%- opts.ellipsis ? '<u></u>' : '' %></div>

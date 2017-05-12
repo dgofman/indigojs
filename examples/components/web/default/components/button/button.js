@@ -6,7 +6,7 @@ function Button($, indigo) {
 	return {
 		init: function(el) {
 			this.$button = $('>button', el);
-			this.onEvent('click', this.$button);
+			this.onEvent('click', el);
 		},
 
 		label: {

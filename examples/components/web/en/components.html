@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="<%- baseStaticPath %>/css/indigo<%- extLESS %>">
+
+	<script type="text/javascript">
+		var customDay = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+	</script>
+
+	<style>
+		body {
+			padding: 10px;
+		}
+
+		section>div.right {
+			width: 80%;
+			float: right;
+			padding-bottom: 40px;
+		}
+
+		section>div.left {
+			width: 20%;
+		}
+
+		section>div.left ul {
+			position: fixed;
+			top: 10px;
+			left: 10px;
+		}
+
+		h1 {
+			color: blue;
+			padding: 40px 0 10px;
+		}
+
+		hr {
+			border-color: #5b87ac;
+			border-style: dotted;
+			margin-top: 30px;
+		}
+
+		.icon:before {
+			background-image: url(<%- baseStaticPath %>/images/flags.png);
+			background-position: -112px -224px;
+		}
+
+		.custom * {
+			color: red !important;
+			text-decoration: underline;
+		}
+
+		.border, .textstyle {
+			border: 1px solid green;
+		}
+
+		.textstyle {
+			min-height: 100px;
+			width: 400px;
+		}
+
+		.code {
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			background: #f9f9f9;
+			margin: 20px 0;
+			padding: 20px;
+			text-align: left;
+		}
+
+		p {
+			padding: 10px;
+			line-height: 20px;
+			text-align: left;
+		}
+
+		.code .cid {
+			color: #4a86ef;
+			font-weight: bold;
+		}
+
+		.code .key {
+			font-weight: bolder;
+		}
+
+		.code .val {
+			color: #f2576d;
+		}
+
+		.code i {
+			color: #20891c;
+			font-weight: bold;
+		}
+	</style>
+
+	<script type="text/template" id="templ">
+		<h1>HEADER 1</h1>
+		<h2>HEADER 2</h2>
+		<h3>HEADER 3</h3>
+		<h4>HEADER 4</h4>
+		<h5>HEADER 5</h5>
+		<h6>HEADER 6</h6>
+	</script>
+</head>
+<body class="init">
+<section>
+	<%
+		var icon = baseStaticPath + '/images/indigo.png';
+
+		var loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+
+		var templ = `<b>&lt;script</b> type="<b>text/template</b>" id="<i>templ</i>"&gt;<br/>
+			&emsp;&lt;h1&gt;<span class="val">HEADER 1</span>&lt;/h1&gt;<br/>
+			&emsp;&lt;h2&gt;<span class="val">HEADER 2</span>&lt;/h2&gt;<br/>
+			&emsp;&lt;h3&gt;<span class="val">HEADER 3</span>&lt;/h3&gt;<br/>
+			&emsp;&lt;h4&gt;<span class="val">HEADER 4</span>&lt;/h4&gt;<br/>
+			&emsp;&lt;h5&gt;<span class="val">HEADER 5</span>&lt;/h5&gt;<br/>
+			&emsp;&lt;h6&gt;<span class="val">HEADER 6</span>&lt;/h6&gt;<br/>
+		<b>&lt;/script&gt;</b><br/><br/>`;
+
+		function code(cid, params, before = '', after = '') {
+			var opts = [];
+			for (var key in params) {
+				opts.push(`<span class="key">${key}</span>: <span class="val">${params[key]}</span>`);
+			}
+			return `<div class="code">
+				${before}
+				&lt;%- <b>$(</b> '<span class="cid">${cid}</span>', {${opts.join(', ')}} <b>)</b> %&gt;
+				${after}
+			</div>`;
+		}
+	%>
+<div class="right">
+	<h1 id="accordion">Accordion:</h1>
+	<p>
+		An accordion allows users to toggle the display of sections of content
+	</p>
+	<div ig-ns="accordion">
+		<p>
+			<b>Example:</b>
+			Default header
+		</p>
+		<%- code('accordion', {labels: `[<i>'Label1'</i>, <i>'Label2'</i>, <i>'Label3'</i>]`}) %>
+		<%- $('accordion', {labels: ['Label1', 'Label2', 'Label3']}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Custom content, multiple selection and default view index
+		</p>
+		<%- code('accordion', {labels: `['Label1', 'Label2', 'Label3']`, contents: `[<i>'View1'</i>, <i>'View2'</i>, <i>'View3'</i>]`, multiple: `<i>true</i>`, selectedIndex: `<i>1</i>`}) %>
+		<%- $('accordion', {labels: ['Label1', 'Label2', 'Label3'], contents: ['View1', 'View2', 'View3'], multiple: true, selectedIndex: 1}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Replace content by available templates
+		</p>
+		<%- code('accordion', {labels: `['Label1', 'Label2', 'Label3']`, contents: `['View1', 'View2', 'View3']`, templates: `[<i>'#templ'</i>, null, <i>'#templ'</i>]`}, templ) %>
+		<%- $('accordion', {labels: ['Label1', 'Label2', 'Label3'], contents: ['View1', 'View2', 'View3'], templates: ['#templ', null, '#templ']}) %><hr/>
+	</div>
+
+	<h1 id="button">Button:</h1>
+	<p>
+		Buttons are an essential way to interact with and navigate through an app, and should clearly communicate what action will occur after the user taps them. Buttons can consist of text and/or an icon, and can be enhanced with a wide variety of attributes.
+	</p>
+	<div ig-ns="button">
+		<p>
+			<b>Example:</b>
+			Default Button
+		</p>
+		<%- code('button', {label: `<i>'Hello World - 1'</i>`}) %>
+		<%- $('button', {label: `${locales.common.helloworld} - 1`}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Icon left align
+		</p>
+		<%- code('button', {label: `'Hello World - 2'`, icon: `<i>'${icon}'</i>`}) %>
+		<%- $('button', {label: `${locales.common.helloworld} - 2`, icon: icon}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Icon right align
+		</p>
+		<%- code('button', {label: `'Hello World - 3'`, icon: `'${icon}'`, icon_align: `<i>'right'</i>`}) %>
+		<%- $('button', {label: `${locales.common.helloworld} - 3`, icon: icon, icon_align: 'right'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Custom style
+		</p>
+		<%- code('button', {label: `'Hello World - 4'`, style: `<i>'color: green; font-weight: bold'</i>`}) %>
+		<%- $('button', {label: `${locales.common.helloworld} - 4`, style: 'color: green; font-weight: bold'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Assign component id and class name
+		</p>
+		<%- code('button', {label: `'Hello World - 5'`, id: `<i>'mybutton'</i>`, class: `<i>'custom'</i>`}) %>
+		<%- $('button', {label: `${locales.common.helloworld} - 5`, id: 'mybutton', class: 'custom'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Disabled button
+		</p>
+		<%- code('button', {label: `'Hello World - 6'`, class: `'custom'`, disabled: `<i>true</i>`}) %>
+		<%- $('button', {label: `${locales.common.helloworld} - 6`, class: 'custom', disabled: true}) %><hr/>
+	</div>
+
+	<h1 id="checkbox">Checkbox:</h1>
+	<p>
+		<p>A checkbox is an input component that holds a <em>boolean</em> value. Checkboxes are no different than HTML checkbox inputs. However, like other Ionic components, checkboxes are styled differently on each platform. Use the <code>checked</code> attribute to set the default value, and the <code>disabled</code> attribute to disable the user from changing the value.</p>
+	</p>
+	<div ig-ns="checkbox">
+		<p>
+			<b>Example:</b>
+			Default Checkbox
+		</p>
+		<%- code('checkbox', {label: `<i>'Hello World - 1'</i>`}) %>
+		<%- $('checkbox', {label: `${locales.common.helloworld} - 1`}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Checkbox with checked attribute
+		</p>
+		<%- code('checkbox', {label: `'Hello World - 2'`, checked: `<i>true</i>`}) %>
+		<%- $('checkbox', {label: `${locales.common.helloworld} - 2`, checked: true}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Partial Checkbox
+		</p>
+		<%- code('checkbox', {label: `'Hello World - 3'`, checked: true, partial: `<i>true</i>`}) %>
+		<%- $('checkbox', {label: `${locales.common.helloworld} - 3`, checked: true, partial: true}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Custom style Checkbox
+		</p>
+		<%- code('checkbox', {label: `'Hello World - 4'`, style: `<i>'color: green; font-weight: bold'</i>`}) %>
+		<%- $('checkbox', {label: `${locales.common.helloworld} - 4`, style: 'color: green; font-weight: bold'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Assign component id and class name
+		</p>
+		<%- code('checkbox', {label: `'Hello World - 5'`, id: `<i>'mycheckbox'</i>`, class: `<i>'custom'</i>`}) %>
+		<%- $('checkbox', {label: `${locales.common.helloworld} - 5`, id: 'mycheckbox', class: 'custom'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Disabled Checkbox
+		</p>
+		<%- code('checkbox', {label: `'Hello World - 6'`, class: `'custom'`, disabled: `<i>true</i>`}) %>
+		<%- $('checkbox', {label: `${locales.common.helloworld} - 6`, class: 'custom', disabled: true}) %><hr/>
+	</div>
+
+	<h1 id="datefield">DateField:</h1>
+	<p>
+	The DateTime component is used to present an interface which makes it easy for users to select dates and times. The DateTime component is similar to the native element, however, Ionic’s DateTime component makes it easy to display the date and time in a preferred format, and manage the datetime values.
+	</p>
+	<div ig-ns="datefield">
+		<p>
+			<b>Example:</b>
+			Default DateField
+		</p>
+		<%- code('datefield') %>
+		<%- $('datefield') %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Defined prompt text
+		</p>
+		<%- code('datefield', {prompt: `<i>'Select a date'</i>`}) %>
+		<%- $('datefield', {prompt: 'Select a date'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Set time using milliseconds
+		</p>
+		<%- code('datefield', {timestamp:`<i>Date.now()</i>`}) %>
+		<%- $('datefield', {timestamp: Date.now()}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Cusomize style
+		</p>
+		<%- code('datefield', {timestamp: `new Date(2012, 0, 25).getTime()`, style: `<i>'color: green; font-weight: bold'</i>`}) %>
+		<%- $('datefield', {timestamp: new Date(2012, 0, 25).getTime(), style: 'color: green; font-weight: bold'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Customized days of weeks
+		</p>
+		<%- code('datefield', {days: `<i>['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']</i>`}) %>
+		or
+		<%- code('datefield', {days: `<i>'customDay'</i>`}, `<b>&lt;script&gt;</b><span class="cid">var</span> <i>customDay</i> = <span class="val">['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']</span>;<b>&lt;/script&gt;</b><br/><br/>`) %>
+		<%- $('datefield', {days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Disabled DateField
+		</p>
+		<%- code('datefield', {prompt: `'Disabled'`, class: `'custom'`, disabled: `<i>true</i>`}) %>
+		<%- $('datefield', {prompt: 'Disabled', class: 'custom', disabled: true}) %><hr/>
+	</div>
+
+	<h1 id="dialog">Dialog:</h1>
+	<p>
+	Dialog are a great way to offer the user the ability to choose a specific action or list of actions. They also can provide the user with important information, or require them to make a decision (or multiple decisions).
+
+	From a UI perspective, Alerts can be thought of as a type of “floating” modal that covers only a portion of the screen. This means Alerts should only be used for quick actions like password verification, small app notifications, or quick options. More in depth user flows should be reserved for full screen 
+	</p>
+	<div ig-ns="dialog">
+		<p>
+			<b>Example:</b>
+			Default Dialog
+		</p>
+		<%- code('dialog', {id: `'dlg_default'`}) %>
+		<%- $('dialog', {id: 'dlg_default'}) %>
+		<%- $('button', {label: 'Default Dialog', attrs: {dialog_id: 'dlg_default'}} ) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Dialog define title, content and footer buttons
+		</p>
+		<%- code('dialog', {id: `'dlg_custom'`, title: `<i>'Dialog Title'</i>`, content: `<i>'Dialog Content'</i>`, 
+			buttons: `<i>[{label: 'OK', style: 'color: red; font-weight: bold'}, {label: 'Close', class: 'close'}]</i>`}) %>
+		<%- $('dialog', {id: 'dlg_custom', title: 'Dialog Title', content: 'Dialog Content', 
+			buttons: [{label: 'OK', style: 'color: red; font-weight: bold'}, {label: 'Close', class: 'close'}]}) %>
+		<%- $('button', {label: 'Custom Dialog', attrs: {dialog_id: 'dlg_custom'}} ) %><hr/>
+
+		<script type="text/template" id="dlg_header">
+			<span class="close pull-right">Close</span>
+			<span class="title">Template Dialog</span>
+		</script>
+
+		<script type="text/template" class="dlg_footer">
+			<button class="close">OK</button>
+		</script>
+
+		<%
+		var dlg_header = `<b>&lt;script</b> type="<b>text/template</b>" id="<i>dlg_header</i>"&gt;<br/>
+			&emsp;&lt;span class="close pull-right"&gt;<span class="val">Close</span>&lt;/span&gt;<br/>
+			&emsp;&lt;span class="title"&gt;<span class="val">Template Dialog</span>&lt;/span&gt;<br/>
+		<b>&lt;/script&gt;</b><br/><br/>`;
+
+		var dlg_footer = `<b>&lt;script</b> type="<b>text/template</b>" id="<i>dlg_footer</i>"&gt;<br/>
+			&emsp;&lt;button class="close"&gt;<span class="val">OK</span>&lt;/button&gt;<br/>
+		<b>&lt;/script&gt;</b><br/><br/>`;
+		%>
+
+		<p>
+			<b>Example:</b>
+			Dialog using pre-defined templates
+		</p>
+		<%- code('dialog', {id: `'dlg_template'`, header_template: `<i>'#dlg_header'</i>`, content_template: `<i>'#templ'</i>`, footer_template: `<i>'.dlg_footer'</i>`}, [dlg_header, templ, dlg_footer].join('')) %>
+		<%- $('dialog', {id: 'dlg_template', header_template: '#dlg_header', content_template: '#templ', footer_template: '.dlg_footer'}) %>
+		<%- $('button', {label: 'Template Dialog', attrs: {dialog_id: 'dlg_template'}} ) %><hr/>
+	</div>
+
+	<h1 id="dropdown">Dropdown:</h1>
+	<p>
+		Lists are used to display rows of information, such as a contact list, playlist, or menu. Or maybe something crazy we don’t even know exists yet!
+	</p>
+	<div ig-ns="dropdown">
+		<p>
+			<b>Example:</b>
+			Default Dropdown
+		</p>
+		<%- code('dropdown', {id: `'mydropdown'`}) %>
+		<%- $('dropdown', {id: 'mydropdown'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Menu Items, selected index and expand by default
+		</p>
+		<%- code('dropdown', {menus: `[<i>'Menu1'</i>, <i>'Menu2'</i>, <i>'Menu3'</i>]`, selectedIndex: `<i>0</i>`, open: `<i>true</i>`}) %>
+		<%- $('dropdown', {menus: ['Menu1', 'Menu2', 'Menu3'], selectedIndex: 0, open: true}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Set default prompt and cusomize style
+		</p>
+		<%- code('dropdown', {prompt: `<i>'Hello World - 1'</i>`, style: `<i>'color: green; font-weight: bold'</i>`}) %>
+		<%- $('dropdown', {prompt: `${locales.common.helloworld} - 1`, style: 'color: green; font-weight: bold'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Set menu as array of objects using pre-defined <code>label</code> labelField
+		</p>
+		<%- code('dropdown', {prompt: `'Hello World - 2'`, menus: `[{<i>label</i>: 'Menu1'}, {<i>label</i>: 'Menu2'}, {<i>label</i>: 'Menu3'}]`}) %>
+		<%- $('dropdown', {prompt: `${locales.common.helloworld} - 2`, menus: [{label: 'Menu1'}, {label: 'Menu2'}, {label: 'Menu3'}]}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Set menu as array of objects using custom labelField
+		</p>
+		<%- code('dropdown', {menus: `[{<i>lbl</i>: 'Menu1'}, {<i>lbl</i>: 'Menu2'}, {<i>lbl</i>: 'Menu3'}]`, labelField: `<i>'lbl'</i>`, selectedIndex: 1}) %>
+		<%- $('dropdown', {menus: [{lbl: 'Menu1'}, {lbl: 'Menu2'}, {lbl: 'Menu3'}], labelField: 'lbl', selectedIndex: 1}) %><hr/>
+
+		<%
+			function customLabelRenderer(menu, opts, defaultItemRenderer, index) {
+				return $('radio', {label: '%LABEL%', checked: true});
+			};
+
+			function customItemRenderer(menu, opts, defaultItemRenderer, index) {
+				return `<li data="%DATA%">${ $('checkbox', {label: '%LABEL%', style: menu.style}) }</li>`;
+			}
+		%>
+
+		<p>
+			<b>Example:</b>
+			Custom <code>itemRenderer</code> and <code>labelRenderer</code>
+		</p>
+		<%- code('dropdown', {menus: `[
+			{lf: 'Menu1', df: 1}, {lf: 'Menu2', df: 2, style: 'color: red'}, {lf: 'Menu3', df: 3, selected: true}]`, 
+			labelField: `'lf'`, dataField: `'df'`, labelRenderer: `<i>'&lt;input type="radio" checked/&gt;%LABEL%'</i>`, itemRenderer: `<i>'&lt;li&gt;&lt;input type="checkbox" data="%DATA%"/&gt;%LABEL%&lt;/li&gt;'</i>`}) %>
+
+		<%- $('dropdown', {menus: [
+			{lf: 'Menu1', df: 1}, {lf: 'Menu2', df: 2, style: 'color: red'}, {lf: 'Menu3', df: 3, selected: true}], 
+			labelField: 'lf', dataField: 'df', labelRenderer: customLabelRenderer, itemRenderer: customItemRenderer}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Default Dropdown
+		</p>
+		<%- code('dropdown', {prompt: `'Hello World - 3'`, class: `'custom'`, disabled: `<i>true</i>`}) %>
+		<%- $('dropdown', {prompt: `${locales.common.helloworld} - 3`, class: 'custom', disabled: true}) %><hr/>
+	</div>
+
+	<h1 id="fieldset">Fieldset:</h1>
+	<p>
+		Flexible layout (100%)
+	</p>
+	<div ig-ns="fieldset">
+		<p>
+			<b>Example:</b>
+			Float Right
+		</p>
+		<%- code('fieldset', {right: `<i>'&lt;button&gt;OK&lt;/button&gt;'</i>`, content: `<i>'&lt;input value="Hello World - 1"/&gt;'</i>`}) %>
+		<%- $('fieldset', {
+			right: '<button>OK</button>',
+			content: `<input value="${locales.common.helloworld} - 1"/>`,
+			parentStyle: 'display: block; width: 400px; padding: 10px; border: 1px solid red'
+		}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Float Left
+		</p>
+		<%- code('fieldset', {left: `<i>'&lt;button&gt;OK&lt;/button&gt;'</i>`, content: `<i>'&lt;input value="Hello World - 2"/&gt;'</i>`}) %>
+		<%- $('fieldset', {
+			left: '<button>OK</button>',
+			content: `<input value="${locales.common.helloworld} - 2"/>`,
+			parentStyle: 'display: block; width: 400px; padding: 10px; margin: 10px 0; border: 1px solid blue'
+		}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Content only
+		</p>
+		<%- code('fieldset', {content: `<i>'&lt;input value="Hello World - 3"/&gt;'</i>`}) %>
+		<%- $('fieldset', {
+			content: $('input', {value: `${locales.common.helloworld} - 3`}),
+			parentStyle: 'display: block; width: 400px; padding: 10px; margin: 10px 0; border: 1px solid green'
+		}) %><hr/>
+	</div>
+
+	<h1 id="file">File:</h1>
+	<p>
+		File Upload
+	</p>
+	<div ig-ns="file">
+		<p>
+			<b>Example:</b>
+			Custom Label
+		</p>
+		<%- code('file', {label: `<i>'Upload File...'</i>`}) %>
+		<%- $('file', {label: 'Upload File...'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Apply icon style and disabled click
+		</p>
+		<%- code('file', {label: `'Upload File...'`, class: `<i>'icon'</i>`, disabled: `<i>true</i>`}) %>
+		<%- $('file', {label: 'Upload File...', class: 'icon', disabled: true}) %><hr/>
+	</div>
+
+	<h1 id="image">Image:</h1>
+	<p>
+		Image Component
+	</p>
+	<div ig-ns="image">
+		<p>
+			<b>Example:</b>
+			Set image url
+		</p>
+		<%- code('image', {url: `<i>'${baseStaticPath}/images/indigo.png'</i>`}) %>
+		<%- $('image', {url: `${baseStaticPath}/images/indigo.png`}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Image pixels size
+		</p>
+		<%- code('image', {url: `'${baseStaticPath}/images/indigo.png'`, width: `<i>30</i>`, height: `<i>30</i>`}) %>
+		<%- $('image', {url: `${baseStaticPath}/images/indigo.png`, width: 30, height: 30, title: 'indigo JS'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Image em size and title
+		</p>
+		<%- code('image', {url: `'${baseStaticPath}/images/indigo.png'`, width: `<i>'2em'</i>`, height: `<i>'2em'</i>`, title: `<i>'indigo JS'</i>`}) %>
+		<%- $('image', {url: `${baseStaticPath}/images/indigo.png`, width: '2em', height: '2em', title: 'indigo JS'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Use IMG tag
+		</p>
+		<%- code('image', {url: `'${baseStaticPath}/images/indigo.png'`, width: 30, height: 30, img: `<i>true</i>`}) %>
+		<%- $('image', {url: `${baseStaticPath}/images/indigo.png`, width: 30, height: 30, img: true}) %><hr/>
+	</div>
+
+	<h1 id="input">Input:</h1>
+	<p>
+		Inputs are essential for collecting and handling user input in a secure way. They should follow styling and interaction guidelines for each platform, so that they are intuitive for users to interact with. Ionic uses Angular 2’s form library, which can be thought of as two dependent pieces, Controls, and Control Groups.
+
+		Each input field in a form has a Control, a function that binds to the value in the field, and performs validation. A Control Group is a collection of Controls. Control Groups handle form submission, and provide a high level API that can be used to determine whether the entire form is valid.
+	</p>
+	<div ig-ns="input">
+		<p>
+			<b>Example:</b>
+			Input value parameter
+		</p>
+		<%- code('input', {value: `<i>'Hello World - 1'</i>`}) %>
+		<%- $('input', {value: `${locales.common.helloworld} - 1`}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Custom class
+		</p>
+		<%- code('input', {value: `'Hello World - 2'`, class: `<i>'custom'</i>`}) %>
+		<%- $('input', {value: `${locales.common.helloworld} - 2`, class: 'custom'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Disable input field
+		</p>
+		<%- code('input', {value: `'Hello World - 3'`, class: `'custom'`, disabled: `<i>true</i>`}) %>
+		<%- $('input', {value: `${locales.common.helloworld} - 3`, class: 'custom', disabled: true}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Input field attributes
+		</p>
+		<%- code('input', {value: `'Hello'`, maxlen: `<i>5</i>`, required: `<i>true</i>`, style: `<i>'color: green'</i>`}) %>
+		<%- $('input', {value: 'Hello', maxlen: 5, required: true, style: 'color: green'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Change input type 
+		</p>
+		<%- code('input', {value: 'Hello World - 4', type: `<i>'password'</i>`}) %>
+		<%- $('input', {value: `${locales.common.helloworld} - 4`, type: 'password'}) %><hr/>
+	</div>
+
+	<h1 id="menu">Menu:</h1>
+	<p>
+		Menu is a side-menu navigation that can be dragged out or toggled to show. The content of a menu will be hidden when the menu is closed.
+
+		Menu adapts to the appropriate style based on the platform.
+	</p>
+	<div ig-ns="menu">
+		<p>
+			<b>Example:</b>
+			Create custom menu
+		</p>
+		<%- code('menu', {menus: `<i>[{label: 'Menu 1', class: 'icon us'}, {label: 'Menu 2', class: 'icon gb'}, {label: 'Menu 3', class: 'icon ca'}]</i>`, background: `'#0d76d0'`}) %>
+		<style>
+			.icon>p:before {
+				width: 16px;
+				background-image: url('<%- baseStaticPath %>/images/flags.png'); 
+				background-repeat: no-repeat;
+				line-height: 1.1;
+			}
+			.us>p:before {
+				background-position: -112px -223px;
+			}
+			.gb>p:before {
+				background-position: -160px -79px;
+			}
+			.ca>p:before {
+				background-position: -64px -47px;
+			}
+		</style>
+		<%- $('menu', {menus: [{label: 'Menu 1', class: 'icon us'}, {label: 'Menu 2', class: 'icon gb'}, {label: 'Menu 3', class: 'icon ca'}], background: '#0d76d0'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Select menu by index and defining custom <code>labelField</code>
+		</p>
+		<%- code('menu', {menus: `[{<i>lbl</i>: 'Menu 1'}, {<i>lbl</i>: 'Menu 2'}]`, labelField: `<i>'lbl'</i>`, selectedIndex: `<i>1</i>`, background: `'#5b87ac'`}) %>
+		<%- $('menu', {menus: [{lbl: 'Menu 1'}, {lbl: 'Menu 2'}], labelField: 'lbl', selectedIndex: 1, background: '#5b87ac'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Create menu using <code>itemRenderer</code>
+		</p>
+		<%- code('menu', {menus: `[{lbl: 'Menu 1'}]`, itemRenderer: `<i>'&lt;li class="icon us"&gt;&lt;p&gt;%LABEL%&lt;/p&gt;&lt;/li&gt;'</i>`, background: `'#cf4d4d'`}) %>
+		<%- $('menu', {menus: [{label: 'Menu 1'}], itemRenderer: function() { return `<li class="icon us"><p>%LABEL%</p></li>`}, background: '#cf4d4d'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Create sub menus
+		</p>
+		<%- code('menu', {menus: `<i>'[{label: 'Menu 1', nav: 'http://indigojs.com', target: '_blank', sub: [
+					{label: 'Sub1', class: 'custom'}, {label: 'Sub2', sub: [
+						{label: 'Sub2-1'}
+					]}
+				]
+			}]'</i>`, background: `'#5d9747'`}) %>
+		<%- $('menu', {menus: [{label: 'Menu 1', nav: 'http://indigojs.com', target: '_blank', sub: [
+					{label: 'Sub1', class: 'custom'}, {label: 'Sub2', sub: [
+						{label: 'Sub2-1'}
+					]}
+				]
+			}], background: '#5d9747'}) %><hr/>
+	</div>
+
+	<h1 id="radio">Radio:</h1>
+	<p>
+		Like the checkbox, a radio is an input component that holds a boolean value. Under the hood, radios are no different than HTML radio inputs. However, like other Ionic components, radios are styled differently on each platform. Unlike checkboxes, radio components form a group, where only one radio can be selected at a time. Use the checked attribute to set the default value, and the disabled attribute to disable the user from changing to that value.
+	</p>
+	<div ig-ns="radio">
+		<p>
+			<b>Example:</b>
+			Label and checked attibutes
+		</p>
+		<%- code('radio', {label: `<i>'Hello World - 1'</i>`, checked: `<i>true</i>`}) %>
+		<%- $('radio', {label: `${locales.common.helloworld} - 1`, checked: true}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Group radio buttons by group name
+		</p>
+		<%- code('radio', {label: `'Hello World - 3'`, group: `<i>'group_buttons'</i>`, checked: true}, `<b>&lt;%- $(</b>'<span class="cid">radio</span>', {<b>label</b>: <span class="val">'Hello World - 2'</span>, <b>group</b>: <i>'group_buttons'</i><b>}) %&gt;</b><br/>`) %>
+		<%- $('radio', {label: `${locales.common.helloworld} - 2`, group: 'group_buttons'}) %><br/>
+		<%- $('radio', {label: `${locales.common.helloworld} - 3`, group: 'group_buttons', checked: true}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Grouping radio buttons by using <code>radiogroup</code>
+		</p>
+		<%- code('radio', {label: `'Hello World - 5'`, group: `'group_yes_no'`, value: `<i>'no'</i>`, class: `'custom'`}, `<b>&lt;%- $(</b>'<span class="cid">radiogroup</span>', {<b>id</b>: <span class="val">'group_yes_no'</span>, <b>value</b>: <i>'no'</i><b>}) %&gt;</b><br/><b>&lt;%- $(</b>'<span class="cid">radio</span>', {<b>label</b>: <span class="val">'Hello World - 4'</span>, <b>group</b>: <span class="val">'group_yes_no'</span>, <b>value</b>: <i>'yes'</i>, <b>style</b>: <span class="val">'color: green; font-weight: bold'</span><b>}) %&gt;</b><br/>`) %>
+		<%- $('radiogroup', {id: 'group_yes_no', value: 'no'}) %>
+		<%- $('radio', {label: `${locales.common.helloworld} - 4`, group: 'group_yes_no', value: 'yes', style: 'color: green; font-weight: bold'}) %><br/>
+		<%- $('radio', {label: `${locales.common.helloworld} - 5`, group: 'group_yes_no', value: 'no', class: 'custom'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Disable radio button
+		</p>
+		<%- code('radio', {label: `'Hello World - 6'`, class: `'custom'`, disabled: `<i>true</i>`}) %>
+		<%- $('radio', {label: `${locales.common.helloworld} - 6`, class: 'custom', disabled: true}) %>
+	</div>
+
+	<h1 id="switch">Switch:</h1>
+	<p>
+		A toggle is an input component that holds a boolean value. Like the checkbox, toggles are often used to allow the user to switch a setting on or off. Attributes like value, disabled, and checked can be applied to the toggle to control its behavior.
+	</p>
+	<div ig-ns="switch">
+		<p>
+			<b>Example:</b>
+			Default switch
+		</p>
+		<%- code('switch') %>
+		<%- $('switch') %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Set title and change state
+		</p>
+		<%- code('switch', {title: `<i>'Network Control'</i>`, checked: `<i>true</i>`}) %>
+		<%- $('switch', {title: 'Network Control', checked: true}) %><hr/>
+
+		<style>
+			.myswitch input:checked + .slider {
+				background-color: red !important;
+			}
+		</style>
+		<p>
+			<b>Example:</b>
+			Apply custom style
+		</p>
+		<%- code('switch', {title: `'Settings'`, checked: true, class: `<i>'myswitch'</i>`}, `<b>&lt;style&gt;</b><br><i>.myswitch</i> input:checked + .slider {<br>	<span class="val">&emsp;background-color: red !important;</span><br>}<br><b>&lt;/style&gt;</b><br>`) %>
+		<%- $('switch', {title: 'Settings', checked: true, class: 'myswitch'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Disabled switch
+		</p>
+		<%- code('switch', {title: `'Power Control'`, checked: true, disabled: `<i>true</i>`}) %>
+		<%- $('switch', {title: 'Power Control', checked: true, disabled: true}) %><hr/>
+	</div>
+
+	<h1 id="tabs">Tabs:</h1>
+	<p>
+		Tabs powers a multi-tabbed interface with a Tab Bar and a set of views that can be tabbed through.
+	</p>
+	<div ig-ns="tabs">
+		<p>
+			<b>Example:</b>
+			Set header tabs
+		</p>
+		<%- code('tabs', {labels: `<i>['Label1', 'Label2', 'Label3']</i>`}) %>
+		<%- $('tabs', {labels: ['Label1', 'Label2', 'Label3']}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Set tab content and apply selected index
+		</p>
+		<%- code('tabs', {labels: `['Label1', 'Label2', 'Label3']`, contents: `<i>['View1', 'View2', 'View3']</i>`, selectedIndex: `<i>1</i>`}) %>
+		<%- $('tabs', {labels: ['Label1', 'Label2', 'Label3'], contents: ['View1', 'View2', 'View3'], selectedIndex: 1}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Using predefined templates
+		</p>
+		<%- code('tabs', {labels: `['Label1', 'Label2', 'Label3']`, contents: `['View1', 'View2', 'View3']`, templates: `[<i>'#templ'</i>, null, <i>'#templ'</i>]`}, templ) %>
+		<%- $('tabs', {labels: ['Label1', 'Label2', 'Label3'], contents: ['View1', 'View2', 'View3'], templates: ['#templ', null, '#templ']}) %><hr/>
+	</div>
+
+	<h1 id="text">Text:</h1>
+	<p>
+		An input is a field used to elicit a response from a user
+	</p>
+	<div ig-ns="text">
+		<p>
+			<b>Example:</b>
+			Displaying entire text
+		</p>
+		<%- code('text', {value: `<i>'Lorem ipsum dolor sit amet...'</i>`}) %>
+		<%- $('text', {value: loremIpsum, class: 'textstyle'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Defined maximum viewpoint height
+		</p>
+		<%- code('text', {value: `'Lorem ipsum dolor sit amet...'`, height: `<i>16</i>`}) %>
+		<%- $('text', {value: loremIpsum, class: 'textstyle', height: 16, parentStyle: 'border-color: blue'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Apply ellipsis
+		</p>
+		<%- code('text', {value: `'Lorem ipsum dolor sit amet...'`, height: 16, ellipsis: `<i>true</i>`}) %>
+		<%- $('text', {value: loremIpsum, class: 'textstyle', height: 16, parentStyle: 'border-color: yellow', ellipsis: true}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Set editable text with ellipsis
+		</p>
+		<%- code('text', {value: `'Lorem ipsum dolor sit amet...'`, height: 54, ellipsis: true, editable: `<i>true</i>`}) %>
+		<%- $('text', {value: loremIpsum, class: 'textstyle', height: 54, parentStyle: 'border-color: magenta', ellipsis: true, editable: true}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Customize style
+		</p>
+		<%- code('text', {value: `'Lorem ipsum dolor sit amet...'`, height: 98, ellipsis: true, style: `<i>'color: green; font-size: 18px; line-height: 2; font-weight: bold'</i>`}) %>
+		<%- $('text', {value: loremIpsum, class: 'textstyle', height: 98, parentStyle: 'border-color: red', ellipsis: true, style: 'color: green; font-size: 18px; line-height: 2; font-weight: bold'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Text rendering function
+		</p>
+		<%- code('text', {value: `<i>function(opts) { return opts.text.substring(0, 45) + '...' }</i>`}) %>
+		<%- $('text', {value: function(opts) { return opts.text.substring(0, 45) + '...' }, text: loremIpsum, class: 'textstyle', parentStyle: 'min-height: 22px; border-color: orange'}) %>
+	</div>
+
+	<h1 id="textarea">TextArea:</h1>
+	<p>
+		An input is a field used to elicit a response from a user
+	</p>
+	<div ig-ns="textarea">
+		<p>
+			<b>Example:</b>
+			Set text value
+		</p>
+		<%- code('textarea', {value: `<i>'Lorem ipsum dolor sit amet...'</i>`}) %>
+		<%- $('textarea', {value: loremIpsum}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Set total rows and disabled for editing
+		</p>
+		<%- code('textarea', {value: `'Lorem ipsum dolor sit amet...'`, rows: `<i>5</i>`, disabled: `<i>true</i>`}) %>
+		<%- $('textarea', {value: loremIpsum, rows: 5, disabled: true, parentStyle: 'width: 400px; border: 1px solid blue'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Defined maxlength and customize input
+		</p>
+		<%- code('textarea', {value: `<i>function(opts) { return loremIpsum.substring(0, 5) }</i>`, maxlen: `<i>5</i>`}) %>
+		<%- $('textarea', {value: function(opts) { return loremIpsum.substring(0, 5) }, maxlen: 5, class: 'textstyle'}) %><hr/>
+	</div>
+
+	<h1 id="togglebox">ToggleBox:</h1>
+	<p>
+		ToggleBox
+	</p>
+	<div ig-ns="togglebox">
+		<p>
+			<b>Example:</b>
+			Define Label and Toggle Content
+		</p>
+		<%- code('togglebox', {label: `<i>'Hello World 1'</i>`, content: `<i>'&lt;p class="toggle-content"&gt;Lorem ipsum dolor sit amet...&lt;/p&gt;'</i>`}) %>
+		<%- $('togglebox', {label: `${locales.common.helloworld} - 1`, content: `<p class="toggle-content">${loremIpsum}</p>`}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Defined Template
+		</p>
+		<%- code('togglebox', {label: `'Hello World 2'</i>`, template: `<i>'#templ'</i>`}, templ) %>
+		<%- $('togglebox', {label: `${locales.common.helloworld} - 2`, template: '#templ'}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Defined multiple toggle contents
+		</p>
+		<%- code('togglebox', {label: `'US Population'</i>`, content: `'<i>Header 1&lt;p class="toggle-content">Content 1&lt;/p&gt;Header 2&lt;p class="toggle-content">Content 2&lt;/p&gt;'</i>`}) %>
+		<%- $('togglebox', {label: `US Population`, content: `<b>Americans</b>: <p class="toggle-content">308,745,538 - 100.0 %</p>
+			<b>White</b>: <p class="toggle-content">196,817,552 - 63.7 %</p>
+			<b>Black</b>: <p class="toggle-content">37,685,848 - 12.2 %</p>
+			<b>Asian</b>: <p class="toggle-content">14,465,124 - 4.7 %</p>
+			<b>American Indian or Alaska Native</b>: <p class="toggle-content">2,247,098 - 0.7 %</p>
+			<b>Hispanic or Latino</b>: <p class="toggle-content">: 50,477,594 - 16.3 %</p>
+		`}) %><hr/>
+	</div>
+
+	<h1 id="tooltip">Tooltip:</h1>
+	<p>
+		Tooltip
+	</p>
+	<div ig-ns="tooltip">
+		<center>
+			<p>
+				<b>Example:</b>
+				Set tooltip top left
+			</p>
+			<%- code('tooltip', {target: `<i>'#topLeft'</i>`, position: `<i>'top-left'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Top Left'</i>, <b>id</b>: <i>'topLeft'</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Top Left', id: 'topLeft', class: 'border'}) %>
+			<%- $('tooltip', {target: '#topLeft', position: 'top-left'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Set tooltip top right
+			</p>
+			<%- code('tooltip', {target: `<i>'#topRight'</i>`, position: `<i>'top-right'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Top Right'</i>, <b>id</b>: <i>'topRight'</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Top Right', id: 'topRight', class: 'border'}) %>
+			<%- $('tooltip', {target: '#topRight', position: 'top-right'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Set tooltip top center
+			</p>
+			<%- code('tooltip', {target: `<i>'#topCenter'</i>`, position: `<i>'top'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Top Center'</i>, <b>id</b>: <i>'topCenter'</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Top Center', id: 'topCenter', class: 'border'}) %>
+			<%- $('tooltip', {target: '#topCenter', position: 'top'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Set tooltip bottom left
+			</p>
+			<%- code('tooltip', {target: `<i>'#bottomLeft'</i>`, position: `<i>'bottom-left'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Bottom Left'</i>, <b>id</b>: <i>'bottomLeft'</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Bottom Left', id: 'bottomLeft', class: 'border'}) %>
+			<%- $('tooltip', {target: '#bottomLeft', position: 'bottom-left'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Set tooltip bottom right
+			</p>
+			<%- code('tooltip', {target: `<i>'#bottomRight'</i>`, position: `<i>'bottom-right'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Bottom Right'</i>, <b>id</b>: <i>'bottomRight</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Bottom Right', id: 'bottomRight', class: 'border'}) %>
+			<%- $('tooltip', {target: '#bottomRight', position: 'bottom-right'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Set tooltip bottom center
+			</p>
+			<%- code('tooltip', {target: `<i>'#bottomCenter'</i>`, position: `<i>'bottom'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Bottom Center'</i>, <b>id</b>: <i>'bottomCenter</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Bottom Center', id: 'bottomCenter', class: 'border'}) %>
+			<%- $('tooltip', {target: '#bottomCenter', position: 'bottom'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Set tooltip left top
+			</p>
+			<%- code('tooltip', {target: `<i>'#leftTop'</i>`, position: `<i>'left-top'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Left Top'</i>, <b>id</b>: <i>'leftTop</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Left Top', id: 'leftTop', class: 'border'}) %>
+			<%- $('tooltip', {target: '#leftTop', position: 'left-top'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Set tooltip left bottom
+			</p>
+			<%- code('tooltip', {target: `<i>'#leftBottom'</i>`, position: `<i>'left-bottom'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Left Bottom'</i>, <b>id</b>: <i>'leftBottom</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Left Bottom', id: 'leftBottom', class: 'border'}) %>
+			<%- $('tooltip', {target: '#leftBottom', position: 'left-bottom'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Set tooltip left middle
+			</p>
+			<%- code('tooltip', {target: `<i>'#leftMiddle'</i>`, position: `<i>'left'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Left Middle'</i>, <b>id</b>: <i>'leftMiddle</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Left Middle', id: 'leftMiddle', class: 'border'}) %>
+			<%- $('tooltip', {target: '#leftMiddle', position: 'left'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Set tooltip right top
+			</p>
+			<%- code('tooltip', {target: `<i>'#rightTop'</i>`, position: `<i>'right-top'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Right Top'</i>, <b>id</b>: <i>'rightTop</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Right Top', id: 'rightTop', class: 'border'}) %>
+			<%- $('tooltip', {target: '#rightTop', position: 'right-top'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Set tooltip right top
+			</p>
+			<%- code('tooltip', {target: `<i>'#rightBottom'</i>`, position: `<i>'right-bottom'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Right Bottom'</i>, <b>id</b>: <i>'rightBottom</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Right Bottom', id: 'rightBottom', class: 'border'}) %>
+			<%- $('tooltip', {target: '#rightBottom', position: 'right-bottom'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Set tooltip right top
+			</p>
+			<%- code('tooltip', {target: `<i>'#rightMiddle'</i>`, position: `<i>'right'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Right Middle'</i>, <b>id</b>: <i>'rightMiddle</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Right Middle', id: 'rightMiddle', class: 'border'}) %>
+			<%- $('tooltip', {target: '#rightMiddle', position: 'right'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Defined text in tooltip, multiple target selectors and auto position
+			</p>
+			<%- code('tooltip', {value: `<i>'Both target should display the same tooltip'</i>`, target: `<i>'#mulSel1, .mulSel2'</i>`, style: `<i>'color: green; font-weight: bold'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Text 1'</i>, <b>id</b>: <i>'mulSel1</i>}<b>) %&gt;</b><br><b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Text 2'</i>, <b>class</b>: <i>'mulSel2</i>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: 'Text 2', class: 'mulSel2 border', parentStyle: 'float: right'}) %>
+			<%- $('text', {value: 'Text 1', id: 'mulSel1', class: 'border', parentStyle: 'float: left'}) %>
+			<br/>
+			<%- $('tooltip', {value: 'Both target should display the same tooltip', target: '#mulSel1, .mulSel2', style: 'color: green; font-weight: bold'}) %><hr/>
+
+			<p>
+				<b>Example:</b>
+				Auto scrolling
+			</p>
+			<%- code('tooltip', {position: 'right', target: `<i>'.rightText'</i>`, width: `'250px'`, height: `'200px'`, scroll: `<i>100</i>`, scrollTimeout: `<i>700</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <span class="val">'Lorem ipsum dolor sit amet...'</span>, <b>class</b>: <i>'rightText</i>, height: <span class="val">94</span>, ellipsis: <span class="val">true</span>}<b>) %&gt;</b><br>`) %>
+			<%- $('text', {value: loremIpsum, class: 'rightText textstyle', height: 94, ellipsis: true}) %>
+			<%- $('tooltip', {position: 'right', target: '.rightText', width: '250px', height: '200px', scroll: 100, scrollTimeout: 700}) %><hr/>
+		</center>
+	</div>
+</div>
+<div class="left">
+	<ul>
+		<li><a href="#accordion">Accordion</a></li>
+		<li><a href="#button">Button</a></li>
+		<li><a href="#checkbox">Checkbox</a></li>
+		<li><a href="#datefield">DateField</a></li>
+		<li><a href="#dialog">Dialog</a></li>
+		<li><a href="#dropdown">Dropdown</a></li>
+		<li><a href="#fieldset">Fieldset</a></li>
+		<li><a href="#file">File</a></li>
+		<li><a href="#image">Image</a></li>
+		<li><a href="#input">Input</a></li>
+		<li><a href="#menu">Menu</a></li>
+		<li><a href="#radio">Radio</a></li>
+		<li><a href="#switch">Switch</a></li>
+		<li><a href="#tabs">Tabs</a></li>
+		<li><a href="#text">Text</a></li>
+		<li><a href="#textarea">TextArea</a></li>
+		<li><a href="#togglebox">ToggleBox</a></li>
+		<li><a href="#tooltip">Tooltip</a></li>
+	</ul>
+</div>
+<section>
+<%- $finalize(true) %>
+</body>
+</html>

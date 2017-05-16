@@ -1,3 +1,4 @@
+**/*min.js
 examples/**/*/vendor
 tools/generator/web/static/js/vendor
 tools/generator/web/default/templates/**/*min.js

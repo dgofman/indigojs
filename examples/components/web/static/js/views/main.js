@@ -3,7 +3,39 @@
 window.top.ready(window, function($, indigo) {
 	indigo.debug('Init Main');
 
-	indigo.import('checkbox', 'switch', 'button', function(Checkbox, Switch, Button) { //callback class references
+	var map = {}, as = [], active, start = 0,
+		h1s = document.querySelectorAll('h1[id]');
+	h1s.forEach(function(h1, index) {
+		var top, next = h1s[index + 1],
+			a = document.querySelector('.left a[href="#' + h1.id + '"]');
+		if (next) {
+			top = next.getBoundingClientRect().top;
+		} else {
+			top = document.body.scrollHeight;
+		}
+		map[h1.id] = {start: start, end: top, a: a};
+		as.push(a);
+		start = top;
+	});
+	window.onscroll = function() {
+		var el = document.scrollingElement || document.documentElement,
+			pos = el.scrollTop + 300;
+		for (var id in map) {
+			var o = map[id];
+			if (pos >= o.start && pos < o.end) {
+				if (active !== o.a) {
+					active = o.a;
+					as.forEach(function(a) {
+						a.className = null;
+					});
+					active.className = 'selected';
+				}
+			}
+		}
+	};
+	window.onscroll();
+
+	/*indigo.import('checkbox', 'switch', 'button', function(Checkbox, Switch, Button) { //callback class references
 
 		indigo.namespace('[ig-ns=one-binding', function(ns) {
 			var login_model = {username: 'User', password: '12345'};
@@ -71,5 +103,5 @@ window.top.ready(window, function($, indigo) {
 		indigo.bind('bindState', [{checked: chk}, {checked: sch}, {editable: txt}, {disabled: btn, $watch: function(name, value) {
 			this[name] = !value;
 		}}], model);
-	});
+	});*/
 });

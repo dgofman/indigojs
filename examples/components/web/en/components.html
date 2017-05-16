@@ -8,28 +8,43 @@
 	</script>
 
 	<style>
-		body {
-			padding: 10px;
+		section {
+			display: flex;
+			justify-content: space-between;
+			font-family: 'Helvetica Neue', Helvetica, sans-serif;
 		}
 
 		section>div.right {
-			width: 80%;
-			float: right;
-			padding-bottom: 40px;
+			flex-grow: 1;
+			padding: 10px 10px 40px;
 		}
 
 		section>div.left {
-			width: 20%;
+			background-color: #f5f2f2;
+			width: 100%;
+			max-width: 200px;
+			border-right: 1px solid #999;
 		}
 
 		section>div.left ul {
 			position: fixed;
 			top: 10px;
 			left: 10px;
+			list-style: none;
+			line-height: 25px;
+			padding: 5px;
+		}
+
+		ul a {
+			color: #444;
+		}
+
+		.selected {
+			color: #6F00FF;
 		}
 
 		h1 {
-			color: blue;
+			color: #6F00FF;
 			padding: 40px 0 10px;
 		}
 
@@ -129,10 +144,32 @@
 			</div>`;
 		}
 	%>
+<div class="left">
+	<ul>
+		<li><a href="#accordion">Accordion</a></li>
+		<li><a href="#button">Button</a></li>
+		<li><a href="#checkbox">Checkbox</a></li>
+		<li><a href="#datefield">DateField</a></li>
+		<li><a href="#dialog">Dialog</a></li>
+		<li><a href="#dropdown">Dropdown</a></li>
+		<li><a href="#fieldset">Fieldset</a></li>
+		<li><a href="#file">File</a></li>
+		<li><a href="#image">Image</a></li>
+		<li><a href="#input">Input</a></li>
+		<li><a href="#menu">Menu</a></li>
+		<li><a href="#radio">Radio</a></li>
+		<li><a href="#switch">Switch</a></li>
+		<li><a href="#tabs">Tabs</a></li>
+		<li><a href="#text">Text</a></li>
+		<li><a href="#textarea">TextArea</a></li>
+		<li><a href="#togglebox">ToggleBox</a></li>
+		<li><a href="#tooltip">Tooltip</a></li>
+	</ul>
+</div>
 <div class="right">
 	<h1 id="accordion">Accordion:</h1>
 	<p>
-		An accordion allows users to toggle the display of sections of content
+		An Accordion navigator container has a collection of child containers declared as <code>contents</code> array collection, but only one of them at a time is visible. You may expand multiple containers by setting <code>multiple</code> as true. There is one navigator button associated with each child container, and each navigator button belongs to the Accordion container, not to the child. When the user clicks a navigator button, the associated child container is displayed. The transition to the new child uses an animation to make it clear to the user that one child is disappearing and a different one is appearing.
 	</p>
 	<div ig-ns="accordion">
 		<p>
@@ -160,6 +197,10 @@
 	<h1 id="button">Button:</h1>
 	<p>
 		Buttons are an essential way to interact with and navigate through an app, and should clearly communicate what action will occur after the user taps them. Buttons can consist of text and/or an icon, and can be enhanced with a wide variety of attributes.
+		The Button component represents a commonly used rectangular button. Button components display a text label, an icon, or both.
+		A Button component is typically associated with an event handler method that listens for a click event and performs the specified task after the click event is dispatched. When the user clicks an enabled button, the button dispatches the click and buttonDown events. Even if it is not enabled, a button dispatches other events including mouseMove, mouseOver, mouseOut, rollOver, rollOut, mouseDown, and mouseUp.
+
+		You can change the appearance of the button by associating a different skin with each button state. A Button component can also be set to function as a push button or a toggle button.
 	</p>
 	<div ig-ns="button">
 		<p>
@@ -255,7 +296,10 @@
 
 	<h1 id="datefield">DateField:</h1>
 	<p>
-	The DateTime component is used to present an interface which makes it easy for users to select dates and times. The DateTime component is similar to the native element, however, Ionic’s DateTime component makes it easy to display the date and time in a preferred format, and manage the datetime values.
+	The DateField component is used to present an interface which makes it easy for users to select dates. The DateField component is similar to the native element, however, Ionic’s DateField component makes it easy to display the date in a preferred format, and manage the date values.
+
+	The DateField control is a text field that shows the date with a calendar icon on its right side. When the user clicks anywhere inside the bounding box of the control, a calendar control pops up and shows the dates in the month of the current date. If no date is selected, the text field is blank and the month of the current date is displayed in the DateChooser control.
+	When the calendar control is open, the user can scroll through months and years, and select a date. When a date is selected, the DateChooser control closes, and the text field shows the selected date.
 	</p>
 	<div ig-ns="datefield">
 		<p>
@@ -958,29 +1002,7 @@
 		</center>
 	</div>
 </div>
-<div class="left">
-	<ul>
-		<li><a href="#accordion">Accordion</a></li>
-		<li><a href="#button">Button</a></li>
-		<li><a href="#checkbox">Checkbox</a></li>
-		<li><a href="#datefield">DateField</a></li>
-		<li><a href="#dialog">Dialog</a></li>
-		<li><a href="#dropdown">Dropdown</a></li>
-		<li><a href="#fieldset">Fieldset</a></li>
-		<li><a href="#file">File</a></li>
-		<li><a href="#image">Image</a></li>
-		<li><a href="#input">Input</a></li>
-		<li><a href="#menu">Menu</a></li>
-		<li><a href="#radio">Radio</a></li>
-		<li><a href="#switch">Switch</a></li>
-		<li><a href="#tabs">Tabs</a></li>
-		<li><a href="#text">Text</a></li>
-		<li><a href="#textarea">TextArea</a></li>
-		<li><a href="#togglebox">ToggleBox</a></li>
-		<li><a href="#tooltip">Tooltip</a></li>
-	</ul>
-</div>
 <section>
-<%- $finalize(true) %>
+<%- $finalize(true, `${baseStaticPath}/js/views/main.js`) %>
 </body>
 </html>

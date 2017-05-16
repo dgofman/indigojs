@@ -4,8 +4,8 @@ window.top.ready(window, function($, indigo) {
 	indigo.debug('Init Main');
 
 	var map = {}, as = [], active, start = 0,
-		h1s = document.querySelectorAll('h1[id]');
-	h1s.forEach(function(h1, index) {
+		h1s = $('h1[id]');
+	h1s.each(function(index, h1) {
 		var top, next = h1s[index + 1],
 			a = document.querySelector('.left a[href="#' + h1.id + '"]');
 		if (next) {

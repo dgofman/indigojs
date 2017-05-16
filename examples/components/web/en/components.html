@@ -21,8 +21,8 @@
 
 		section>div.left {
 			background-color: #f5f2f2;
-			width: 100%;
-			max-width: 200px;
+			min-width: 150px;
+			max-width: 150px;
 			border-right: 1px solid #999;
 		}
 
@@ -41,6 +41,7 @@
 
 		.selected {
 			color: #6F00FF;
+			font-weight: bold;
 		}
 
 		h1 {
@@ -139,7 +140,7 @@
 			}
 			return `<div class="code">
 				${before}
-				&lt;%- <b>$(</b> '<span class="cid">${cid}</span>', {${opts.join(', ')}} <b>)</b> %&gt;
+				<b>&lt;%- $(</b> '<span class="cid">${cid}</span>', {${opts.join(', ')}} <b>) %&gt;</b>
 				${after}
 			</div>`;
 		}
@@ -152,8 +153,8 @@
 		<li><a href="#datefield">DateField</a></li>
 		<li><a href="#dialog">Dialog</a></li>
 		<li><a href="#dropdown">Dropdown</a></li>
-		<li><a href="#fieldset">Fieldset</a></li>
 		<li><a href="#file">File</a></li>
+		<li><a href="#hbox">HBox</a></li>
 		<li><a href="#image">Image</a></li>
 		<li><a href="#input">Input</a></li>
 		<li><a href="#menu">Menu</a></li>
@@ -403,7 +404,7 @@
 
 	<h1 id="dropdown">Dropdown:</h1>
 	<p>
-		Lists are used to display rows of information, such as a contact list, playlist, or menu. Or maybe something crazy we don’t even know exists yet!
+		The Dropdown component contains a drop-down list from which the user can select one value. Its functionality is similar to that of the SELECT form element in HTML. The Dropdown component can be editable, in which case the user can type entries that are not in the list into the TextInput portion of the Dropdown component.
 	</p>
 	<div ig-ns="dropdown">
 		<p>
@@ -471,47 +472,22 @@
 		<%- $('dropdown', {prompt: `${locales.common.helloworld} - 3`, class: 'custom', disabled: true}) %><hr/>
 	</div>
 
-	<h1 id="fieldset">Fieldset:</h1>
-	<p>
-		Flexible layout (100%)
-	</p>
-	<div ig-ns="fieldset">
-		<p>
-			<b>Example:</b>
-			Float Right
-		</p>
-		<%- code('fieldset', {right: `<i>'&lt;button&gt;OK&lt;/button&gt;'</i>`, content: `<i>'&lt;input value="Hello World - 1"/&gt;'</i>`}) %>
-		<%- $('fieldset', {
-			right: '<button>OK</button>',
-			content: `<input value="${locales.common.helloworld} - 1"/>`,
-			parentStyle: 'display: block; width: 400px; padding: 10px; border: 1px solid red'
-		}) %><hr/>
-
-		<p>
-			<b>Example:</b>
-			Float Left
-		</p>
-		<%- code('fieldset', {left: `<i>'&lt;button&gt;OK&lt;/button&gt;'</i>`, content: `<i>'&lt;input value="Hello World - 2"/&gt;'</i>`}) %>
-		<%- $('fieldset', {
-			left: '<button>OK</button>',
-			content: `<input value="${locales.common.helloworld} - 2"/>`,
-			parentStyle: 'display: block; width: 400px; padding: 10px; margin: 10px 0; border: 1px solid blue'
-		}) %><hr/>
-
-		<p>
-			<b>Example:</b>
-			Content only
-		</p>
-		<%- code('fieldset', {content: `<i>'&lt;input value="Hello World - 3"/&gt;'</i>`}) %>
-		<%- $('fieldset', {
-			content: $('input', {value: `${locales.common.helloworld} - 3`}),
-			parentStyle: 'display: block; width: 400px; padding: 10px; margin: 10px 0; border: 1px solid green'
-		}) %><hr/>
-	</div>
-
 	<h1 id="file">File:</h1>
 	<p>
-		File Upload
+		The FileSystemTree control displays the contents of a file system directory as a tree.
+		You specify the directory whose content is displayed by setting the directory property to an instance of the flash.filesystem.File class. (File instances can represent directories as well as files.) Whenever this property changes for any reason, the control dispatches a directoryChange event.
+
+		You can set the enumerationMode property to specify whether to show this directory's files, its subdirectories, or both. There are three ways to show both files and subdirectories within each tree node: directories first, files first, or intermixed.
+
+		You can set the extensions property to filter the list so that only files with the specified extensions are displayed. (Extensions on directories are ignored.) You can also specify an additional filtering function of your own by setting the filterFunction property.
+
+		You can use the showExtensions property to show or hide file extensions, and the showIcons property to show or hide icons.
+
+		You can do custom-sorting within each tree node by setting the nameCompareFunction property to a function that compares two file or directory names.
+
+		If the user double-clicks a closed directory node, or clicks its disclosure icon, this control dispatches a directoryOpening event. If the user double-clicks an open directory node, or clicks its disclosure icon, this control dispatches a directoryClosing event. A handler can cancel either event by calling event.preventDefault() in which case the node doesn't open.
+
+		If the user double-clicks a file node, this control dispatches a select event.
 	</p>
 	<div ig-ns="file">
 		<p>
@@ -529,9 +505,67 @@
 		<%- $('file', {label: 'Upload File...', class: 'icon', disabled: true}) %><hr/>
 	</div>
 
+	<h1 id="hbox">HBox:</h1>
+	<p>
+		The Halo HBox container lays out its children in a single horizontal row. You use the <mx:HBox> tag instead of the <mx:Box> tag as a shortcut to avoid having to set the direction property to "horizontal".
+		Note: Adobe recommends that, when possible, you use the Spark containers with HorizontalLayout instead of the Halo HBox container.
+
+		An HBox container has the following default sizing characteristics: (left, right and content values.)
+	</p>
+	<div ig-ns="hbox">
+		<p>
+			<b>Example:</b>
+			Float Right
+		</p>
+		<%- code('hbox', {right: `<i>'&lt;button&gt;OK&lt;/button&gt;'</i>`, content: `<i>'&lt;input value="Hello World - 1"/&gt;'</i>`}) %>
+		<%- $('hbox', {
+			right: '<button>OK</button>',
+			content: `<input value="${locales.common.helloworld} - 1"/>`,
+			parentStyle: 'display: block; width: 400px; padding: 10px; border: 1px solid red'
+		}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Float Left
+		</p>
+		<%- code('hbox', {left: `<i>'&lt;button&gt;OK&lt;/button&gt;'</i>`, content: `<i>'&lt;input value="Hello World - 2"/&gt;'</i>`}) %>
+		<%- $('hbox', {
+			left: '<button>OK</button>',
+			content: `<input value="${locales.common.helloworld} - 2"/>`,
+			parentStyle: 'display: block; width: 400px; padding: 10px; margin: 10px 0; border: 1px solid blue'
+		}) %><hr/>
+
+		<p>
+			<b>Example:</b>
+			Content only
+		</p>
+		<%- code('hbox', {content: `<i>'&lt;input value="Hello World - 3"/&gt;'</i>`}) %>
+		<%- $('hbox', {
+			content: $('input', {value: `${locales.common.helloworld} - 3`}),
+			parentStyle: 'display: block; width: 400px; padding: 10px; margin: 10px 0; border: 1px solid green'
+		}) %><hr/>
+	</div>
+
 	<h1 id="image">Image:</h1>
 	<p>
-		Image Component
+		The Image control lets you import JPEG, PNG, GIF, and SWF files at runtime. You can also embed any of these files and SVG files at compile time by using @Embed(source='filename').
+		Note: Flex also includes the SWFLoader control for loading Flex applications. You typically use the Image control for loading static graphic files and SWF files, and use the SWFLoader control for loading Flex applications. The Image control is also designed to be used in custom item renderers and item editors.
+
+		Note: Flex also includes the BitmapImage class. This class is used for embedding images into skins and FXG components.
+
+		Embedded images load immediately, because they are already part of the Flex SWF file. However, they add to the size of your application and slow down the application initialization process. Embedded images also require you to recompile your applications whenever your image files change.
+
+		The alternative to embedding a resource is to load the resource at runtime. You can load a resource from the local file system in which the SWF file runs, or you can access a remote resource, typically though an HTTP request over a network. These images are independent of your Flex application, so you can change them without causing a recompile operation as long as the names of the modified images remain the same. The referenced images add no additional overhead to an application's initial loading time. However, you might experience a delay when you use the images and load them into Flash Player or AIR.
+
+		A SWF file can access one type of external resource only, either local or over a network; it cannot access both types. You determine the type of access allowed by the SWF file using the use-network flag when you compile your application. When the use-network flag is set to false, you can access resources in the local file system, but not over the network. The default value is true, which allows you to access resources over the network, but not in the local file system.
+
+		When you load images at runtime, you should be aware of the security restrictions of Flash Player or AIR. For example, in Flash Player you can load an image from any domain by using a URL, but the default security settings won't allow your code to access the bitmap data of the image unless it came from the same domain as the application. To access bitmap data from images on other servers, you must use a crossdomain.xml file.
+
+		The PNG and GIF formats also support the use of an alpha channel for creating transparent images.
+
+		When you use the Image control as a drop-in item renderer in a List control, either set an explicit row height of the List control, by using the rowHeight property, or set the variableRowHeight property of the List control to true to size the row correctly.
+
+		If you find memory problems related to Images objects, try explicitly setting the source property to null when you are done using the Image object in your application.
 	</p>
 	<div ig-ns="image">
 		<p>
@@ -568,6 +602,17 @@
 		Inputs are essential for collecting and handling user input in a secure way. They should follow styling and interaction guidelines for each platform, so that they are intuitive for users to interact with. Ionic uses Angular 2’s form library, which can be thought of as two dependent pieces, Controls, and Control Groups.
 
 		Each input field in a form has a Control, a function that binds to the value in the field, and performs validation. A Control Group is a collection of Controls. Control Groups handle form submission, and provide a high level API that can be used to determine whether the entire form is valid.
+
+		A TextInput component can be enabled or disabled in an application. When the TextInput component is disabled, it cannot receive input from mouse or keyboard. An enabled TextInput component implements focus, selection, and navigation like an ActionScript TextField object.
+
+		You can use styles to customize the TextInput component by changing its appearance--for example, when it is disabled. Some other customizations that you can apply to this component include formatting it with HTML or setting it to be a password field whose text must be hidden.
+
+		The TextInput control is a single-line text field that is optionally editable. All text in this control must use the same styling unless it is HTML text. The TextInput control supports the HTML rendering capabilities of Flash Player and AIR.
+		TextInput controls do not include a label, although you can add one by using a Label control or by nesting the TextInput control in a FormItem control in a Form container. When used in a FormItem control, a TextInput control indicates whether a value is required. TextInput controls have a number of states, including filled, selected, disabled, and error. TextInput controls support formatting, validation, and keyboard equivalents; they also dispatch change and enter events.
+
+		If you disable a TextInput control, it displays its contents in the color specified by the disabledColor style. To disallow editing the text, you set the editable property to false. To conceal the input text by displaying asterisks instead of the characters entered, you set the displayAsPassword property to true.
+
+		The TextInput control is used as a subcomponent in several other controls, such as the RichTextEditor, NumericStepper, and ComboBox controls. As a result, if you assign style properties to a TextInput control by using a CSS type selector, Flex applies those styles to the TextInput when it appears in the other controls unless you explicitly override them.
 	</p>
 	<div ig-ns="input">
 		<p>
@@ -611,6 +656,11 @@
 		Menu is a side-menu navigation that can be dragged out or toggled to show. The content of a menu will be hidden when the menu is closed.
 
 		Menu adapts to the appropriate style based on the platform.
+
+		A Menu control defines a horizontal, top-level menu bar that contains one or more menus. Clicking on a top-level menu item opens a pop-up submenu that is an instance of the Menu control.
+		The top-level menu bar of the MenuBar control is generally always visible. It is not intended for use as a pop-up menu. The individual submenus pop up as the user selects them with the mouse or keyboard. Open submenus disappear when a menu item is selected, or if the menu is dismissed by the user clicking outside the menu.
+
+		For information and an example on the attributes that you can use in the data provider for the Menu control, see the Menu control.
 	</p>
 	<div ig-ns="menu">
 		<p>
@@ -672,6 +722,20 @@
 	<h1 id="radio">Radio:</h1>
 	<p>
 		Like the checkbox, a radio is an input component that holds a boolean value. Under the hood, radios are no different than HTML radio inputs. However, like other Ionic components, radios are styled differently on each platform. Unlike checkboxes, radio components form a group, where only one radio can be selected at a time. Use the checked attribute to set the default value, and the disabled attribute to disable the user from changing to that value.
+
+		The RadioButton component lets you force a user to make a single selection from a set of choices. This component must be used in a group of at least two RadioButton instances. Only one member of the group can be selected at any given time. Selecting one radio button in a group deselects the currently selected radio button in the group. You set the groupName parameter to indicate which group a radio button belongs to. When the user clicks or tabs into a RadioButton component group, only the selected radio button receives focus.
+		A radio button can be enabled or disabled. A disabled radio button does not receive mouse or keyboard input.
+
+		The RadioButtonGroup class defines a group of RadioButton components to act as a single component. When one radio button is selected, no other radio buttons from the same group can be selected.
+
+		The RadioButton control lets the user make a single choice within a set of mutually exclusive choices. A RadioButton group is composed of two or more RadioButton controls with the same groupName property. While grouping RadioButton instances in a RadioButtonGroup is optional, a group lets you do things like set a single event handler on a group of buttons, rather than on each individual button. The RadioButton group can refer to a group created by the <mx:RadioButtonGroup> tag. The user selects only one member of the group at a time. Selecting an unselected group member deselects the currently selected RadioButton control within that group.
+
+		The RadioButtonGroup control defines a group of RadioButton controls that act as a single mutually exclusive control; therefore, a user can select only one RadioButton control at a time. While grouping RadioButton instances in a RadioButtonGroup is optional, a group lets you do things like set a single event handler on a group of buttons, rather than on each individual button.
+		The id property is required when you use the <mx:RadioButtonGroup> tag to define the name of the group.
+
+		Notice that the RadioButtonGroup control is a subclass of EventDispatcher, not UIComponent, and implements the IMXMLObject interface. All other Flex visual components are subclasses of UIComponent, which implements the IUIComponent interface. The RadioButtonGroup control has support built into the Flex compiler that allows you to use the RadioButtonGroup control as a child of a Flex container, even though it does not implement IUIComponent. All other container children must implement the IUIComponent interface.
+
+		Therefore, if you try to define a visual component as a subclass of EventDispatcher that implements the IMXMLObject interface, you will not be able to use it as the child of a container.
 	</p>
 	<div ig-ns="radio">
 		<p>
@@ -748,6 +812,16 @@
 	<h1 id="tabs">Tabs:</h1>
 	<p>
 		Tabs powers a multi-tabbed interface with a Tab Bar and a set of views that can be tabbed through.
+
+		The TabBar control lets you create a horizontal or vertical group of tab navigation items by defining the labels and data associated with each tab. Use the TabBar control instead of the TabNavigator container to create tabs that, by default, are not associated with multiple views.
+		Using the TabBar control lets the tabs be directly determined by the data so that you can change the view or views in any way.
+
+		The MX TabNavigator container extends the MX ViewStack container by including a TabBar container for navigating between its child containers.
+		Note: The direct children of an MX navigator container must be MX containers, either MX layout or MX navigator containers, or the Spark NavigatorContent container. You cannot directly nest a control or a Spark container other than the Spark NavigatorContent container within a navigator; they must be children of an child MX container.
+
+		Like a ViewStack container, a TabNavigator container has a collection of child containers, in which only one child at a time is visible. Flex automatically creates a TabBar container at the top of the TabNavigator container, with a tab corresponding to each child container. Each tab can have its own label and icon. When the user clicks a tab, the corresponding child container becomes visible as the selected child of the TabNavigator container.
+
+		When you change the currently visible child container, you can use the hideEffect property of the container being hidden and the showEffect property of the newly visible child container to apply an effect to the child containers. The TabNavigator container waits for the hideEffect of the child container being hidden to complete before it reveals the new child container. You can interrupt a currently playing effect if you change the selectedIndex property of the TabNavigator container while an effect is playing.
 	</p>
 	<div ig-ns="tabs">
 		<p>
@@ -774,7 +848,20 @@
 
 	<h1 id="text">Text:</h1>
 	<p>
-		An input is a field used to elicit a response from a user
+		The Text control displays multiline, noneditable text. Use the Label control if you need only a single line of text.
+		The Text control does not support scroll bars. If you need scrolling, you should use a non-editable TextArea control.
+
+		You can format the text in a Text control using HTML tags, which are applied after the control's CSS styles are applied. You can also put padding around the four sides of the text.
+
+		The text in a Text control is selectable by default, but you can make it unselectable by setting the selectable property to false.
+
+		If the control is not as wide as the text, the text will wordwrap. The text is always aligned top-left in the control.
+
+		To size a Text component, it's common to specify an explicit width and let Flex determine the height as required to display all the text. If you specify an explicit height, some of the text may get clipped; unlike Label, Text does not truncate its text with "...". It's also common to use percentage widths and heights with Text.
+
+		If you leave both the width and the height unspecified, Flex calculates them based on any explicit line breaks in the text, with no wordwrapping within lines. For example, if you set the text property, the newline character "\n" causes a line break. If you set the htmlText property, the HTML markup <br> causes a line break. If your text or htmlText is lengthy and doesn't contain line breaks, you can get a very wide Text component; you can set the maxWidth to limit how wide the component is allowed to grow.
+
+		Text controls do not have backgrounds or borders and cannot take focus.
 	</p>
 	<div ig-ns="text">
 		<p>
@@ -822,7 +909,8 @@
 
 	<h1 id="textarea">TextArea:</h1>
 	<p>
-		An input is a field used to elicit a response from a user
+		The TextArea control is a multiline text field with a border and optional scroll bars. The TextArea control supports the HTML rendering capabilities of Flash Player and AIR.
+		If you disable a TextArea control, it displays its contents in the color specified by the disabledColor style. You can also set a TextArea control to read-only to disallow editing of the text. To conceal input text by displaying characters as asterisks, set the TextArea's displayAsPassword property.
 	</p>
 	<div ig-ns="textarea">
 		<p>
@@ -849,7 +937,16 @@
 
 	<h1 id="togglebox">ToggleBox:</h1>
 	<p>
-		ToggleBox
+		The ToggleButtonBar control defines a horizontal or vertical group of buttons that maintain their selected or deselected state. Only one button in the ToggleButtonBar control can be in the selected state. This means that when a user selects a button in a ToggleButtonBar control, the button stays in the selected state until the user selects a different button.
+		If you set the toggleOnClick property of the ToggleButtonBar container to true, selecting the currently selected button deselects it. By default the toggleOnClick property is set to false.
+
+		You can use the ButtonBar control to define a group of push buttons.
+
+		The typical use for a toggle button is for maintaining selection among a set of options, such as switching between views in a ViewStack container.
+
+		The ToggleButtonBar control creates Button controls based on the value of its dataProvider property. Even though ToggleButtonBar is a subclass of Container, do not use methods such as Container.addChild() and Container.removeChild() to add or remove Button controls. Instead, use methods such as addItem() and removeItem() to manipulate the dataProvider property. The ToggleButtonBar control automatically adds or removes the necessary children based on changes to the dataProvider property.
+
+		To control the styling of the buttons of the ToggleButtonBar control, use the buttonStyleName, firstButtonStyleName, and lastButtonStyleName style properties; do not try to style the individual Button controls that make up the ToggleButtonBar control.
 	</p>
 	<div ig-ns="togglebox">
 		<p>
@@ -882,7 +979,7 @@
 
 	<h1 id="tooltip">Tooltip:</h1>
 	<p>
-		Tooltip
+		The ToolTip control lets you provide helpful information to your users. When a user moves the mouse pointer over a graphical component, the ToolTip control pops up and displays text that provides information about the component. You can use ToolTips to guide users as they work with your application or customize the ToolTip controls to provide additional functionality.
 	</p>
 	<div ig-ns="tooltip">
 		<center>
@@ -986,11 +1083,11 @@
 				<b>Example:</b>
 				Defined text in tooltip, multiple target selectors and auto position
 			</p>
-			<%- code('tooltip', {value: `<i>'Both target should display the same tooltip'</i>`, target: `<i>'#mulSel1, .mulSel2'</i>`, style: `<i>'color: green; font-weight: bold'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Text 1'</i>, <b>id</b>: <i>'mulSel1</i>}<b>) %&gt;</b><br><b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Text 2'</i>, <b>class</b>: <i>'mulSel2</i>}<b>) %&gt;</b><br>`) %>
+			<%- code('tooltip', {value: `<i>'Both targets should display the same tooltip'</i>`, target: `<i>'#mulSel1, .mulSel2'</i>`, style: `<i>'color: green; font-weight: bold'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Text 1'</i>, <b>id</b>: <i>'mulSel1</i>}<b>) %&gt;</b><br><b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Text 2'</i>, <b>class</b>: <i>'mulSel2</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Text 2', class: 'mulSel2 border', parentStyle: 'float: right'}) %>
 			<%- $('text', {value: 'Text 1', id: 'mulSel1', class: 'border', parentStyle: 'float: left'}) %>
 			<br/>
-			<%- $('tooltip', {value: 'Both target should display the same tooltip', target: '#mulSel1, .mulSel2', style: 'color: green; font-weight: bold'}) %><hr/>
+			<%- $('tooltip', {value: 'Both targets should display the same tooltip', target: '#mulSel1, .mulSel2', style: 'color: green; font-weight: bold'}) %><hr/>
 
 			<p>
 				<b>Example:</b>

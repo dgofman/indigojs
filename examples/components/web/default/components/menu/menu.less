@@ -55,7 +55,7 @@ li {
 	.noselect();
 
 	&:hover > ol {
-		margin-top: 1px;
+		margin-top: -1px;
 		top: @submenu_gap;
 		left: 100%;
 		display: table;
@@ -74,7 +74,6 @@ ol {
 	z-index: 999;
 	position: absolute;
 	border: 1px solid #333;
-	background: @submenu_bg;
 	-webkit-box-shadow: -1px 3px 7px 1px rgba(100, 100, 100, 0.75);
 	-moz-box-shadow: -1px 3px 7px 1px rgba(100, 100, 100, 0.75);
 	box-shadow: -1px 3px 7px 1px rgba(100, 100, 100, 0.75);
@@ -84,6 +83,7 @@ ol {
 		width: 100%;
 		position: relative;
 		white-space: nowrap;
+		background: @submenu_bg;
 	}
 
 	a, p {

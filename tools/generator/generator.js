@@ -3,6 +3,7 @@
 var stdio = require('stdio'),
 	fs = require('fs'),
 	path = require('path'),
+	exec = require('child_process').exec,
 	pkg = require('../../package.json');
 
 (function() {
@@ -95,15 +96,20 @@ var stdio = require('stdio'),
 	lines = fs.readFileSync(__dirname + '/controller.js', 'utf-8');
 	createFile(controllersDir, '/controller.js', lines);
 	copySync(__dirname + '/web', '.' + webdir);
+	
+	console.log('\Installing bower libraries...');
+	exec('bower install indigojs', function(error, stdout, stderr) {
+		if (error) {
+			return console.error(stderr);
+		}
+		console.log(stdout);
+		console.log('\nThank you for using IndigoJS!');
 
-	bower install indigojs
-
-	console.log('\nThank you for using IndigoJS!');
-
-	console.log('\nPlease run commands:');
-	console.log('npm install --production');
-	console.log('npm start');
-	console.log('\nURL: http://localhost:%s%s/index', ops.port || defaultPort, ops.uri || '/' + ops.name);
+		console.log('\nPlease run commands:');
+		console.log('npm install --production');
+		console.log('npm start');
+		console.log('\nURL: http://localhost:%s%s/index', ops.port || defaultPort, ops.uri || '/' + ops.name);
+	});
 })();
 
 function createFile(dir, file, lines) {

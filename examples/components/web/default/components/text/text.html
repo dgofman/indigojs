@@ -1,1 +1,0 @@
-<div role="<%- opts.editable ? 'contentinfo' : 'textbox' %>"<%- opts.height ? `style="height: ${opts.height}px;"` : ''%><%- $title() %>><p<%- $attr('style') %><%- $attr('editable', 'contenteditable') %>><%- typeof opts.value === 'function' ? opts.value(opts) : opts.value %></p><%- opts.ellipsis ? '<u></u>' : '' %></div>

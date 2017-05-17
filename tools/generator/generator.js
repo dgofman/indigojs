@@ -54,10 +54,13 @@ var stdio = require('stdio'),
 	
 	lines = fs.readFileSync(__dirname + '/.jshintignore', 'utf-8').replace(/{{webdir}}/g, webdir);
 	createFile(dir, '/.jshintignore', lines);
-	
+
+	lines = fs.readFileSync(__dirname + '/.bowerrc', 'utf-8').replace(/{{webdir}}/g, webdir);
+	createFile(dir, '/.bowerrc', lines);
+
 	lines = fs.readFileSync(__dirname + '/constant.less', 'utf-8').replace(/{{static}}/g, staticDir);
 	createFile(webdir + '/default/less', '/constant.less', lines);
-	
+
 	lines = fs.readFileSync(__dirname + '/Gruntfile.js', 'utf-8').replace(/{{webdir}}/g, webdir);
 	createFile(dir, '/Gruntfile.js', lines);
 
@@ -92,6 +95,8 @@ var stdio = require('stdio'),
 	lines = fs.readFileSync(__dirname + '/controller.js', 'utf-8');
 	createFile(controllersDir, '/controller.js', lines);
 	copySync(__dirname + '/web', '.' + webdir);
+
+	bower install indigojs
 
 	console.log('\nThank you for using IndigoJS!');
 

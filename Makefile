@@ -41,6 +41,7 @@ firststep: killnode
 	open "http://localhost:8787/firststep/index"
 
 components: killnode
+	bower install indigojs
 	node examples/components/index.js </dev/null &
 	open "http://localhost:8888/uicomponents/index"
 

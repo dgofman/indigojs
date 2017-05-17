@@ -83,7 +83,7 @@ module.exports = (app) => {
 			dir = getModuleWebDir(req),
 			className = arr[0],
 			cache = parseInt(indigo.appconf.get('server:cache')),
-			fileURL = indigo.getNewURL(req, null, `/components/${className}/${req.params.file}`);
+			fileURL = indigo.getNewURL(req, null, `/indigojs/components/${className}/${req.params.file}`);
 		if (!fs.existsSync(dir + fileURL)) {
 			return res.status(404).end();
 		}
@@ -127,7 +127,7 @@ module.exports = (app) => {
 		const cTag = indigo.getComponentTag();
 		debug(req.method, className);
 		const dir = getModuleWebDir(req),
-			newUrl = indigo.getNewURL(req, null, `/components/${className}/${className}.html`);
+			newUrl = indigo.getNewURL(req, null, `/indigojs/components/${className}/${className}.html`);
 
 		try {
 			let model = assign(req, opts, req.model);
@@ -174,8 +174,8 @@ module.exports = (app) => {
 		for (let className in req.model.assets) {
 			const asset = req.model.assets[className],
 				dir = getModuleWebDir(req),
-				lessFile = indigo.getNewURL(req, null, `/components/${asset.className}/${asset.className}.less`),
-				jsFile = indigo.getNewURL(req, null, `/components/${asset.className}/${asset.className}.js`);
+				lessFile = indigo.getNewURL(req, null, `/indigojs/components/${asset.className}/${asset.className}.less`),
+				jsFile = indigo.getNewURL(req, null, `/indigojs/components/${asset.className}/${asset.className}.js`);
 			if (fs.existsSync(dir + lessFile)) {
 				assets.push(`<link href="${uri}/${asset.className}.less" rel="stylesheet" type="text/css"/>`);
 			}

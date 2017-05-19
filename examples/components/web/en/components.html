@@ -170,7 +170,7 @@
 <div class="right">
 	<h1 id="accordion">Accordion:</h1>
 	<p>
-		An Accordion navigator container has a collection of child containers declared as <code>contents</code> array collection, but only one of them at a time is visible. You may expand multiple containers by setting <code>multiple</code> as true. There is one navigator button associated with each child container, and each navigator button belongs to the Accordion container, not to the child. When the user clicks a navigator button, the associated child container is displayed. The transition to the new child uses an animation to make it clear to the user that one child is disappearing and a different one is appearing.
+		The Accordion is a navigator made up of child containers declared as an array. Each child uses the parent container’s navigator button. This button, when triggered by the user, uses animation to expand the corresponding child container and collapse whichever one was currently being displayed. By default, only one child container is expanded at a time, however this can be altered such that multiple containers are simultaneously displayed by setting <code>multiple</code> = true.
 	</p>
 	<div ig-ns="accordion">
 		<p>
@@ -182,14 +182,14 @@
 
 		<p>
 			<b>Example:</b>
-			Custom content, multiple selection and default view index
+			Customizing content, multiple selection, and default view index
 		</p>
 		<%- code('accordion', {labels: `['Label1', 'Label2', 'Label3']`, contents: `[<i>'View1'</i>, <i>'View2'</i>, <i>'View3'</i>]`, multiple: `<i>true</i>`, selectedIndex: `<i>1</i>`}) %>
 		<%- $('accordion', {labels: ['Label1', 'Label2', 'Label3'], contents: ['View1', 'View2', 'View3'], multiple: true, selectedIndex: 1}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Replace content by available templates
+			Replacing content with available templates
 		</p>
 		<%- code('accordion', {labels: `['Label1', 'Label2', 'Label3']`, contents: `['View1', 'View2', 'View3']`, templates: `[<i>'#templ'</i>, null, <i>'#templ'</i>]`}, templ) %>
 		<%- $('accordion', {labels: ['Label1', 'Label2', 'Label3'], contents: ['View1', 'View2', 'View3'], templates: ['#templ', null, '#templ']}) %><hr/>
@@ -197,11 +197,7 @@
 
 	<h1 id="button">Button:</h1>
 	<p>
-		Buttons are an essential way to interact with and navigate through an app, and should clearly communicate what action will occur after the user taps them. Buttons can consist of text and/or an icon, and can be enhanced with a wide variety of attributes.
-		The Button component represents a commonly used rectangular button. Button components display a text label, an icon, or both.
-		A Button component is typically associated with an event handler method that listens for a click event and performs the specified task after the click event is dispatched. When the user clicks an enabled button, the button dispatches the click and buttonDown events. Even if it is not enabled, a button dispatches other events including mouseMove, mouseOver, mouseOut, rollOver, rollOut, mouseDown, and mouseUp.
-
-		You can change the appearance of the button by associating a different skin with each button state. A Button component can also be set to function as a push button or a toggle button.
+		The Button component allows the user to easily  interact with the interface and navigate through an application. By default the Button is rectangular, however the style attributes can be modified to change shape and color and to specify labels and icons to clearly convey what action will be  carried out. Each button is associated with a handler method which listens for a specified event and calls a particular function when triggered.
 	</p>
 	<div ig-ns="button">
 		<p>
@@ -213,35 +209,35 @@
 
 		<p>
 			<b>Example:</b>
-			Icon left align
+			Left-Aligning icon
 		</p>
 		<%- code('button', {label: `'Hello World - 2'`, icon: `<i>'${icon}'</i>`}) %>
 		<%- $('button', {label: `${locales.common.helloworld} - 2`, icon: icon}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Icon right align
+			Right-Aligning Icon
 		</p>
 		<%- code('button', {label: `'Hello World - 3'`, icon: `'${icon}'`, icon_align: `<i>'right'</i>`}) %>
 		<%- $('button', {label: `${locales.common.helloworld} - 3`, icon: icon, icon_align: 'right'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Custom style
+			Customizing style
 		</p>
 		<%- code('button', {label: `'Hello World - 4'`, style: `<i>'color: green; font-weight: bold'</i>`}) %>
 		<%- $('button', {label: `${locales.common.helloworld} - 4`, style: 'color: green; font-weight: bold'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Assign component id and class name
+			Assigning component id and class name
 		</p>
 		<%- code('button', {label: `'Hello World - 5'`, id: `<i>'mybutton'</i>`, class: `<i>'custom'</i>`}) %>
 		<%- $('button', {label: `${locales.common.helloworld} - 5`, id: 'mybutton', class: 'custom'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Disabled button
+			Using disabled property
 		</p>
 		<%- code('button', {label: `'Hello World - 6'`, class: `'custom'`, disabled: `<i>true</i>`}) %>
 		<%- $('button', {label: `${locales.common.helloworld} - 6`, class: 'custom', disabled: true}) %><hr/>
@@ -249,7 +245,7 @@
 
 	<h1 id="checkbox">Checkbox:</h1>
 	<p>
-		<p>A checkbox is an input component that holds a <em>boolean</em> value. Checkboxes are no different than HTML checkbox inputs. However, like other Ionic components, checkboxes are styled differently on each platform. Use the <code>checked</code> attribute to set the default value, and the <code>disabled</code> attribute to disable the user from changing the value.</p>
+		<p>The Checkbox is a square-shaped component that stores a <em>boolean</em> value based on the user’s input. If the user does not interact with the component, the boolean value will remain default. The <code>checked</code> attribute is used to set the default value of the Checkbox, and the <code>disabled</code> attribute is used to prevent the user from changing the value. Checkbox will retain its styling across platforms. </p>
 	</p>
 	<div ig-ns="checkbox">
 		<p>
@@ -261,7 +257,7 @@
 
 		<p>
 			<b>Example:</b>
-			Checkbox with checked attribute
+			Using checked attribute
 		</p>
 		<%- code('checkbox', {label: `'Hello World - 2'`, checked: `<i>true</i>`}) %>
 		<%- $('checkbox', {label: `${locales.common.helloworld} - 2`, checked: true}) %><hr/>
@@ -275,21 +271,21 @@
 
 		<p>
 			<b>Example:</b>
-			Custom style Checkbox
+			Custom styling Checkbox
 		</p>
 		<%- code('checkbox', {label: `'Hello World - 4'`, style: `<i>'color: green; font-weight: bold'</i>`}) %>
 		<%- $('checkbox', {label: `${locales.common.helloworld} - 4`, style: 'color: green; font-weight: bold'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Assign component id and class name
+			Assigning component id and class name
 		</p>
 		<%- code('checkbox', {label: `'Hello World - 5'`, id: `<i>'mycheckbox'</i>`, class: `<i>'custom'</i>`}) %>
 		<%- $('checkbox', {label: `${locales.common.helloworld} - 5`, id: 'mycheckbox', class: 'custom'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Disabled Checkbox
+			Disabling Checkbox
 		</p>
 		<%- code('checkbox', {label: `'Hello World - 6'`, class: `'custom'`, disabled: `<i>true</i>`}) %>
 		<%- $('checkbox', {label: `${locales.common.helloworld} - 6`, class: 'custom', disabled: true}) %><hr/>
@@ -297,10 +293,8 @@
 
 	<h1 id="datefield">DateField:</h1>
 	<p>
-	The DateField component is used to present an interface which makes it easy for users to select dates. The DateField component is similar to the native element, however, Ionic’s DateField component makes it easy to display the date in a preferred format, and manage the date values.
+	The DateField component provides the user with a convenient way to select dates. The DateField control is displayed as a text input field with a calendar icon on its right side. Upon clicking the icon, the user is presented with a <code>CalendarControl</code>, from which they can scroll through months and years to select a specific date. Once a date has been selected, the <code>CalendarControl</code> will collapse and the DateField control will be populated with the selected date. If the user does not select a date, they can click the icon to collapse the calendar control and leave the DateField in its previous state. The DateField component can be customized to include prompts and styling attributes.
 
-	The DateField control is a text field that shows the date with a calendar icon on its right side. When the user clicks anywhere inside the bounding box of the control, a calendar control pops up and shows the dates in the month of the current date. If no date is selected, the text field is blank and the month of the current date is displayed in the DateChooser control.
-	When the calendar control is open, the user can scroll through months and years, and select a date. When a date is selected, the DateChooser control closes, and the text field shows the selected date.
 	</p>
 	<div ig-ns="datefield">
 		<p>
@@ -312,28 +306,28 @@
 
 		<p>
 			<b>Example:</b>
-			Defined prompt text
+			Defining prompt text
 		</p>
 		<%- code('datefield', {prompt: `<i>'Select a date'</i>`}) %>
 		<%- $('datefield', {prompt: 'Select a date'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Set time using milliseconds
+			Setting time using milliseconds
 		</p>
 		<%- code('datefield', {timestamp:`<i>Date.now()</i>`}) %>
 		<%- $('datefield', {timestamp: Date.now()}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Cusomize style
+			Customizing style
 		</p>
 		<%- code('datefield', {timestamp: `new Date(2012, 0, 25).getTime()`, style: `<i>'color: green; font-weight: bold'</i>`}) %>
 		<%- $('datefield', {timestamp: new Date(2012, 0, 25).getTime(), style: 'color: green; font-weight: bold'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Customized days of weeks
+			Customizing days of week
 		</p>
 		<%- code('datefield', {days: `<i>['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']</i>`}) %>
 		or
@@ -342,7 +336,7 @@
 
 		<p>
 			<b>Example:</b>
-			Disabled DateField
+			Disabling DateField
 		</p>
 		<%- code('datefield', {prompt: `'Disabled'`, class: `'custom'`, disabled: `<i>true</i>`}) %>
 		<%- $('datefield', {prompt: 'Disabled', class: 'custom', disabled: true}) %><hr/>
@@ -350,9 +344,7 @@
 
 	<h1 id="dialog">Dialog:</h1>
 	<p>
-	Dialog are a great way to offer the user the ability to choose a specific action or list of actions. They also can provide the user with important information, or require them to make a decision (or multiple decisions).
-
-	From a UI perspective, Alerts can be thought of as a type of “floating” modal that covers only a portion of the screen. This means Alerts should only be used for quick actions like password verification, small app notifications, or quick options. More in depth user flows should be reserved for full screen 
+		The Dialog component creates a modal with three distinct sections: header, footer, and content. Each can be customized to display specified information to the user. The Dialog box covers a part of the UI and can be used for short messages and quick decisions (such as error messages and password confirmation). User flows that require more in-depth information would be better-suited for full-screen.
 	</p>
 	<div ig-ns="dialog">
 		<p>
@@ -365,7 +357,7 @@
 
 		<p>
 			<b>Example:</b>
-			Dialog define title, content and footer buttons
+			Defining title, content and footer buttons
 		</p>
 		<%- code('dialog', {id: `'dlg_custom'`, title: `<i>'Dialog Title'</i>`, content: `<i>'Dialog Content'</i>`, 
 			buttons: `<i>[{label: 'OK', style: 'color: red; font-weight: bold'}, {label: 'Close', class: 'close'}]</i>`}) %>
@@ -395,7 +387,7 @@
 
 		<p>
 			<b>Example:</b>
-			Dialog using pre-defined templates
+			Using pre-defined templates
 		</p>
 		<%- code('dialog', {id: `'dlg_template'`, header_template: `<i>'#dlg_header'</i>`, content_template: `<i>'#templ'</i>`, footer_template: `<i>'.dlg_footer'</i>`}, [dlg_header, templ, dlg_footer].join('')) %>
 		<%- $('dialog', {id: 'dlg_template', header_template: '#dlg_header', content_template: '#templ', footer_template: '.dlg_footer'}) %>
@@ -404,7 +396,8 @@
 
 	<h1 id="dropdown">Dropdown:</h1>
 	<p>
-		The Dropdown component contains a drop-down list from which the user can select one value. Its functionality is similar to that of the SELECT form element in HTML. The Dropdown component can be editable, in which case the user can type entries that are not in the list into the TextInput portion of the Dropdown component.
+		The Dropdown component provides the user with a collapsible list of options from which they can select a single value. The default value can be set using <code>selectedIndex</code>. If no value is specified, it can be set with <code>prompt</code>.
+
 	</p>
 	<div ig-ns="dropdown">
 		<p>
@@ -416,28 +409,28 @@
 
 		<p>
 			<b>Example:</b>
-			Menu Items, selected index and expand by default
+			Using menu items, selecting index and expanding by default
 		</p>
 		<%- code('dropdown', {menus: `[<i>'Menu1'</i>, <i>'Menu2'</i>, <i>'Menu3'</i>]`, selectedIndex: `<i>0</i>`, open: `<i>true</i>`}) %>
 		<%- $('dropdown', {menus: ['Menu1', 'Menu2', 'Menu3'], selectedIndex: 0, open: true}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Set default prompt and cusomize style
+			Setting default prompt and customizing style
 		</p>
 		<%- code('dropdown', {prompt: `<i>'Hello World - 1'</i>`, style: `<i>'color: green; font-weight: bold'</i>`}) %>
 		<%- $('dropdown', {prompt: `${locales.common.helloworld} - 1`, style: 'color: green; font-weight: bold'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Set menu as array of objects using pre-defined <code>label</code> labelField
+			Setting menu as an array of objects using a pre-defined <code>label</code> labelField
 		</p>
-		<%- code('dropdown', {prompt: `'Hello World - 2'`, menus: `[{<i>label</i>: 'Menu1'}, {<i>label</i>: 'Menu2'}, {<i>label</i>: 'Menu3'}]`}) %>
-		<%- $('dropdown', {prompt: `${locales.common.helloworld} - 2`, menus: [{label: 'Menu1'}, {label: 'Menu2'}, {label: 'Menu3'}]}) %><hr/>
+		<%- code('dropdown', {prompt: `'Hello World - 2'`, menus: `[{<i>label</i>: 'Menu1'}, {<i>label</i>: 'Menu2', <i>selected: true</i>}, {<i>label</i>: 'Menu3'}]`}) %>
+		<%- $('dropdown', {prompt: `${locales.common.helloworld} - 2`, menus: [{label: 'Menu1'}, {label: 'Menu2', selected: true}, {label: 'Menu3'}]}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Set menu as array of objects using custom labelField
+			Setting menu as an array of objects using customized labelField
 		</p>
 		<%- code('dropdown', {menus: `[{<i>lbl</i>: 'Menu1'}, {<i>lbl</i>: 'Menu2'}, {<i>lbl</i>: 'Menu3'}]`, labelField: `<i>'lbl'</i>`, selectedIndex: 1}) %>
 		<%- $('dropdown', {menus: [{lbl: 'Menu1'}, {lbl: 'Menu2'}, {lbl: 'Menu3'}], labelField: 'lbl', selectedIndex: 1}) %><hr/>
@@ -454,7 +447,7 @@
 
 		<p>
 			<b>Example:</b>
-			Custom <code>itemRenderer</code> and <code>labelRenderer</code>
+			Using customized <code>itemRenderer</code> and <code>labelRenderer</code>
 		</p>
 		<%- code('dropdown', {menus: `[
 			{lf: 'Menu1', df: 1}, {lf: 'Menu2', df: 2, style: 'color: red'}, {lf: 'Menu3', df: 3, selected: true}]`, 
@@ -474,32 +467,19 @@
 
 	<h1 id="file">File:</h1>
 	<p>
-		The FileSystemTree control displays the contents of a file system directory as a tree.
-		You specify the directory whose content is displayed by setting the directory property to an instance of the flash.filesystem.File class. (File instances can represent directories as well as files.) Whenever this property changes for any reason, the control dispatches a directoryChange event.
-
-		You can set the enumerationMode property to specify whether to show this directory's files, its subdirectories, or both. There are three ways to show both files and subdirectories within each tree node: directories first, files first, or intermixed.
-
-		You can set the extensions property to filter the list so that only files with the specified extensions are displayed. (Extensions on directories are ignored.) You can also specify an additional filtering function of your own by setting the filterFunction property.
-
-		You can use the showExtensions property to show or hide file extensions, and the showIcons property to show or hide icons.
-
-		You can do custom-sorting within each tree node by setting the nameCompareFunction property to a function that compares two file or directory names.
-
-		If the user double-clicks a closed directory node, or clicks its disclosure icon, this control dispatches a directoryOpening event. If the user double-clicks an open directory node, or clicks its disclosure icon, this control dispatches a directoryClosing event. A handler can cancel either event by calling event.preventDefault() in which case the node doesn't open.
-
-		If the user double-clicks a file node, this control dispatches a select event.
+		The File component allows the user to select and upload a file from their own directories. The file system directory is organized in a tree structure. Upon clicking the File control, the user is presented with a File Dialog window in which their directory’s content is displayed.
 	</p>
 	<div ig-ns="file">
 		<p>
 			<b>Example:</b>
-			Custom Label
+			Using custom label
 		</p>
 		<%- code('file', {label: `<i>'Upload File...'</i>`}) %>
 		<%- $('file', {label: 'Upload File...'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Apply icon style and disabled click
+			Applying icon style and disabled click
 		</p>
 		<%- code('file', {label: `'Upload File...'`, class: `<i>'icon'</i>`, disabled: `<i>true</i>`}) %>
 		<%- $('file', {label: 'Upload File...', class: 'icon', disabled: true}) %><hr/>
@@ -507,10 +487,7 @@
 
 	<h1 id="hbox">HBox:</h1>
 	<p>
-		The Halo HBox container lays out its children in a single horizontal row. You use the <mx:HBox> tag instead of the <mx:Box> tag as a shortcut to avoid having to set the direction property to "horizontal".
-		Note: Adobe recommends that, when possible, you use the Spark containers with HorizontalLayout instead of the Halo HBox container.
-
-		An HBox container has the following default sizing characteristics: (left, right and content values.)
+		The HBox is a layout pane which presents its children in a single horizontal row. The custom size on the <code>left</code> or <code>right</code> is specified, and the remaining elements will take up the remaining width of the parent element. The HBox prevents the element with unspecified width from overflowing to a new line. 
 	</p>
 	<div ig-ns="hbox">
 		<p>
@@ -548,71 +525,42 @@
 
 	<h1 id="image">Image:</h1>
 	<p>
-		The Image control lets you import JPEG, PNG, GIF, and SWF files at runtime. You can also embed any of these files and SVG files at compile time by using @Embed(source='filename').
-		Note: Flex also includes the SWFLoader control for loading Flex applications. You typically use the Image control for loading static graphic files and SWF files, and use the SWFLoader control for loading Flex applications. The Image control is also designed to be used in custom item renderers and item editors.
-
-		Note: Flex also includes the BitmapImage class. This class is used for embedding images into skins and FXG components.
-
-		Embedded images load immediately, because they are already part of the Flex SWF file. However, they add to the size of your application and slow down the application initialization process. Embedded images also require you to recompile your applications whenever your image files change.
-
-		The alternative to embedding a resource is to load the resource at runtime. You can load a resource from the local file system in which the SWF file runs, or you can access a remote resource, typically though an HTTP request over a network. These images are independent of your Flex application, so you can change them without causing a recompile operation as long as the names of the modified images remain the same. The referenced images add no additional overhead to an application's initial loading time. However, you might experience a delay when you use the images and load them into Flash Player or AIR.
-
-		A SWF file can access one type of external resource only, either local or over a network; it cannot access both types. You determine the type of access allowed by the SWF file using the use-network flag when you compile your application. When the use-network flag is set to false, you can access resources in the local file system, but not over the network. The default value is true, which allows you to access resources over the network, but not in the local file system.
-
-		When you load images at runtime, you should be aware of the security restrictions of Flash Player or AIR. For example, in Flash Player you can load an image from any domain by using a URL, but the default security settings won't allow your code to access the bitmap data of the image unless it came from the same domain as the application. To access bitmap data from images on other servers, you must use a crossdomain.xml file.
-
-		The PNG and GIF formats also support the use of an alpha channel for creating transparent images.
-
-		When you use the Image control as a drop-in item renderer in a List control, either set an explicit row height of the List control, by using the rowHeight property, or set the variableRowHeight property of the List control to true to size the row correctly.
-
-		If you find memory problems related to Images objects, try explicitly setting the source property to null when you are done using the Image object in your application.
+		The image control makes it possible to import image files (including GIF, JPEG, PNG, etc.) at runtime. The image can be loaded into an HTML <code>DIV</code> or <code>IMG</code> control when <code>img</code> is set to true. Images can be customized with regards to size, styling, etc.
 	</p>
 	<div ig-ns="image">
 		<p>
 			<b>Example:</b>
-			Set image url
+			Setting image url
 		</p>
 		<%- code('image', {url: `<i>'${baseStaticPath}/images/indigo.png'</i>`}) %>
 		<%- $('image', {url: `${baseStaticPath}/images/indigo.png`}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Image pixels size
+			Image sizing using pixels
 		</p>
 		<%- code('image', {url: `'${baseStaticPath}/images/indigo.png'`, width: `<i>30</i>`, height: `<i>30</i>`}) %>
 		<%- $('image', {url: `${baseStaticPath}/images/indigo.png`, width: 30, height: 30, title: 'indigo JS'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Image em size and title
+			Image sizing using em and title
 		</p>
 		<%- code('image', {url: `'${baseStaticPath}/images/indigo.png'`, width: `<i>'2em'</i>`, height: `<i>'2em'</i>`, title: `<i>'indigo JS'</i>`}) %>
 		<%- $('image', {url: `${baseStaticPath}/images/indigo.png`, width: '2em', height: '2em', title: 'indigo JS'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Use IMG tag
+			Using IMG tag
 		</p>
-		<%- code('image', {url: `'${baseStaticPath}/images/indigo.png'`, width: 30, height: 30, img: `<i>true</i>`}) %>
-		<%- $('image', {url: `${baseStaticPath}/images/indigo.png`, width: 30, height: 30, img: true}) %><hr/>
+		<%- code('image', {url: `'${baseStaticPath}/images/indigo.png'`, img: `<i>true</i>`}) %>
+		<%- $('image', {url: `${baseStaticPath}/images/indigo.png`, img: true}) %><hr/>
 	</div>
 
 	<h1 id="input">Input:</h1>
 	<p>
-		Inputs are essential for collecting and handling user input in a secure way. They should follow styling and interaction guidelines for each platform, so that they are intuitive for users to interact with. Ionic uses Angular 2’s form library, which can be thought of as two dependent pieces, Controls, and Control Groups.
+		The Input control allows for secure gathering and handling of user input. Input needs to be altered for each platform to ensure that styling and interaction guidelines are followed and the user will have a smooth experience. The input text can have a specified input-type to customize styling and appearance. The Input field can also be disabled, preventing the user from entering any information, by setting the <code>disabled</code> property to <code>true</code>.
 
-		Each input field in a form has a Control, a function that binds to the value in the field, and performs validation. A Control Group is a collection of Controls. Control Groups handle form submission, and provide a high level API that can be used to determine whether the entire form is valid.
-
-		A TextInput component can be enabled or disabled in an application. When the TextInput component is disabled, it cannot receive input from mouse or keyboard. An enabled TextInput component implements focus, selection, and navigation like an ActionScript TextField object.
-
-		You can use styles to customize the TextInput component by changing its appearance--for example, when it is disabled. Some other customizations that you can apply to this component include formatting it with HTML or setting it to be a password field whose text must be hidden.
-
-		The TextInput control is a single-line text field that is optionally editable. All text in this control must use the same styling unless it is HTML text. The TextInput control supports the HTML rendering capabilities of Flash Player and AIR.
-		TextInput controls do not include a label, although you can add one by using a Label control or by nesting the TextInput control in a FormItem control in a Form container. When used in a FormItem control, a TextInput control indicates whether a value is required. TextInput controls have a number of states, including filled, selected, disabled, and error. TextInput controls support formatting, validation, and keyboard equivalents; they also dispatch change and enter events.
-
-		If you disable a TextInput control, it displays its contents in the color specified by the disabledColor style. To disallow editing the text, you set the editable property to false. To conceal the input text by displaying asterisks instead of the characters entered, you set the displayAsPassword property to true.
-
-		The TextInput control is used as a subcomponent in several other controls, such as the RichTextEditor, NumericStepper, and ComboBox controls. As a result, if you assign style properties to a TextInput control by using a CSS type selector, Flex applies those styles to the TextInput when it appears in the other controls unless you explicitly override them.
 	</p>
 	<div ig-ns="input">
 		<p>
@@ -624,14 +572,14 @@
 
 		<p>
 			<b>Example:</b>
-			Custom class
+			Using custom class
 		</p>
 		<%- code('input', {value: `'Hello World - 2'`, class: `<i>'custom'</i>`}) %>
 		<%- $('input', {value: `${locales.common.helloworld} - 2`, class: 'custom'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Disable input field
+			Disabling input field
 		</p>
 		<%- code('input', {value: `'Hello World - 3'`, class: `'custom'`, disabled: `<i>true</i>`}) %>
 		<%- $('input', {value: `${locales.common.helloworld} - 3`, class: 'custom', disabled: true}) %><hr/>
@@ -645,7 +593,7 @@
 
 		<p>
 			<b>Example:</b>
-			Change input type 
+			Changing input type 
 		</p>
 		<%- code('input', {value: 'Hello World - 4', type: `<i>'password'</i>`}) %>
 		<%- $('input', {value: `${locales.common.helloworld} - 4`, type: 'password'}) %><hr/>
@@ -653,19 +601,12 @@
 
 	<h1 id="menu">Menu:</h1>
 	<p>
-		Menu is a side-menu navigation that can be dragged out or toggled to show. The content of a menu will be hidden when the menu is closed.
-
-		Menu adapts to the appropriate style based on the platform.
-
-		A Menu control defines a horizontal, top-level menu bar that contains one or more menus. Clicking on a top-level menu item opens a pop-up submenu that is an instance of the Menu control.
-		The top-level menu bar of the MenuBar control is generally always visible. It is not intended for use as a pop-up menu. The individual submenus pop up as the user selects them with the mouse or keyboard. Open submenus disappear when a menu item is selected, or if the menu is dismissed by the user clicking outside the menu.
-
-		For information and an example on the attributes that you can use in the data provider for the Menu control, see the Menu control.
+		The Menu is a navigation component that contains links to other pages or bookmarks. By default, this control is a horizontal top-level menu bar that can contain pop-up sub-menus. The Menu automatically adapts to whichever platform it is being run on, however can be customized. The top-level menu is generally visible at all times. Open sub-menus disappear as the user selects an item or clicks outside of the menu.
 	</p>
 	<div ig-ns="menu">
 		<p>
 			<b>Example:</b>
-			Create custom menu
+			Creating custom menu
 		</p>
 		<%- code('menu', {menus: `<i>[{label: 'Menu 1', class: 'icon us'}, {label: 'Menu 2', class: 'icon gb'}, {label: 'Menu 3', class: 'icon ca'}]</i>`, background: `'#0d76d0'`}) %>
 		<style>
@@ -689,21 +630,21 @@
 
 		<p>
 			<b>Example:</b>
-			Select menu by index and defining custom <code>labelField</code>
+			Selecting menu by index and defining custom <code>labelField</code>
 		</p>
 		<%- code('menu', {menus: `[{<i>lbl</i>: 'Menu 1'}, {<i>lbl</i>: 'Menu 2'}]`, labelField: `<i>'lbl'</i>`, selectedIndex: `<i>1</i>`, background: `'#5b87ac'`}) %>
 		<%- $('menu', {menus: [{lbl: 'Menu 1'}, {lbl: 'Menu 2'}], labelField: 'lbl', selectedIndex: 1, background: '#5b87ac'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Create menu using <code>itemRenderer</code>
+			Creating menu using <code>itemRenderer</code>
 		</p>
 		<%- code('menu', {menus: `[{lbl: 'Menu 1'}]`, itemRenderer: `<i>'&lt;li class="icon us"&gt;&lt;p&gt;%LABEL%&lt;/p&gt;&lt;/li&gt;'</i>`, background: `'#cf4d4d'`}) %>
 		<%- $('menu', {menus: [{label: 'Menu 1'}], itemRenderer: function() { return `<li class="icon us"><p>%LABEL%</p></li>`}, background: '#cf4d4d'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Create sub menus
+			Creating sub menus
 		</p>
 		<%- code('menu', {menus: `<i>'[{label: 'Menu 1', nav: 'http://indigojs.com', target: '_blank', sub: [
 					{label: 'Sub1', class: 'custom'}, {label: 'Sub2', sub: [
@@ -721,33 +662,19 @@
 
 	<h1 id="radio">Radio:</h1>
 	<p>
-		Like the checkbox, a radio is an input component that holds a boolean value. Under the hood, radios are no different than HTML radio inputs. However, like other Ionic components, radios are styled differently on each platform. Unlike checkboxes, radio components form a group, where only one radio can be selected at a time. Use the checked attribute to set the default value, and the disabled attribute to disable the user from changing to that value.
-
-		The RadioButton component lets you force a user to make a single selection from a set of choices. This component must be used in a group of at least two RadioButton instances. Only one member of the group can be selected at any given time. Selecting one radio button in a group deselects the currently selected radio button in the group. You set the groupName parameter to indicate which group a radio button belongs to. When the user clicks or tabs into a RadioButton component group, only the selected radio button receives focus.
-		A radio button can be enabled or disabled. A disabled radio button does not receive mouse or keyboard input.
-
-		The RadioButtonGroup class defines a group of RadioButton components to act as a single component. When one radio button is selected, no other radio buttons from the same group can be selected.
-
-		The RadioButton control lets the user make a single choice within a set of mutually exclusive choices. A RadioButton group is composed of two or more RadioButton controls with the same groupName property. While grouping RadioButton instances in a RadioButtonGroup is optional, a group lets you do things like set a single event handler on a group of buttons, rather than on each individual button. The RadioButton group can refer to a group created by the <mx:RadioButtonGroup> tag. The user selects only one member of the group at a time. Selecting an unselected group member deselects the currently selected RadioButton control within that group.
-
-		The RadioButtonGroup control defines a group of RadioButton controls that act as a single mutually exclusive control; therefore, a user can select only one RadioButton control at a time. While grouping RadioButton instances in a RadioButtonGroup is optional, a group lets you do things like set a single event handler on a group of buttons, rather than on each individual button.
-		The id property is required when you use the <mx:RadioButtonGroup> tag to define the name of the group.
-
-		Notice that the RadioButtonGroup control is a subclass of EventDispatcher, not UIComponent, and implements the IMXMLObject interface. All other Flex visual components are subclasses of UIComponent, which implements the IUIComponent interface. The RadioButtonGroup control has support built into the Flex compiler that allows you to use the RadioButtonGroup control as a child of a Flex container, even though it does not implement IUIComponent. All other container children must implement the IUIComponent interface.
-
-		Therefore, if you try to define a visual component as a subclass of EventDispatcher that implements the IMXMLObject interface, you will not be able to use it as the child of a container.
+		The Radio is an input component which contains a boolean value, similar to the Checkbox. Unlike the Checkbox, Radio buttons are generally part of a group. Radio buttons can be grouped using the IndigoJs <code>radiogroup</code> component or <code>group</code> property. Exactly one button must be selected from the Radio group. Radio buttons are styled differently across platforms.
 	</p>
 	<div ig-ns="radio">
 		<p>
 			<b>Example:</b>
-			Label and checked attibutes
+			Label and checked attributes
 		</p>
 		<%- code('radio', {label: `<i>'Hello World - 1'</i>`, checked: `<i>true</i>`}) %>
 		<%- $('radio', {label: `${locales.common.helloworld} - 1`, checked: true}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Group radio buttons by group name
+			Grouping radio buttons by group name
 		</p>
 		<%- code('radio', {label: `'Hello World - 3'`, group: `<i>'group_buttons'</i>`, checked: true}, `<b>&lt;%- $(</b>'<span class="cid">radio</span>', {<b>label</b>: <span class="val">'Hello World - 2'</span>, <b>group</b>: <i>'group_buttons'</i><b>}) %&gt;</b><br/>`) %>
 		<%- $('radio', {label: `${locales.common.helloworld} - 2`, group: 'group_buttons'}) %><br/>
@@ -764,7 +691,7 @@
 
 		<p>
 			<b>Example:</b>
-			Disable radio button
+			Disabling radio button
 		</p>
 		<%- code('radio', {label: `'Hello World - 6'`, class: `'custom'`, disabled: `<i>true</i>`}) %>
 		<%- $('radio', {label: `${locales.common.helloworld} - 6`, class: 'custom', disabled: true}) %>
@@ -772,7 +699,7 @@
 
 	<h1 id="switch">Switch:</h1>
 	<p>
-		A toggle is an input component that holds a boolean value. Like the checkbox, toggles are often used to allow the user to switch a setting on or off. Attributes like value, disabled, and checked can be applied to the toggle to control its behavior.
+		Like the Checkbox, a Switch component holds a boolean value. The Switch allows the user to turn a particular setting or feature on or off. This component can be customized with styling properties as well as certain attributes (such as <code>disabled</code> and <code>checked</code>) to control its behavior.
 	</p>
 	<div ig-ns="switch">
 		<p>
@@ -784,7 +711,7 @@
 
 		<p>
 			<b>Example:</b>
-			Set title and change state
+			Setting title and changing state
 		</p>
 		<%- code('switch', {title: `<i>'Network Control'</i>`, checked: `<i>true</i>`}) %>
 		<%- $('switch', {title: 'Network Control', checked: true}) %><hr/>
@@ -796,14 +723,14 @@
 		</style>
 		<p>
 			<b>Example:</b>
-			Apply custom style
+			Applying custom style
 		</p>
 		<%- code('switch', {title: `'Settings'`, checked: true, class: `<i>'myswitch'</i>`}, `<b>&lt;style&gt;</b><br><i>.myswitch</i> input:checked + .slider {<br>	<span class="val">&emsp;background-color: red !important;</span><br>}<br><b>&lt;/style&gt;</b><br>`) %>
 		<%- $('switch', {title: 'Settings', checked: true, class: 'myswitch'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Disabled switch
+			Disabling switch
 		</p>
 		<%- code('switch', {title: `'Power Control'`, checked: true, disabled: `<i>true</i>`}) %>
 		<%- $('switch', {title: 'Power Control', checked: true, disabled: true}) %><hr/>
@@ -811,29 +738,20 @@
 
 	<h1 id="tabs">Tabs:</h1>
 	<p>
-		Tabs powers a multi-tabbed interface with a Tab Bar and a set of views that can be tabbed through.
-
-		The TabBar control lets you create a horizontal or vertical group of tab navigation items by defining the labels and data associated with each tab. Use the TabBar control instead of the TabNavigator container to create tabs that, by default, are not associated with multiple views.
-		Using the TabBar control lets the tabs be directly determined by the data so that you can change the view or views in any way.
-
-		The MX TabNavigator container extends the MX ViewStack container by including a TabBar container for navigating between its child containers.
-		Note: The direct children of an MX navigator container must be MX containers, either MX layout or MX navigator containers, or the Spark NavigatorContent container. You cannot directly nest a control or a Spark container other than the Spark NavigatorContent container within a navigator; they must be children of an child MX container.
-
-		Like a ViewStack container, a TabNavigator container has a collection of child containers, in which only one child at a time is visible. Flex automatically creates a TabBar container at the top of the TabNavigator container, with a tab corresponding to each child container. Each tab can have its own label and icon. When the user clicks a tab, the corresponding child container becomes visible as the selected child of the TabNavigator container.
-
-		When you change the currently visible child container, you can use the hideEffect property of the container being hidden and the showEffect property of the newly visible child container to apply an effect to the child containers. The TabNavigator container waits for the hideEffect of the child container being hidden to complete before it reveals the new child container. You can interrupt a currently playing effect if you change the selectedIndex property of the TabNavigator container while an effect is playing.
+		
+		The tab component allows for a multi-tabbed interface. Each tab is associated with a particular view. The user can navigate between views by clicking on their respective tabs. The tab contents can be set with labels and predefined templates. When the user clicks a new tab, the previously displayed view will be hidden completely prior to loading the new one.
 	</p>
 	<div ig-ns="tabs">
 		<p>
 			<b>Example:</b>
-			Set header tabs
+			Setting header tabs
 		</p>
 		<%- code('tabs', {labels: `<i>['Label1', 'Label2', 'Label3']</i>`}) %>
 		<%- $('tabs', {labels: ['Label1', 'Label2', 'Label3']}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Set tab content and apply selected index
+			Setting tab content and apply selected index
 		</p>
 		<%- code('tabs', {labels: `['Label1', 'Label2', 'Label3']`, contents: `<i>['View1', 'View2', 'View3']</i>`, selectedIndex: `<i>1</i>`}) %>
 		<%- $('tabs', {labels: ['Label1', 'Label2', 'Label3'], contents: ['View1', 'View2', 'View3'], selectedIndex: 1}) %><hr/>
@@ -848,53 +766,41 @@
 
 	<h1 id="text">Text:</h1>
 	<p>
-		The Text control displays multiline, noneditable text. Use the Label control if you need only a single line of text.
-		The Text control does not support scroll bars. If you need scrolling, you should use a non-editable TextArea control.
+		The Text control displays text that is longer than a single line. By default, the text will be uneditable, however this can be changed by setting <code>editable = true</code>. The text can be formatted with HTML tags and padding properties. Text aligns contents top left and does not support scrolling features. The width and height properties can be customized. If the text content exceeds the specified height limit, an ellipsis should be used. 
 
-		You can format the text in a Text control using HTML tags, which are applied after the control's CSS styles are applied. You can also put padding around the four sides of the text.
-
-		The text in a Text control is selectable by default, but you can make it unselectable by setting the selectable property to false.
-
-		If the control is not as wide as the text, the text will wordwrap. The text is always aligned top-left in the control.
-
-		To size a Text component, it's common to specify an explicit width and let Flex determine the height as required to display all the text. If you specify an explicit height, some of the text may get clipped; unlike Label, Text does not truncate its text with "...". It's also common to use percentage widths and heights with Text.
-
-		If you leave both the width and the height unspecified, Flex calculates them based on any explicit line breaks in the text, with no wordwrapping within lines. For example, if you set the text property, the newline character "\n" causes a line break. If you set the htmlText property, the HTML markup <br> causes a line break. If your text or htmlText is lengthy and doesn't contain line breaks, you can get a very wide Text component; you can set the maxWidth to limit how wide the component is allowed to grow.
-
-		Text controls do not have backgrounds or borders and cannot take focus.
 	</p>
 	<div ig-ns="text">
 		<p>
 			<b>Example:</b>
-			Displaying entire text
+			Displaying the entire text
 		</p>
 		<%- code('text', {value: `<i>'Lorem ipsum dolor sit amet...'</i>`}) %>
 		<%- $('text', {value: loremIpsum, class: 'textstyle'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Defined maximum viewpoint height
+			Defining maximum viewpoint height
 		</p>
 		<%- code('text', {value: `'Lorem ipsum dolor sit amet...'`, height: `<i>16</i>`}) %>
 		<%- $('text', {value: loremIpsum, class: 'textstyle', height: 16, parentStyle: 'border-color: blue'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Apply ellipsis
+			Applying ellipsis
 		</p>
 		<%- code('text', {value: `'Lorem ipsum dolor sit amet...'`, height: 16, ellipsis: `<i>true</i>`}) %>
 		<%- $('text', {value: loremIpsum, class: 'textstyle', height: 16, parentStyle: 'border-color: yellow', ellipsis: true}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Set editable text with ellipsis
+			Setting editable text with ellipsis
 		</p>
 		<%- code('text', {value: `'Lorem ipsum dolor sit amet...'`, height: 54, ellipsis: true, editable: `<i>true</i>`}) %>
 		<%- $('text', {value: loremIpsum, class: 'textstyle', height: 54, parentStyle: 'border-color: magenta', ellipsis: true, editable: true}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Customize style
+			Customizing style
 		</p>
 		<%- code('text', {value: `'Lorem ipsum dolor sit amet...'`, height: 98, ellipsis: true, style: `<i>'color: green; font-size: 18px; line-height: 2; font-weight: bold'</i>`}) %>
 		<%- $('text', {value: loremIpsum, class: 'textstyle', height: 98, parentStyle: 'border-color: red', ellipsis: true, style: 'color: green; font-size: 18px; line-height: 2; font-weight: bold'}) %><hr/>
@@ -909,27 +815,26 @@
 
 	<h1 id="textarea">TextArea:</h1>
 	<p>
-		The TextArea control is a multiline text field with a border and optional scroll bars. The TextArea control supports the HTML rendering capabilities of Flash Player and AIR.
-		If you disable a TextArea control, it displays its contents in the color specified by the disabledColor style. You can also set a TextArea control to read-only to disallow editing of the text. To conceal input text by displaying characters as asterisks, set the TextArea's displayAsPassword property.
+		The TextArea control is based on HTML TextArea, however it can be set to display a specified amount of rows and maximum length. To disable text editing, the <code>disabled</code> property should be set to true. TextArea does not support resizing and is compatible across browsers.
 	</p>
 	<div ig-ns="textarea">
 		<p>
 			<b>Example:</b>
-			Set text value
+			Setting text value
 		</p>
 		<%- code('textarea', {value: `<i>'Lorem ipsum dolor sit amet...'</i>`}) %>
 		<%- $('textarea', {value: loremIpsum}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Set total rows and disabled for editing
+			Setting total rows and disable for editing
 		</p>
 		<%- code('textarea', {value: `'Lorem ipsum dolor sit amet...'`, rows: `<i>5</i>`, disabled: `<i>true</i>`}) %>
 		<%- $('textarea', {value: loremIpsum, rows: 5, disabled: true, parentStyle: 'width: 400px; border: 1px solid blue'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Defined maxlength and customize input
+			Defining maxlength and customize input
 		</p>
 		<%- code('textarea', {value: `<i>function(opts) { return loremIpsum.substring(0, 5) }</i>`, maxlen: `<i>5</i>`}) %>
 		<%- $('textarea', {value: function(opts) { return loremIpsum.substring(0, 5) }, maxlen: 5, class: 'textstyle'}) %><hr/>
@@ -937,35 +842,26 @@
 
 	<h1 id="togglebox">ToggleBox:</h1>
 	<p>
-		The ToggleButtonBar control defines a horizontal or vertical group of buttons that maintain their selected or deselected state. Only one button in the ToggleButtonBar control can be in the selected state. This means that when a user selects a button in a ToggleButtonBar control, the button stays in the selected state until the user selects a different button.
-		If you set the toggleOnClick property of the ToggleButtonBar container to true, selecting the currently selected button deselects it. By default the toggleOnClick property is set to false.
-
-		You can use the ButtonBar control to define a group of push buttons.
-
-		The typical use for a toggle button is for maintaining selection among a set of options, such as switching between views in a ViewStack container.
-
-		The ToggleButtonBar control creates Button controls based on the value of its dataProvider property. Even though ToggleButtonBar is a subclass of Container, do not use methods such as Container.addChild() and Container.removeChild() to add or remove Button controls. Instead, use methods such as addItem() and removeItem() to manipulate the dataProvider property. The ToggleButtonBar control automatically adds or removes the necessary children based on changes to the dataProvider property.
-
-		To control the styling of the buttons of the ToggleButtonBar control, use the buttonStyleName, firstButtonStyleName, and lastButtonStyleName style properties; do not try to style the individual Button controls that make up the ToggleButtonBar control.
+		The ToggleBox control allows for displaying and hiding information from view. When the associated button is selected, the information in the ToggleBox will be displayed; when deselected it will be collapsed. It is possible to define multiple toggled content items to be displayed simultaneously by using the <code>toggle-content</code> class.
 	</p>
 	<div ig-ns="togglebox">
 		<p>
 			<b>Example:</b>
-			Define Label and Toggle Content
+			Defining Label and Toggle Content
 		</p>
 		<%- code('togglebox', {label: `<i>'Hello World 1'</i>`, content: `<i>'&lt;p class="toggle-content"&gt;Lorem ipsum dolor sit amet...&lt;/p&gt;'</i>`}) %>
 		<%- $('togglebox', {label: `${locales.common.helloworld} - 1`, content: `<p class="toggle-content">${loremIpsum}</p>`}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Defined Template
+			Defining Template
 		</p>
 		<%- code('togglebox', {label: `'Hello World 2'</i>`, template: `<i>'#templ'</i>`}, templ) %>
 		<%- $('togglebox', {label: `${locales.common.helloworld} - 2`, template: '#templ'}) %><hr/>
 
 		<p>
 			<b>Example:</b>
-			Defined multiple toggle contents
+			Defining multiple toggle contents
 		</p>
 		<%- code('togglebox', {label: `'US Population'</i>`, content: `'<i>Header 1&lt;p class="toggle-content">Content 1&lt;/p&gt;Header 2&lt;p class="toggle-content">Content 2&lt;/p&gt;'</i>`}) %>
 		<%- $('togglebox', {label: `US Population`, content: `<b>Americans</b>: <p class="toggle-content">308,745,538 - 100.0 %</p>
@@ -979,13 +875,13 @@
 
 	<h1 id="tooltip">Tooltip:</h1>
 	<p>
-		The ToolTip control lets you provide helpful information to your users. When a user moves the mouse pointer over a graphical component, the ToolTip control pops up and displays text that provides information about the component. You can use ToolTips to guide users as they work with your application or customize the ToolTip controls to provide additional functionality.
+		The ToolTip functions to provide the user with helpful information. The ToolTip pops up when the user mouses over a particular element, providing information about that element. It can be customized with position settings and styling. If no porition is specified, the Tooltip will automatically position itself relative to its parent container's boundaries.
 	</p>
 	<div ig-ns="tooltip">
 		<center>
 			<p>
 				<b>Example:</b>
-				Set tooltip top left
+				Setting tooltip top left
 			</p>
 			<%- code('tooltip', {target: `<i>'#topLeft'</i>`, position: `<i>'top-left'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Top Left'</i>, <b>id</b>: <i>'topLeft'</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Top Left', id: 'topLeft', class: 'border'}) %>
@@ -993,7 +889,7 @@
 
 			<p>
 				<b>Example:</b>
-				Set tooltip top right
+				Setting tooltip top right
 			</p>
 			<%- code('tooltip', {target: `<i>'#topRight'</i>`, position: `<i>'top-right'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Top Right'</i>, <b>id</b>: <i>'topRight'</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Top Right', id: 'topRight', class: 'border'}) %>
@@ -1001,7 +897,7 @@
 
 			<p>
 				<b>Example:</b>
-				Set tooltip top center
+				Setting tooltip top center
 			</p>
 			<%- code('tooltip', {target: `<i>'#topCenter'</i>`, position: `<i>'top'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Top Center'</i>, <b>id</b>: <i>'topCenter'</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Top Center', id: 'topCenter', class: 'border'}) %>
@@ -1009,7 +905,7 @@
 
 			<p>
 				<b>Example:</b>
-				Set tooltip bottom left
+				Setting tooltip bottom left
 			</p>
 			<%- code('tooltip', {target: `<i>'#bottomLeft'</i>`, position: `<i>'bottom-left'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Bottom Left'</i>, <b>id</b>: <i>'bottomLeft'</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Bottom Left', id: 'bottomLeft', class: 'border'}) %>
@@ -1017,7 +913,7 @@
 
 			<p>
 				<b>Example:</b>
-				Set tooltip bottom right
+				Setting tooltip bottom right
 			</p>
 			<%- code('tooltip', {target: `<i>'#bottomRight'</i>`, position: `<i>'bottom-right'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Bottom Right'</i>, <b>id</b>: <i>'bottomRight</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Bottom Right', id: 'bottomRight', class: 'border'}) %>
@@ -1025,7 +921,7 @@
 
 			<p>
 				<b>Example:</b>
-				Set tooltip bottom center
+				Setting tooltip bottom center
 			</p>
 			<%- code('tooltip', {target: `<i>'#bottomCenter'</i>`, position: `<i>'bottom'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Bottom Center'</i>, <b>id</b>: <i>'bottomCenter</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Bottom Center', id: 'bottomCenter', class: 'border'}) %>
@@ -1033,7 +929,7 @@
 
 			<p>
 				<b>Example:</b>
-				Set tooltip left top
+				Setting tooltip left top
 			</p>
 			<%- code('tooltip', {target: `<i>'#leftTop'</i>`, position: `<i>'left-top'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Left Top'</i>, <b>id</b>: <i>'leftTop</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Left Top', id: 'leftTop', class: 'border'}) %>
@@ -1041,7 +937,7 @@
 
 			<p>
 				<b>Example:</b>
-				Set tooltip left bottom
+				Setting tooltip left bottom
 			</p>
 			<%- code('tooltip', {target: `<i>'#leftBottom'</i>`, position: `<i>'left-bottom'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Left Bottom'</i>, <b>id</b>: <i>'leftBottom</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Left Bottom', id: 'leftBottom', class: 'border'}) %>
@@ -1049,7 +945,7 @@
 
 			<p>
 				<b>Example:</b>
-				Set tooltip left middle
+				Setting tooltip left middle
 			</p>
 			<%- code('tooltip', {target: `<i>'#leftMiddle'</i>`, position: `<i>'left'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Left Middle'</i>, <b>id</b>: <i>'leftMiddle</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Left Middle', id: 'leftMiddle', class: 'border'}) %>
@@ -1057,7 +953,7 @@
 
 			<p>
 				<b>Example:</b>
-				Set tooltip right top
+				Setting tooltip right top
 			</p>
 			<%- code('tooltip', {target: `<i>'#rightTop'</i>`, position: `<i>'right-top'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Right Top'</i>, <b>id</b>: <i>'rightTop</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Right Top', id: 'rightTop', class: 'border'}) %>
@@ -1065,7 +961,7 @@
 
 			<p>
 				<b>Example:</b>
-				Set tooltip right top
+				Setting tooltip right top
 			</p>
 			<%- code('tooltip', {target: `<i>'#rightBottom'</i>`, position: `<i>'right-bottom'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Right Bottom'</i>, <b>id</b>: <i>'rightBottom</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Right Bottom', id: 'rightBottom', class: 'border'}) %>
@@ -1073,7 +969,7 @@
 
 			<p>
 				<b>Example:</b>
-				Set tooltip right top
+				Setting tooltip right top
 			</p>
 			<%- code('tooltip', {target: `<i>'#rightMiddle'</i>`, position: `<i>'right'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Right Middle'</i>, <b>id</b>: <i>'rightMiddle</i>}<b>) %&gt;</b><br>`) %>
 			<%- $('text', {value: 'Right Middle', id: 'rightMiddle', class: 'border'}) %>
@@ -1081,13 +977,14 @@
 
 			<p>
 				<b>Example:</b>
-				Defined text in tooltip, multiple target selectors and auto position
+				Defining text in tooltip, multiple target selectors and auto position
 			</p>
 			<%- code('tooltip', {value: `<i>'Both targets should display the same tooltip'</i>`, target: `<i>'#mulSel1, .mulSel2'</i>`, style: `<i>'color: green; font-weight: bold'</i>`}, `<b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Text 1'</i>, <b>id</b>: <i>'mulSel1</i>}<b>) %&gt;</b><br><b>&lt;%- $(</b>'<span class="cid">text</span>', {<b>value</b>: <i>'Text 2'</i>, <b>class</b>: <i>'mulSel2</i>}<b>) %&gt;</b><br>`) %>
-			<%- $('text', {value: 'Text 2', class: 'mulSel2 border', parentStyle: 'float: right'}) %>
+			<%- $('text', {value: 'Text 3', class: 'mulSel3 border', parentStyle: 'float: right'}) %>
 			<%- $('text', {value: 'Text 1', id: 'mulSel1', class: 'border', parentStyle: 'float: left'}) %>
+			<center><%- $('text', {value: 'Text 2', class: 'mulSel2 border'}) %></center>
 			<br/>
-			<%- $('tooltip', {value: 'Both targets should display the same tooltip', target: '#mulSel1, .mulSel2', style: 'color: green; font-weight: bold'}) %><hr/>
+			<%- $('tooltip', {value: 'Both targets should display the same tooltip', target: '#mulSel1, .mulSel2, .mulSel3', style: 'color: green; font-weight: bold'}) %><hr/>
 
 			<p>
 				<b>Example:</b>

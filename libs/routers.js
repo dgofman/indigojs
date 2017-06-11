@@ -6,9 +6,11 @@ const indigo = global.__indigo,
 	fs = require('fs');
 
 /**
- * Router class handling any HTTP request starting from the route base path.
+ * Router class handling HTTP requests from the root path.
  *
  * @version 1.0
+ *
+ * @see https://www.npmjs.com/package/express
  *
  * @module
  * @mixin libs/routers
@@ -17,7 +19,7 @@ const routers =
 	/** @lends libs/routers.prototype */
 	{
 	/**
-	 * Initializing location of routers directory defined in <code>app.json</code> configuration file.
+	 * Initializing location of the routers directory defined in the <code>app.json</code> configuration file.
 	 *
 	 * @example
 	 * conf/app.json 
@@ -31,7 +33,7 @@ const routers =
 	 *
 	 * @param Object appconf JSON object represents application configuration.
 	 * @param {Object} [locales] Reference to <code>/lib/locales</code>.
-	 * @param {Object} [reqModel] Reference to {@link libs/reqmodel} object what will be assign to <code>req.model</code> for each router request.
+	 * @param {Object} [reqModel] Reference to {@link libs/reqmodel} object that will be assigned to <code>req.model</code> for each router request.
 	 */
 	init(appconf, locales, reqModel) {
 		const indigo = global.__indigo,
@@ -82,7 +84,7 @@ const routers =
 
 			debug('router::base - %s, controllers: %s', conf.base, conf.controllers);
 
-			// dynamically include controllers
+			// dynamically include the controllers
 			routers.loadModule(conf.controllers, controller => {
 				controller(router, app, locales);
 			});
@@ -98,22 +100,27 @@ const routers =
 
 /**
  * This function evaluates the router configuration and initializes routing rules.
- * A router isolates the requests from the client by a route path. The main parameter from the router 
- * instances is <code>base</code> name. For handling all routing requests in the same class we may return 
- * just name (Example 1).
+ * The router isolates requests from the client by using a route path. The main parameter from the router 
+ * instances is the <code>base</code> name. To handle all routing requests in the same class we can return 
+ * just the name (Example 1).
  *
- * Each router path may extend implementation of the the business logic in the multiple controllers.
+ * Each router path may extend implementation of the business logic via multiple controllers.
  * What helps to reduce numbers of lines in the same file. For this reason we need to specify the path into 
  * controllers directories (Example 2).
  *
- * IndigoJS routers process five sequential phases 
- * <code>derivation/interception/implementation/middleware/integration</code>. For the security reasons indogoJS 
- * protects access to <code>derivation</code> and <code>integration</code> phases. The router may handle and 
- * prevent propagation to the next phase starting from <code>interception</code> phase (Example 3).
+ * IndigoJS routers process five sequential phases :
+   1. <code>derivation</code>
+   2. <code>interception</code>
+   3. <code>implementation</code>
+   4. <code>middleware</code>
+   5. <code>integration</code> 
+
+   For security reasons indigoJS protects access to the <code>derivation</code> and <code>integration</code> phases. The router may handle and 
+ * prevent propagation to the following phases (Example 3).
  *
- * The next phase <code>implementation</code> resolves in router/controller (Example 4).
+ * The <code>implementation</code> phases is resolved in the router/controller (Example 4).
  *
- * The <code>middleware</code> phase usually handles all requests to the static resourses (Example 5).
+ * The <code>middleware</code> phase typically handles all requests to the static resourses (Example 5).
  *
  * @example
  * Example 1
@@ -184,8 +191,8 @@ const routers =
  * @alias routerConf
  *
  * @param {Object|String} [opt] Return configuration parameters from the router class. 
- * In case of <code>opt</code> is undefined the default router pass will assign to root '/route' or you 
- * can override by returning base name as string or an object <code>{base:'/myroute'}</code>
+ * In the case that <code>opt</code> is undefined, the default router pass will be assigned to root '/route' or 
+ * can be overridden by returning the base name as a string or object <code>{base:'/myroute'}</code>
  * @return {Object} conf New router configuration object.
  */
 routers.routerConf = opt => {
@@ -199,7 +206,7 @@ routers.routerConf = opt => {
 };
 
 /**
- * This function verifying and loading routers and controllers.
+ * This function verifies and loads routers and controllers.
  * @memberof libs/routers.prototype
  * @alias loadModule
  * @param {Array} list List of directories or files.

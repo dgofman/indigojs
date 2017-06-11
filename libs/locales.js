@@ -9,14 +9,13 @@ const indigo = global.__indigo,
 	defaultLocale = 'en-us';
 
 /**
- * This module exposes the locale-determination logic for resource 
- * bundles implementation that needs to produce localized messages.
+ * This module exposes the locale-determination logic for the implementation of resource 
+ * bundles that need to produce localized messages.
  *
  * @version 1.0
  *
  * @module
  * @mixin libs/locales
- * @requires ./locales/accept-rules.json
  */
 const locales = () => {
 	/** @lends libs/locales.prototype */
@@ -25,6 +24,8 @@ const locales = () => {
 		/**
 		 * Collection of localization objects where key points to locale code and value map 
 		 * of key and value of localization messages.
+		 * @memberof libs/locales
+		 * @alias localeMap
 		 * @type {Object}
 		 */
 		localeMap: {},
@@ -32,25 +33,34 @@ const locales = () => {
 		/**
 		 * Collection of expections during parsering the locale files, where key is file 
 		 * name and value is error object.
+		 * @memberof libs/locales
+		 * @alias errorFiles
 		 * @type {Object}
 		 */
 		errorFiles: {},
 
 		/**
 		 * Default language code 
+		 * @memberof libs/locales
+		 * @alias defaultLocale
 		 * @type {String}
 		 */
 		defaultLocale,
 
 		/**
 		 * Map of locale files modified dates
+		 * @memberof libs/locales
+		 * @alias lastModified
 		 * @type {Object}
 		 */
 		lastModified: {},
 
 		/**
-		 * This method executed once reading <code>locales</code> setting defined in appconf.json 
+		 * This method is executed once reading <code>locales</code> setting defined in appconf.json 
 		 * and building tree of locale messages <code>localeMap</code> at start time.
+		 *
+		 * @memberof libs/locales
+		 * @alias config
 		 *
 		 * @example
 		 * conf/app.json 
@@ -87,7 +97,10 @@ const locales = () => {
 		},
 
 		/**
-		 * Loading locale files and building locales object.
+		 * Loads locale files and builds a locale object.
+		 *
+		 * @memberof libs/locales
+		 * @alias parse
 		 *
 		 * @param {String} dirName Absolute path to json files.
 		 * @param {Object} parent Locales properties.
@@ -115,9 +128,12 @@ const locales = () => {
 
 		/**
 		 * Initializing user locale by using request header.
+		 *
+		 * @memberof libs/locales
+		 * @alias headerLocale
+		 *
 		 * @param {express.Request} req Defines an object to provide client request information.
-		 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
-		 * return {String} locale Return the router locale name.
+		 * @return {String} locale Return the router locale name.
 		 */
 		headerLocale(req) {
 			if (req.headers) {
@@ -145,7 +161,11 @@ const locales = () => {
 		},
 
 		/**
-		 * Initializing current user locale and returning locallization map of localized messages.
+		 * Initializes the current user locale and returns a map of localized messages.
+		 *
+		 * @memberof libs/locales
+		 * @alias headerLocale
+		 *
 		 * @param {express.Request} req Defines an object to provide client request information.
 		 * @param {String} [locale] User language code.
 		 * @return {Object} locale Collection of localization messages.
@@ -157,6 +177,10 @@ const locales = () => {
 
 		/**
 		 * Monitor changes in locale file.
+		 *
+		 * @memberof libs/locales
+		 * @alias headerLocale
+		 *
 		 * @param {Object} appconf JSON object represents application configuration.
 		 */
 		monitor(appconf) {

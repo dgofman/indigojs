@@ -7,7 +7,7 @@
 
 ### Getting started
 
-###### 1. Download and install Install NodeJS
+###### 1. Download and install NodeJS
 
 ```
  http://nodejs.org/download/
@@ -26,7 +26,7 @@
  npm install indigojs
 ```
 
-###### 4. Check the project generator attributes.
+###### 4. Check the project generator attributes
 
 ```
  ./node_modules/indigojs/generator --help
@@ -95,6 +95,6 @@ grunt
 
 [MIT](http://opensource.org/licenses/mit-license.php)
 
-### Please read our API's documentation.
+### Please read our API documentation.
 
 http://www.indigojs.com/docs/index.html

@@ -3,17 +3,15 @@
 const indigo = global.__indigo;
 
 /**
- * indigoJS <code>rest</code> module is a simple yet powerful representation of your RESTful API.
- * By specifying <code>service:path</code> in <code>app.conf</code> you can link to custom version to your
- * REST API's or another service manager module.
+ * The indigoJS <code>rest</code> module is a simple yet powerful representation of your RESTful API.
+ * By specifying <code>service:path</code> in <code>app.conf</code> you can override any indigoJS module with a custom version of your choice.
  *
  * @version 1.0
  *
  * @module
  * @mixin libs/rest
  *
- * @requires http
- * @requires https
+ * @see https://www.npmjs.com/package/proxy-orchestrator
  *
  * @example
  * conf/app.json 
@@ -33,7 +31,8 @@ const rest = () => {
 
 	return /** @lends libs/rest.prototype */ {
 		/**
-		 * Initializing server settings.
+		 * Initializes server settings.
+		 *
 		 * @param {Object} opts Defined default server configuration where <code>host</code> is IP Address or
 		 * domain name,  <code>port</code> server port number and <code>secure</code> communications protocol
 		 * HTTP or HTTPS.
@@ -64,7 +63,7 @@ const rest = () => {
 			return this;
 		},
 		/**
-		 * This function used to request a LIST of entities or to SHOW details for one entity.
+		 * This function is used to request a LIST of entities or to SHOW details for a single entity.
 		 * @param {Function} callback A callback function that is executed if the request completed.
 		 * @param {String} path Canonical path of the router.
 		 * @param {Object} [data] An object that is sent to the server with the request.
@@ -79,7 +78,7 @@ const rest = () => {
 			this.request(callback, 'GET', path, data, query);
 		},
 		/**
-		 * Executing HTTP POST requests contain their data in the body of the request. 
+		 * This function executes HTTP POST requests. 
 		 * @param {Function} callback A callback function that is executed if the request completed.
 		 * @param {String} path Canonical path of the router.
 		 * @param {Object} [data] An object that is sent to the server with the request.
@@ -94,7 +93,7 @@ const rest = () => {
 			this.request(callback, 'POST', path, data, query);
 		},
 		/**
-		 * The function sending request and translated as UPDATE or REPLACE an entity. 
+		 * This function sends a request and UPDATEs or REPLACEs an entity. 
 		 * @param {Function} callback A callback function that is executed if the request completed.
 		 * @param {String} path Canonical path of the router.
 		 * @param {Object} [data] An object that is sent to the server with the request.
@@ -109,7 +108,7 @@ const rest = () => {
 			this.request(callback, 'PUT', path, data, query);
 		},
 		/**
-		 * The function requests are used to delete an entity.
+		 * This function is used to delete an entity.
 		 * @param {Function} callback A callback function that is executed if the request completed.
 		 * @param {String} path Canonical path of the router.
 		 * @param {Object} [data] An object that is sent to the server with the request.
@@ -124,7 +123,7 @@ const rest = () => {
 			this.request(callback, 'DELETE', path, data, query);
 		},
 		/**
-		 * The function perform a partial update of an entity.
+		 * This function perform a partial update of an entity.
 		 * @param {Function} callback A callback function that is executed if the request completed.
 		 * @param {String} path Canonical path of the router.
 		 * @param {Object} [data] An object that is sent to the server with the request.

@@ -13,18 +13,17 @@ var reqModel, http,
  * indigoJS is the simplest localization and templating framework running on node platform.
  *
  * indigoJS is a flexible library, allowing multiple configurations from 
- * the JSON file. By default indigoJS assigns a server port number from a system environment
- * <code>process.env.INDIGO_PORT</code> if this varible is not defined on the host server, indigoJS reads
+ * the JSON file. By default, indigoJS assigns a server port number from a system environment
+ * <code>process.env.INDIGO_PORT</code>. If this varible is not defined on the host server, indigoJS reads
  * the server properties from the JSON file. 
  *
- * The <code>cache</code> property sets the header cache value for static files (in the seconds). 
- * By assigning it to zero it will prevent browser from caching.
+ * The <code>cache</code> property sets the header cache value for static files (in seconds). 
+ * Assigning it to zero it will prevent the browser from caching.
  *
- * The property <code>webdir</code> specifies path to the all web static resources.
+ * The <code>webdir</code> property specifies the path to all web resources.
  *
- * By defining the <code>environment</code> variable as <code>prod</code> indigo including a minifying version of
- * the static resources (*.min.js, *.min.css, compressed less) that simulates file output in deployed server, by
- * default the value set's to <code>dev</code>.
+ * When defining the <code>environment</code> variable as <code>prod</code>, indigoJS includes a minified version of
+ * the static resources (*.min.js, *.min.css, compressed less) that simulates file output in the deployed server. The value is set to <code>dev</code> by default.
  *
  * @example
  * conf/app.json 
@@ -49,9 +48,9 @@ const indigo =
 	{
 
 	/**
-	 * Determine minimum supported version.
+	 * Determines minimum supported version.
 	 * @param {String} version Minimum supported version.
-	 * @return {Class} this Return class instance.
+	 * @return {Class} this Returns class instance.
 	 */
 	min_version(version) {
 		let current_version = require('./package.json').version,
@@ -69,9 +68,9 @@ const indigo =
 	},
 
 	/**
-	 * Creating <code>appconf</code> object.
+	 * Creates <code>appconf</code> object.
 	 * @param {JSON|String} appconf Path to the <code>app.json</code> file or application configuration object.
-	 * @return {Object} appconf Return reference to the configuration object.
+	 * @return {Object} appconf Returns reference to the configuration object.
 	 */
 	getAppConf(appconf) {
 		if (typeof(appconf) === 'string') { //path to app.json
@@ -105,9 +104,9 @@ const indigo =
 	},
 
 	/**
-	 * Initialization of module members by using JSON configuration object.
+	 * Initializes module members by using the JSON configuration object.
 	 * @param {JSON|String} appconf Path to the <code>app.json</code> file or application configuration object.
-	 * @return {Object} appconf Return reference to the  configuration object.
+	 * @return {Object} appconf Returns reference to the configuration object.
 	 */
 	init(appconf) {
 		/**
@@ -149,7 +148,7 @@ const indigo =
 		const service = require(this.appconfPath('service:path') || './libs/rest')();
 
 		/**
-		 * Reference to REST-based api.
+		 * Reference to REST-based API.
 		 * @memberof indigo
 		 * @alias service
 		 * @type {Object}
@@ -162,14 +161,14 @@ const indigo =
 
 		this.portNumber = Number(process.env.INDIGO_PORT || appconf.get('server:port'));
 
-		locales.config(appconf); //initialize locales
-		locales.monitor(appconf); //check file changes
+		locales.config(appconf); //initializes locales
+		locales.monitor(appconf); //checks for file changes
 
 		return appconf;
 	},
 
 	/**
-	 * Starting a server. It is called after the init method.
+	 * Starts a server. This method is called after the init method has been executed.
 	 * @example
 	 * require('indigojs').start(__dirname + '/config/app.json', 
 	 *	function(http, app) { //before
@@ -182,8 +181,8 @@ const indigo =
 	 * require('indigojs').start({server:80, webdir:"/web"});
 	 *
 	 * @param {JSON|String} appconf Path to the app.json file or application configuration object.
-	 * @param {Function} [before] Callback function before starting http server.
-	 * @param {Function} [after] Callback function after server started.
+	 * @param {Function} [before] Callback function which is executed prior before starting http server.
+	 * @param {Function} [after] Callback function which is executed after the server has been started.
 	 */
 	start(appconf, before, after) {
 
@@ -236,17 +235,17 @@ const indigo =
 
 		errorHandler.notFound(app);
 
-		// Using the .html extension instead of
-		// having to name the views as *.ejs
+		// Uses the .html extension instead of
+		// naming the views as *.ejs
 		app.engine('.html', ejs.__express);
 
-		// Set the folder where the pages are kept
+		// Sets the folder where view pages are kept
 		app.set('views', webdir);
 
 		/**
 		 * Reference to HTTP server.
 		 * @memberof indigo
-		 * @alias logger
+		 * @alias http
 		 * @type {Object}
 		 */
 		indigo.http = http = require('http').createServer(app);
@@ -272,9 +271,9 @@ const indigo =
 
 	/**
 	 * Register application routes
-	 * @param {Object} appconf JSON object represents application configuration.
-	 * @param {Object} [locales] Reference to <code>/lib/locales</code>.
-	 * @param {Object} [reqModel] Reference to {@link libs/reqmodel} object what will be assign to <code>req.model</code> for each router request.
+	 * @param {Object} appconf JSON object which represents the application configuration.
+	 * @param {Module} [locales] Reference to <code>/lib/locales</code>.
+	 * @param {Module} [reqModel] Reference to {@link libs/reqmodel} object which will be assigned to <code>req.model</code> for each router request.
 	 */
 	addRoute(appconf, locales, reqModel) {
 		routers.init(appconf, locales, reqModel);
@@ -283,7 +282,8 @@ const indigo =
 	/**
 	 * Substitutes "{n}" tokens within the specified string with the respective arguments passed in.
 	 * @param {String} str The string to make substitutions in. This string can contain special tokens of the form {n}, where n is a zero based index, that will be replaced with the additional parameters found at that index if specified.
-	 * @param {Array} rest — Additional parameters that can be substituted in the str parameter at each {n} location, where n is an integer (zero based) index value into the array of values specified.
+	 * @param {Array} rest Additional parameters that can be substituted in the str parameter at each {n} location, where n is an integer (zero based) index value in the array of values specified.
+	 * @return {String} str New string with all of the {n} tokens replaced with the respective arguments specified.
 	 */
 	substitute(str, rest) {
 		if (str) {
@@ -295,8 +295,8 @@ const indigo =
 	},
 
 	/**
-	 * Explicitly closing http server by using unittests.
-	 * @param {Function} done Callback function executing after services are terminated.
+	 * Explicitly closes http server by using unit tests.
+	 * @param {Function} done Callback function which executes after services are terminated.
 	 */
 	close(done) {
 		http.close(done);
@@ -311,7 +311,7 @@ const indigo =
 	 */
 	render(req, res, fileName) {
 		if (fileName.indexOf('.') === -1) {
-			fileName += '.html'; //attach default HTML extension
+			fileName += '.html'; //attaches default HTML extension
 		}
 
 		const newUrl = indigo.getNewURL(req, res, fileName);
@@ -334,7 +334,7 @@ const indigo =
 	},
 
 	/**
-	 * Return path to the custom module.
+	 * Returns path to the custom module.
 	 * @param {String} key The property name/path defined in configuration file.
 	 * @return {String} path Absolute path to the file from the current project directory.
 	 */
@@ -344,9 +344,9 @@ const indigo =
 	},
 
 	/**
-	 * Return object with key/value pair when values will be localized base on client locale request.
+	 * Returns object with key/value pair when values will be localized based on client locale request.
 	 * @param {express.Request} req Defines an object to provide client request information.
-	 * @param {String} [keyName='locale'] Customize <code>req.params</code> key name refering to locale code.
+	 * @param {String} [keyName='locale'] Customizes <code>req.params</code> key name referring to locale code.
 	 * @return {Object} locale Collection of localization messages.
 	 */
 	getLocale(req, keyName) {
@@ -355,7 +355,7 @@ const indigo =
 	},
 
 	/**
-	 * Return path to application webroot directory.
+	 * Returns the path to the application webroot directory.
 	 * @return {String} webdir Absolute path to webroot directory.
 	 */
 	getWebDir() {
@@ -363,7 +363,7 @@ const indigo =
 	},
 
 	/**
-	 * Return path to web/static directory defined in app.conf file.
+	 * Returns path to the web/static directory defined in app.conf file.
 	 * @return {String} Web path to static directory.
 	 */
 	getStaticDir() {
@@ -371,7 +371,7 @@ const indigo =
 	},
 
 	/**
-	 * Return base path to component assets.
+	 * Returns base path to the component assets.
 	 * @return {String} Web path to component less and js files.
 	 */
 	getComponentPath() {
@@ -379,7 +379,7 @@ const indigo =
 	},
 
 	/**
-	 * Return HTML component tag.
+	 * Returns HTML component tag.
 	 * @return {String} HTML component tag.
 	 */
 	getComponentTag() {
@@ -387,17 +387,17 @@ const indigo =
 	},
 
 	/**
-	 * Return value from system environment or package.json
+	 * Returns value from the system environment or package.json
 	 * @param {String} key Pair key.
-	 * @return {String} Pair value.
+	 * @return {String} value Environment name.
 	 */
 	getEnv(key) {
 		return process.env[key] || process.env['npm_package_config_' + key];
 	},
 
 	/**
-	 * Return command line arguments
-	 * @return {Object} Pair key and value.
+	 * Returns command line arguments
+	 * @return {Object} Pair key and value pair.
 	 */
 	getArgs() {
 		const args = {};
@@ -411,11 +411,11 @@ const indigo =
 	},
 
 	/**
-	 * Verify path to existing file in application web directory based of locale rule in <code>libs/locales/accept-rules.json</code>.
+	 * Verifies the path to the existing file in the web application's directory based on locale rules in <code>libs/locales/accept-rules.json</code>.
 	 * @param {express.Request} req Defines an object to provide client request information.
 	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
 	 * @param {String} url Client request to the locale file. 
-	 * @return {String} url New URL base on web appllication directory defined in locale dependencies.
+	 * @return {String} url New URL based on web appllication directory defined in locale dependencies.
 	 */
 	getNewURL(req, res, url) {
 		if (url.charAt(0) !== '/') {
@@ -456,16 +456,16 @@ const indigo =
 	debug: require('debug'),
 
 	/**
-	 * Import a module under <code>libs</code> directory.
+	 * Imports a module under <code>libs</code> directory.
 	 * @param {String} module File name.
-	 * @return {Object} module.
+	 * @return {Module} module. The module definition under <code>libs</code> directory.
 	 */
 	libs(module) {
 		return require('./libs/' + module);
 	},
 
 	/**
-	 * Include Express directory handler.
+	 * Includes Express directory handler.
 	 * @param {String} path URI path.
 	 * @param {String} webdir Absolute path to the web directory.
 	 */
@@ -474,7 +474,7 @@ const indigo =
 	},
 
 	/**
-	 * Render an error template.
+	 * Renders an error template.
 	 * @param {Object} err Contains information about errors.
 	 * @param {express.Request} req Defines an object to provide client request information.
 	 * @param {express.Response} res Defines an object to assist a server in sending a response to the client.
@@ -491,7 +491,10 @@ const indigo =
 };
 
 /**
- * Return path of the current plugin/module webroot directory.
+ * Returns path of the current plugin/module webroot directory.
+ *
+ * @memberof indigo
+ *
  * @param {express.Request} req Defines an object to provide client request information.
  * @return {String} webdir Absolute path to module webroot directory.
  */
@@ -500,15 +503,18 @@ const getModuleWebDir = (req) => {
 };
 
 /**
- * Global variable defined absolute path to application directory.
+ * Global variable which defines an absolute path to the application directory.
  * @global
  * @alias __appDir
  * @type {String}
+ *
+ * @example
+ * require(\`${__appDir}/indigojs\`);
  */
 global.__appDir = process.cwd();
 
 /**
- * Global instance to the <code>indigo</code> module.
+ * Global instance of the <code>indigo</code> module.
  * @global
  * @alias __indigo
  * @type {Object}

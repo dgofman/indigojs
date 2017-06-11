@@ -8,10 +8,7 @@ const indigo = global.__indigo;
  * Based on <code>environment</code> value definded in <code>app.json</code> is included at runtime
  * original source or compiled (<code>minify</code>) files by using keys <code>extCSS</code> and <code>extJS</code>.
  *
- * The object <code>locality</code> defined user locality information such as language code.
- *
- * The <code>locales</code> object refers to the values of localization messages. This object builds based on 
- * your files names in your <code>locales</code> directory plus localization keys.
+ * The <code>locales</code> object refers to the values of localization messages.
  *
  * The <code>contextPath</code> providing path for the current router.
  *
@@ -22,41 +19,38 @@ const indigo = global.__indigo;
  *
  * @return {Object} model List of properties assigning to <code>req.model</code> for rendering in EJS templates.
  *
- * @see {@link libs/routers#init}
- * @see {@link libs/reqmodel.js}
- *
  * @example
- * conf/app.json 
+ *
+ *<pre><code>conf/app.json 
  *{
  *	"environment": "dev"
  *	...
  *}
+ *</code></pre>
  *
- * @example
- * head.template.html 
  *
- * &lt;html lang="&lt;%= locality.langugage %&gt;"&gt;
- * &lt;meta charset="UTF-8"&gt;
- * &lt;meta http-equiv="content-type" content="text/html; charset=UTF-8"&gt;
- * &lt;title&gt;&lt;%= locales.content.pageTitle %&gt;&lt;/title&gt;
+ *<pre><code>head.template.html 
  *
- * &lt;link rel="stylesheet" href="css/bootstrap&lt;%= extCSS %&gt;" media="screen"&gt;
- * &lt;link rel="stylesheet" type="text/css" href="css/custom.less"&gt;
+ * &lt;link rel="stylesheet" href="css/bootstrap&lt;%- <b>extCSS</b> %&gt;" media="screen"/&gt;
  *
- * &lt;script src="js/vendor/require-2.1.15&lt;%= extJS %&gt;" data-main="js&lt;%= contextPath %&gt;/main-&lt;%= environment %&gt;"&gt;&lt;/script&gt;
+ *&lt;script src="js/vendor/require-2.1.15&lt;%- <b>extJS</b> %&gt;" data-main="js&lt;%- contextPath %&gt;/main-&lt;%- environment %&gt;"/&gt;
+ *</code></pre>
  *
  * You can override this module anytime
  *
- * module.exports = function(appconf) {
- *	var reqmodel = indigo.libs('reqmodel')(appconf);
+ *<pre><code> module.exports = function(appconf, app) {
+ *	const reqmodel = indigo.libs('reqmodel')(appconf, app); //initializes default indigoJS properties
  *
  *	return function(req, res, next) {
  *		reqmodel(req, res, function() {
- *			req.model.newModelKey = 'newModelValue';
+ *			 //adds custom properties
+ *			req.model.customKey = 'customValue';
+ *			...
  *			next();
  *		});
  *	};
  * };
+ *</code></pre>
  */
 
 const reqmodel = (appconf, app) => {

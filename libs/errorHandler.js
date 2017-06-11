@@ -3,16 +3,15 @@
 const indigo = global.__indigo;
 
 /**
- * This is the default expection handler module assigned for each router and reporting an error 
- * that occurred during HTTP request.
+ * The default exception handler module. It is assigned to each router and reports errors 
+ * that occurred during an HTTP request.
  *
- * indigo provides the option to override this library from <code>app.json</code> by specifing <code>path</code>
+ * indigo provides the option to override this library from <code>app.json</code> by specifing the <code>path</code>
  * to your custom library.
  *
- * Another option for you is to customize an HTML error details by pointing to your <code>template</code> file. By default
- * indigo rendering template from <code>examples/templates</code> directory. 
+ * Indigo renders templates from the <code>examples/templates</code> directory, however it is possible to customize HTML error details by pointing to your own <code>template</code> file. 
  *
- * And last option is the ability to specify a URL link for HTTP errors <code>400/500/503</code>.
+ * A specific URL link can also be specified for HTTP errors <code>400/500/503</code>.
  * 
  * @see {@link sourceloader.routers.js#errorHandler libs/routers}
  *
@@ -34,7 +33,6 @@ const indigo = global.__indigo;
  *
  * @module
  * @mixin libs/errorHandler
- * @param {Object} appconf An application configuration.
  */
 const errorHandler = () => {
 
@@ -82,7 +80,7 @@ const errorHandler = () => {
 		},
 
 		/**
-		 * Create an error model based on statusCode.
+		 * Creates an error model based on statusCode.
 		 * @memberof libs/errorHandler.prototype
 		 * @alias getErrorModel
 		 * @param {Object} err Contains information about errors.
@@ -115,15 +113,15 @@ const errorHandler = () => {
 		},
 
 		/**
-		 * Update error model.
+		 * Updates the error model.
 		 * @memberof libs/errorHandler.prototype
 		 * @alias updateErrorModel
 		 * @param {Object} model Error model.
-		 * @param {String|Number} errorId Error id assigning for each function hanlder.
+		 * @param {String|Number} errorId Error id assigned for each individual function handler.
 		 * @param {Object} err Contains information about errors.
 		 * @param {String} message Error description.
 		 * @param {String} [details] Error details.
-		 * @return {Object} error JSON object with error infomation.
+		 * @return {Object} error JSON object with error information.
 		 */
 		setErrorDetails(model, errorId, err, message, details) {
 			model.uid = model.uid || Date.now();
@@ -136,7 +134,7 @@ const errorHandler = () => {
 		},
 
 		/**
-		 * Error handler of runtime errors during rendering EJS templates.
+		   Handles runtime errors during EJS template rendering.
 		 * @see {@link sourceloader.indigo.js#localsInject app.locals.inject}
 		 * @memberof libs/errorHandler.prototype
 		 * @alias injectErrorHandler
@@ -151,14 +149,14 @@ const errorHandler = () => {
 		},
 
 		/**
-		 * Logging an error message and assigning an uinque system id for each error.
+		 * Logs an error message and assigns a unique system id to each error.
 		 * @memberof libs/errorHandler.prototype
 		 * @alias error
-		 * @param {String|Number} errorId Error id assigning for each function hanlder.
+		 * @param {String|Number} errorId Error id assigned to individual function hanlder.
 		 * @param {Object} err Contains information about errors.
 		 * @param {String} message Error description.
 		 * @param {String} [details] Error details.
-		 * @return {Object} error JSON object with error infomation.
+		 * @return {Object} error JSON object with error information.
 		 */
 		error(errorId, err, message, details) {
 			const model = this.setErrorDetails({}, errorId, err, message, details);

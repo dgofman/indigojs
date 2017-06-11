@@ -3,11 +3,10 @@
 const winston = require('winston');
 
 /**
- * This module including default a logger class is used to log messages for a specific system.
- * The logger is determined by the configured levels from <code>app.json</code> file.
- * From application configuration file can may provide path to another logger source module.
+ * This module includes a default logger class and is used to log messages for a specific system.
+ * The logger is determined by the configured levels from the <code>app.json</code> file.
+ * The application configuration file can provide the path to another logger source module as well.
  * 
- * @see {@link libs/locales.js libs/logger}
  * @see {@link https://www.npmjs.com/package/winston}
  *
  * @example
@@ -43,11 +42,26 @@ const logger = (appconf) => {
 		]
 	});
 
-
+	/**
+	 * Dynamically changes the <code>winston</code> log level of a transport at runtime.
+	 *
+	 * @memberof libs/logger
+	 * @alias getLevel
+	 *
+	 * @param {String} level New logging level - [error, warn, info, verbose, debug, silly]
+	 */
 	log.setLevel = level => {
 		log.transports.console.level = level;
 	};
 
+	/**
+	 * Gets the current <code>winston</code> log level.
+	 *
+	 * @memberof libs/logger
+	 * @alias getLevel
+	 *
+	 * @return {String} locale Returns the logging levels
+	 */
 	log.getLevel = () => {
 		return log.transports.console.level;
 	};

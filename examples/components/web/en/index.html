@@ -1,41 +1,109 @@
 <!DOCTYPE html>
-<html lang="<%- locality.langugage %>">
+<html lang="en">
 <head>
 <title><%- locales.common.pageTitle %></title>
 
 <%- $include('templates/meta.html') %>
 
-<%
-if (app_template === 'spa') {
-%>
-	<%
-		if (app_template_layout === 'sticky') {
-	%>
-		<%- $include('templates/spa/sticky/index.html') %>
-	<%
-		} else {
-	%>
-		<%- $include('templates/spa/flex/index.html') %>
-	<%
-		}
-	%>
-<%
-} else {
-%>
-	<%
-		if (app_template_layout === 'sticky') {
-	%>
-		<%- $include('templates/fpa/sticky/index.html') %>
-	<%
-		} else {
-	%>
-		<%- $include('templates/fpa/flex/index.html') %>
-	<%
-		}
-	%>
-<%
-}
-%>
+<link rel="stylesheet" type="text/css" href="<%- componentPath %>/less/common<%- extLESS %>">
+<link rel="stylesheet" type="text/css" href="<%- componentPath %>/less/index<%- extLESS %>">
 
-<%- $finalize() %>
+<!-- Source Code styling -->
+<link rel="stylesheet" type="text/css" href="<%- baseStaticPath %>/css/styles<%- extLESS %>">
+</head>
+
+<body>
+	<section class="igo-content"></section>
+
+	<script type="text/javascript">
+		var content = document.querySelector('.igo-content'),
+			loadPage = function() {
+				if (window.location.hash) {
+					var page = window.location.hash.split('#').pop();
+					if (page) {
+						//<!-- juiSpinner Localization -->
+						//src="https://jqueryui.com/resources/demos/external/globalize/globalize.js"
+						//src="https://jqueryui.com/resources/demos/external/globalize/globalize.culture.ja-JP.js"
+
+						var xhttp = new XMLHttpRequest();
+						xhttp.onreadystatechange = function() {
+						if (this.readyState === 4 && this.status == 200) {
+								content.innerHTML = this.responseText;
+								var scripts = content.querySelectorAll('script');
+								for (var i = 0; i < scripts.length; i++) {
+									var script = scripts[i];
+									if ((script.type || '').indexOf('template') === -1) {
+										try {
+											eval(script.innerHTML);
+										} catch (e) {console.error(e, script.innerHTML);}
+									}
+								}
+								initScroll();
+							}
+						};
+						xhttp.open('GET', '<%- contextPath %>/' + page);
+						xhttp.send();
+					}
+				}
+			};
+
+		window.onhashchange = function() {
+			loadPage();
+		};
+		loadPage();
+
+		function initScroll() {
+			var div = content.querySelector('.right');
+			if (!div) return;
+			var map = {}, as = [], active, start = 0,
+				h1s = content.querySelectorAll('h1[id]');
+			for (var j = 0; j < h1s.length; j++) {
+				var top, h1 = h1s[j], next = h1s[j + 1],
+					a = content.querySelector('.left a[href*="#' + h1.id + '"]');
+				if (a) {
+					if (next) {
+						top = next.getBoundingClientRect().top;
+					} else {
+						top = div.scrollHeight;
+					}
+					map[h1.id] = {start: start, end: top, a: a};
+					as.push(a);
+					start = top;
+				}
+			}
+			div.onscroll = function() {
+				var pos = Math.max(div.scrollTop - 100, 0);
+				for (var id in map) {
+					var o = map[id];
+					if (pos >= o.start && pos < o.end) {
+						if (active !== o.a) {
+							active = o.a;
+							as.forEach(function(a) {
+								a.className = null;
+							});
+							active.className = 'selected';
+							return;
+						}
+					}
+				}
+			};
+			div.onscroll();
+		}
+
+		function printSource(id) {
+			var frame = document.createElement('iframe');
+			frame.domain = document.domain;
+			frame.style.position = 'absolute';
+			frame.style.top = '-10000px';
+			document.body.appendChild(frame);
+			frame.contentDocument.write(document.querySelector(id + '>div>div').innerHTML);
+			frame.focus();
+			frame.contentWindow.print();
+			frame.parentNode.removeChild(frame);
+		}
+	</script>
+
+	<%- $include('templates/footer.html') %>
+</body>
+
 </html>

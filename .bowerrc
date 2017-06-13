@@ -1,3 +1,6 @@
 {
-	"directory" : "examples/components/web/default"
+	"directory" : "examples/components/web/default",
+	"scripts": {
+		"postinstall": "npm install && grunt"
+	}
 }

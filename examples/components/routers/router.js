@@ -1,6 +1,6 @@
 'use strict';
 
-const defaultPage = 'components',
+const defaultPage = 'igo',
 	bodyParser = require('body-parser');
 
 module.exports = (router, app) => {

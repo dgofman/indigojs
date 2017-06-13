@@ -8,15 +8,15 @@ module.exports = function(router) {
 		indigo.render(req, res, '/index');
 	});
 
-	router.get('/components', function(req, res) {
-		indigo.render(req, res, '/components');
+	router.get('/igo', function(req, res) {
+		indigo.render(req, res, '/indigo_components.html');
 	});
 
-	router.get('/examples', function(req, res) {
-		indigo.render(req, res, '/examples');
+	router.get('/jui', function(req, res) {
+		indigo.render(req, res, '/jqueryui_components.html');
 	});
 
-	router.get('/docs', function(req, res) {
-		indigo.render(req, res, '/docs');
+	router.get('/core', function(req, res) {
+		indigo.render(req, res, '/data_binding.html');
 	});
 };

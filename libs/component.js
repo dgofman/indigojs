@@ -21,7 +21,9 @@ const indigo = global.__indigo,
 		self.$css = register(getCss);
 		self.$title = register(addTitle);
 		self.$label = register(addLabel);
-		self.$assign = assign;
+		self.$assign = (opts, self) => {
+			return assign(req, opts, self);
+		}
 		return self;
 	}, addTitle = (req, opts, title) => {
 		title = title || opts.title;
@@ -63,8 +65,6 @@ const indigo = global.__indigo,
 			}
 		}
 		return '';
-	}, jsRender = (data, cTag, className) => {
-		return `window.top.init(window, '${componentTag ? cTag : ''}[cid=${className}]', ${data});`;
 	};
 
 /**
@@ -73,50 +73,27 @@ const indigo = global.__indigo,
  */
 module.exports = (app) => {
 
-	var getModuleWebDir = indigo.getModuleWebDir;
+	app.get(`${indigo.getComponentPath()}/*`, (req, res, next) => {
 
-	app.get(`${indigo.getComponentPath()}/:file`, (req, res) => {
-		req.model = req.model || {};
-		indigo.locales.headerLocale(req);
+		const file = req.params[0],
+			match = file.split('.'),
+			index = match.length - 1,
+			filePath = `${indigo.getModuleWebDir(req)}/default/components/${file}`;
 
-		const arr = req.params.file.split('.'),
-			dir = getModuleWebDir(req),
-			className = arr[0],
-			cache = parseInt(indigo.appconf.get('server:cache')),
-			fileURL = indigo.getNewURL(req, null, `/indigojs/components/${className}/${req.params.file}`);
-		if (!fs.existsSync(dir + fileURL)) {
-			return res.status(404).end();
+		if (!fs.existsSync(filePath) || match[index] === 'less') {
+			if (match[index] === 'css') {
+				match[index] = 'less';
+			}
+			return module.exports.renderLess(`${indigo.getModuleWebDir(req)}/default/components/${match.join('.')}`, req, res, next);
 		}
 
-		fs.readFile(dir + fileURL, (error, data) => {
-			if (error) {
-				indigo.error(error);
-				return res.status(404).end();
-			} else {
-				res.setHeader('Cache-Control', 'public, max-age=' + (!isNaN(cache) ? cache : 3600)); //or one hour
-
-				if (arr[1] === 'js') {
-					res.set('Content-Type', 'application/javascript');
-					res.write(jsRender(data, indigo.getComponentTag(), className));
-					res.end();
-				} else {
-					less.render(`${componentTag ? indigo.getComponentTag() : ''}[cid=${className}] {\n${data.toString()}\n}`, {
-						filename: fileURL,
-						compress: indigo.appconf.get('environment') !== 'dev',
-						paths: [getModuleWebDir(req) + '/default']
-					}, (e, result) => {
-						res.set('Content-Type', 'text/css');
-						if (e) {
-							indigo.logger.error(`LESS Parse Error: ${fileURL}\n`, JSON.stringify(e, null, 2));
-							res.send(data);
-						} else {
-							res.write(result.css);
-							res.end();
-						}
-					});
-				}
-			}
+		res.writeHead(200, {
+			'Content-Type': 'application/octet-stream',
+			'Content-Disposition' : 'attachment; filename=' + file
 		});
+
+		const readStream = fs.createReadStream(filePath);
+		readStream.pipe(res);
 	});
 
 	/**
@@ -124,39 +101,50 @@ module.exports = (app) => {
 	 * @alias component.js#component
 	 */	
 	app.locals.component = app.locals.$ = (req, className, opts={}) => {
-		const cTag = indigo.getComponentTag();
 		debug(req.method, className);
-		const dir = getModuleWebDir(req),
-			newUrl = indigo.getNewURL(req, null, `/indigojs/components/${className}/${className}.html`);
 
-		try {
-			let model = assign(req, opts, req.model);
-			model.opts = opts;
-			model.componentIndex = model.componentIndex || 1;
-			model.assets = model.assets || {};
-
-			if (!model.assets[className]) {
-				model.assets[className] = {className, cTag};
-			}
-			model.componentIndex++;
-
-			let html = '', 
-				begin = `<${cTag} cid="${className}" tabindex="-1" class="init${model.$get('class')}"${model.$get('disabled', 'disabled')}${model.$attr('id')}`;
-			if (fs.existsSync(dir + newUrl)) {
-				model.filename = getModuleWebDir(req) + newUrl;
-				html = ejs.render(fs.readFileSync(model.filename, 'utf-8'), req.model);
-			}
-
-			if (opts.show === false) {
-				opts.parentStyle = `display: none; ${opts.parentStyle || ''}`;
-			}
-			html = `${begin}${model.$attr('parentStyle', 'style')}>${html}</${cTag}>`;
-
-			return html;
-		} catch(err) {
-			indigo.logger.error(err);
-			return '';
+		if (className.charCodeAt(0) < 91) {
+			className = 'igo' + className; //Button -> igoButton 
 		}
+
+		const cTag = indigo.getComponentTag(),
+			dir = indigo.getModuleWebDir(req),
+			match = className.match(/(.*)([A-Z].*)/);
+
+		if (match && match.length === 3) {
+			try {
+				const pkg = match[1],
+					type = match[2].toLowerCase(),
+					newUrl = indigo.getNewURL(req, null, `/default/components/${pkg}/${type}/${type}.ejs`),
+					model = assign(req, opts, req.model);
+				model.opts = opts;
+				model.assets = model.assets || {};
+				model.componentIndex = model.componentIndex || 1;
+
+				if (!model.assets[className]) {
+					model.assets[className] = {pkg, type};
+				}
+
+				let html = '',
+					begin = `<${cTag} _=${className} tabindex="-1" class="init${model.$get('class')}"${model.$get('disabled', 'disabled')}${model.$attr('id')}`;
+
+				if (fs.existsSync(dir + newUrl)) {
+					model.filename = indigo.getModuleWebDir(req) + newUrl;
+					html = ejs.render(fs.readFileSync(model.filename, 'utf-8'), req.model);
+				}
+
+				if (model.opts.show === false) {
+					model.opts.parentStyle = `display: none; ${model.opts.parentStyle || ''}`;
+				}
+				html = `${begin}${model.$attr('parentStyle', 'style')}>${html}</${cTag}>`;
+
+				model.componentIndex++;
+				return html;
+			} catch(err) {
+				indigo.logger.error(err);
+			}
+		}
+		return '';
 	};
 
 	/**
@@ -165,32 +153,71 @@ module.exports = (app) => {
 	 */
 	app.locals.finalize = (req, ...args) => {
 		debug('Include scripts: %s', JSON.stringify(req.model.assets));
-		let lines = [],
-			assets = [],
-			uri = indigo.getComponentPath();
-		if (args.length && args[0] === true) { //include common.less
-			assets.push(`<link rel="stylesheet" type="text/css" href="${req.model.baseStaticPath}/css/common${req.model.extLESS}">`);
-		}
-		for (let className in req.model.assets) {
-			const asset = req.model.assets[className],
-				dir = getModuleWebDir(req),
-				lessFile = indigo.getNewURL(req, null, `/indigojs/components/${asset.className}/${asset.className}.less`),
-				jsFile = indigo.getNewURL(req, null, `/indigojs/components/${asset.className}/${asset.className}.js`);
-			if (fs.existsSync(dir + lessFile)) {
-				assets.push(`<link href="${uri}/${asset.className}.less" rel="stylesheet" type="text/css"/>`);
-			}
 
-			if (fs.existsSync(dir + jsFile)) {
-				assets.push(`<script src="${uri}/${asset.className}.js" rel="${className}" type="text/javascript"></script>`);
-			} else {
-				assets.push(`<script>window.top.init(window, '[cid=${className}]', function() {})</script>`);
+		const dir = indigo.getModuleWebDir(req),
+			isDev = indigo.appconf.get('environment') === 'dev',
+			lines = [],
+			libs = [];
+		for (var className in req.model.assets) {
+			const asset = req.model.assets[className],
+				lessFile = indigo.getNewURL(req, null, `/components/${asset.pkg}/${asset.type}/${asset.type}.less`),
+				jsFile = indigo.getNewURL(req, null, `/components/${asset.pkg}/${asset.type}/${asset.type}.js`);
+
+			if (!fs.existsSync(dir + jsFile)) {
+				className = '!' + className;
 			}
-		}
-		for (let i = 0; i < args.length; i++) {
-			if (typeof args[i] === 'string') {
-				assets.push(`<script src="${args[i]}"></script>`);
+			if (!fs.existsSync(dir + lessFile)) {
+				className += '!';
 			}
+			libs.push(className);
 		}
-		return lines.concat(assets).join('\n');
+
+		lines.push(`<script>
+			var script = document.createElement('script');
+			script.src = '${isDev ? '/default/components/js/loader.js' : baseStaticPath + '/js/loader.min.js'}';
+			script.setAttribute('rel', 'igocore');
+			script.setAttribute('libs', '${libs.join(',')}');
+			script.setAttribute('uri', '${indigo.getComponentPath()}/');
+			document.head.appendChild(script);
+		</script>`);
+
+		if (args.length) {
+			lines.push(`<input igo-main type="hidden" value="${args.join()}"/>`);
+		}
+
+		return lines.join('\n');
 	};
 };
+
+
+module.exports.renderLess = (lessFile, req, res, next) => {
+	debug(req.method, lessFile);
+
+	if (fs.existsSync(lessFile)) {
+		const dir = indigo.getModuleWebDir(req),
+			cache = parseInt(indigo.appconf.get('server:cache')),
+			isDev = indigo.appconf.get('environment') === 'dev';
+
+		res.setHeader && res.setHeader('Cache-Control', 'public, max-age=' + 
+				(!isNaN(cache) ? cache : 3600)); //or one hour
+
+		fs.readFile(lessFile, (error, data) => {
+			less.render(data.toString(), {
+					filename: lessFile,
+					compress: !isDev,
+					paths: [`${dir}/default`, `${dir}/default/components`]
+				}, (error, result) => {
+					res.set('Content-Type', 'text/css');
+					if (!error) {
+						res.write(result.css);
+						res.end();
+					} else {
+						indigo.error(error);
+						res.send(data);
+					}
+				});
+		});
+		return;
+	}
+	next();
+}

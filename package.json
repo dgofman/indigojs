@@ -13,6 +13,7 @@
 		"account": "nodemon --debug examples/account/index.js",
 		"helloworld": "nodemon --debug examples/helloworld/index.js",
 		"firststep": "nodemon --debug examples/firststep/index.js",
+		"components": "nodemon --debug examples/components/index.js",
 		"jshint": "./node_modules/.bin/jshint . --config .jshintrc",
 		"test": "./node_modules/.bin/mocha test/unittest --reporter spec --check-leaks",
 		"mocha": "./node_modules/.bin/mocha test/mocha --reporter spec --check-leaks",

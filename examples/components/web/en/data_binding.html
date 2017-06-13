@@ -1,0 +1,510 @@
+<div class="left">
+	<ul>
+		<li><a href="/index?core#api">API Specification</a></li><hr/>
+		<li><a href="/index?core#example1">Example 1</a></li>
+		<li><a href="/index?core#example2">Example 2</a></li>
+		<li><a href="/index?core#example3">Example 3</a></li>
+		<li><a href="/index?core#example4">Example 4</a></li>
+		<li><a href="/index?core#example5">Example 5</a></li>
+		<li><a href="/index?core#example6">Example 6</a></li>
+		<li><a href="/index?core#example7">Example 7</a></li>
+		<br/><hr/>
+		<b>Components:</b><br/>
+		<div><a href="/index?igo">igo</a></div>
+		<div><a href="/index?jui">jui</a></div>
+	</ul>
+</div>
+<div class="right">
+	<style>
+		c {
+			margin-bottom: 5px;
+		}
+		[_=igoTogglebox] {
+			margin-top: 20px;
+		}
+		[_=igoTogglebox] label {
+			margin-bottom: 10px;
+			line-height: 30px;
+		}
+		[_=igoTogglebox] label:before {
+			content: '\1F441';
+			margin-right: 5px;
+			color: #6F00FF;
+		}
+		h6 {
+			font-weight: bold;
+			font-size: 11px;
+			margin-left: 10px;
+		}
+		.boxStyle c {
+			display: block;
+		}
+		pre {
+			margin-top: 10px;
+			white-space: pre-wrap;
+		}
+		code {
+			font-weight: bold;
+		}
+		z {
+			color: #4fdf4f;
+			font-weight: bold;
+		}
+		t {
+			color: #e6215d;
+		}
+		i {
+			font-style: italic;
+		}
+		.output {
+			min-height: 60px;
+			width: 100%;
+		}
+		.output, .output * {
+			color: red;
+			word-break: break-all;
+		}
+		a[onclick] {
+			color: blue;
+			float: right;
+		}
+	</style>
+	<h2>IndigoJS Core (Component Data Binding)</h2>
+	<p>
+		IndigoJS Core is a JavaScript data binding library which allows for the binding of HTML DOM objects to a data <u>model</u> (which can be represented as a JSON object). It provides a convenient way to pass data between multiple DOM components. The model dispatches an event when the source property changes. Binding occurs under the following circumstances:<br/><br/>
+
+		1. The source <code>property</code> has been modified, triggering the <code>model</code> to dispatch an event.<br/>
+		2. The getter/setter functions (<code>chain</code>) has been changed, modifying the component (<code>host</code>) binding value. <br/><br/>
+
+		<a href="/index?core#api" style="text-decoration: underline">API Specification</a>
+	</p>
+
+	<h2 id="example1">Example 1</h2>
+	<p>
+		Update the <u>model</u> on ENTER event. The model will also be updated automatically on blur/focusout.
+	</p>
+	<div ig-ns>
+		<div ex1 class="clearfix, boxStyle" style="padding: 10px">
+			<div class="output"></div>
+			<%- $('Input') %>
+			<%- $('Input') %>
+			<%- $('Input') %>
+		</div>
+
+		<%- $('igoTogglebox', {id: 'ex1', label: `<u>view source</u>`, content: `
+<div>
+	<b>HTML</b>
+	<pre class="toggle-content">
+	&lt;div <b>ex1</b>&gt;
+		&lt;div class=<t>'output'</t>&gt;&lt;/div&gt;
+		&lt;%- $(<t>'Input'</t>) %&gt;
+		&lt;%- $(<t>'Input'</t>) %&gt;
+		&lt;%- $(<t>'Input'</t>) %&gt;
+	&lt;/div&gt;
+
+	</pre>
+
+	<b>JavaScript</b>
+	<pre class="toggle-content">
+    <b>var</b> <u>model</u> = {ipt1Value: <t>'Value1'</t>, ipt2Value: <t>'Value2'</t>},
+	<i>parent</i> = $(<t>'div[ex1]'</t>),
+	div = <i>parent</i>.find(<t>'div.output'</t>),
+	<z>//The watch function is triggered on changes to the model (See: underlined text)</z>
+	<i>watch</i> = <b>function</b>(name, value) {
+	    div.html(<t>'&lt;b&gt;Name:&lt;/b&gt; '</t> + name + <t>'&lt;br&gt;&lt;b&gt;Value:&lt;/b&gt; '</t> + value + <t>'&lt;br&gt;&lt;b&gt;Model&lt;/b&gt;: '</t> + JSON.stringify(<u>model</u>));
+	},
+	<z>//Attach an instance of a base element to each component</z>
+	ipt1 = <b>indigo.create</b>(<t>'igoInput'</t>, 0, <i>parent</i>), <z>//parent.find('[_=igoInput]').eq(0)</z>
+	ipt2 = <b>indigo.create</b>(<t>'igoInput'</t>, 1, <i>parent</i>), <z>//parent.find('[_=igoInput]').eq(1)</z>
+	ipt3 = <b>indigo.create</b>(<t>'igoInput'</t>, 2, <i>parent</i>); <z>//parent.find('[_=igoInput]').eq(2)</z>
+
+	<z>//Initialize data binding of the component property ('value') to the model</z>
+	<b>indigo.bind</b>(<u>model</u>, <t>'ipt1Value'</t>, <t>'value'</t>, ipt1, <i>watch</i>);
+	<b>indigo.bind</b>(<u>model</u>, <t>'ipt2Value'</t>, <t>'value'</t>, ipt2, <i>watch</i>);
+	<b>indigo.bind</b>(<u>model</u>, <t>'ipt3Value'</t>, <t>'value'</t>, ipt3, <i>watch</i>);
+	</pre>
+</div>
+<br/><br/><a href="#" onclick="printSource('#ex1')">Print</a>
+		`}) %>
+	</div><hr/>
+
+	<h2 id="example2">Example 2</h2>
+	<p>
+		Update the <u>model</u> using namespace (optimized).
+	</p>
+	<div ig-ns>
+		<div ex2 class="clearfix, boxStyle" style="padding: 10px">
+			<div class="output"></div>
+			<%- $('Input') %>
+			<%- $('Input') %>
+			<%- $('Input') %>
+		</div>
+
+		<%- $('igoTogglebox', {id: 'ex2', label: `<u>view source</u>`, content: `
+<div>
+	<b>HTML</b>
+	<pre class="toggle-content">
+	&lt;div <b>ex2</b>&gt;
+		&lt;div class=<t>'output'</t>&gt;&lt;/div&gt;
+		&lt;%- $(<t>'Input'</t>) %&gt;
+		&lt;%- $(<t>'Input'</t>) %&gt;
+		&lt;%- $(<t>'Input'</t>) %&gt;
+	&lt;/div&gt;
+
+	</pre>
+
+	<b>JavaScript</b>
+	<pre class="toggle-content">
+	<b>indigo.namespace</b>(<t>'div[ex2]'</t>, function(<b>ns</b>) {
+	    <b>var</b> <i>Input</i> = <b>indigo.import</b>(<t>'igoInput'</t>),
+		div = <b>ns.$</b>(<t>'div.output'</t>);
+
+	    <b>indigo.watch</b>(<u>{ipt1Value: <t>'Value1'</t>, ipt2Value: <t>'Value2'</t>}</u>, <b>function</b>(name, value, <u>model</u>) {
+		div.html(<t>'&lt;b&gt;Name:&lt;/b&gt; '</t> + name + <t>'&lt;br&gt;&lt;b&gt;Value:&lt;/b&gt; '</t> + value + <t>'&lt;br&gt;&lt;b&gt;Model&lt;/b&gt;: '</t> + JSON.stringify(<u>model</u>));
+	    })
+	    <b>.bind</b>(<t>'ipt1Value'</t>, <t>'value'</t>, <b>ns.create</b>(Input))
+	    <b>.bind</b>(<t>'ipt2Value'</t>, <t>'value'</t>, <b>ns.create</b>(Input, 1))
+	    <b>.bind</b>(<t>'ipt3Value'</t>, <t>'value'</t>, <b>ns.create</b>(Input, 2));
+	});
+	</pre>
+</div>
+<br/><br/><a href="#" onclick="printSource('#ex2')">Print</a>
+		`}) %>
+	</div><hr/>
+
+	<h2 id="example3">Example 3</h2>
+	<p>
+		Two-way data-binding between components with common model property.
+	</p>
+	<div ig-ns>
+		<div ex3 class="clearfix, boxStyle" style="padding: 10px">
+			<div class="output"></div>
+			<%- $('Input') %>
+			<%- $('Input') %>
+			<%- $('Input', {class: 'ipt_class'}) %>
+		</div>
+
+		<%- $('igoTogglebox', {id: 'ex3', label: `<u>view source</u>`, content: `
+<div>
+	<b>HTML</b>
+	<pre class="toggle-content">
+	&lt;div <b>ex3</b>&gt;
+		&lt;div class=<t>'output'</t>&gt;&lt;/div&gt;
+		&lt;%- $(<t>'Input'</t>) %&gt;
+		&lt;%- $(<t>'Input'</t>) %&gt;
+		&lt;%- $(<t>'Input'</t>, {class: <t>'ipt_class'</t>}) %&gt;
+	&lt;/div&gt;
+
+	</pre>
+
+	<b>JavaScript</b>
+	<pre class="toggle-content">
+	<b>indigo.namespace</b>(<t>'div[ex3]'</t>, function(<b>ns</b>) {
+	    <b>var</b> <u>model</u> = {sharedValue: <t>'IndigoJS'</t>},
+		div = <b>ns.$</b>(<t>'div.output'</t>),
+		<i>Input</i> = <b>indigo.import</b>(<t>'Input'</t>),
+		ipt1 = <b>ns.create</b>(<i>Input</i>), <z>//document.querySelector('div[ex3] [_=igoInput]')</z>
+		ipt2 = <b>ns.create</b>(<i>Input</i>, 1), <z>//document.querySelectorAll('div[ex3] [_=igoInput]')[1]</z>
+		ipt3 = <b>ns.create</b>(<i>Input</i>, <t>'.ipt_class'</t>), <z>//document.querySelector('div[ex3] [_=igoInput].ipt_class')</z>
+		<i>watch</i> = <b>function</b>(name, value) {
+		    div.html(<t>'&lt;b&gt;Name:&lt;/b&gt; '</t> + name + <t>'&lt;br&gt;&lt;b&gt;Value:&lt;/b&gt; '</t> + value + <t>'&lt;br&gt;&lt;b&gt;Model&lt;/b&gt;: '</t> + JSON.stringify(<u>model</u>));
+		};
+
+	    <z>//bind multiple components to a property name in the model</z>
+	    <b>indigo.bind</b>(<u>model</u>, <t>'sharedValue'</t>, <t>'value'</t>, ipt1, <i>watch</i>)
+	          <b>.bind</b>(<t>'sharedValue'</t>, <t>'value'</t>, ipt2)
+	          <b>.bind</b>(<t>'sharedValue'</t>, <t>'value'</t>, ipt3)<b>.trigger</b>(<t>'keydown keyup'</t>); <z>//attach additional keydown and keyup trigger events</z>
+	});
+	</pre>
+</div>
+<br/><br/><a href="#" onclick="printSource('#ex3')">Print</a>
+		`}) %>
+	</div><hr/>
+
+	<h2 id="example4">Example 4</h2>
+	<p>
+		Two-way data-binding between components with common model property. (optimized).<br/>
+		This is achieved by overloading the <b>host</b> argument of the <code>indigo.bind</code> function with an array of class instances.
+	</p>
+	<div ig-ns>
+		<div ex4 class="clearfix, boxStyle" style="padding: 10px">
+			<div class="output"></div>
+			<%- $('Input') %>
+			<%- $('Input') %>
+			<%- $('Input', {class: 'ipt_class'}) %>
+		</div>
+
+		<%- $('igoTogglebox', {id: 'ex4', label: `<u>view source</u>`, content: `
+<div>
+	<b>HTML</b>
+	<pre class="toggle-content">
+	&lt;div <b>ex4</b>&gt;
+		&lt;div class=<t>'output'</t>&gt;&lt;/div&gt;
+		&lt;%- $(<t>'Input'</t>) %&gt;
+		&lt;%- $(<t>'Input'</t>) %&gt;
+		&lt;%- $(<t>'Input'</t>, {class: <t>'ipt_class'</t>}) %&gt;
+	&lt;/div&gt;
+
+	</pre>
+
+	<b>JavaScript</b>
+	<pre class="toggle-content">
+	<b>indigo.namespace</b>(<t>'div[ex4]'</t>, function(<b>ns</b>) {
+	    <b>var</b> div = ns.$(<t>'div.output'</t>),
+		<i>Input</i> = <b>indigo.import</b>(<t>'Input'</t>);
+
+	    <b>indigo.watch</b>(<u>{sharedValue: <t>'IndigoJS'</t>}</u>, <b>function</b>(name, value, <u>model</u>) {
+		div.html(<t>'&lt;b&gt;Name:&lt;/b&gt; '</t> + name + <t>'&lt;br&gt;&lt;b&gt;Value:&lt;/b&gt; '</t> + value + <t>'&lt;br&gt;&lt;b&gt;Model&lt;/b&gt;: '</t> + JSON.stringify(<u>model</u>));
+	    })
+	    <b>.bind</b>(<t>'sharedValue'</t>, <t>'value'</t>, [<b>ns.create</b>(<i>Input</i>), <b>ns.create</b>(<i>Input</i>, 1), <b>ns.create</b>(<i>Input</i>, <t>'.ipt_class'</t>)])<b>.trigger</b>(<t>'keydown keyup'</t>);
+	});
+	</pre>
+</div>
+<br/><br/><a href="#" onclick="printSource('#ex4')">Print</a>
+		`}) %>
+	</div><hr/>
+
+	<h2 id="example5">Example 5</h2>
+	<p>
+		Two-way data-binding of components with different property names.
+	</p>
+	<div ig-ns>
+		<div ex5 class="clearfix, boxStyle" style="padding: 10px">
+			<div class="output"></div>
+			<%- $('Switch') %>
+			<%- $('Checkbox', {label: 'Checkbox'}) %>
+			<%- $('Button', {label: 'Button'}) %>
+		</div>
+
+		<%- $('igoTogglebox', {id: 'ex5', label: `<u>view source</u>`, content: `
+<div>
+	<b>HTML</b>
+	<pre class="toggle-content">
+	&lt;div <b>ex5</b>&gt;
+		&lt;div class=<t>'output'</t>&gt;&lt;/div&gt;
+		&lt;%- $(<t>'Switch'</t>) %&gt;
+		&lt;%- $(<t>'Checkbox'</t>, {label: <t>'Checkbox'</t>}) %&gt;
+		&lt;%- $(<t>'Button'</t>, {label: <t>'Button'</t>}) %&gt;
+	&lt;/div&gt;
+
+	</pre>
+
+	<b>JavaScript</b>
+	<pre class="toggle-content">
+	<b>indigo.namespace</b>(<t>'div[ex5]'</t>, function(<b>ns</b>) {
+	     <b>var</b> <u>model</u> = {sharedValue: true},
+		watchHandlers = [],
+		<z>//apply watch function to each component</z>
+		<i>watch</i> = <b>function</b>(type) {
+			<b>return function</b>() {
+				watchHandlers.push(watchHandlers.length + <t>' - '</t> + type);
+				div.html(watchHandlers.join(<t>', '</t>));
+			};
+		},
+		div = <b>ns.$</b>(<t>'div.output'</t>),
+		sch = <b>ns.create</b>(<t>'Switch'</t>),
+		cbx = <b>ns.create</b>(<t>'Checkbox'</t>),
+		btn = <b>ns.create</b>(<t>'Button'</t>);
+
+	    <b>indigo.bind</b>(<u>model</u>)
+		  <b>.bind</b>(<t>'sharedValue'</t>, <t>'checked'</t>,  sch, <i>watch</i>(<t>'Switch'</t>))
+		  <b>.bind</b>(<t>'sharedValue'</t>, <t>'checked'</t>,  cbx, <i>watch</i>(<t>'Checkbox'</t>))
+		  <b>.bind</b>(<t>'sharedValue'</t>, <t>'disabled'</t>, btn, <i>watch</i>(<t>'Button'</t>));
+
+	    btn<b>.click</b> = function() {
+		watchHandlers = [];
+		<u>model</u>.sharedValue = true;
+	    };
+	});
+	</pre>
+</div>
+<br/><br/><a href="#" onclick="printSource('#ex5')">Print</a>
+		`}) %>
+	</div><hr/>
+
+	<h2 id="example6">Example 6</h2>
+	<p>
+		Two-way data-binding of components with different property names (optimized).<br/>
+		This is achieved by overloading the <b>chain</b> argument of the <code>indigo.bind</code> function.
+	</p>
+	<div ig-ns>
+		<div ex6 class="clearfix, boxStyle" style="padding: 10px">
+			<div class="output"></div>
+			<%- $('Switch') %>
+			<%- $('Checkbox', {label: 'Checkbox'}) %>
+			<%- $('Button', {label: 'Button'}) %>
+		</div>
+
+		<%- $('igoTogglebox', {id: 'ex6', label: `<u>view source</u>`, content: `
+<div>
+	<b>HTML</b>
+	<pre class="toggle-content">
+	&lt;div <b>ex5</b>&gt;
+		&lt;div class=<t>'output'</t>&gt;&lt;/div&gt;
+		&lt;%- $(<t>'Switch'</t>) %&gt;
+		&lt;%- $(<t>'Checkbox'</t>, {label: <t>'Checkbox'</t>}) %&gt;
+		&lt;%- $(<t>'Button'</t>, {label: <t>'Button'</t>}) %&gt;
+	&lt;/div&gt;
+
+	</pre>
+
+	<b>JavaScript</b>
+	<pre class="toggle-content">
+	<b>indigo.namespace</b>(<t>'div[ex6]'</t>, function(<b>ns</b>) {
+	    <b>var</b> <u>model</u> = {sharedValue: true},
+		watchHandlers = [],
+		<i>watch</i> = <b>function</b>(type) {
+			<b>return function</b>() {
+				watchHandlers.push(watchHandlers.length + <t>' - '</t> + type);
+				div.html(watchHandlers.join(<t>', '</t>));
+			};
+		},
+		div = <b>ns.$</b>(<t>'div.output'</t>),
+		btn = <b>ns.create</b>(<t>'Button'</t>);
+
+	    <b>indigo.bind</b>(<u>model</u>, <t>'sharedValue'</t>, [
+		{<b>$watch</b>: <i>watch</i>(<t>'Switch'</t>),   <t>'checked'</t> : <b>ns.create</b>(<t>'Switch'</t>)},
+		{<b>$watch</b>: <i>watch</i>(<t>'Checkbox'</t>), <t>'checked'</t> : <b>ns.create</b>(<t>'Checkbox'</t>)},
+		{<b>$watch</b>: <i>watch</i>(<t>'Button'</t>),   <t>'disabled'</t>: btn}]);
+
+	    btn<b>.click</b> = function() {
+		watchHandlers = [];
+		<u>model</u>.sharedValue = true;
+	    };
+	});
+	</pre>
+</div>
+<br/><br/><a href="#" onclick="printSource('#ex6')">Print</a>
+		`}) %>
+	</div><hr/>
+
+	<h2 id="example7">Example 7</h2>
+	<p>
+		Two-way data-binding using a custom watch event listener for the <i>Input</i> field.
+	</p>
+	<div ig-ns>
+		<div ex7 class="clearfix, boxStyle" style="padding: 10px">
+			<%- $('Text', {class: 'output'}) %>
+			<%- $('Input') %>
+			<%- $('Switch') %>
+			<%- $('Checkbox', {label: 'Checkbox'}) %>
+		</div>
+
+		<%- $('igoTogglebox', {id: 'ex7', label: `<u>view source</u>`, content: `
+<div>
+	<b>HTML</b>
+	<pre class="toggle-content">
+	&lt;div <b>ex7</b>&gt;
+		&lt;%- $(<t>'Text'</t>, {class: <t>'output'</t>}) %&gt;
+		&lt;%- $(<t>'Input'</t>) %&gt;
+		&lt;%- $(<t>'Switch'</t>) %&gt;
+		&lt;%- $(<t>'Checkbox'</t>, {label: <t>'Checkbox'</t>}) %&gt;
+	&lt;/div&gt;
+
+	</pre>
+
+	<b>JavaScript</b>
+	<pre class="toggle-content">
+	<b>indigo.import</b>(<t>'Text'</t>, <t>'Input'</t>, <t>'Switch'</t>, <t>'Checkbox'</t>, function(<i>Text</i>, <i>Input</i>, <i>Switch</i>, <i>Checkbox</i>) {
+	    <b>var</b> chars = [],
+		ns = <b>indigo.namespace</b>(<t>'div[ex7]'</t>),
+		txt = <b>ns.create</b>(<i>Text</i>),
+		<i>watch</i> = <b>function</b>(name, value, <u>model</u>) {
+			txt.value = <t>'&lt;b&gt;Name:&lt;/b&gt; '</t> + name + <t>'&lt;br&gt;&lt;b&gt;Value:&lt;/b&gt; '</t> + value + <t>'&lt;br&gt;&lt;b&gt;Model&lt;/b&gt;: '</t> + JSON.stringify(<u>model</u>);
+		};
+
+	    <b>indigo.watch</b>(<u>{swhValue: true, chkValue: true}</u>, <i>watch</i>) <z>//common watch handler</z>
+		  <b>.bind</b>(<t>'iptValue'</t>, <t>'value'</t>, <b>ns.create</b>(<i>Input</i>), <b>function</b>(name, value, <u>model</u>, e) { <z>// custom watch handler for Input</z>
+			if (e.type === <t>'keydown'</t>) {
+				var code = e.which || e.keyCode;
+				if (code === 8) {
+					chars.pop();
+				} else {
+					chars.push(String.fromCharCode(code));
+				}
+			}
+			this.$input.val((value || <t>''</t>).replace(/./g, <t>'*'</t>)); <z>//mask value in component input box</z>
+			<u>model</u>[name] = chars.join(<t>''</t>); <z>//assign actual value to model</z>
+			<i>watch</i>(name, value, <u>model</u>);
+		})<b>.trigger</b>(<t>'keydown keyup'</t>) <z>//assign keydown and keyup events masking the field value</z>
+		<b>.bind</b>(<t>'swhValue'</t>, <t>'checked'</t>, <b>ns.create</b>(<i>Switch</i>))
+		<b>.bind</b>(<t>'chkValue'</t>, <t>'checked'</t>, <b>ns.create</b>(<i>Checkbox</i>));
+	});
+	</pre>
+</div>
+<br/><br/><a href="#" onclick="printSource('#ex7')">Print</a>
+		`}) %>
+	</div><hr/>
+
+	<h2 id="api">API Specification</h2>
+
+	<code>indigo.uid()</code> provides a simple means for generating unique ids. The identifiers generated by UUID are universally unique identifiers.<br/><br/>
+
+	<code>indigo.import(...rest, callback)</code> This function returns the class definition as specified by class name(s) <br/>
+<h6>Parameters:</h6>
+	<ul>
+	<li><code>...rest</code> - an array of class names of the component loaded and registered in <b>window.top</b> scope.</li>
+	<li><code>callback</code> - when defined, it will be passed the component class definition from <code>...rest</code>.</li>
+	</ul>
+<h6>Returns:</h6>
+	<ul>
+	<li>When the callback function is omitted, the first matched component definition will be returned. However, when a callback is provided, nothing will be returned and all class names listed as <code>...rest</code> arguments will be passed to the callback function in the same order. This allows for mangling of the component type variables during minification of the source code, effectively reducing file size.</li>
+	</ul>
+	<br/><br/>
+
+	<code>indigo.namespace(selector, callback)</code> Encapsulates all of the DOM elements within a parent container. <br/>
+<h6>Parameters:</h6>
+	<ul>
+	<li><code>selector</code> - a string representation of a CSS selector name of the based DOM element.</li>
+	<li><code>callback</code> - an optional function which returns the promise object defined in the return statement.</li>
+	</ul>
+<h6>Returns:</h6>
+	<ul>
+	<li>Returns the promise object of the callback, which contains two parameters {<b>$</b> - jQuery <i>find</i> function, and <b>create</b> - reference to <a href="/index?core#create">indigo.create</a> }</li>
+	</ul>
+	<br/><br/>
+
+	<code id="create">indigo.create(clazz, idxOrSelector, parent)</code> Creates and initializes an instance of the component. <br/>
+<h6>Parameters:</h6>
+	<ul>
+	<li><code>clazz</code> - The class name or class definition.</li>
+	<li><code>idxOrSelector</code> - CSS selector or an integer indicating the position of the element in the set of matched elements.</li>
+	<li><code>parent</code> - immediate parent of the specified selector argument (<code>idxOrSelector</code>).</li>
+	</ul>
+<h6>Returns:</h6>
+	<ul>
+	Returns a new instance of a component based on the class definition.
+	</ul>
+	<br/><br/>
+
+	<code>indigo.watch(model, watch)</code> Registers a common model and dispatches changes when a property of the current value in the model is updated.
+<h6>Parameters:</h6>
+	<ul>
+	<li><code>model</code> - The data binding model.</li>
+	<li><code>watch</code> - The function which invokes changes to the model. </li>
+	</ul>
+<h6>Returns:</h6>
+	<ul>
+	Returns the promise <a href="/index?core#bind">indigo.bind</a> </li>
+	</ul>
+	<br></br>
+
+	<code id="bind">indigo.bind(model, prop, chain, host, watch)</code> Establishes data binding between the <u>model</u> property and the component getter and setter definitions (<b>chain</b>).
+<h6>Parameters:</h6>
+	<ul>
+	<li><code>model</code> - The data binding model.</li>
+	<li><code>prop</code> - The name of the model property. </li>
+	<li><code>chain</code> - The getter/setter defined in the class definition. </li>
+	<li><code>host</code> - Represents an instance of the object returned by the <a href="/index?core#create">indigo.create</a> function. </li>
+	<li><code>watch</code> - The function triggered when changes are made to the model. </li>
+	</ul>
+<h6>Returns:</h6>
+	<ul>
+	<li>Returns the promise {<code>bind</code> - <a href="/index?core#bind">indigo.bind</a>, <code>trigger</code> - is event type name or event types delim by space character attached to coresponding <b>host</b> object.} </li>
+	</ul>
+	<br></br>
+
+	The <b>igo</b> prefix can be omitted when using IndigoJS components. Example: $('Button') instead of $('igoButton').
+</div>
+
+<%- $finalize('ejs/data_binding.js') %>

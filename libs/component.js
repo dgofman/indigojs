@@ -5,7 +5,6 @@ const indigo = global.__indigo,
 	ejs = require('ejs'),
 	fs = require('fs'),
 	less = require('less'),
-	componentTag = indigo.appconf.get('server:componentTag') || false,
 	assign = (req, opts, self) => {
 		self = self || opts;
 		const register = (handler) => {

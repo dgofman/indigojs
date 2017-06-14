@@ -7,6 +7,7 @@
 		"app_template": "{{app_template}}",
 		"staticDir": "{{static}}", /* path to the web/static directory */
 		"componentPath": "{{component}}", /* base path which loads component resource file */
+		"buildPath": "{{buildDir}}",
 		"cache": 3600 /* seconds, 0 - no-cache */
 	},
 

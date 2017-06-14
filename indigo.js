@@ -469,7 +469,7 @@ const indigo =
 	 * @return {Module} module. The module definition under <code>libs</code> directory.
 	 */
 	libs(module) {
-		return require(`${__appDir}/libs/${module}`);
+		return require(`./libs/${module}`);
 	},
 
 	/**

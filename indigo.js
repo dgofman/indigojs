@@ -364,15 +364,23 @@ const indigo =
 
 	/**
 	 * Returns path to the web/static directory defined in app.conf file.
-	 * @return {String} Web path to static directory.
+	 * @return {String} path Web path to static directory.
 	 */
 	getStaticDir() {
 		return this.appconf.get('server:staticDir') || '/static';
 	},
 
 	/**
+	 * Returns the absolute path to the grunt-compiled directory.
+	 * @return {String} path The target directory name.
+	 */
+	getBuildPath() {
+		return __appDir + (this.appconf.get('server:buildPath') || '/build');
+	},
+
+	/**
 	 * Returns base path to the component assets.
-	 * @return {String} Web path to component less and js files.
+	 * @return {String} path Web path to component less and js files.
 	 */
 	getComponentPath() {
 		return this.appconf.get('server:componentPath') || '/components';

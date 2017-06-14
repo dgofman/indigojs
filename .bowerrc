@@ -1,6 +1,7 @@
 {
 	"directory" : "examples/components/web/default",
+	"cwd": "./",
 	"scripts": {
-		"postinstall": "npm install && grunt"
+		"postinstall": "npm run-script init_bower"
 	}
 }

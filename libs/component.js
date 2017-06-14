@@ -73,27 +73,32 @@ const indigo = global.__indigo,
  */
 module.exports = (app) => {
 
+
 	app.get(`${indigo.getComponentPath()}/*`, (req, res, next) => {
 
-		const file = req.params[0],
-			match = file.split('.'),
-			index = match.length - 1,
-			filePath = `${indigo.getModuleWebDir(req)}/default/components/${file}`;
+		let file = req.params[0],
+			compDir = `${indigo.getModuleWebDir(req)}/default/components`;
 
-		if (!fs.existsSync(filePath) || match[index] === 'less') {
-			if (match[index] === 'css') {
-				match[index] = 'less';
-			}
-			return module.exports.renderLess(`${indigo.getModuleWebDir(req)}/default/components/${match.join('.')}`, req, res, next);
+		if (file.startsWith('static')) {
+			compDir = `${indigo.getBuildPath()}/components`;
 		}
 
-		res.writeHead(200, {
-			'Content-Type': 'application/octet-stream',
-			'Content-Disposition' : 'attachment; filename=' + file
-		});
+		const ext = file.split('.').pop(),
+			filePath = `${compDir}/${file}`;
 
-		const readStream = fs.createReadStream(filePath);
-		readStream.pipe(res);
+		if (ext === 'less') {
+			return module.exports.renderLess(filePath, req, res, next);
+		}
+
+		fs.readFile(filePath, function(err, data) {
+			if (err) {
+				indigo.logger.error(err);
+				res.status(404).end();
+			} else {
+				res.contentType(ext);
+				res.send(data);
+			}
+		});
 	});
 
 	/**
@@ -173,11 +178,15 @@ module.exports = (app) => {
 		}
 
 		lines.push(`<script>
-			var script = document.createElement('script');
+			var core = document.querySelector('script[rel=igocore]'),
+				script = document.createElement('script');
+			if (core) {
+				document.head.removeChild(core);
+			}
 			script.src = '${isDev ? '/default/components/js/loader.js' : baseStaticPath + '/js/loader.min.js'}';
 			script.setAttribute('rel', 'igocore');
 			script.setAttribute('libs', '${libs.join(',')}');
-			script.setAttribute('uri', '${indigo.getComponentPath()}/');
+			script.setAttribute('uri', '${indigo.getComponentPath()}');
 			document.head.appendChild(script);
 		</script>`);
 

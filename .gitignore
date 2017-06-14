@@ -14,4 +14,5 @@ dist
 ehthumbs.db
 Icon?
 Thumbs.db
-examples/components/web/default/indigojs
+examples/components/web/default/components
+examples/components/web/build

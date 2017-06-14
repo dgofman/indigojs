@@ -58,7 +58,7 @@ goto :eof
 
 :components
 	call :killnode
-	call bower install indigojs
+	call bower install indigojs-components
 	start /WAIT /B node examples/components/index.js
 	start "" "http://localhost:8888/uicomponents/index"
 goto :eof

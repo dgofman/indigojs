@@ -1,6 +1,6 @@
 {
 	"name": "indigojs",
-	"version": "2.5.2",
+	"version": "2.6.0",
 	"description": "IndigoJS is an open source, JavaScript/NodeJS localization framework",
 	"main": "indigo.js",
 	"config": {
@@ -18,7 +18,7 @@
 		"test": "./node_modules/.bin/mocha test/unittest --reporter spec --check-leaks",
 		"mocha": "./node_modules/.bin/mocha test/mocha --reporter spec --check-leaks",
 		"cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha test/mocha test/unittest -- --reporter spec --check-leaks",
-		"start": "make account"
+		"init_bower": "cd ./examples/components/web/default/components && npm install --ignore-scripts && grunt --buildPath=../../build/components"
 	},
 	"homepage": "https://github.com/dgofman/indigojs.git",
 	"author": "David Gofman <dgofman@gmail.com>",

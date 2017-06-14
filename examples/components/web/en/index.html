@@ -10,6 +10,10 @@
 
 <!-- Source Code styling -->
 <link rel="stylesheet" type="text/css" href="<%- baseStaticPath %>/css/styles<%- extLESS %>">
+
+<!-- juiSpinner Localization -->
+<script type="text/javascript" src="https://jqueryui.com/resources/demos/external/globalize/globalize.js"></script>
+<script type="text/javascript" src="https://jqueryui.com/resources/demos/external/globalize/globalize.culture.ja-JP.js"></script>
 </head>
 
 <body>
@@ -17,25 +21,31 @@
 
 	<script type="text/javascript">
 		var content = document.querySelector('.igo-content'),
+			currentPage,
 			loadPage = function() {
 				if (window.location.hash) {
-					var page = window.location.hash.split('#').pop();
-					if (page) {
-						//<!-- juiSpinner Localization -->
-						//src="https://jqueryui.com/resources/demos/external/globalize/globalize.js"
-						//src="https://jqueryui.com/resources/demos/external/globalize/globalize.culture.ja-JP.js"
-
+					var page = window.location.hash.split('#').pop().split('/')[0];
+					if (page && currentPage !== page) {
 						var xhttp = new XMLHttpRequest();
 						xhttp.onreadystatechange = function() {
 						if (this.readyState === 4 && this.status == 200) {
+								currentPage = page;
 								content.innerHTML = this.responseText;
 								var scripts = content.querySelectorAll('script');
 								for (var i = 0; i < scripts.length; i++) {
 									var script = scripts[i];
 									if ((script.type || '').indexOf('template') === -1) {
-										try {
-											eval(script.innerHTML);
-										} catch (e) {console.error(e, script.innerHTML);}
+										if (script.innerHTML) {
+											try {
+												eval(script.innerHTML);
+												continue;
+											} catch (e) {console.error(e, script.innerHTML);}
+										}
+										if (script.src && !document.head.querySelector('[src="' + script.src + '"]')) {
+											var el = document.createElement('script');
+											el.src = script.src;
+											document.head.appendChild(el);
+										}
 									}
 								}
 								initScroll();

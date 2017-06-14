@@ -64,26 +64,26 @@
 <div class="left">
 	<ul>
 		<b>Packages:</b><br/>
-		<div><a href="/index?igo">igo</a></div>
+		<div><a href="index#igo/">igo</a></div>
 		<div><b>jui</b></div>
 		<hr/>
 
-		<li><a href="/index?jui#juiaccordion">Accordion</a></li>
-		<li><a href="/index?jui#juiautocomplete">Autocomplete</a></li>
-		<li><a href="/index?jui#juibutton">Button</a></li>
-		<li><a href="/index?jui#juicheckbox">Checkbox</a></li>
-		<li><a href="/index?jui#juidatepicker">Datepicker</a></li>
-		<li><a href="/index?jui#juidialog">Dialog</a></li>
-		<li><a href="/index?jui#juidropdown">Dropdown</a></li>
-		<li><a href="/index?jui#juimenu">Menu</a></li>
-		<li><a href="/index?jui#juiradio">Radio</a></li>
-		<li><a href="/index?jui#juiprogressbar">Progressbar</a></li>
-		<li><a href="/index?jui#juislider">Slider</a></li>
-		<li><a href="/index?jui#juispinner">Spinner</a></li>
-		<li><a href="/index?jui#juitabs">Tabs</a></li>
-		<li><a href="/index?jui#juitooltip">Tooltip</a></li>
+		<li><a href="#jui/accordion">Accordion</a></li>
+		<li><a href="#jui/autocomplete">Autocomplete</a></li>
+		<li><a href="#jui/button">Button</a></li>
+		<li><a href="#jui/checkbox">Checkbox</a></li>
+		<li><a href="#jui/datepicker">Datepicker</a></li>
+		<li><a href="#jui/dialog">Dialog</a></li>
+		<li><a href="#jui/dropdown">Dropdown</a></li>
+		<li><a href="#jui/menu">Menu</a></li>
+		<li><a href="#jui/radio">Radio</a></li>
+		<li><a href="#jui/progressbar">Progressbar</a></li>
+		<li><a href="#jui/slider">Slider</a></li>
+		<li><a href="#jui/spinner">Spinner</a></li>
+		<li><a href="#jui/tabs">Tabs</a></li>
+		<li><a href="#jui/tooltip">Tooltip</a></li>
 		<br/><hr/>
-		<li><a href="/index?core">IndigoJS Core</a></li>
+		<li><a href="index#core/">IndigoJS Core</a></li>
 	</ul>
 </div>
 <div class="right">
@@ -92,7 +92,7 @@
 		jQuery UI is a curated set of user interface interactions, effects, widgets, and themes built on top of the jQuery JavaScript Library. Widgets are full-featured UI controls that bring the richness of desktop applications to the Web. All widgets provide a solid core with plenty of extension points for customizing behavior, as well as full theming support.
 	</p>
 
-	<h1 id="juiaccordion">Accordion</h1>
+	<h1 id="jui/accordion">Accordion</h1>
 	<p>
 		Accordions support arbitrary markup, but each content panel must always be the next sibling after its associated header. Displays collapsible content panels for presenting information in a limited amount of space.
 
@@ -121,7 +121,7 @@
 		<%- $('juiAccordion', {labels: ['Label1', 'Label2', 'Label3'], contents: ['View1', 'View2', 'View3'], templates: ['#templ', null, '#templ']}) %><hr/>
 	</div>
 
-	<h1 id="juiautocomplete">Autocomplete</h1>
+	<h1 id="jui/autocomplete">Autocomplete</h1>
 	<p>
 		Autocomplete enables users to quickly find and select from a pre-populated list of values as they type, leveraging searching and filtering.
 
@@ -139,7 +139,7 @@
 		<%- $('juiAutocomplete', {availableTags: availableTags.join(',')}) %><hr/>
 	</div>
 
-	<h1 id="juibutton">Button</h1>
+	<h1 id="jui/button">Button</h1>
 	<p>
 		Button enhances standard form elements like buttons, inputs and anchors to themeable buttons with appropriate hover and active styles.
 
@@ -189,7 +189,7 @@
 		<%- $('juiButton', {label: `Hello World - 6`, class: 'custom', disabled: true}) %><hr/>
 	</div>
 
-	<h1 id="juicheckbox">Checkbox</h1>
+	<h1 id="jui/checkbox">Checkbox</h1>
 	<p>
 		<p>Native HTML input elements are impossible to style consistently. This widget allows working around that limitation by positining the associated label on top of the hidden input, and emulating the checkbox element itself using an (optional) icon. The original input still receives focus and all events, the label merely provides a themeable button on top. </p>
 	</p>
@@ -230,7 +230,7 @@
 		<%- $('juiCheckbox', {label: `Hello World - 6`, class: 'custom', disabled: true}) %><hr/>
 	</div>
 
-	<h1 id="juidatepicker">Datepicker</h1>
+	<h1 id="jui/datepicker">Datepicker</h1>
 	<p>
 	The jQuery UI Datepicker is a highly configurable plugin that adds datepicker functionality to your pages. You can customize the date format and language, restrict the selectable date ranges and add in buttons and other navigation options easily.
 
@@ -280,7 +280,7 @@
 		<%- $('juiDatepicker', {prompt: 'Disabled', class: 'custom', disabled: true}) %><hr/>
 	</div>
 
-	<h1 id="juidialog">Dialog</h1>
+	<h1 id="jui/dialog">Dialog</h1>
 	<p>
 		A dialog is a floating window that contains a title bar and a content area. The dialog window can be moved, resized and closed with the 'x' icon by default.
 		If the content length exceeds the maximum height, a scrollbar will automatically appear.
@@ -306,7 +306,7 @@
 		<%- $('juiButton', {label: 'Custom Dialog', attrs: {dialog_id: 'dlg_custom'}} ) %><hr/>
 	</div>
 
-	<h1 id="juidropdown">Dropdown</h1>
+	<h1 id="jui/dropdown">Dropdown</h1>
 	<p>
 		The Dropdown - jQuery Selectmenu transforms a &lt;select&gt; element into a themeable and customizable control. The widget acts as a proxy to the original &lt;select&gt;; therefore the original element's state is maintained for form submission and serialization.
 
@@ -374,7 +374,7 @@
 		<%- $('juiDropdown', {prompt: `Hello World - 3`, class: 'custom', disabled: true}) %><hr/>
 	</div>
 
-	<h1 id="juimenu">Menu</h1>
+	<h1 id="jui/menu">Menu</h1>
 	<p>
 		A menu can be created from any valid markup as long as the elements have a strict parent/child relationship. The most commonly used element is the unordered list (&lt;ul&gt;). Additionally, the contents of each menu item must be wrapped with a block-level DOM element. If you use a structure other than &lt;ul&gt;/&lt;li&gt;, including using the same element for the menu and the menu items, use the menus option to specify a way to differentiate the two elements, e.g., menus: "div.menuElement".
 
@@ -421,7 +421,7 @@
 			}]}) %><hr/>
 	</div>
 
-	<h1 id="juiradio">Radio</h1>
+	<h1 id="jui/radio">Radio</h1>
 	<p>
 		Native HTML input elements are impossible to style consistently. This widget allows working around that limitation by positining the associated label on top of the hidden input, and emulating the radio element itself using an (optional) icon. The original input still receives focus and all events, the label merely provides a themeable button on top.
 	</p>
@@ -457,7 +457,7 @@
 		<%- $('juiRadio', {label: `Hello World - 6`, class: 'custom', disabled: true}) %>
 	</div>
 
-	<h1 id="juiprogressbar">Progressbar</h1>
+	<h1 id="jui/progressbar">Progressbar</h1>
 	<p>
 		The progress bar is designed to display the current percent complete for a process. The bar is coded to be flexibly sized through CSS and will scale to fit inside its parent container by default.
 
@@ -503,7 +503,7 @@
 		<button onclick="window.progress()">Start Download</button>
 	</div>
 
-	<h1 id="juislider">Slider</h1>
+	<h1 id="jui/slider">Slider</h1>
 	<p>
 		The jQuery UI Slider plugin makes selected elements into sliders. There are various options such as multiple handles and ranges. The handle can be moved with the mouse or the arrow keys.
 
@@ -532,7 +532,7 @@
 		<%- $('juiSlider', {handle: true, value: 100, min: 50, max: 150}) %><hr/>
 	</div>
 
-	<h1 id="juispinner">Spinner</h1>
+	<h1 id="jui/spinner">Spinner</h1>
 	<p>
 		The Spinner, or number stepper widget, is perfect for handling all kinds of numeric input. It allows users to type a value directly, or modify an existing value by spinning with the keyboard, mouse or scrollwheel. When combined with Globalize, you can even spin currencies and dates in a variety of locales.
 
@@ -573,7 +573,7 @@
 		<%- $('juiSpinner', {value: 100, class: 'custom', disabled: true}) %><hr/>
 	</div>
 
-	<h1 id="juitabs">Tabs</h1>
+	<h1 id="jui/tabs">Tabs</h1>
 	<p>
 		Tabs are generally used to break content into multiple sections that can be swapped to save space, much like an accordion.
 		Tabs have a particular set of markup that must be used in order for them to work properly:<br/>
@@ -604,7 +604,7 @@
 		<%- $('juiTabs', {labels: ['Label1', 'Label2', 'Label3'], contents: ['View1', 'View2', 'View3'], templates: ['#templ', null, '#templ'], class: 'tabStyle'}) %><hr/>
 	</div>
 
-	<h1 id="juitooltip">Tooltip</h1>
+	<h1 id="jui/tooltip">Tooltip</h1>
 	<p>
 		Tooltip replaces native tooltips, making them themeable as well as allowing various customizations:<br/>
 		* Display other content than just the title, like inline footnotes or extra content retrieved via Ajax.<br/>
@@ -716,6 +716,9 @@
 			<%- code('juiTooltip', {value: `<i>'Custom Error Message'</i>`, target: '.tltError', tltclass: `<i>'ui-state-error'</i>`}, `<b>&lt;div class</b>="<i>tltError</i> border"&gt;Tooltip Error<b>&lt;/div&gt;</b><br>`) %>
 			<div class="tltError border">Tooltip Error</div>
 			<%- $('juiTooltip', {value: 'Custom Error Message', target: '.tltError', tltclass: 'ui-state-error'}) %><hr/>
+
+
+			<%- $('juiWidget', {show: false}) %>
 
 		</center>
 	</div>

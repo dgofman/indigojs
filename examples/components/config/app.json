@@ -7,6 +7,7 @@
 		"componentTag": false, /* attach into less/css files the component tag */ 
 		"staticDir": "/static", /* path to the web/static directory */
 		"componentPath": "/component", /* path to component files */
+		"buildPath": "/examples/components/web/build",
 		"cache": 3600 /* seconds, 0 - no-cache */
 	},
 

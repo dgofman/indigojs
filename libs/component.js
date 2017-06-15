@@ -22,7 +22,7 @@ const indigo = global.__indigo,
 		self.$label = register(addLabel);
 		self.$assign = (opts, self) => {
 			return assign(req, opts, self);
-		}
+		};
 		return self;
 	}, addTitle = (req, opts, title) => {
 		title = title || opts.title;
@@ -176,18 +176,21 @@ module.exports = (app) => {
 			libs.push(className);
 		}
 
-		lines.push(`<script>
-			var core = document.querySelector('script[rel=igocore]'),
-				script = document.createElement('script');
-			if (core) {
-				document.head.removeChild(core);
-			}
-			script.src = '${isDev ? '/default/components/js/loader.js' : baseStaticPath + '/js/loader.min.js'}';
-			script.setAttribute('rel', 'igocore');
-			script.setAttribute('libs', '${libs.join(',')}');
-			script.setAttribute('uri', '${indigo.getComponentPath()}');
-			document.head.appendChild(script);
-		</script>`);
+		if (libs.length) {
+			const baseStaticPath = ''; //jshint: 'baseStaticPath' is not defined.
+			lines.push(`<script>
+				var core = document.querySelector('script[rel=igocore]'),
+					script = document.createElement('script');
+				if (core) {
+					document.head.removeChild(core);
+				}
+				script.src = '${isDev ? '/default/components/js/loader.js' : baseStaticPath + '/js/loader.min.js'}';
+				script.setAttribute('rel', 'igocore');
+				script.setAttribute('libs', '${libs.join(',')}');
+				script.setAttribute('uri', '${indigo.getComponentPath()}');
+				document.head.appendChild(script);
+			</script>`);
+		}
 
 		if (args.length) {
 			lines.push(`<input igo-main type="hidden" value="${args.join()}"/>`);
@@ -228,4 +231,4 @@ module.exports.renderLess = (lessFile, req, res, next) => {
 		return;
 	}
 	next();
-}
+};

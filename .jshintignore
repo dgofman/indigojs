@@ -1,6 +1,7 @@
 **/*min.js
 examples/**/*/vendor
 examples/components/web/default/components/**/*
+examples/components/web/build/**/*
 tools/generator/web/static/js/vendor
 tools/generator/web/default/templates/**/*min.js
 tools/docs/dist

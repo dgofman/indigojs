@@ -1,6 +1,7 @@
 'use strict';
 
-const indigo = global.__indigo;
+const indigo = global.__indigo,
+	fs = require('fs');
 
 /**
  * This module creates properties initializing on each router <code>express.Request</code> and assigning to <code>req.model</code>.
@@ -55,17 +56,15 @@ const indigo = global.__indigo;
 
 const reqmodel = (appconf, app) => {
 
-	let minify, env = appconf.get('environment'),
-		appTemplate = appconf.get('server:app_template') || 'fpa',
-		appLayout = appconf.get('server:app_layout') || 'sticky',
-		staticDir = indigo.getStaticDir();
+	let env = appconf.get('environment');
 
 	if ((process.env.NODE_ENV || '').trim() === 'production') {
 		env = 'prod';
 	}
 
-	env = env || 'dev';
-	minify = env === 'dev' ? '' : '.min';
+	const minify = env === 'dev' ? '' : '.min',
+		extLESS = env === 'dev' ? '.less' : '.css',
+		staticDir = indigo.getStaticDir();
 
 	return (req, res, next) => {
 		req.model = req.model || {
@@ -74,12 +73,10 @@ const reqmodel = (appconf, app) => {
 			minify: minify,
 			extCSS: `${minify}.css`,
 			extJS: `${minify}.js`,
-			extLESS: env === 'dev' ? '.less' : '.css',
+			extLESS: extLESS,
 			contextPath: req.baseUrl,
 			baseStaticPath: staticDir,
 			componentPath: indigo.getComponentPath(),
-			app_template: appTemplate,
-			app_template_layout: appLayout,
 
 			$createTemplate: (...urls) => {
 				const lines = [];
@@ -112,7 +109,21 @@ const reqmodel = (appconf, app) => {
 			$: (className, opts, wrapTag) => {
 				return app.locals.component(req, className, opts, wrapTag);
 			},
+			$link: (path, isFolder=false, basePath=staticDir) => {
+				if (isFolder && env === 'dev') {
+					const lessFiles = [],
+						dir = path.split('/').pop(),
+						files = fs.readdirSync(`${indigo.getModuleWebDir(req)}/default/less/${dir}`);
 
+					files.forEach(file => {
+						lessFiles.push(`<link rel="stylesheet" type="text/css" href="${basePath}${path}/${file}">`);
+					});
+					if (lessFiles.length) {
+						return lessFiles.join('\n');
+					}
+				}
+				return `<link rel="stylesheet" type="text/css" href="${basePath}${path}${extLESS}">`;
+			},
 			__initialized__: Date.now()
 		};
 

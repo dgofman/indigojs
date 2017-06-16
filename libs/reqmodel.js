@@ -56,7 +56,7 @@ const indigo = global.__indigo,
 
 const reqmodel = (appconf, app) => {
 
-	let env = appconf.get('environment');
+	let env = appconf.get('environment') || 'dev';
 
 	if ((process.env.NODE_ENV || '').trim() === 'production') {
 		env = 'prod';

@@ -130,7 +130,7 @@ module.exports = (app) => {
 				}
 
 				let html = '',
-					begin = `<${cTag} _=${className} tabindex="-1" class="init${model.$get('class')}"${model.$get('disabled', 'disabled')}${model.$attr('id')}`;
+					begin = `<${cTag} _=${className} tabindex="-1" class="init${model.$get('class')}"${opts.disabled ? model.$get('disabled', 'disabled') : ''}${model.$attr('id')}`;
 
 				if (fs.existsSync(dir + newUrl)) {
 					model.filename = indigo.getModuleWebDir(req) + newUrl;

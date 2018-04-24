@@ -23,7 +23,13 @@
 ###### 3. Download indigoJS framework
 
 ```
- npm install indigojs
+npm install indigojs
+
+or 
+
+git clone -b version.1.x https://github.com/dgofman/indigojs.git
+cd indigojs
+npm install
 ```
 
 ###### 4. Check the project generator attributes

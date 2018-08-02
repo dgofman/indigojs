@@ -7,8 +7,8 @@
 		"INDOGO_DEBUG": true
 	},
 	"presets": [
-    "node6"
-  ],
+		"node6"
+	],
 	"scripts": {
 		"account": "nodemon --debug examples/account/index.js",
 		"helloworld": "nodemon --debug examples/helloworld/index.js",
